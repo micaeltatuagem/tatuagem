@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Micael Tatuagem · Traço com peso e intenção</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=IM+Fell+English:ital@0;1&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:       #0a0a0a;
+      --deep:      #111010;
+      --surface:   #181616;
+      --bone:      #d4c9b0;
+      --blood:     #8b1a1a;
+      --rust:      #c0392b;
+      --muted:     #6b6560;
+      --border:    rgba(212,201,176,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ink);
+      color: var(--bone);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── GRAIN OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      position: relative;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* vignette radial */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 50%, transparent 20%, var(--ink) 100%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-name {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(3.2rem, 12vw, 9rem);
+      font-weight: 900;
+      line-height: 0.92;
+      letter-spacing: -0.01em;
+      color: var(--bone);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-name span {
+      display: block;
+      font-size: clamp(1.1rem, 3.5vw, 2.2rem);
+      font-weight: 400;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--blood);
+      margin-top: 0.5rem;
+    }
+
+    /* THE SIGNATURE ELEMENT: a hand-drawn style ruled line with a drop of ink */
+    .ink-rule {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 2.5rem auto;
+      width: min(420px, 80vw);
+    }
+    .ink-rule::before,
+    .ink-rule::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--blood), transparent);
+    }
+    .ink-drop {
+      width: 8px;
+      height: 8px;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      background: var(--blood);
+      flex-shrink: 0;
+      box-shadow: 0 0 12px rgba(139,26,26,0.6);
+    }
+
+    .hero-tagline {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 2.5vw, 1.35rem);
+      color: var(--bone);
+      opacity: 0.75;
+      max-width: 480px;
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-meta {
+      margin-top: 1.5rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .hero-cta {
+      margin-top: 3.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── BUTTONS ── */
+    .btn-primary {
+      display: inline-block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bone);
+      background: transparent;
+      border: 1px solid var(--blood);
+      padding: 1rem 2.5rem;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s, border-color 0.3s;
+      cursor: pointer;
+    }
+    .btn-primary:hover {
+      background: var(--blood);
+      color: #fff;
+      border-color: var(--blood);
+    }
+
+    .btn-secondary {
+      display: inline-block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      margin-left: 2rem;
+      transition: color 0.3s;
+    }
+    .btn-secondary:hover { color: var(--bone); }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 6rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--blood);
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── MANIFESTO ── */
+    .manifesto {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      max-width: 100%;
+      background: var(--deep);
+      padding: 5rem 2rem;
+    }
+    .manifesto-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .manifesto-text {
+      font-family: 'IM Fell English', serif;
+      font-size: clamp(1.2rem, 3vw, 1.7rem);
+      line-height: 1.65;
+      color: var(--bone);
+    }
+    .manifesto-text em {
+      color: var(--rust);
+      font-style: normal;
+    }
+
+    /* ── SOBRE ── */
+    .sobre-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    @media (max-width: 640px) {
+      .sobre-grid { grid-template-columns: 1fr; gap: 2rem; }
+    }
+    .sobre-heading {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--bone);
+      margin-bottom: 1.5rem;
+    }
+    .sobre-body {
+      font-size: 0.92rem;
+      color: rgba(212,201,176,0.7);
+      line-height: 1.85;
+    }
+    .sobre-body p + p { margin-top: 1rem; }
+
+    .pilares {
+      list-style: none;
+      border-left: 1px solid var(--border);
+      padding-left: 1.5rem;
+    }
+    .pilares li {
+      font-size: 0.88rem;
+      color: rgba(212,201,176,0.75);
+      padding: 0.7rem 0;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.5;
+    }
+    .pilares li:last-child { border-bottom: none; }
+    .pilares li strong {
+      display: block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--bone);
+      margin-bottom: 0.2rem;
+    }
+
+    /* ── ESTILOS (estilo gallery placeholder) ── */
+    .estilos-wrap {
+      background: var(--deep);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 2rem;
+    }
+    .estilos-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .estilos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      margin-top: 2.5rem;
+      border: 1px solid var(--border);
+    }
+    .estilo-card {
+      aspect-ratio: 3/4;
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 1.5rem 1rem;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+    }
+    .estilo-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10,10,10,0.9) 0%, transparent 60%);
+    }
+    /* Decorative SVG motifs per card */
+    .estilo-card .motif {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-55%);
+      opacity: 0.08;
+      width: 60%;
+    }
+    .estilo-card-label {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+    .estilo-card-label strong {
+      display: block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      color: var(--bone);
+    }
+    .estilo-card-label span {
+      font-size: 0.68rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── PROCESSO ── */
+    .processo-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 2rem;
+    }
+    .processo-item {
+      display: grid;
+      grid-template-columns: 3rem 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .processo-item:first-child { border-top: 1px solid var(--border); }
+    .processo-num {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--blood);
+      padding-top: 0.3rem;
+    }
+    .processo-text strong {
+      display: block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      color: var(--bone);
+      margin-bottom: 0.3rem;
+      letter-spacing: 0.05em;
+    }
+    .processo-text p {
+      font-size: 0.87rem;
+      color: rgba(212,201,176,0.65);
+      line-height: 1.7;
+    }
+
+    /* ── CONTATO ── */
+    .contato-wrap {
+      text-align: center;
+      border-top: 1px solid var(--border);
+      padding: 6rem 2rem;
+      background: var(--deep);
+    }
+    .contato-heading {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 700;
+      color: var(--bone);
+      line-height: 1.2;
+      max-width: 520px;
+      margin: 1rem auto 2rem;
+    }
+    .contato-sub {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 3rem;
+    }
+    .social-links {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin-top: 3rem;
+    }
+    .social-links a {
+      font-size: 0.68rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .social-links a:hover { color: var(--bone); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* ── FADE IN ── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <p class="hero-eyebrow">Atendimento privado</p>
+
+  <h1 class="hero-name">
+    Micael
+    <span>Tatuagem</span>
+  </h1>
+
+  <div class="ink-rule">
+    <div class="ink-drop"></div>
+  </div>
+
+  <p class="hero-tagline">
+    Traço com peso e intenção.<br>
+    Projetos médios e grandes.
+  </p>
+
+  <p class="hero-meta">Dark art &nbsp;·&nbsp; Blackwork &nbsp;·&nbsp; Colorido &nbsp;·&nbsp; Ornamental</p>
+
+  <div class="hero-cta">
+    <a href="https://wa.me/5532999666946?text=Ol%C3%A1.+quero+fazer+uma+tatuagem" class="btn-primary" target="_blank" rel="noopener">
+      Iniciar conversa
+    </a>
+    <a href="#sobre" class="btn-secondary">Ver mais</a>
+  </div>
+</header>
+
+<!-- ── MANIFESTO ── -->
+<div class="manifesto">
+  <div class="manifesto-inner fade-in">
+    <p class="section-label">Manifesto</p>
+    <p class="manifesto-text">
+      Tatuagem não é decoração.<br>
+      É <em>marca</em>. Permanente, deliberada,<br>
+      feita para durar mais que a razão<br>
+      pela qual você a quis.
+    </p>
+  </div>
+</div>
+
+<!-- ── SOBRE ── -->
+<section id="sobre">
+  <div class="sobre-grid fade-in">
+    <div>
+      <p class="section-label">Sobre</p>
+      <h2 class="sobre-heading">Intenção antes<br>de agulha</h2>
+      <div class="sobre-body">
+        <p>
+          Micael Faccio é tatuador, artista visual e estudioso das formas simbólicas humanas.
+          Com formação que cruza artes plásticas, design gráfico e psicanálise,
+          cada projeto nasce de uma escuta real.
+        </p>
+        <p>
+          Trabalha com projetos médios e grandes que exigem leitura de corpo,
+          construção narrativa e domínio técnico de traço e sombra.
+          Atendimento privado, agenda limitada.
+        </p>
+      </div>
+    </div>
+
+    <div>
+      <ul class="pilares">
+        <li>
+          <strong>Escuta</strong>
+          A consulta antecede qualquer rascunho. O projeto é construído, não escolhido em catálogo.
+        </li>
+        <li>
+          <strong>Técnica</strong>
+          Domínio de traço, peso de linha, degradê e ocupação de espaço no corpo.
+        </li>
+        <li>
+          <strong>Intenção</strong>
+          Nada é decorativo por acidente. Cada elemento tem função visual e simbólica.
+        </li>
+        <li>
+          <strong>Permanência</strong>
+          Projetos pensados para envelhecer bem — na pele e no tempo.
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── ESTILOS ── -->
+<div class="estilos-wrap">
+  <div class="estilos-inner">
+    <p class="section-label fade-in">Linguagens</p>
+    <div class="estilos-grid fade-in">
+
+      <!-- Dark Art -->
+      <div class="estilo-card">
+        <svg class="motif" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="45" stroke="white" stroke-width="2"/>
+          <path d="M50 10 L55 40 L85 40 L62 58 L70 88 L50 70 L30 88 L38 58 L15 40 L45 40 Z" stroke="white" stroke-width="1.5" fill="none"/>
+        </svg>
+        <div class="estilo-card-label">
+          <strong>Dark Art</strong>
+          <span>Mitologia · Ocultismo · Figura</span>
+        </div>
+      </div>
+
+      <!-- Blackwork -->
+      <div class="estilo-card">
+        <svg class="motif" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="80" height="80" stroke="white" stroke-width="1.5"/>
+          <rect x="20" y="20" width="60" height="60" stroke="white" stroke-width="1"/>
+          <line x1="10" y1="10" x2="90" y2="90" stroke="white" stroke-width="1"/>
+          <line x1="90" y1="10" x2="10" y2="90" stroke="white" stroke-width="1"/>
+        </svg>
+        <div class="estilo-card-label">
+          <strong>Blackwork</strong>
+          <span>Geométrico · Abstrato · Tribal</span>
+        </div>
+      </div>
+      <!-- Colorido -->
+      <div class="estilo-card">
+        <svg class="motif" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="38" r="22" stroke="white" stroke-width="1.5"/>
+          <path d="M30 62 Q50 80 70 62" stroke="white" stroke-width="1.5" fill="none"/>
+          <line x1="38" y1="20" x2="34" y2="12" stroke="white" stroke-width="1"/>
+          <line x1="50" y1="16" x2="50" y2="8"  stroke="white" stroke-width="1"/>
+          <line x1="62" y1="20" x2="66" y2="12" stroke="white" stroke-width="1"/>
+        </svg>
+        <div class="estilo-card-label">
+          <strong>Colorido</strong>
+          <span>Neo-tradicional · Aquarela · Ilustrativo</span>
+        </div>
+      </div>
+
+      <!-- Ornamental -->
+      <div class="estilo-card">
+        <svg class="motif" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="30" stroke="white" stroke-width="1.2"/>
+          <circle cx="50" cy="50" r="20" stroke="white" stroke-width="1"/>
+          <circle cx="50" cy="50" r="5" stroke="white" stroke-width="1.5"/>
+          <line x1="50" y1="20" x2="50" y2="10" stroke="white" stroke-width="1"/>
+          <line x1="50" y1="80" x2="50" y2="90" stroke="white" stroke-width="1"/>
+          <line x1="20" y1="50" x2="10" y2="50" stroke="white" stroke-width="1"/>
+          <line x1="80" y1="50" x2="90" y2="50" stroke="white" stroke-width="1"/>
+        </svg>
+        <div class="estilo-card-label">
+          <strong>Ornamental</strong>
+          <span>Mandala · Filigrana · Simétrico</span>
+        </div>
+      </div>
+
+    </div>
+    <p style="font-size:0.7rem;color:var(--muted);margin-top:1rem;text-align:right;letter-spacing:0.1em;">
+      ↗ portfólio completo no Instagram
+    </p>
+  </div>
+</div>
+
+<!-- ── PROCESSO ── -->
+<section id="processo">
+  <p class="section-label fade-in">Processo</p>
+  <h2 class="sobre-heading fade-in" style="margin-bottom:0.5rem">Como funciona</h2>
+
+  <div class="processo-list fade-in">
+    <div class="processo-item">
+      <span class="processo-num">I</span>
+      <div class="processo-text">
+        <strong>Consulta</strong>
+        <p>Conversa por mensagem para entender o projeto, o corpo e a intenção. Sem compromisso, sem pressa.</p>
+      </div>
+    </div>
+    <div class="processo-item">
+      <span class="processo-num">II</span>
+      <div class="processo-text">
+        <strong>Desenvolvimento</strong>
+        <p>Você traz as referências e as ideias. Eu monto um desenho exclusivo respeitando as regras de composição da tatuagem: proporção, fluxo no corpo, envelhecimento do traço.</p>
+      </div>
+    </div>
+    <div class="processo-item">
+      <span class="processo-num">III</span>
+      <div class="processo-text">
+        <strong>Sessão</strong>
+        <p>Atendimento privado, ambiente controlado, sem pressa de agenda.</p>
+      </div>
+    </div>
+    <div class="processo-item">
+      <span class="processo-num">IV</span>
+      <div class="processo-text">
+        <strong>Protocolo</strong>
+        <p>Somente materiais de primeira linha para que sua tatuagem seja motivo de orgulho por muitos anos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTATO ── -->
+<div class="contato-wrap" id="contato">
+  <p class="section-label fade-in">Contato</p>
+  <h2 class="contato-heading fade-in">Tem um projeto<br>em mente?</h2>
+  <p class="contato-sub fade-in">Agenda limitada. Consulta sem compromisso.</p>
+
+  <a href="https://wa.me/5532999666946?text=Ol%C3%A1.+quero+fazer+uma+tatuagem" class="btn-primary fade-in" target="_blank" rel="noopener">
+    Falar no WhatsApp
+  </a>
+
+  <div class="social-links fade-in">
+    <a href="https://instagram.com/micaeltatuagem" target="_blank" rel="noopener">Instagram</a>
+    <a href="mailto:micaeltattoo@gmail.com">E-mail</a>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  © Micael Faccio &nbsp;·&nbsp; Todos os projetos são autorais
+</footer>
+
+<script>
+  // Intersection Observer para fade-in
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
