@@ -466,6 +466,25 @@
     @media (prefers-reduced-motion: reduce) {
       .fade-in { opacity: 1; transform: none; transition: none; }
     }
+
+    /* ── SAFARI iOS FIX: tils/acentos cortados por letter-spacing ── */
+    @supports (-webkit-touch-callout: none) {
+      .sobre-heading,
+      .pilares li strong,
+      .processo-text strong,
+      .section-label,
+      .hero-eyebrow,
+      .hero-meta,
+      .hero-tagline,
+      .manifesto-text,
+      .contato-heading,
+      .contato-sub {
+        padding-right: 0.15em;
+      }
+      .sobre-heading {
+        padding-right: 0.2em;
+      }
+    }
   </style>
 </head>
 <body>
