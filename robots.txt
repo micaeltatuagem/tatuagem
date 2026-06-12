@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://micaeltatuagem.github.io/tatuagem/sitemap.xml
