@@ -37,7 +37,7 @@
       content: '';
       position: fixed;
       inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='50'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
       opacity: 0.035;
       pointer-events: none;
       z-index: 9999;
@@ -55,9 +55,7 @@
       padding: 2rem;
     }
 
-    .login-screen.hidden {
-      display: none;
-    }
+    .login-screen.hidden { display: none; }
 
     .login-card {
       background: var(--deep);
@@ -65,7 +63,7 @@
       padding: 3rem 2rem;
       border-radius: 4px;
       width: 100%;
-      max-width: 350px;
+      max-width: 380px;
       text-align: center;
     }
 
@@ -86,7 +84,8 @@
     }
 
     .login-form-group {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
+      text-align: left;
     }
 
     .login-form-group label {
@@ -98,7 +97,7 @@
       margin-bottom: 0.5rem;
     }
 
-    .login-form-group input[type="password"] {
+    .login-form-group input {
       width: 100%;
       padding: 0.8rem;
       background: var(--surface);
@@ -107,11 +106,19 @@
       font-family: 'Inter', sans-serif;
       border-radius: 4px;
       transition: border-color 0.3s;
+      font-size: 0.95rem;
     }
 
-    .login-form-group input[type="password"]:focus {
+    .login-form-group input:focus {
       outline: none;
       border-color: var(--rust);
+    }
+
+    .login-hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+      line-height: 1.4;
     }
 
     .btn-login {
@@ -127,6 +134,7 @@
       border-radius: 4px;
       cursor: pointer;
       transition: all 0.3s;
+      margin-top: 0.5rem;
     }
 
     .btn-login:hover {
@@ -145,9 +153,7 @@
       display: none;
     }
 
-    .login-alert.visible {
-      display: block;
-    }
+    .login-alert.visible { display: block; }
 
     /* ── CONTAINER ── */
     .container {
@@ -189,9 +195,32 @@
       cursor: pointer;
     }
 
-    .admin-header-links a:hover {
-      color: var(--bone);
+    .admin-header-links a:hover { color: var(--bone); }
+
+    /* ── GITHUB STATUS BAR ── */
+    .github-status {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.7rem 1rem;
+      border-radius: 4px;
+      margin-bottom: 2rem;
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
+      background: var(--deep);
     }
+
+    .github-status .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .github-status.connected { border-color: rgba(74,222,128,0.3); }
+    .github-status.connected .dot { background: var(--success); }
+    .github-status.disconnected { border-color: rgba(139,26,26,0.3); }
+    .github-status.disconnected .dot { background: var(--blood); }
 
     /* ── FORM SECTION ── */
     .form-section {
@@ -209,7 +238,6 @@
       color: var(--bone);
     }
 
-    /* ── FORM GROUP ── */
     .form-group {
       margin-bottom: 1.5rem;
     }
@@ -236,8 +264,7 @@
       transition: border-color 0.3s;
     }
 
-    .form-group input[type="file"],
-    .form-group input[type="text"],
+    .form-group input[type="text"]:focus,
     .form-group textarea:focus {
       outline: none;
       border-color: var(--rust);
@@ -299,8 +326,35 @@
       display: none;
     }
 
-    .preview-image.visible {
-      display: block;
+    .preview-image.visible { display: block; }
+
+    /* ── UPLOAD PROGRESS ── */
+    .upload-progress {
+      display: none;
+      margin-top: 1rem;
+    }
+
+    .upload-progress.visible { display: block; }
+
+    .progress-bar-wrap {
+      background: var(--surface);
+      border-radius: 4px;
+      height: 6px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--rust);
+      border-radius: 4px;
+      transition: width 0.3s;
+      width: 0%;
+    }
+
+    .progress-label {
+      font-size: 0.85rem;
+      color: var(--muted);
     }
 
     /* ── BUTTONS ── */
@@ -328,15 +382,18 @@
       color: var(--blood);
     }
 
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     .btn-secondary {
       background: transparent;
       color: var(--bone);
       border: 1px solid var(--muted);
     }
 
-    .btn-secondary:hover {
-      border-color: var(--bone);
-    }
+    .btn-secondary:hover { border-color: var(--bone); }
 
     .btn-danger {
       background: transparent;
@@ -360,7 +417,7 @@
     }
 
     .gallery-item {
-      background: var(--deep);
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 4px;
       overflow: hidden;
@@ -379,9 +436,7 @@
       display: block;
     }
 
-    .gallery-item-info {
-      padding: 1rem;
-    }
+    .gallery-item-info { padding: 1rem; }
 
     .gallery-item-title {
       font-family: 'Cormorant Garamond', serif;
@@ -390,6 +445,13 @@
       margin-bottom: 0.5rem;
       color: var(--bone);
       word-break: break-word;
+    }
+
+    .gallery-item-filename {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      word-break: break-all;
     }
 
     .gallery-item-tags {
@@ -425,9 +487,7 @@
       display: none;
     }
 
-    .alert.visible {
-      display: block;
-    }
+    .alert.visible { display: block; }
 
     .alert.success {
       background: rgba(74, 222, 128, 0.1);
@@ -478,6 +538,62 @@
       margin-top: 0.5rem;
     }
 
+    /* ── TAG MANAGER ── */
+    .tag-manager-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+      min-height: 2.5rem;
+    }
+
+    .tag-manager-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      background: rgba(192,57,43,0.15);
+      border: 1px solid var(--rust);
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: var(--bone);
+    }
+
+    .tag-manager-item button {
+      background: none;
+      border: none;
+      color: var(--rust);
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0;
+      transition: color 0.2s;
+    }
+
+    .tag-manager-item button:hover { color: var(--blood); }
+
+    .tag-add-row {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+    }
+
+    .tag-add-row input {
+      flex: 1;
+      padding: 0.7rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--bone);
+      font-family: 'Inter', sans-serif;
+      border-radius: 4px;
+      transition: border-color 0.3s;
+    }
+
+    .tag-add-row input:focus {
+      outline: none;
+      border-color: var(--rust);
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       .admin-header {
@@ -491,20 +607,10 @@
         gap: 0.5rem;
       }
 
-      .tags-container {
-        gap: 0.5rem;
-      }
-
-      .tag-option {
-        padding: 0.5rem 0.8rem;
-        font-size: 0.85rem;
-      }
-
       .gallery-list {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
       }
     }
-
   </style>
 </head>
 <body>
@@ -514,14 +620,21 @@
   <div class="login-card">
     <h2 class="login-title">Acesso Restrito</h2>
     <p class="login-subtitle">Painel de Admin</p>
-    
+
     <div class="login-alert" id="loginAlert"></div>
-    
+
     <form onsubmit="handleLogin(event)">
       <div class="login-form-group">
         <label for="adminPassword">Senha de Acesso</label>
         <input type="password" id="adminPassword" placeholder="Digite sua senha" required autofocus />
       </div>
+
+      <div class="login-form-group">
+        <label for="githubToken">Token do GitHub</label>
+        <input type="password" id="githubToken" placeholder="ghp_..." required />
+        <p class="login-hint">Usado apenas nesta sessão. Não é salvo em nenhum lugar.</p>
+      </div>
+
       <button type="submit" class="btn-login">Acessar</button>
     </form>
   </div>
@@ -529,7 +642,7 @@
 
 <!-- ── ADMIN PANEL ── -->
 <div class="container" id="adminPanel" style="display: none;">
-  <!-- ── HEADER ── -->
+
   <div class="admin-header">
     <h1>Gerenciar Galeria</h1>
     <div class="admin-header-links">
@@ -539,32 +652,38 @@
     </div>
   </div>
 
-  <!-- ── ALERTS ── -->
+  <!-- GitHub status -->
+  <div class="github-status disconnected" id="githubStatus">
+    <span class="dot"></span>
+    <span id="githubStatusText">Verificando conexão com GitHub...</span>
+  </div>
+
   <div class="alert success" id="alertSuccess"></div>
   <div class="alert error" id="alertError"></div>
   <div class="alert info" id="alertInfo"></div>
 
-  <!-- ── STATS ── -->
+  <!-- Stats -->
   <div class="stats">
     <div class="stat-card">
       <div class="stat-number" id="totalImages">0</div>
-      <div class="stat-label">Imagens Total</div>
+      <div class="stat-label">Imagens</div>
     </div>
     <div class="stat-card">
-      <div class="stat-number" id="storageUsed">0</div>
-      <div class="stat-label">Armazenamento (MB)</div>
+      <div class="stat-number" id="pendingSync">0</div>
+      <div class="stat-label">Aguardando Sync</div>
     </div>
   </div>
 
-  <!-- ── FORM ── -->
+  <!-- Form -->
   <div class="form-section">
     <h2>Adicionar Nova Imagem</h2>
-    
+
     <div class="form-group">
       <label for="imageFile">Selecionar Imagem *</label>
-      <input type="file" id="imageFile" accept="image/*" required />
+      <input type="file" id="imageFile" accept="image/jpeg,image/png,image/webp,image/gif" required />
       <div class="preview-container">
         <img id="previewImage" class="preview-image" alt="Preview" />
+        <p id="previewPlaceholder" style="color:var(--muted);font-size:0.9rem;">Nenhuma imagem selecionada</p>
       </div>
     </div>
 
@@ -575,9 +694,7 @@
 
     <div class="form-group">
       <label>Estilos (selecione um ou mais) *</label>
-      <div class="tags-container" id="tagsContainer">
-        <!-- Tags will be inserted here -->
-      </div>
+      <div class="tags-container" id="tagsContainer"></div>
     </div>
 
     <div class="form-group">
@@ -585,123 +702,283 @@
       <textarea id="imageDescription" placeholder="Descreva a tatuagem, significado, etc." rows="3"></textarea>
     </div>
 
-    <button class="btn btn-primary" onclick="addImage()">Adicionar Imagem</button>
-    <button class="btn btn-secondary" onclick="resetForm()">Limpar Formulário</button>
-  </div>
+    <!-- Upload progress -->
+    <div class="upload-progress" id="uploadProgress">
+      <p class="progress-label" id="progressLabel">Fazendo upload...</p>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </div>
 
-  <!-- ── GALLERY LIST ── -->
-  <div class="form-section">
-    <h2>Imagens na Galeria</h2>
-    <div class="gallery-list" id="galleryList">
-      <!-- Items will be inserted here -->
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
+      <button class="btn btn-primary" id="btnAdd" onclick="addImage()">Adicionar e Publicar</button>
+      <button class="btn btn-secondary" onclick="resetForm()">Limpar</button>
     </div>
   </div>
 
-  <!-- ── EXPORT/IMPORT ── -->
+  <!-- Tag Manager -->
   <div class="form-section">
-    <h2>Backup & Restauração</h2>
-    <p style="margin-bottom: 1rem; color: rgba(212,201,176,0.8); font-size: 0.95rem;">
-      Faça backup de suas imagens ou restaure de um arquivo anterior.
+    <h2>Gerenciar Estilos / Tags</h2>
+    <p style="margin-bottom:1.2rem;color:rgba(212,201,176,0.7);font-size:0.9rem;">
+      As tags criadas aqui aparecem automaticamente no formulário de upload.
+    </p>
+    <div class="tag-manager-list" id="tagManagerList"></div>
+    <div class="tag-add-row">
+      <input type="text" id="newTagInput" placeholder="Nova tag (ex: Realismo, Fine Line...)" maxlength="40"
+        onkeydown="if(event.key==='Enter'){event.preventDefault();addTag();}" />
+      <button class="btn btn-primary" onclick="addTag()">Adicionar</button>
+    </div>
+  </div>
+
+  <!-- Gallery list -->
+  <div class="form-section">
+    <h2>Imagens na Galeria</h2>
+    <div class="gallery-list" id="galleryList"></div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div id="editModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:20000;align-items:center;justify-content:center;padding:2rem;">
+    <div style="background:var(--deep);border:1px solid var(--border);border-radius:4px;width:100%;max-width:500px;padding:2rem;max-height:90vh;overflow-y:auto;">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:1.5rem;">Editar Imagem</h2>
+      <input type="hidden" id="editId" />
+
+      <div class="form-group">
+        <label for="editTitle">Título *</label>
+        <input type="text" id="editTitle" />
+      </div>
+
+      <div class="form-group">
+        <label>Estilos *</label>
+        <div class="tags-container" id="editTagsContainer"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="editDescription">Descrição</label>
+        <textarea id="editDescription" rows="3"></textarea>
+      </div>
+
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
+        <button class="btn btn-primary" onclick="saveEdit()">Salvar</button>
+        <button class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Backup -->
+  <div class="form-section">
+    <h2>Backup Local</h2>
+    <p style="margin-bottom:1rem;color:rgba(212,201,176,0.8);font-size:0.95rem;">
+      Exporta os metadados (títulos, estilos, nomes de arquivo) em JSON. As imagens ficam no GitHub.
     </p>
     <button class="btn btn-secondary" onclick="exportData()">📥 Fazer Backup</button>
     <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 Restaurar Backup</button>
-    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)" />
+    <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(event)" />
   </div>
 
 </div>
 
 <script>
-  const STYLES = ['Dark Art', 'Blackwork', 'Colorido', 'Ornamental Orgânica'];
-  const STORAGE_KEY = 'micaelGallery';
-  const AUTH_KEY = 'micaelAdminAuth';
-  const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB por imagem
-  const PASSWORD_HASH = 'b6e0b3c3e7f8d9c6b3a9f8e7d6c5b4a3'; // SHA-256 de "Salmo31@$2"
+  // ── CONFIG ──
+  const STORAGE_KEY  = 'micaelGallery_v2';
+  const TAGS_KEY     = 'micaelTags';
+  const AUTH_KEY     = 'micaelAdminAuth';
+  const REPO_OWNER   = 'micaeltatuagem';
+  const REPO_NAME    = 'tatuagem';
+  const BRANCH       = 'main';
+  const IMAGE_FOLDER = 'galeria';
 
-  // ── CHECK AUTHENTICATION ── 
-  function checkAuth() {
-    const auth = sessionStorage.getItem(AUTH_KEY);
-    if (!auth) {
-      document.getElementById('loginScreen').classList.remove('hidden');
-      document.getElementById('adminPanel').style.display = 'none';
-    } else {
-      document.getElementById('loginScreen').classList.add('hidden');
-      document.getElementById('adminPanel').style.display = 'block';
-      init();
+  const DEFAULT_TAGS = ['Dark Art', 'Blackwork', 'Colorido', 'Ornamental'];
+
+  let GH_TOKEN = '';
+
+  // ── TAG STORAGE ──
+  function getTags() {
+    try { return JSON.parse(localStorage.getItem(TAGS_KEY)) || DEFAULT_TAGS; }
+    catch { return DEFAULT_TAGS; }
+  }
+
+  function saveTags(tags) {
+    localStorage.setItem(TAGS_KEY, JSON.stringify(tags));
+  }
+
+  function addTag() {
+    const input = document.getElementById('newTagInput');
+    const name  = input.value.trim();
+    if (!name) return;
+
+    const tags = getTags();
+    if (tags.includes(name)) {
+      showAlert('error', '❌ Essa tag já existe.');
+      return;
     }
+    tags.push(name);
+    saveTags(tags);
+    input.value = '';
+    renderTagManager();
+    renderTags();
+    showAlert('success', `✅ Tag "${name}" criada!`);
   }
 
-  // ── SIMPLE SHA256 HASH ── 
-  async function sha256(str) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(buf)).map(x => x.toString(16).padStart(2, '0')).join('');
-  }
+  function deleteTag(name) {
+    if (!confirm(`Deletar a tag "${name}"? Ela será removida das imagens que a usam.`)) return;
+    const tags = getTags().filter(t => t !== name);
+    saveTags(tags);
 
-  // ── HANDLE LOGIN ── 
-  async function handleLogin(e) {
-    e.preventDefault();
-    const passwordInput = document.getElementById('adminPassword');
-    const password = passwordInput.value;
-    const alert = document.getElementById('loginAlert');
+    // Remove from existing gallery items
+    const gallery = getGallery();
+    gallery.forEach(img => {
+      img.styles = (img.styles || []).filter(s => s !== name);
+    });
+    saveGallery(gallery);
 
-    // Simple password check (compare directly for security)
-    if (password === 'Salmo31@$2') {
-      sessionStorage.setItem(AUTH_KEY, 'true');
-      document.getElementById('loginScreen').classList.add('hidden');
-      document.getElementById('adminPanel').style.display = 'block';
-      passwordInput.value = '';
-      init();
-    } else {
-      alert.textContent = '❌ Senha incorreta. Tente novamente.';
-      alert.classList.add('visible');
-      passwordInput.value = '';
-      setTimeout(() => alert.classList.remove('visible'), 3000);
-    }
-  }
-
-  // ── LOGOUT ── 
-  function logout() {
-    if (confirm('Deseja realmente sair?')) {
-      sessionStorage.removeItem(AUTH_KEY);
-      location.reload();
-    }
-  }
-
-  // ── INITIALIZE ── 
-  function init() {
+    renderTagManager();
     renderTags();
     renderGallery();
-    updateStats();
+    showAlert('success', `✅ Tag "${name}" removida.`);
   }
 
-  // ── TAGS ── 
-  function renderTags() {
-    const container = document.getElementById('tagsContainer');
-    container.innerHTML = STYLES.map(style => `
-      <div class="tag-option">
-        <input type="checkbox" id="tag-${style}" value="${style}" />
-        <label for="tag-${style}">${style}</label>
+  function renderTagManager() {
+    const tags = getTags();
+    const container = document.getElementById('tagManagerList');
+    if (tags.length === 0) {
+      container.innerHTML = '<p style="color:var(--muted);font-size:0.9rem;">Nenhuma tag ainda.</p>';
+      return;
+    }
+    container.innerHTML = tags.map(t => `
+      <div class="tag-manager-item">
+        <span>${t}</span>
+        <button onclick="deleteTag('${t.replace(/'/g, "\\'")}')" title="Deletar tag">✕</button>
       </div>
     `).join('');
   }
 
-  // ── IMAGE PREVIEW ── 
+  // ── AUTH ──
+  function checkAuth() {
+    const auth = sessionStorage.getItem(AUTH_KEY);
+    const token = sessionStorage.getItem('ghToken');
+    if (auth && token) {
+      GH_TOKEN = token;
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('adminPanel').style.display = 'block';
+      init();
+    }
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    const password = document.getElementById('adminPassword').value;
+    const token    = document.getElementById('githubToken').value.trim();
+    const alertEl  = document.getElementById('loginAlert');
+
+    if (password !== 'Salmo31@$2') {
+      alertEl.textContent = '❌ Senha incorreta.';
+      alertEl.classList.add('visible');
+      document.getElementById('adminPassword').value = '';
+      setTimeout(() => alertEl.classList.remove('visible'), 3000);
+      return;
+    }
+
+    if (!token.startsWith('ghp_') && !token.startsWith('github_pat_')) {
+      alertEl.textContent = '❌ Token inválido. Deve começar com ghp_ ou github_pat_';
+      alertEl.classList.add('visible');
+      setTimeout(() => alertEl.classList.remove('visible'), 4000);
+      return;
+    }
+
+    // Validate token against GitHub API
+    alertEl.textContent = '⏳ Validando token...';
+    alertEl.style.background = 'rgba(212,201,176,0.05)';
+    alertEl.style.borderColor = 'var(--border)';
+    alertEl.style.color = 'var(--bone)';
+    alertEl.classList.add('visible');
+
+    try {
+      const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
+        headers: { Authorization: `token ${token}` }
+      });
+
+      if (!res.ok) throw new Error('Token sem acesso ao repositório');
+
+      GH_TOKEN = token;
+      sessionStorage.setItem(AUTH_KEY, 'true');
+      sessionStorage.setItem('ghToken', token);
+
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('adminPanel').style.display = 'block';
+      document.getElementById('adminPassword').value = '';
+      document.getElementById('githubToken').value = '';
+      init();
+
+    } catch (err) {
+      alertEl.textContent = '❌ ' + err.message;
+      alertEl.style.background = 'rgba(139,26,26,0.2)';
+      alertEl.style.borderColor = 'var(--blood)';
+      alertEl.style.color = 'var(--blood)';
+      setTimeout(() => alertEl.classList.remove('visible'), 4000);
+    }
+  }
+
+  function logout() {
+    if (confirm('Deseja realmente sair?')) {
+      sessionStorage.clear();
+      location.reload();
+    }
+  }
+
+  // ── INIT ──
+  async function init() {
+    renderTagManager();
+    renderTags();
+    renderGallery();
+    updateStats();
+    await checkGitHubStatus();
+  }
+
+  // ── GITHUB STATUS ──
+  async function checkGitHubStatus() {
+    const statusEl   = document.getElementById('githubStatus');
+    const statusText = document.getElementById('githubStatusText');
+
+    try {
+      const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
+        headers: { Authorization: `token ${GH_TOKEN}` }
+      });
+
+      if (res.ok) {
+        statusEl.className = 'github-status connected';
+        statusText.textContent = `✓ Conectado · micaeltatuagem/tatuagem`;
+      } else {
+        throw new Error();
+      }
+    } catch {
+      statusEl.className = 'github-status disconnected';
+      statusText.textContent = '✗ Sem conexão com GitHub. Uploads não funcionarão.';
+    }
+  }
+
+  // ── TAGS ──
+  function renderTags() {
+    const tags = getTags();
+    document.getElementById('tagsContainer').innerHTML = tags.map(s => `
+      <div class="tag-option">
+        <input type="checkbox" id="tag-${s}" value="${s}" />
+        <label for="tag-${s}">${s}</label>
+      </div>
+    `).join('');
+  }
+
+  // ── FILE PREVIEW ──
   document.addEventListener('DOMContentLoaded', () => {
-    const fileInput = document.getElementById('imageFile');
-    fileInput.addEventListener('change', (e) => {
+    document.getElementById('imageFile').addEventListener('change', e => {
       const file = e.target.files[0];
       if (!file) return;
 
-      if (file.size > MAX_FILE_SIZE) {
-        showAlert('error', '❌ Arquivo muito grande! Máximo 2MB por imagem.');
-        e.target.value = '';
-        return;
-      }
-
       const reader = new FileReader();
-      reader.onload = (event) => {
+      reader.onload = ev => {
         const preview = document.getElementById('previewImage');
-        preview.src = event.target.result;
+        preview.src = ev.target.result;
         preview.classList.add('visible');
+        document.getElementById('previewPlaceholder').style.display = 'none';
       };
       reader.readAsDataURL(file);
     });
@@ -709,14 +986,69 @@
     checkAuth();
   });
 
-  // ── ADD IMAGE ── 
-  function addImage() {
-    const fileInput = document.getElementById('imageFile');
+  // ── UPLOAD TO GITHUB ──
+  async function uploadToGitHub(file, filename) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        // e.target.result is a data URL: "data:image/jpeg;base64,XXXX"
+        const base64 = e.target.result.split(',')[1];
+
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${IMAGE_FOLDER}/${filename}`;
+
+        // Check if file already exists (need SHA for update)
+        let sha = null;
+        try {
+          const checkRes = await fetch(url, {
+            headers: { Authorization: `token ${GH_TOKEN}` }
+          });
+          if (checkRes.ok) {
+            const existing = await checkRes.json();
+            sha = existing.sha;
+          }
+        } catch {}
+
+        const body = {
+          message: `Adiciona imagem: ${filename}`,
+          content: base64,
+          branch: BRANCH
+        };
+        if (sha) body.sha = sha;
+
+        const res = await fetch(url, {
+          method: 'PUT',
+          headers: {
+            Authorization: `token ${GH_TOKEN}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          reject(new Error(err.message || 'Erro no upload'));
+          return;
+        }
+
+        const data = await res.json();
+        // Return the raw GitHub CDN URL
+        const rawUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${IMAGE_FOLDER}/${filename}`;
+        resolve(rawUrl);
+      };
+      reader.onerror = () => reject(new Error('Erro ao ler arquivo'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ── ADD IMAGE ──
+  async function addImage() {
+    const fileInput  = document.getElementById('imageFile');
     const titleInput = document.getElementById('imageTitle');
-    const descInput = document.getElementById('imageDescription');
-    
-    if (!fileInput.files[0] || !titleInput.value) {
-      showAlert('error', '❌ Preencha título e selecione uma imagem!');
+    const descInput  = document.getElementById('imageDescription');
+    const btnAdd     = document.getElementById('btnAdd');
+
+    if (!fileInput.files[0] || !titleInput.value.trim()) {
+      showAlert('error', '❌ Preencha o título e selecione uma imagem!');
       return;
     }
 
@@ -726,60 +1058,126 @@
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const imageData = event.target.result;
+    const file = fileInput.files[0];
+    const ext  = file.name.split('.').pop().toLowerCase();
+    const slug = titleInput.value.trim()
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+    const filename = `${Date.now()}-${slug}.${ext}`;
+
+    // Show progress
+    btnAdd.disabled = true;
+    const progressEl = document.getElementById('uploadProgress');
+    const progressBar = document.getElementById('progressBar');
+    const progressLabel = document.getElementById('progressLabel');
+    progressEl.classList.add('visible');
+    progressLabel.textContent = '⏳ Fazendo upload para o GitHub...';
+    progressBar.style.width = '30%';
+
+    try {
+      progressBar.style.width = '60%';
+      const imageUrl = await uploadToGitHub(file, filename);
+      progressBar.style.width = '90%';
+
+      // Save metadata locally
       const gallery = getGallery();
-      
-      gallery.push({
+      gallery.unshift({
         id: Date.now(),
-        title: titleInput.value,
-        image: imageData,
+        title: titleInput.value.trim(),
+        filename,
+        imageUrl,
         styles: selectedTags,
         description: descInput.value,
         createdAt: new Date().toISOString()
       });
-
       saveGallery(gallery);
+
+      progressBar.style.width = '100%';
+      progressLabel.textContent = '✅ Publicado!';
+
+      setTimeout(() => {
+        progressEl.classList.remove('visible');
+        progressBar.style.width = '0%';
+      }, 2000);
+
       renderGallery();
       updateStats();
       resetForm();
-      showAlert('success', '✅ Imagem adicionada com sucesso!');
-    };
-    reader.readAsDataURL(fileInput.files[0]);
+      showAlert('success', `✅ "${titleInput.value.trim()}" publicada no GitHub Pages!`);
+
+    } catch (err) {
+      progressEl.classList.remove('visible');
+      progressBar.style.width = '0%';
+      showAlert('error', '❌ Erro no upload: ' + err.message);
+    } finally {
+      btnAdd.disabled = false;
+    }
   }
 
-  // ── DELETE IMAGE ── 
-  function deleteImage(id) {
-    if (!confirm('Tem certeza que deseja deletar esta imagem?')) return;
-    
+  // ── DELETE IMAGE ──
+  async function deleteImage(id) {
+    if (!confirm('Deletar esta imagem do GitHub também?')) return;
+
     const gallery = getGallery();
-    const filtered = gallery.filter(img => img.id !== id);
+    const img = gallery.find(i => i.id === id);
+    if (!img) return;
+
+    // Try to delete from GitHub
+    if (img.filename) {
+      try {
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${IMAGE_FOLDER}/${img.filename}`;
+        const checkRes = await fetch(url, { headers: { Authorization: `token ${GH_TOKEN}` } });
+
+        if (checkRes.ok) {
+          const existing = await checkRes.json();
+          await fetch(url, {
+            method: 'DELETE',
+            headers: {
+              Authorization: `token ${GH_TOKEN}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              message: `Remove imagem: ${img.filename}`,
+              sha: existing.sha,
+              branch: BRANCH
+            })
+          });
+        }
+      } catch (err) {
+        console.warn('Não foi possível deletar do GitHub:', err);
+      }
+    }
+
+    const filtered = gallery.filter(i => i.id !== id);
     saveGallery(filtered);
     renderGallery();
     updateStats();
     showAlert('success', '✅ Imagem removida!');
   }
 
-  // ── RENDER GALLERY ── 
+  // ── RENDER GALLERY ──
   function renderGallery() {
-    const gallery = getGallery();
+    const gallery   = getGallery();
     const container = document.getElementById('galleryList');
 
     if (gallery.length === 0) {
-      container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--muted); padding: 2rem;">Nenhuma imagem ainda. Adicione a primeira acima! 👆</p>';
+      container.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--muted);padding:2rem;">Nenhuma imagem ainda. Adicione a primeira acima! 👆</p>';
       return;
     }
 
     container.innerHTML = gallery.map(img => `
       <div class="gallery-item">
-        <img src="${img.image}" class="gallery-item-image" alt="${img.title}" />
+        <img src="${img.imageUrl || img.image || ''}" class="gallery-item-image" alt="${img.title}" loading="lazy" />
         <div class="gallery-item-info">
           <div class="gallery-item-title">${img.title}</div>
+          <div class="gallery-item-filename">${img.filename || '(local)'}</div>
           <div class="gallery-item-tags">
-            ${img.styles.map(s => `<span class="tag">${s}</span>`).join('')}
+            ${(img.styles || []).map(s => `<span class="tag">${s}</span>`).join('')}
           </div>
           <div class="gallery-item-actions">
+            <button class="btn btn-secondary" style="padding:0.4rem 0.8rem;font-size:0.8rem;" onclick="openEditModal(${img.id})">Editar</button>
             <button class="btn btn-danger" onclick="deleteImage(${img.id})">Deletar</button>
           </div>
         </div>
@@ -787,80 +1185,129 @@
     `).join('');
   }
 
-  // ── RESET FORM ── 
+  // ── RESET FORM ──
   function resetForm() {
     document.getElementById('imageFile').value = '';
     document.getElementById('imageTitle').value = '';
     document.getElementById('imageDescription').value = '';
     document.querySelectorAll('#tagsContainer input').forEach(cb => cb.checked = false);
-    document.getElementById('previewImage').classList.remove('visible');
+    const preview = document.getElementById('previewImage');
+    preview.classList.remove('visible');
+    preview.src = '';
+    document.getElementById('previewPlaceholder').style.display = '';
   }
 
-  // ── STATS ── 
+  // ── STATS ──
   function updateStats() {
     const gallery = getGallery();
-    const totalSize = gallery.reduce((acc, img) => acc + img.image.length, 0);
-    const sizeInMB = (totalSize / (1024 * 1024)).toFixed(2);
-    
     document.getElementById('totalImages').textContent = gallery.length;
-    document.getElementById('storageUsed').textContent = sizeInMB;
+    document.getElementById('pendingSync').textContent = gallery.filter(i => !i.imageUrl).length;
   }
 
-  // ── EXPORT DATA ── 
+  // ── EXPORT / IMPORT ──
   function exportData() {
     const gallery = getGallery();
-    const dataStr = JSON.stringify(gallery, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
+    // Export without base64 data (just metadata + URLs)
+    const exportGallery = gallery.map(({ image, ...rest }) => rest);
+    const blob = new Blob([JSON.stringify(exportGallery, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
     link.download = `galeria-backup-${new Date().toISOString().split('T')[0]}.json`;
     link.click();
     URL.revokeObjectURL(url);
-    showAlert('success', '✅ Backup realizado com sucesso!');
+    showAlert('success', '✅ Backup realizado!');
   }
 
-  // ── IMPORT DATA ── 
   function importData(event) {
     const file = event.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = e => {
       try {
         const data = JSON.parse(e.target.result);
         if (!Array.isArray(data)) throw new Error('Formato inválido');
-        
         saveGallery(data);
         renderGallery();
         updateStats();
-        showAlert('success', '✅ Backup restaurado com sucesso!');
+        showAlert('success', '✅ Backup restaurado!');
         document.getElementById('importFile').value = '';
       } catch (err) {
-        showAlert('error', '❌ Erro ao restaurar backup: ' + err.message);
+        showAlert('error', '❌ Erro ao restaurar: ' + err.message);
       }
     };
     reader.readAsText(file);
   }
 
-  // ── STORAGE ── 
+  // ── STORAGE ──
   function getGallery() {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
   }
 
   function saveGallery(gallery) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(gallery));
   }
 
-  // ── ALERTS ── 
+  // ── EDIT MODAL ──
+  function openEditModal(id) {
+    const gallery = getGallery();
+    const img = gallery.find(i => i.id === id);
+    if (!img) return;
+
+    document.getElementById('editId').value = id;
+    document.getElementById('editTitle').value = img.title;
+    document.getElementById('editDescription').value = img.description || '';
+
+    // Render tags with current selection
+    const tags = getTags();
+    document.getElementById('editTagsContainer').innerHTML = tags.map(s => `
+      <div class="tag-option">
+        <input type="checkbox" id="etag-${s}" value="${s}" ${(img.styles||[]).includes(s) ? 'checked' : ''} />
+        <label for="etag-${s}">${s}</label>
+      </div>
+    `).join('');
+
+    const modal = document.getElementById('editModal');
+    modal.style.display = 'flex';
+  }
+
+  function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+  }
+
+  function saveEdit() {
+    const id    = parseInt(document.getElementById('editId').value);
+    const title = document.getElementById('editTitle').value.trim();
+    const desc  = document.getElementById('editDescription').value;
+    const styles = Array.from(document.querySelectorAll('#editTagsContainer input:checked')).map(cb => cb.value);
+
+    if (!title) { showAlert('error', '❌ O título não pode ser vazio.'); return; }
+    if (styles.length === 0) { showAlert('error', '❌ Selecione pelo menos um estilo.'); return; }
+
+    const gallery = getGallery();
+    const idx = gallery.findIndex(i => i.id === id);
+    if (idx === -1) return;
+
+    gallery[idx] = { ...gallery[idx], title, description: desc, styles };
+    saveGallery(gallery);
+    closeEditModal();
+    renderGallery();
+    showAlert('success', '✅ Informações atualizadas!');
+  }
+
+  // Close modal clicking outside
+  document.getElementById('editModal').addEventListener('click', function(e) {
+    if (e.target === this) closeEditModal();
+  });
+
+  // ── ALERTS ──
   function showAlert(type, message) {
-    const alert = document.getElementById(`alert${type.charAt(0).toUpperCase() + type.slice(1)}`);
-    alert.textContent = message;
-    alert.classList.add('visible');
-    setTimeout(() => alert.classList.remove('visible'), 5000);
+    const el = document.getElementById(`alert${type.charAt(0).toUpperCase() + type.slice(1)}`);
+    el.textContent = message;
+    el.classList.add('visible');
+    setTimeout(() => el.classList.remove('visible'), 6000);
   }
 </script>
-
 </body>
 </html>
