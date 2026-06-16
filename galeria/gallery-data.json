@@ -1,5 +1,17 @@
 [
   {
+    "id": 1781647269258,
+    "title": "Tatuagem Águia",
+    "filename": "1781647267215-tatuagem-aguia.png",
+    "imageUrl": "galeria/1781647267215-tatuagem-aguia.png",
+    "styles": [
+      "Colorido",
+      "Tradicional"
+    ],
+    "description": "",
+    "createdAt": "2026-06-16T22:01:09.258Z"
+  },
+  {
     "id": 1781643496604,
     "title": "Tatuagem Thor",
     "filename": "1781643494250-tatuagem-thor.png",
