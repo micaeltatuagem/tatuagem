@@ -787,6 +787,8 @@
   const BRANCH       = 'main';
   const IMAGE_FOLDER = 'galeria';
   const DATA_PATH    = `${IMAGE_FOLDER}/gallery-data.json`;
+  const SITEMAP_PATH = 'sitemap.xml';
+  const SITE_URL     = 'https://micaeltatuagem.github.io/tatuagem';
 
   const DEFAULT_TAGS = ['Dark Art', 'Blackwork', 'Colorido', 'Ornamental'];
 
@@ -1269,6 +1271,98 @@
   async function saveGallery(gallery) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(gallery));
     await commitGalleryData(gallery);
+    // O sitemap de imagens é importante para SEO, mas não deve travar o
+    // salvamento principal se a chamada falhar por algum motivo pontual.
+    try {
+      await commitSitemap(gallery);
+    } catch (err) {
+      console.warn('Não foi possível atualizar o sitemap.xml:', err);
+    }
+  }
+
+  function escapeXml(str) {
+    return String(str || '').replace(/[<>&'"]/g, c => ({
+      '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;'
+    }[c]));
+  }
+
+  // Monta o sitemap.xml com uma entrada <image:image> para cada foto da
+  // galeria, aninhada dentro da URL da galeria.html — é o jeito mais direto
+  // de avisar o Google Imagens sobre cada foto, sem depender do tempo de
+  // rastreamento/renderização de JavaScript.
+  function buildSitemapXml(gallery) {
+    const today = new Date().toISOString().split('T')[0];
+
+    const imageEntries = gallery.map(item => {
+      const loc = `${SITE_URL}/${item.imageUrl || ''}`;
+      const styles = (item.styles || []).join(', ');
+      const caption = escapeXml(
+        `Tatuagem ${styles ? styles + ' ' : ''}— ${item.title || ''} — Micael Faccio, tatuador em Muriaé MG`.trim()
+      );
+      const title = escapeXml(item.title || '');
+      return `      <image:image>
+        <image:loc>${escapeXml(loc)}</image:loc>
+        <image:title>${title}</image:title>
+        <image:caption>${caption}</image:caption>
+      </image:image>`;
+    }).join('\n');
+
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>${SITE_URL}/</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/galeria.html</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+${imageEntries}
+  </url>
+</urlset>
+`;
+  }
+
+  // Comita o sitemap.xml atualizado no repositório, mesmo padrão usado para
+  // imagens e para o gallery-data.json (checa SHA existente, depois PUT).
+  async function commitSitemap(gallery) {
+    const xml = buildSitemapXml(gallery);
+    const content = btoa(unescape(encodeURIComponent(xml)));
+    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${SITEMAP_PATH}`;
+
+    let sha = null;
+    try {
+      const checkRes = await fetch(url, { headers: { Authorization: `token ${GH_TOKEN}` } });
+      if (checkRes.ok) {
+        const existing = await checkRes.json();
+        sha = existing.sha;
+      }
+    } catch {}
+
+    const body = {
+      message: 'Atualiza sitemap.xml com imagens da galeria',
+      content,
+      branch: BRANCH
+    };
+    if (sha) body.sha = sha;
+
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        Authorization: `token ${GH_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error('Falha ao atualizar sitemap.xml: ' + (err.message || 'erro desconhecido'));
+    }
   }
 
   // Busca o gallery-data.json publicado no repo e sincroniza o localStorage

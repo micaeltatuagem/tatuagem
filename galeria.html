@@ -6,6 +6,26 @@
   <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <title>Galeria · Micael Tatuagem</title>
+  <meta name="description" content="Galeria de tatuagens de Micael Faccio — blackwork, dark art, colorido e ornamental. Trabalhos autorais realizados em Muriaé-MG." />
+  <meta name="keywords" content="galeria tatuagem Muriaé, portfólio tatuador MG, blackwork Muriaé, dark art tatuagem, tatuagem ornamental Muriaé, Micael Faccio tatuagem" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Micael Faccio" />
+  <link rel="canonical" href="https://micaeltatuagem.github.io/tatuagem/galeria.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Galeria · Micael Tatuagem" />
+  <meta property="og:description" content="Trabalhos autorais em blackwork, dark art, colorido e ornamental. Tatuador em Muriaé-MG." />
+  <meta property="og:image" content="https://micaeltatuagem.github.io/tatuagem/hero-bg.webp" />
+  <meta property="og:url" content="https://micaeltatuagem.github.io/tatuagem/galeria.html" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:site_name" content="Micael Tatuagem" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Galeria · Micael Tatuagem" />
+  <meta name="twitter:description" content="Trabalhos autorais em blackwork, dark art, colorido e ornamental. Muriaé-MG." />
+  <meta name="twitter:image" content="https://micaeltatuagem.github.io/tatuagem/hero-bg.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
@@ -627,6 +647,7 @@
 
 <script>
   const DATA_PATH = 'galeria/gallery-data.json';
+  const SITE_URL  = 'https://micaeltatuagem.github.io/tatuagem';
   let galleryData = [];
   let filteredData = [];
   let currentFilterStyle = null;
@@ -639,6 +660,7 @@
     renderGallery();
     setupLightboxListeners();
     setupFadeInObserver();
+    injectStructuredData();
   }
 
   // ── LOAD GALLERY ── 
@@ -651,6 +673,41 @@
       galleryData = [];
     }
     filteredData = [...galleryData];
+  }
+
+  function escapeHtml(str) {
+    return String(str || '').replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  // Alt text mais descritivo para SEO de imagens: estilo + título + contexto
+  // do tatuador/cidade, em vez de só o título cru.
+  function buildAltText(img) {
+    const styles = (img.styles || []).join(', ');
+    const stylePart = styles ? `Tatuagem ${styles}` : 'Tatuagem';
+    return escapeHtml(`${stylePart} — ${img.title || ''} — Micael Faccio, tatuador em Muriaé MG`);
+  }
+
+  // Injeta dados estruturados (Schema.org ImageGallery) com base nas imagens
+  // já carregadas. É feito via JS porque a lista de imagens só existe em
+  // tempo de execução (vem do gallery-data.json), mas o Google processa
+  // JSON-LD inserido dinamicamente normalmente, desde que esteja no DOM
+  // depois da renderização.
+  function injectStructuredData() {
+    if (!galleryData.length) return;
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'ImageGallery',
+      name: 'Galeria de Tatuagens — Micael Faccio',
+      description: 'Trabalhos autorais em blackwork, dark art, colorido e ornamental, realizados por Micael Faccio em Muriaé-MG.',
+      url: `${SITE_URL}/galeria.html`,
+      image: galleryData.map(img => `${SITE_URL}/${img.imageUrl || img.image || ''}`)
+    };
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify(schema);
+    document.head.appendChild(script);
   }
 
   // ── RENDER FILTERS ── 
@@ -702,13 +759,7 @@
 
     grid.innerHTML = filteredData.map((img, idx) => `
       <div class="gallery-item" onclick="openLightbox(${idx})">
-        <img src="${img.imageUrl || img.image}" alt="${img.title}" loading="lazy" />
-        <div class="gallery-info">
-          <div class="gallery-info-title">${img.title}</div>
-          <div class="gallery-info-tags">
-            ${(img.styles || []).map(s => `<span class="tag">${s}</span>`).join('')}
-          </div>
-        </div>
+        <img src="${img.imageUrl || img.image}" alt="${buildAltText(img)}" loading="lazy" />
       </div>
     `).join('');
   }
@@ -728,10 +779,12 @@
 
   function updateLightbox() {
     const img = filteredData[currentImageIndex];
-    document.getElementById('lightboxImage').src = img.imageUrl || img.image;
+    const lightboxImg = document.getElementById('lightboxImage');
+    lightboxImg.src = img.imageUrl || img.image;
+    lightboxImg.alt = buildAltText(img);
     document.getElementById('lightboxTitle').textContent = img.title;
     
-    const tagsHtml = (img.styles || []).map(s => `<span class="lightbox-tag">${s}</span>`).join('');
+    const tagsHtml = (img.styles || []).map(s => `<span class="lightbox-tag">${escapeHtml(s)}</span>`).join('');
     document.getElementById('lightboxTags').innerHTML = tagsHtml;
     
     document.getElementById('lightboxCounter').textContent = `${currentImageIndex + 1} / ${filteredData.length}`;

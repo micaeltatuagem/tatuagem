@@ -307,7 +307,6 @@
       .pilares li strong { font-size: 0.85rem; }
       .section-label { font-size: 0.82rem; letter-spacing: 0.18em; }
       .carrossel-title { font-size: 1.05rem; }
-      .carrossel-tags span { font-size: 0.78rem; }
       .processo-step p { font-size: 1rem; line-height: 1.8; color: rgba(212,201,176,0.9); }
       .contato-sub { font-size: 1.05rem; }
       .footer-links a { font-size: 0.88rem; }
@@ -417,23 +416,13 @@
       font-size: 1.3rem;
       font-weight: 700;
       color: var(--bone);
-      margin-bottom: 0.4rem;
-    }
-    .carrossel-tags {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-    .carrossel-tags span {
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--rust);
+      text-shadow: 0 2px 6px rgba(0,0,0,0.9), 0 0 14px rgba(0,0,0,0.6);
     }
     .carrossel-counter {
       font-size: 0.85rem;
-      color: rgba(212,201,176,0.8);
+      color: rgba(212,201,176,0.9);
       white-space: nowrap;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.9);
     }
     .carrossel-nav {
       position: absolute;
@@ -668,7 +657,6 @@
         <div class="carrossel-overlay" id="carrosselOverlay" style="display:none;">
           <div>
             <div class="carrossel-title" id="carrosselTitle"></div>
-            <div class="carrossel-tags" id="carrosselTags"></div>
           </div>
           <div class="carrossel-counter" id="carrosselCounter"></div>
         </div>
@@ -691,7 +679,6 @@
     const imgEl     = document.getElementById('carrosselImg');
     const overlayEl = document.getElementById('carrosselOverlay');
     const titleEl   = document.getElementById('carrosselTitle');
-    const tagsEl    = document.getElementById('carrosselTags');
     const counterEl = document.getElementById('carrosselCounter');
     const prevBtn   = document.getElementById('carrosselPrev');
     const nextBtn   = document.getElementById('carrosselNext');
@@ -699,6 +686,18 @@
     let items = [];
     let current = 0;
     let autoplayTimer = null;
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+
+    function buildAltText(img) {
+      const styles = (img.styles || []).join(', ');
+      const stylePart = styles ? `Tatuagem ${styles}` : 'Tatuagem';
+      return escapeHtml(`${stylePart} — ${img.title || ''} — Micael Faccio, tatuador em Muriaé MG`);
+    }
 
     async function loadCarrossel() {
       try {
@@ -729,9 +728,8 @@
       imgEl.classList.remove('visible');
       setTimeout(() => {
         imgEl.src = item.imageUrl || item.image || '';
-        imgEl.alt = item.title || '';
+        imgEl.alt = buildAltText(item);
         titleEl.textContent = item.title || '';
-        tagsEl.innerHTML = (item.styles || []).map(s => `<span>${s}</span>`).join('');
         counterEl.textContent = `${index + 1} / ${items.length}`;
         imgEl.onload = () => imgEl.classList.add('visible');
       }, 150);
