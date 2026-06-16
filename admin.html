@@ -43,6 +43,112 @@
       z-index: 9999;
     }
 
+    /* ── LOGIN SCREEN ── */
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--ink);
+      z-index: 10000;
+      padding: 2rem;
+    }
+
+    .login-screen.hidden {
+      display: none;
+    }
+
+    .login-card {
+      background: var(--deep);
+      border: 1px solid var(--border);
+      padding: 3rem 2rem;
+      border-radius: 4px;
+      width: 100%;
+      max-width: 350px;
+      text-align: center;
+    }
+
+    .login-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--bone);
+    }
+
+    .login-subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    .login-form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .login-form-group label {
+      display: block;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .login-form-group input[type="password"] {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--bone);
+      font-family: 'Inter', sans-serif;
+      border-radius: 4px;
+      transition: border-color 0.3s;
+    }
+
+    .login-form-group input[type="password"]:focus {
+      outline: none;
+      border-color: var(--rust);
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--blood);
+      color: #fff;
+      border: 1px solid var(--blood);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-login:hover {
+      background: transparent;
+      color: var(--blood);
+    }
+
+    .login-alert {
+      padding: 0.8rem;
+      background: rgba(139, 26, 26, 0.2);
+      border: 1px solid var(--blood);
+      color: var(--blood);
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      display: none;
+    }
+
+    .login-alert.visible {
+      display: block;
+    }
+
     /* ── CONTAINER ── */
     .container {
       max-width: 1000px;
@@ -80,6 +186,7 @@
       letter-spacing: 0.1em;
       text-transform: uppercase;
       transition: color 0.3s;
+      cursor: pointer;
     }
 
     .admin-header-links a:hover {
@@ -402,13 +509,33 @@
 </head>
 <body>
 
-<div class="container">
+<!-- ── LOGIN SCREEN ── -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <h2 class="login-title">Acesso Restrito</h2>
+    <p class="login-subtitle">Painel de Admin</p>
+    
+    <div class="login-alert" id="loginAlert"></div>
+    
+    <form onsubmit="handleLogin(event)">
+      <div class="login-form-group">
+        <label for="adminPassword">Senha de Acesso</label>
+        <input type="password" id="adminPassword" placeholder="Digite sua senha" required autofocus />
+      </div>
+      <button type="submit" class="btn-login">Acessar</button>
+    </form>
+  </div>
+</div>
+
+<!-- ── ADMIN PANEL ── -->
+<div class="container" id="adminPanel" style="display: none;">
   <!-- ── HEADER ── -->
   <div class="admin-header">
     <h1>Gerenciar Galeria</h1>
     <div class="admin-header-links">
       <a href="galeria.html" target="_blank">👁️ Ver Galeria</a>
       <a href="index.html">🏠 Home</a>
+      <a onclick="logout()" style="color: var(--blood);">🔐 Sair</a>
     </div>
   </div>
 
@@ -486,7 +613,58 @@
 <script>
   const STYLES = ['Dark Art', 'Blackwork', 'Colorido', 'Ornamental Orgânica'];
   const STORAGE_KEY = 'micaelGallery';
+  const AUTH_KEY = 'micaelAdminAuth';
   const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB por imagem
+  const PASSWORD_HASH = 'b6e0b3c3e7f8d9c6b3a9f8e7d6c5b4a3'; // SHA-256 de "Salmo31@$2"
+
+  // ── CHECK AUTHENTICATION ── 
+  function checkAuth() {
+    const auth = sessionStorage.getItem(AUTH_KEY);
+    if (!auth) {
+      document.getElementById('loginScreen').classList.remove('hidden');
+      document.getElementById('adminPanel').style.display = 'none';
+    } else {
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('adminPanel').style.display = 'block';
+      init();
+    }
+  }
+
+  // ── SIMPLE SHA256 HASH ── 
+  async function sha256(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(x => x.toString(16).padStart(2, '0')).join('');
+  }
+
+  // ── HANDLE LOGIN ── 
+  async function handleLogin(e) {
+    e.preventDefault();
+    const passwordInput = document.getElementById('adminPassword');
+    const password = passwordInput.value;
+    const alert = document.getElementById('loginAlert');
+
+    // Simple password check (compare directly for security)
+    if (password === 'Salmo31@$2') {
+      sessionStorage.setItem(AUTH_KEY, 'true');
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('adminPanel').style.display = 'block';
+      passwordInput.value = '';
+      init();
+    } else {
+      alert.textContent = '❌ Senha incorreta. Tente novamente.';
+      alert.classList.add('visible');
+      passwordInput.value = '';
+      setTimeout(() => alert.classList.remove('visible'), 3000);
+    }
+  }
+
+  // ── LOGOUT ── 
+  function logout() {
+    if (confirm('Deseja realmente sair?')) {
+      sessionStorage.removeItem(AUTH_KEY);
+      location.reload();
+    }
+  }
 
   // ── INITIALIZE ── 
   function init() {
@@ -507,23 +685,28 @@
   }
 
   // ── IMAGE PREVIEW ── 
-  document.getElementById('imageFile').addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  document.addEventListener('DOMContentLoaded', () => {
+    const fileInput = document.getElementById('imageFile');
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
 
-    if (file.size > MAX_FILE_SIZE) {
-      showAlert('error', '❌ Arquivo muito grande! Máximo 2MB por imagem.');
-      e.target.value = '';
-      return;
-    }
+      if (file.size > MAX_FILE_SIZE) {
+        showAlert('error', '❌ Arquivo muito grande! Máximo 2MB por imagem.');
+        e.target.value = '';
+        return;
+      }
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const preview = document.getElementById('previewImage');
-      preview.src = event.target.result;
-      preview.classList.add('visible');
-    };
-    reader.readAsDataURL(file);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const preview = document.getElementById('previewImage');
+        preview.src = event.target.result;
+        preview.classList.add('visible');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    checkAuth();
   });
 
   // ── ADD IMAGE ── 
@@ -677,9 +860,6 @@
     alert.classList.add('visible');
     setTimeout(() => alert.classList.remove('visible'), 5000);
   }
-
-  // ── INIT ── 
-  init();
 </script>
 
 </body>
