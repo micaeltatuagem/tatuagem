@@ -786,6 +786,7 @@
   const REPO_NAME    = 'tatuagem';
   const BRANCH       = 'main';
   const IMAGE_FOLDER = 'galeria';
+  const DATA_PATH    = `${IMAGE_FOLDER}/gallery-data.json`;
 
   const DEFAULT_TAGS = ['Dark Art', 'Blackwork', 'Colorido', 'Ornamental'];
 
@@ -819,7 +820,7 @@
     showAlert('success', `✅ Tag "${name}" criada!`);
   }
 
-  function deleteTag(name) {
+  async function deleteTag(name) {
     if (!confirm(`Deletar a tag "${name}"? Ela será removida das imagens que a usam.`)) return;
     const tags = getTags().filter(t => t !== name);
     saveTags(tags);
@@ -829,12 +830,19 @@
     gallery.forEach(img => {
       img.styles = (img.styles || []).filter(s => s !== name);
     });
-    saveGallery(gallery);
 
-    renderTagManager();
-    renderTags();
-    renderGallery();
-    showAlert('success', `✅ Tag "${name}" removida.`);
+    try {
+      await saveGallery(gallery);
+      renderTagManager();
+      renderTags();
+      renderGallery();
+      showAlert('success', `✅ Tag "${name}" removida.`);
+    } catch (err) {
+      renderTagManager();
+      renderTags();
+      renderGallery();
+      showAlert('error', '⚠️ Tag removida localmente, mas falhou ao sincronizar: ' + err.message);
+    }
   }
 
   function renderTagManager() {
@@ -927,6 +935,7 @@
 
   // ── INIT ──
   async function init() {
+    await seedGalleryFromRepo();
     renderTagManager();
     renderTags();
     renderGallery();
@@ -1031,8 +1040,9 @@
         }
 
         const data = await res.json();
-        // Return the raw GitHub CDN URL
-        const rawUrl = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${IMAGE_FOLDER}/${filename}`;
+        // Caminho relativo, servido pelo próprio GitHub Pages (mesma origem do site,
+        // sem depender do CDN separado do raw.githubusercontent.com)
+        const rawUrl = `${IMAGE_FOLDER}/${filename}`;
         resolve(rawUrl);
       };
       reader.onerror = () => reject(new Error('Erro ao ler arquivo'));
@@ -1081,7 +1091,7 @@
       const imageUrl = await uploadToGitHub(file, filename);
       progressBar.style.width = '90%';
 
-      // Save metadata locally
+      // Save metadata locally and publish to GitHub
       const gallery = getGallery();
       gallery.unshift({
         id: Date.now(),
@@ -1092,7 +1102,8 @@
         description: descInput.value,
         createdAt: new Date().toISOString()
       });
-      saveGallery(gallery);
+      progressLabel.textContent = '⏳ Publicando dados da galeria...';
+      await saveGallery(gallery);
 
       progressBar.style.width = '100%';
       progressLabel.textContent = '✅ Publicado!';
@@ -1151,10 +1162,16 @@
     }
 
     const filtered = gallery.filter(i => i.id !== id);
-    saveGallery(filtered);
-    renderGallery();
-    updateStats();
-    showAlert('success', '✅ Imagem removida!');
+    try {
+      await saveGallery(filtered);
+      renderGallery();
+      updateStats();
+      showAlert('success', '✅ Imagem removida!');
+    } catch (err) {
+      renderGallery();
+      updateStats();
+      showAlert('error', '⚠️ Removida localmente, mas falhou ao sincronizar: ' + err.message);
+    }
   }
 
   // ── RENDER GALLERY ──
@@ -1223,11 +1240,11 @@
     const file = event.target.files[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = e => {
+    reader.onload = async e => {
       try {
         const data = JSON.parse(e.target.result);
         if (!Array.isArray(data)) throw new Error('Formato inválido');
-        saveGallery(data);
+        await saveGallery(data);
         renderGallery();
         updateStats();
         showAlert('success', '✅ Backup restaurado!');
@@ -1245,8 +1262,68 @@
     catch { return []; }
   }
 
-  function saveGallery(gallery) {
+  // Salva localmente (cache rápido para a própria tela de admin) E publica
+  // o gallery-data.json no repositório — é esse arquivo que galeria.html lê.
+  // Sem isso, os dados ficavam só no localStorage deste navegador e nunca
+  // chegavam ao GitHub, então a galeria pública nunca via as imagens.
+  async function saveGallery(gallery) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(gallery));
+    await commitGalleryData(gallery);
+  }
+
+  // Busca o gallery-data.json publicado no repo e sincroniza o localStorage
+  // local com ele. Assim o painel admin sempre reflete o estado real
+  // publicado, mesmo se aberto em outro navegador/dispositivo.
+  async function seedGalleryFromRepo() {
+    try {
+      const res = await fetch(`${DATA_PATH}?t=${Date.now()}`, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+      }
+    } catch (err) {
+      console.warn('Não foi possível carregar gallery-data.json do repositório:', err);
+    }
+  }
+
+  // Comita o JSON de metadados no repositório, usando o mesmo padrão de
+  // upload (PUT na Contents API, com SHA se o arquivo já existir).
+  async function commitGalleryData(gallery) {
+    const exportGallery = gallery.map(({ image, ...rest }) => rest);
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(exportGallery, null, 2))));
+    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${DATA_PATH}`;
+
+    let sha = null;
+    try {
+      const checkRes = await fetch(url, { headers: { Authorization: `token ${GH_TOKEN}` } });
+      if (checkRes.ok) {
+        const existing = await checkRes.json();
+        sha = existing.sha;
+      }
+    } catch {}
+
+    const body = {
+      message: 'Atualiza dados da galeria (gallery-data.json)',
+      content,
+      branch: BRANCH
+    };
+    if (sha) body.sha = sha;
+
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        Authorization: `token ${GH_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error('Falha ao sincronizar dados com o GitHub: ' + (err.message || 'erro desconhecido'));
+    }
   }
 
   // ── EDIT MODAL ──
@@ -1276,7 +1353,7 @@
     document.getElementById('editModal').style.display = 'none';
   }
 
-  function saveEdit() {
+  async function saveEdit() {
     const id    = parseInt(document.getElementById('editId').value);
     const title = document.getElementById('editTitle').value.trim();
     const desc  = document.getElementById('editDescription').value;
@@ -1290,10 +1367,16 @@
     if (idx === -1) return;
 
     gallery[idx] = { ...gallery[idx], title, description: desc, styles };
-    saveGallery(gallery);
-    closeEditModal();
-    renderGallery();
-    showAlert('success', '✅ Informações atualizadas!');
+    try {
+      await saveGallery(gallery);
+      closeEditModal();
+      renderGallery();
+      showAlert('success', '✅ Informações atualizadas!');
+    } catch (err) {
+      closeEditModal();
+      renderGallery();
+      showAlert('error', '⚠️ Atualizado localmente, mas falhou ao sincronizar: ' + err.message);
+    }
   }
 
   // Close modal clicking outside

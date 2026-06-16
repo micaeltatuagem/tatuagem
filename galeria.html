@@ -626,15 +626,15 @@
 </footer>
 
 <script>
-  const STORAGE_KEY = 'micaelGallery';
+  const DATA_PATH = 'galeria/gallery-data.json';
   let galleryData = [];
   let filteredData = [];
   let currentFilterStyle = null;
   let currentImageIndex = 0;
 
   // ── INITIALIZE ── 
-  function init() {
-    loadGallery();
+  async function init() {
+    await loadGallery();
     renderFilters();
     renderGallery();
     setupLightboxListeners();
@@ -642,9 +642,14 @@
   }
 
   // ── LOAD GALLERY ── 
-  function loadGallery() {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    galleryData = stored ? JSON.parse(stored) : [];
+  async function loadGallery() {
+    try {
+      const res = await fetch(`${DATA_PATH}?t=${Date.now()}`, { cache: 'no-store' });
+      galleryData = res.ok ? await res.json() : [];
+    } catch (err) {
+      console.warn('Não foi possível carregar gallery-data.json:', err);
+      galleryData = [];
+    }
     filteredData = [...galleryData];
   }
 
@@ -697,7 +702,7 @@
 
     grid.innerHTML = filteredData.map((img, idx) => `
       <div class="gallery-item" onclick="openLightbox(${idx})">
-        <img src="${img.image}" alt="${img.title}" loading="lazy" />
+        <img src="${img.imageUrl || img.image}" alt="${img.title}" loading="lazy" />
         <div class="gallery-info">
           <div class="gallery-info-title">${img.title}</div>
           <div class="gallery-info-tags">
@@ -723,7 +728,7 @@
 
   function updateLightbox() {
     const img = filteredData[currentImageIndex];
-    document.getElementById('lightboxImage').src = img.image;
+    document.getElementById('lightboxImage').src = img.imageUrl || img.image;
     document.getElementById('lightboxTitle').textContent = img.title;
     
     const tagsHtml = (img.styles || []).map(s => `<span class="lightbox-tag">${s}</span>`).join('');
