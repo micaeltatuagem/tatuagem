@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <title>Admin Galeria · Micael Tatuagem</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:       #0a0a0a;
+      --deep:      #111010;
+      --surface:   #181616;
+      --bone:      #d4c9b0;
+      --blood:     #8b1a1a;
+      --rust:      #c0392b;
+      --muted:     #6b6560;
+      --border:    rgba(212,201,176,0.12);
+      --success:   #4ade80;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ink);
+      color: var(--bone);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='50'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── CONTAINER ── */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── HEADER ── */
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .admin-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .admin-header-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .admin-header-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    .admin-header-links a:hover {
+      color: var(--bone);
+    }
+
+    /* ── FORM SECTION ── */
+    .form-section {
+      background: var(--deep);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      margin-bottom: 3rem;
+      border-radius: 4px;
+    }
+
+    .form-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--bone);
+    }
+
+    /* ── FORM GROUP ── */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input[type="file"],
+    .form-group input[type="text"],
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--bone);
+      font-family: 'Inter', sans-serif;
+      border-radius: 4px;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input[type="file"],
+    .form-group input[type="text"],
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--rust);
+    }
+
+    /* ── TAGS ── */
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 0.8rem;
+    }
+
+    .tag-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .tag-option input[type="checkbox"] {
+      cursor: pointer;
+      accent-color: var(--rust);
+    }
+
+    .tag-option:has(input:checked) {
+      background: rgba(192, 57, 43, 0.2);
+      border-color: var(--rust);
+    }
+
+    .tag-option label {
+      margin: 0;
+      text-transform: none;
+      letter-spacing: 0;
+      color: var(--bone);
+      cursor: pointer;
+    }
+
+    /* ── PREVIEW ── */
+    .preview-container {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .preview-image {
+      max-width: 200px;
+      max-height: 200px;
+      margin: 0 auto 1rem;
+      border-radius: 4px;
+      display: none;
+    }
+
+    .preview-image.visible {
+      display: block;
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 1.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: var(--blood);
+      color: #fff;
+      border: 1px solid var(--blood);
+    }
+
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--blood);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--bone);
+      border: 1px solid var(--muted);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--bone);
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--blood);
+      border: 1px solid var(--blood);
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-danger:hover {
+      background: var(--blood);
+      color: #fff;
+    }
+
+    /* ── GALLERY LIST ── */
+    .gallery-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .gallery-item {
+      background: var(--deep);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .gallery-item:hover {
+      border-color: var(--rust);
+      transform: translateY(-4px);
+    }
+
+    .gallery-item-image {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-item-info {
+      padding: 1rem;
+    }
+
+    .gallery-item-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--bone);
+      word-break: break-word;
+    }
+
+    .gallery-item-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.3rem 0.6rem;
+      background: rgba(192, 57, 43, 0.2);
+      border: 1px solid var(--rust);
+      border-radius: 3px;
+      font-size: 0.75rem;
+      color: var(--rust);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .gallery-item-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* ── ALERTS ── */
+    .alert {
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+      display: none;
+    }
+
+    .alert.visible {
+      display: block;
+    }
+
+    .alert.success {
+      background: rgba(74, 222, 128, 0.1);
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .alert.error {
+      background: rgba(139, 26, 26, 0.1);
+      border-color: var(--blood);
+      color: var(--blood);
+    }
+
+    .alert.info {
+      background: rgba(212, 201, 176, 0.05);
+      border-color: var(--border);
+      color: var(--bone);
+    }
+
+    /* ── STATS ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--deep);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      text-align: center;
+      border-radius: 4px;
+    }
+
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--rust);
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .admin-header-links {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .tags-container {
+        gap: 0.5rem;
+      }
+
+      .tag-option {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.85rem;
+      }
+
+      .gallery-list {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- ── HEADER ── -->
+  <div class="admin-header">
+    <h1>Gerenciar Galeria</h1>
+    <div class="admin-header-links">
+      <a href="galeria.html" target="_blank">👁️ Ver Galeria</a>
+      <a href="index.html">🏠 Home</a>
+    </div>
+  </div>
+
+  <!-- ── ALERTS ── -->
+  <div class="alert success" id="alertSuccess"></div>
+  <div class="alert error" id="alertError"></div>
+  <div class="alert info" id="alertInfo"></div>
+
+  <!-- ── STATS ── -->
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-number" id="totalImages">0</div>
+      <div class="stat-label">Imagens Total</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" id="storageUsed">0</div>
+      <div class="stat-label">Armazenamento (MB)</div>
+    </div>
+  </div>
+
+  <!-- ── FORM ── -->
+  <div class="form-section">
+    <h2>Adicionar Nova Imagem</h2>
+    
+    <div class="form-group">
+      <label for="imageFile">Selecionar Imagem *</label>
+      <input type="file" id="imageFile" accept="image/*" required />
+      <div class="preview-container">
+        <img id="previewImage" class="preview-image" alt="Preview" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="imageTitle">Título da Tatuagem *</label>
+      <input type="text" id="imageTitle" placeholder="Ex: Crânio Mitológico" required />
+    </div>
+
+    <div class="form-group">
+      <label>Estilos (selecione um ou mais) *</label>
+      <div class="tags-container" id="tagsContainer">
+        <!-- Tags will be inserted here -->
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="imageDescription">Descrição (opcional)</label>
+      <textarea id="imageDescription" placeholder="Descreva a tatuagem, significado, etc." rows="3"></textarea>
+    </div>
+
+    <button class="btn btn-primary" onclick="addImage()">Adicionar Imagem</button>
+    <button class="btn btn-secondary" onclick="resetForm()">Limpar Formulário</button>
+  </div>
+
+  <!-- ── GALLERY LIST ── -->
+  <div class="form-section">
+    <h2>Imagens na Galeria</h2>
+    <div class="gallery-list" id="galleryList">
+      <!-- Items will be inserted here -->
+    </div>
+  </div>
+
+  <!-- ── EXPORT/IMPORT ── -->
+  <div class="form-section">
+    <h2>Backup & Restauração</h2>
+    <p style="margin-bottom: 1rem; color: rgba(212,201,176,0.8); font-size: 0.95rem;">
+      Faça backup de suas imagens ou restaure de um arquivo anterior.
+    </p>
+    <button class="btn btn-secondary" onclick="exportData()">📥 Fazer Backup</button>
+    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 Restaurar Backup</button>
+    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)" />
+  </div>
+
+</div>
+
+<script>
+  const STYLES = ['Dark Art', 'Blackwork', 'Colorido', 'Ornamental Orgânica'];
+  const STORAGE_KEY = 'micaelGallery';
+  const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB por imagem
+
+  // ── INITIALIZE ── 
+  function init() {
+    renderTags();
+    renderGallery();
+    updateStats();
+  }
+
+  // ── TAGS ── 
+  function renderTags() {
+    const container = document.getElementById('tagsContainer');
+    container.innerHTML = STYLES.map(style => `
+      <div class="tag-option">
+        <input type="checkbox" id="tag-${style}" value="${style}" />
+        <label for="tag-${style}">${style}</label>
+      </div>
+    `).join('');
+  }
+
+  // ── IMAGE PREVIEW ── 
+  document.getElementById('imageFile').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > MAX_FILE_SIZE) {
+      showAlert('error', '❌ Arquivo muito grande! Máximo 2MB por imagem.');
+      e.target.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const preview = document.getElementById('previewImage');
+      preview.src = event.target.result;
+      preview.classList.add('visible');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ── ADD IMAGE ── 
+  function addImage() {
+    const fileInput = document.getElementById('imageFile');
+    const titleInput = document.getElementById('imageTitle');
+    const descInput = document.getElementById('imageDescription');
+    
+    if (!fileInput.files[0] || !titleInput.value) {
+      showAlert('error', '❌ Preencha título e selecione uma imagem!');
+      return;
+    }
+
+    const selectedTags = Array.from(document.querySelectorAll('#tagsContainer input:checked')).map(cb => cb.value);
+    if (selectedTags.length === 0) {
+      showAlert('error', '❌ Selecione pelo menos um estilo!');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const imageData = event.target.result;
+      const gallery = getGallery();
+      
+      gallery.push({
+        id: Date.now(),
+        title: titleInput.value,
+        image: imageData,
+        styles: selectedTags,
+        description: descInput.value,
+        createdAt: new Date().toISOString()
+      });
+
+      saveGallery(gallery);
+      renderGallery();
+      updateStats();
+      resetForm();
+      showAlert('success', '✅ Imagem adicionada com sucesso!');
+    };
+    reader.readAsDataURL(fileInput.files[0]);
+  }
+
+  // ── DELETE IMAGE ── 
+  function deleteImage(id) {
+    if (!confirm('Tem certeza que deseja deletar esta imagem?')) return;
+    
+    const gallery = getGallery();
+    const filtered = gallery.filter(img => img.id !== id);
+    saveGallery(filtered);
+    renderGallery();
+    updateStats();
+    showAlert('success', '✅ Imagem removida!');
+  }
+
+  // ── RENDER GALLERY ── 
+  function renderGallery() {
+    const gallery = getGallery();
+    const container = document.getElementById('galleryList');
+
+    if (gallery.length === 0) {
+      container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--muted); padding: 2rem;">Nenhuma imagem ainda. Adicione a primeira acima! 👆</p>';
+      return;
+    }
+
+    container.innerHTML = gallery.map(img => `
+      <div class="gallery-item">
+        <img src="${img.image}" class="gallery-item-image" alt="${img.title}" />
+        <div class="gallery-item-info">
+          <div class="gallery-item-title">${img.title}</div>
+          <div class="gallery-item-tags">
+            ${img.styles.map(s => `<span class="tag">${s}</span>`).join('')}
+          </div>
+          <div class="gallery-item-actions">
+            <button class="btn btn-danger" onclick="deleteImage(${img.id})">Deletar</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── RESET FORM ── 
+  function resetForm() {
+    document.getElementById('imageFile').value = '';
+    document.getElementById('imageTitle').value = '';
+    document.getElementById('imageDescription').value = '';
+    document.querySelectorAll('#tagsContainer input').forEach(cb => cb.checked = false);
+    document.getElementById('previewImage').classList.remove('visible');
+  }
+
+  // ── STATS ── 
+  function updateStats() {
+    const gallery = getGallery();
+    const totalSize = gallery.reduce((acc, img) => acc + img.image.length, 0);
+    const sizeInMB = (totalSize / (1024 * 1024)).toFixed(2);
+    
+    document.getElementById('totalImages').textContent = gallery.length;
+    document.getElementById('storageUsed').textContent = sizeInMB;
+  }
+
+  // ── EXPORT DATA ── 
+  function exportData() {
+    const gallery = getGallery();
+    const dataStr = JSON.stringify(gallery, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `galeria-backup-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    showAlert('success', '✅ Backup realizado com sucesso!');
+  }
+
+  // ── IMPORT DATA ── 
+  function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!Array.isArray(data)) throw new Error('Formato inválido');
+        
+        saveGallery(data);
+        renderGallery();
+        updateStats();
+        showAlert('success', '✅ Backup restaurado com sucesso!');
+        document.getElementById('importFile').value = '';
+      } catch (err) {
+        showAlert('error', '❌ Erro ao restaurar backup: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // ── STORAGE ── 
+  function getGallery() {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  function saveGallery(gallery) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(gallery));
+  }
+
+  // ── ALERTS ── 
+  function showAlert(type, message) {
+    const alert = document.getElementById(`alert${type.charAt(0).toUpperCase() + type.slice(1)}`);
+    alert.textContent = message;
+    alert.classList.add('visible');
+    setTimeout(() => alert.classList.remove('visible'), 5000);
+  }
+
+  // ── INIT ── 
+  init();
+</script>
+
+</body>
+</html>
