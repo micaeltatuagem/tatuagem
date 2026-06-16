@@ -297,8 +297,7 @@
       .section-label { letter-spacing: 0.12em; font-size: 1.05rem; }
       .pilares li strong { letter-spacing: 0.04em; overflow: visible; }
       .processo-text strong { letter-spacing: 0.02em; overflow: visible; }
-      .estilos-grid { gap: 3px; grid-template-columns: 1fr; }
-      .estilo-card { min-height: 150px; aspect-ratio: unset; }
+      .carrossel-slide { min-height: 280px; }
       body { font-size: 1.15rem; }
       .hero-eyebrow { font-size: 0.9rem; }
       .hero-meta { font-size: 0.95rem; letter-spacing: 0.14em; }
@@ -307,8 +306,8 @@
       .pilares li { font-size: 1.02rem; color: rgba(212,201,176,0.9); }
       .pilares li strong { font-size: 0.85rem; }
       .section-label { font-size: 0.82rem; letter-spacing: 0.18em; }
-      .estilo-card-label strong { font-size: 1.05rem; }
-      .estilo-card-label span { font-size: 0.88rem; }
+      .carrossel-title { font-size: 1.05rem; }
+      .carrossel-tags span { font-size: 0.78rem; }
       .processo-step p { font-size: 1rem; line-height: 1.8; color: rgba(212,201,176,0.9); }
       .contato-sub { font-size: 1.05rem; }
       .footer-links a { font-size: 0.88rem; }
@@ -359,66 +358,107 @@
       margin-bottom: 0.2rem;
     }
 
-    /* ── ESTILOS ── */
-    .estilos-wrap {
+    /* ── GALERIA (CARROSSEL) ── */
+    .galeria-wrap {
       background: var(--deep);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
       padding: 5rem 2rem;
     }
-    .estilos-inner {
+    .galeria-carrossel-inner {
       max-width: 900px;
       margin: 0 auto;
     }
-    .estilos-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 2px;
+    .carrossel {
+      position: relative;
       margin-top: 2.5rem;
     }
-    .estilo-card {
-      aspect-ratio: 1/1;
-      min-height: 140px;
-      background: var(--surface);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-      padding: 1.5rem 1rem;
+    .carrossel-slide {
       position: relative;
+      aspect-ratio: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
       overflow: hidden;
     }
-    .estilo-card::before {
-      content: '';
+    .carrossel-empty {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(10,10,10,0.88) 0%, rgba(10,10,10,0.2) 60%, transparent 100%);
-    }
-    .estilo-card .motif {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%,-55%);
-      opacity: 0.08;
-      width: 60%;
-    }
-    .estilo-card-label {
-      position: relative;
-      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
       text-align: center;
+      padding: 2rem;
     }
-    .estilo-card-label strong {
+    .carrossel-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       display: block;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.05rem;
-      letter-spacing: 0.08em;
-      color: var(--bone);
+      opacity: 0;
+      transition: opacity 0.5s ease;
     }
-    .estilo-card-label span {
-      font-size: 0.88rem;
-      color: rgba(212,201,176,0.8);
+    .carrossel-img.visible { opacity: 1; }
+    .carrossel-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.5rem;
+      background: linear-gradient(to top, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.1) 55%, transparent 100%);
+      pointer-events: none;
+    }
+    .carrossel-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--bone);
+      margin-bottom: 0.4rem;
+    }
+    .carrossel-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .carrossel-tags span {
+      font-size: 0.75rem;
       letter-spacing: 0.05em;
       text-transform: uppercase;
+      color: var(--rust);
+    }
+    .carrossel-counter {
+      font-size: 0.85rem;
+      color: rgba(212,201,176,0.8);
+      white-space: nowrap;
+    }
+    .carrossel-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 46px;
+      height: 46px;
+      background: rgba(212,201,176,0.1);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--bone);
+      font-size: 1.2rem;
+      transition: all 0.3s;
+      z-index: 2;
+    }
+    .carrossel-nav:hover { background: var(--blood); border-color: var(--blood); }
+    .carrossel-prev { left: 0.75rem; }
+    .carrossel-next { right: 0.75rem; }
+    @media (max-width: 640px) {
+      .carrossel-nav { width: 38px; height: 38px; font-size: 1rem; }
+      .carrossel-title { font-size: 1.05rem; }
     }
 
     /* ── PROCESSO ── */
@@ -616,76 +656,121 @@
   </div>
 </section>
 
-<!-- ── ESTILOS ── -->
-<div class="estilos-wrap" id="estilos">
-  <div class="estilos-inner">
-    <p class="section-label fade-in">Linguagens</p>
-    <div class="estilos-grid fade-in">
+<!-- ── GALERIA (CARROSSEL) ── -->
+<div class="galeria-wrap" id="galeria-home">
+  <div class="galeria-carrossel-inner">
+    <p class="section-label fade-in">Galeria</p>
 
-      <!-- Dark Art -->
-      <div class="estilo-card">
-        <svg class="motif" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <circle cx="50" cy="50" r="45" stroke="white" stroke-width="2"/>
-          <path d="M50 10 L55 40 L85 40 L62 58 L70 88 L50 70 L30 88 L38 58 L15 40 L45 40 Z" stroke="white" stroke-width="1.5" fill="none"/>
-        </svg>
-        <div class="estilo-card-label">
-          <strong>Dark Art</strong>
-          <span>Mitologia · Ocultismo · Figura</span>
+    <div class="carrossel fade-in" id="carrossel">
+      <div class="carrossel-slide" id="carrosselSlide">
+        <div class="carrossel-empty" id="carrosselEmpty">Carregando galeria…</div>
+        <img class="carrossel-img" id="carrosselImg" src="" alt="" loading="lazy" style="display:none;" />
+        <div class="carrossel-overlay" id="carrosselOverlay" style="display:none;">
+          <div>
+            <div class="carrossel-title" id="carrosselTitle"></div>
+            <div class="carrossel-tags" id="carrosselTags"></div>
+          </div>
+          <div class="carrossel-counter" id="carrosselCounter"></div>
         </div>
       </div>
 
-      <!-- Blackwork -->
-      <div class="estilo-card">
-        <svg class="motif" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <rect x="10" y="10" width="80" height="80" stroke="white" stroke-width="1.5"/>
-          <rect x="20" y="20" width="60" height="60" stroke="white" stroke-width="1"/>
-          <line x1="10" y1="10" x2="90" y2="90" stroke="white" stroke-width="1"/>
-          <line x1="90" y1="10" x2="10" y2="90" stroke="white" stroke-width="1"/>
-        </svg>
-        <div class="estilo-card-label">
-          <strong>Blackwork</strong>
-          <span>Geométrico · Abstrato · Tribal</span>
-        </div>
-      </div>
-
-      <!-- Colorido -->
-      <div class="estilo-card">
-        <svg class="motif" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <circle cx="50" cy="38" r="22" stroke="white" stroke-width="1.5"/>
-          <path d="M30 62 Q50 80 70 62" stroke="white" stroke-width="1.5" fill="none"/>
-          <line x1="38" y1="20" x2="34" y2="12" stroke="white" stroke-width="1"/>
-          <line x1="50" y1="16" x2="50" y2="8"  stroke="white" stroke-width="1"/>
-          <line x1="62" y1="20" x2="66" y2="12" stroke="white" stroke-width="1"/>
-        </svg>
-        <div class="estilo-card-label">
-          <strong>Colorido</strong>
-          <span>Neo-tradicional · Aquarela · Ilustrativo</span>
-        </div>
-      </div>
-
-      <!-- Ornamental -->
-      <div class="estilo-card">
-        <svg class="motif" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <circle cx="50" cy="50" r="30" stroke="white" stroke-width="1.2"/>
-          <circle cx="50" cy="50" r="20" stroke="white" stroke-width="1"/>
-          <circle cx="50" cy="50" r="5" stroke="white" stroke-width="1.5"/>
-          <line x1="50" y1="20" x2="50" y2="10" stroke="white" stroke-width="1"/>
-          <line x1="50" y1="80" x2="50" y2="90" stroke="white" stroke-width="1"/>
-          <line x1="20" y1="50" x2="10" y2="50" stroke="white" stroke-width="1"/>
-          <line x1="80" y1="50" x2="90" y2="50" stroke="white" stroke-width="1"/>
-        </svg>
-        <div class="estilo-card-label">
-          <strong>Ornamental</strong>
-          <span>Mandala · Filigrana · Simétrico</span>
-        </div>
-      </div>
-
+      <button class="carrossel-nav carrossel-prev" id="carrosselPrev" aria-label="Anterior" style="display:none;">&#10094;</button>
+      <button class="carrossel-nav carrossel-next" id="carrosselNext" aria-label="Próxima" style="display:none;">&#10095;</button>
     </div>
-    <p style="font-size:0.9rem;margin-top:1rem;text-align:right;letter-spacing:0.1em;">
-      <a href="https://instagram.com/micaeltatuagem" target="_blank" rel="noopener" style="color:var(--muted);text-decoration:none;transition:color 0.3s;" onmouseover="this.style.color='var(--bone)'" onmouseout="this.style.color='var(--muted)'">↗ portfólio completo no Instagram</a>
+
+    <p style="font-size:0.9rem;margin-top:1.5rem;text-align:right;letter-spacing:0.1em;">
+      <a href="galeria.html" style="color:var(--muted);text-decoration:none;transition:color 0.3s;" onmouseover="this.style.color='var(--bone)'" onmouseout="this.style.color='var(--muted)'">↗ ver galeria completa</a>
     </p>
   </div>
 </div>
+
+<script>
+  (function () {
+    const slideEl   = document.getElementById('carrosselSlide');
+    const emptyEl   = document.getElementById('carrosselEmpty');
+    const imgEl     = document.getElementById('carrosselImg');
+    const overlayEl = document.getElementById('carrosselOverlay');
+    const titleEl   = document.getElementById('carrosselTitle');
+    const tagsEl    = document.getElementById('carrosselTags');
+    const counterEl = document.getElementById('carrosselCounter');
+    const prevBtn   = document.getElementById('carrosselPrev');
+    const nextBtn   = document.getElementById('carrosselNext');
+
+    let items = [];
+    let current = 0;
+    let autoplayTimer = null;
+
+    async function loadCarrossel() {
+      try {
+        const res = await fetch(`galeria/gallery-data.json?t=${Date.now()}`, { cache: 'no-store' });
+        items = res.ok ? await res.json() : [];
+      } catch {
+        items = [];
+      }
+
+      if (!Array.isArray(items) || items.length === 0) {
+        emptyEl.textContent = 'Em breve, novos trabalhos por aqui.';
+        return;
+      }
+
+      emptyEl.style.display = 'none';
+      imgEl.style.display = 'block';
+      overlayEl.style.display = 'flex';
+      if (items.length > 1) {
+        prevBtn.style.display = 'flex';
+        nextBtn.style.display = 'flex';
+        startAutoplay();
+      }
+      render(0);
+    }
+
+    function render(index) {
+      const item = items[index];
+      imgEl.classList.remove('visible');
+      setTimeout(() => {
+        imgEl.src = item.imageUrl || item.image || '';
+        imgEl.alt = item.title || '';
+        titleEl.textContent = item.title || '';
+        tagsEl.innerHTML = (item.styles || []).map(s => `<span>${s}</span>`).join('');
+        counterEl.textContent = `${index + 1} / ${items.length}`;
+        imgEl.onload = () => imgEl.classList.add('visible');
+      }, 150);
+    }
+
+    function goTo(index) {
+      current = (index + items.length) % items.length;
+      render(current);
+    }
+
+    function next() { goTo(current + 1); resetAutoplay(); }
+    function prev() { goTo(current - 1); resetAutoplay(); }
+
+    function startAutoplay() {
+      clearInterval(autoplayTimer);
+      autoplayTimer = setInterval(() => goTo(current + 1), 5000);
+    }
+    function resetAutoplay() {
+      if (items.length > 1) startAutoplay();
+    }
+
+    prevBtn.addEventListener('click', prev);
+    nextBtn.addEventListener('click', next);
+
+    // Swipe no celular
+    let touchStartX = 0;
+    slideEl.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    slideEl.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 40) { dx < 0 ? next() : prev(); }
+    }, { passive: true });
+
+    // Pausa o autoplay ao passar o mouse (desktop)
+    slideEl.addEventListener('mouseenter', () => clearInterval(autoplayTimer));
+    slideEl.addEventListener('mouseleave', () => resetAutoplay());
+
+    loadCarrossel();
+  })();
+</script>
 
 <!-- ── PROCESSO ── -->
 <section id="processo" style="position:relative;overflow:hidden;" aria-label="Como funciona">
