@@ -312,7 +312,7 @@
     const referencias    = document.getElementById('referencias').value.trim();
     const disponibilidade = document.getElementById('disponibilidade').value.trim();
 
-    let msg = 'Olá! Quero fazer uma tatuagem.\n\n';
+    let msg = 'Olá! Quero fazer uma tatuagem com o Micael.\n\n';
     msg += `*Nome:* ${nome}\n`;
     msg += `*Ideia:* ${ideia}\n`;
     msg += `*Estilo:* ${estilo}\n`;
@@ -320,6 +320,13 @@
     msg += `*Local do corpo:* ${local}\n`;
     if (referencias)      msg += `*Referências:* ${referencias}\n`;
     if (disponibilidade)  msg += `*Disponibilidade:* ${disponibilidade}\n`;
+
+    if (typeof gtag === 'function') {
+      gtag('event', 'reserva_form_submit', {
+        event_category: 'conversao',
+        event_label: estilo
+      });
+    }
 
     const url = `https://wa.me/5532999666946?text=${encodeURIComponent(msg)}`;
     window.location.href = url;
