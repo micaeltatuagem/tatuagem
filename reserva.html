@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JB6GZM1DFM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-JB6GZM1DFM');
+</script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="favicon.png" />
@@ -325,6 +335,32 @@
   }, { threshold: 0.12 });
 
   document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+  // Busca os estilos cadastrados no admin e substitui as opções fixas do
+  // select. Se o arquivo ainda não existir ou a busca falhar, mantém a
+  // lista fixa que já está no HTML como reserva.
+  function escapeHtml(str) {
+    return String(str || '').replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  async function loadStyleOptions() {
+    const select = document.getElementById('estilo');
+    try {
+      const res = await fetch(`galeria/tags.json?t=${Date.now()}`, { cache: 'no-store' });
+      const tags = res.ok ? await res.json() : null;
+      if (Array.isArray(tags) && tags.length) {
+        select.innerHTML = '<option value="" disabled selected>Selecione um estilo</option>' +
+          tags.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('') +
+          '<option value="Ainda não sei">Ainda não sei</option>';
+      }
+    } catch (err) {
+      console.warn('Não foi possível carregar os estilos cadastrados:', err);
+    }
+  }
+
+  loadStyleOptions();
 </script>
 </body>
 </html>

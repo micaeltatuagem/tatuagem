@@ -788,6 +788,7 @@
   const IMAGE_FOLDER = 'galeria';
   const DATA_PATH    = `${IMAGE_FOLDER}/gallery-data.json`;
   const SITEMAP_PATH = 'sitemap.xml';
+  const TAGS_PATH    = `${IMAGE_FOLDER}/tags.json`;
   const SITE_URL     = 'https://micaeltatuagem.github.io/tatuagem';
 
   const DEFAULT_TAGS = ['Dark Art', 'Blackwork', 'Colorido', 'Ornamental'];
@@ -802,9 +803,65 @@
 
   function saveTags(tags) {
     localStorage.setItem(TAGS_KEY, JSON.stringify(tags));
+    return commitTags(tags);
   }
 
-  function addTag() {
+  // Busca o tags.json publicado no repo e sincroniza o localStorage local —
+  // mesmo padrão usado para a galeria, pro admin nunca ficar dessincronizado
+  // de outro navegador/dispositivo.
+  async function seedTagsFromRepo() {
+    try {
+      const res = await fetch(`${TAGS_PATH}?t=${Date.now()}`, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          localStorage.setItem(TAGS_KEY, JSON.stringify(data));
+        }
+      }
+    } catch (err) {
+      console.warn('Não foi possível carregar tags.json do repositório:', err);
+    }
+  }
+
+  // Comita o tags.json no repositório — é esse arquivo que a reserva.html lê
+  // para montar as opções de estilo no formulário, sempre em sincronia com
+  // as tags reais usadas aqui no admin.
+  async function commitTags(tags) {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(tags, null, 2))));
+    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${TAGS_PATH}`;
+
+    let sha = null;
+    try {
+      const checkRes = await fetch(url, { headers: { Authorization: `token ${GH_TOKEN}` } });
+      if (checkRes.ok) {
+        const existing = await checkRes.json();
+        sha = existing.sha;
+      }
+    } catch {}
+
+    const body = {
+      message: 'Atualiza tags.json',
+      content,
+      branch: BRANCH
+    };
+    if (sha) body.sha = sha;
+
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        Authorization: `token ${GH_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error('Falha ao sincronizar tags.json: ' + (err.message || 'erro desconhecido'));
+    }
+  }
+
+  async function addTag() {
     const input = document.getElementById('newTagInput');
     const name  = input.value.trim();
     if (!name) return;
@@ -815,17 +872,20 @@
       return;
     }
     tags.push(name);
-    saveTags(tags);
     input.value = '';
     renderTagManager();
     renderTags();
-    showAlert('success', `✅ Tag "${name}" criada!`);
+    try {
+      await saveTags(tags);
+      showAlert('success', `✅ Tag "${name}" criada!`);
+    } catch (err) {
+      showAlert('error', '⚠️ Tag criada localmente, mas falhou ao sincronizar: ' + err.message);
+    }
   }
 
   async function deleteTag(name) {
     if (!confirm(`Deletar a tag "${name}"? Ela será removida das imagens que a usam.`)) return;
     const tags = getTags().filter(t => t !== name);
-    saveTags(tags);
 
     // Remove from existing gallery items
     const gallery = getGallery();
@@ -834,6 +894,7 @@
     });
 
     try {
+      await saveTags(tags);
       await saveGallery(gallery);
       renderTagManager();
       renderTags();
@@ -938,6 +999,7 @@
   // ── INIT ──
   async function init() {
     await seedGalleryFromRepo();
+    await seedTagsFromRepo();
     renderTagManager();
     renderTags();
     renderGallery();
@@ -1322,6 +1384,12 @@
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
 ${imageEntries}
+  </url>
+  <url>
+    <loc>${SITE_URL}/reserva.html</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>
 `;
