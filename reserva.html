@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <title>Reserva · Micael Tatuagem</title>
+  <meta name="description" content="Conte sua ideia de tatuagem — estilo, tamanho, local do corpo e referências — e gere uma mensagem pronta para enviar no WhatsApp do Micael Faccio." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://micaeltatuagem.github.io/tatuagem/reserva.html" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:       #0a0a0a;
+      --deep:      #111010;
+      --surface:   #181616;
+      --bone:      #d4c9b0;
+      --blood:     #8b1a1a;
+      --rust:      #c0392b;
+      --muted:     #6b6560;
+      --border:    rgba(212,201,176,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ink);
+      color: var(--bone);
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      min-height: 40vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      position: relative;
+      border-bottom: 1px solid var(--border);
+    }
+    .header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 70% at 50% 50%, transparent 30%, rgba(10,10,10,0.85) 100%);
+      pointer-events: none;
+    }
+    .header-label {
+      font-size: 0.9rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+    .header-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 8vw, 3.6rem);
+      font-weight: 700;
+      color: var(--bone);
+      position: relative;
+      z-index: 1;
+      text-shadow: 0 2px 16px rgba(0,0,0,0.9);
+      margin-bottom: 1.5rem;
+    }
+    .header-subtitle {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      font-size: clamp(1rem, 3vw, 1.25rem);
+      color: rgba(212,201,176,0.9);
+      position: relative;
+      z-index: 1;
+      max-width: 520px;
+    }
+
+    /* ── FORM ── */
+    .form-section {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 5rem 2rem 4rem;
+    }
+    .field { margin-bottom: 1.8rem; }
+    .field label {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.08rem;
+      color: var(--bone);
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.02em;
+    }
+    .field .req { color: var(--rust); }
+    .field .hint {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      line-height: 1.5;
+    }
+    .field input[type="text"],
+    .field select,
+    .field textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--bone);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.98rem;
+      padding: 0.85rem 1rem;
+      transition: border-color 0.3s;
+    }
+    .field textarea {
+      min-height: 110px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: var(--muted);
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--rust);
+    }
+    .field select { cursor: pointer; }
+    .field select option { background: var(--surface); color: var(--bone); }
+
+    .form-note {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 1.5rem;
+      line-height: 1.7;
+    }
+
+    .btn-primary {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--bone);
+      background: transparent;
+      border: 1px solid var(--blood);
+      padding: 1.1rem 2.5rem;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s, border-color 0.3s;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .btn-primary:hover {
+      background: var(--blood);
+      color: #fff;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 2.5rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .back-link:hover { color: var(--bone); }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in { opacity: 1; transform: none; transition: none; }
+    }
+
+    @media (max-width: 640px) {
+      .header { min-height: 32vh; padding: 4rem 1.5rem 3rem; }
+      .form-section { padding: 3.5rem 1.5rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <p class="header-label">Reserva</p>
+  <h1 class="header-title">Vamos começar<br>seu projeto</h1>
+  <p class="header-subtitle">Conte sua ideia. No final, isso vira uma mensagem pronta — você só revisa e envia no WhatsApp.</p>
+</header>
+
+<section class="form-section">
+  <form id="bookingForm" class="fade-in">
+    <div class="field">
+      <label for="nome">Nome <span class="req">*</span></label>
+      <input type="text" id="nome" name="nome" required />
+    </div>
+
+    <div class="field">
+      <label for="ideia">O que você imagina tatuar? <span class="req">*</span></label>
+      <textarea id="ideia" name="ideia" required placeholder="Tema, símbolos, referências, a sensação que quer transmitir..."></textarea>
+    </div>
+
+    <div class="field">
+      <label for="estilo">Estilo <span class="req">*</span></label>
+      <select id="estilo" name="estilo" required>
+        <option value="" disabled selected>Selecione um estilo</option>
+        <option value="Blackwork">Blackwork</option>
+        <option value="Dark Art">Dark Art</option>
+        <option value="Colorido / Neo-tradicional">Colorido / Neo-tradicional</option>
+        <option value="Ornamental">Ornamental</option>
+        <option value="Ainda não sei">Ainda não sei</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="tamanho">Tamanho aproximado <span class="req">*</span></label>
+      <select id="tamanho" name="tamanho" required>
+        <option value="" disabled selected>Selecione um tamanho</option>
+        <option value="Pequena (até 10cm)">Pequena (até 10cm)</option>
+        <option value="Média (10 a 20cm)">Média (10 a 20cm)</option>
+        <option value="Grande (acima de 20cm)">Grande (acima de 20cm)</option>
+        <option value="Não sei">Não sei</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="local">Local do corpo <span class="req">*</span></label>
+      <input type="text" id="local" name="local" required placeholder="Ex: antebraço direito, costas, panturrilha..." />
+    </div>
+
+    <div class="field">
+      <label for="referencias">Referências visuais</label>
+      <textarea id="referencias" name="referencias" placeholder="Descreva referências, estilos parecidos ou artistas que admira"></textarea>
+      <span class="hint">Tem fotos de referência? Pode enviar direto na conversa do WhatsApp depois.</span>
+    </div>
+
+    <div class="field">
+      <label for="disponibilidade">Disponibilidade</label>
+      <input type="text" id="disponibilidade" name="disponibilidade" placeholder="Dias ou horários de preferência" />
+    </div>
+
+    <button type="submit" class="btn-primary">Gerar mensagem no WhatsApp</button>
+
+    <p class="form-note">Nada é enviado automaticamente. Ao confirmar, o WhatsApp abre com a mensagem já escrita — você decide se envia.</p>
+  </form>
+
+  <a href="index.html" class="back-link">← Voltar para o início</a>
+</section>
+
+<footer>
+  <p>© Micael Faccio · Tatuador em Muriaé, MG</p>
+</footer>
+
+<script>
+  document.getElementById('bookingForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const nome           = document.getElementById('nome').value.trim();
+    const ideia          = document.getElementById('ideia').value.trim();
+    const estilo         = document.getElementById('estilo').value;
+    const tamanho        = document.getElementById('tamanho').value;
+    const local          = document.getElementById('local').value.trim();
+    const referencias    = document.getElementById('referencias').value.trim();
+    const disponibilidade = document.getElementById('disponibilidade').value.trim();
+
+    let msg = 'Olá! Quero fazer uma tatuagem.\n\n';
+    msg += `*Nome:* ${nome}\n`;
+    msg += `*Ideia:* ${ideia}\n`;
+    msg += `*Estilo:* ${estilo}\n`;
+    msg += `*Tamanho aproximado:* ${tamanho}\n`;
+    msg += `*Local do corpo:* ${local}\n`;
+    if (referencias)      msg += `*Referências:* ${referencias}\n`;
+    if (disponibilidade)  msg += `*Disponibilidade:* ${disponibilidade}\n`;
+
+    const url = `https://wa.me/5532999666946?text=${encodeURIComponent(msg)}`;
+    window.location.href = url;
+  });
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

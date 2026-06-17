@@ -6,7 +6,7 @@
   <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <title>Galeria · Micael Tatuagem</title>
-  <meta name="description" content="Galeria de tatuagens de Micael Faccio — blackwork, dark art, colorido e ornamental. Trabalhos autorais realizados em Muriaé-MG." />
+  <meta name="description" content="Galeria de tatuagens de Micael Faccio — blackwork, dark art, colorido e ornamental, desenvolvidas a partir das referências de cada cliente. Muriaé-MG." />
   <meta name="keywords" content="galeria tatuagem Muriaé, portfólio tatuador MG, blackwork Muriaé, dark art tatuagem, tatuagem ornamental Muriaé, Micael Faccio tatuagem" />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="Micael Faccio" />
@@ -15,7 +15,7 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Galeria · Micael Tatuagem" />
-  <meta property="og:description" content="Trabalhos autorais em blackwork, dark art, colorido e ornamental. Tatuador em Muriaé-MG." />
+  <meta property="og:description" content="Blackwork, dark art, colorido e ornamental, a partir das referências de cada cliente. Tatuador em Muriaé-MG." />
   <meta property="og:image" content="https://micaeltatuagem.github.io/tatuagem/hero-bg.webp" />
   <meta property="og:url" content="https://micaeltatuagem.github.io/tatuagem/galeria.html" />
   <meta property="og:locale" content="pt_BR" />
@@ -24,8 +24,18 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Galeria · Micael Tatuagem" />
-  <meta name="twitter:description" content="Trabalhos autorais em blackwork, dark art, colorido e ornamental. Muriaé-MG." />
+  <meta name="twitter:description" content="Blackwork, dark art, colorido e ornamental, a partir das referências do cliente. Muriaé-MG." />
   <meta name="twitter:image" content="https://micaeltatuagem.github.io/tatuagem/hero-bg.webp" />
+
+  <script type="application/ld+json" id="gallerySchema">
+  {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    "name": "Galeria de Tatuagens — Micael Faccio",
+    "description": "Trabalhos em blackwork, dark art, colorido e ornamental, desenvolvidos a partir das referências de cada cliente, por Micael Faccio em Muriaé-MG.",
+    "url": "https://micaeltatuagem.github.io/tatuagem/galeria.html"
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
@@ -605,6 +615,14 @@
   <div class="gallery-grid fade-in" id="galleryGrid">
     <!-- Gallery items will be inserted here by JavaScript -->
   </div>
+
+  <noscript>
+    <p style="text-align:center;color:var(--muted);padding:2rem;line-height:1.7;">
+      Esta galeria carrega as fotos dinamicamente e precisa de JavaScript habilitado.
+      Os trabalhos de Micael Faccio abrangem blackwork, dark art, colorido (neo-tradicional) e ornamental,
+      em Muriaé-MG. Veja também no <a href="https://instagram.com/micaeltatuagem" style="color:var(--bone);">Instagram</a>.
+    </p>
+  </noscript>
 </section>
 
 <!-- ── CTA SECTION ── -->
@@ -696,18 +714,15 @@
   // depois da renderização.
   function injectStructuredData() {
     if (!galleryData.length) return;
-    const schema = {
-      '@context': 'https://schema.org',
-      '@type': 'ImageGallery',
-      name: 'Galeria de Tatuagens — Micael Faccio',
-      description: 'Trabalhos autorais em blackwork, dark art, colorido e ornamental, realizados por Micael Faccio em Muriaé-MG.',
-      url: `${SITE_URL}/galeria.html`,
-      image: galleryData.map(img => `${SITE_URL}/${img.imageUrl || img.image || ''}`)
-    };
-    const script = document.createElement('script');
-    script.type = 'application/ld+json';
-    script.textContent = JSON.stringify(schema);
-    document.head.appendChild(script);
+    const script = document.getElementById('gallerySchema');
+    if (!script) return;
+    try {
+      const schema = JSON.parse(script.textContent);
+      schema.image = galleryData.map(img => `${SITE_URL}/${img.imageUrl || img.image || ''}`);
+      script.textContent = JSON.stringify(schema);
+    } catch (err) {
+      console.warn('Não foi possível atualizar o JSON-LD da galeria:', err);
+    }
   }
 
   // ── RENDER FILTERS ── 
