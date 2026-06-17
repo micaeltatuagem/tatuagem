@@ -1,15 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://micaeltatuagem.github.io/tatuagem/</loc>
-    <lastmod>2026-06-16</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://micaeltatuagem.github.io/tatuagem/galeria.html</loc>
-    <lastmod>2026-06-16</lastmod>
+    <lastmod>2026-06-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+      <image:image>
+        <image:loc>https://micaeltatuagem.github.io/tatuagem/galeria/1781655126876-tatuagem-tubarao.png</image:loc>
+        <image:title>Tatuagem Tubarão</image:title>
+        <image:caption>Tatuagem Blackwork, Tribal — Tatuagem Tubarão — Micael Faccio, tatuador em Muriaé MG</image:caption>
+      </image:image>
+      <image:image>
+        <image:loc>https://micaeltatuagem.github.io/tatuagem/galeria/1781648577280-tatuagem-ganesha.png</image:loc>
+        <image:title>Tatuagem Ganesha</image:title>
+        <image:caption>Tatuagem Blackwork, Oriental — Tatuagem Ganesha — Micael Faccio, tatuador em Muriaé MG</image:caption>
+      </image:image>
+      <image:image>
+        <image:loc>https://micaeltatuagem.github.io/tatuagem/galeria/1781647329279-tatuagem-serpente.png</image:loc>
+        <image:title>Tatuagem Serpente</image:title>
+        <image:caption>Tatuagem Blackwork — Tatuagem Serpente — Micael Faccio, tatuador em Muriaé MG</image:caption>
+      </image:image>
+      <image:image>
+        <image:loc>https://micaeltatuagem.github.io/tatuagem/galeria/1781647267215-tatuagem-aguia.png</image:loc>
+        <image:title>Tatuagem Águia</image:title>
+        <image:caption>Tatuagem Colorido, Tradicional — Tatuagem Águia — Micael Faccio, tatuador em Muriaé MG</image:caption>
+      </image:image>
+      <image:image>
+        <image:loc>https://micaeltatuagem.github.io/tatuagem/galeria/1781643494250-tatuagem-thor.png</image:loc>
+        <image:title>Tatuagem Thor</image:title>
+        <image:caption>Tatuagem Colorido, Comics — Tatuagem Thor — Micael Faccio, tatuador em Muriaé MG</image:caption>
+      </image:image>
+      <image:image>
+        <image:loc>https://micaeltatuagem.github.io/tatuagem/galeria/1781643432172-tatuagem-valentina.png</image:loc>
+        <image:title>Tatuagem Valentina</image:title>
+        <image:caption>Tatuagem Comics — Tatuagem Valentina — Micael Faccio, tatuador em Muriaé MG</image:caption>
+      </image:image>
   </url>
 </urlset>
