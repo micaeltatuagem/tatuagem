@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="favicon.png" />
   <title>Ficha de Anamnese · Micael Tatuagem</title>
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -354,11 +355,11 @@
 
         <p>Estou ciente de que devo acompanhar o processo de cicatrização, mantendo a higiene e cuidados diários conforme descritos no GUIA DE CUIDADOS anexo, e de que o processo de cicatrização é de total responsabilidade do cliente.</p>
 
-        <p><strong>Retoques</strong>, no caso de tatuagem, só serão efetuados sem ônus até o prazo máximo de 30 dias corridos, contados a partir da data de realização do serviço, inclusive, e somente no caso de que a região onde o serviço tenha sido realizado não tenha sido submetido à exposição do Sol e não se encontre em estado de bronzeamento.</p>
+        <p><strong>Retoques</strong>, no caso de tatuagem, só serão efetuados sem ônus até o prazo máximo de 60 dias corridos, contados a partir da data de realização do serviço, inclusive, e somente no caso de que a região onde o serviço tenha sido realizado não tenha sido submetido à exposição do Sol e não se encontre em estado de bronzeamento.</p>
 
         <p>Quaisquer retoques de tatuagens, não descritos no item acima, serão realizados apenas mediante pagamento do VALOR MÍNIMO DE SERVIÇOS DE TATUAGEM, conforme tabela em vigor na data em que o serviço for solicitado.</p>
 
-        <p>Tatuagens que tenham sido negociadas pelo valor total do serviço, e que necessitem de mais de uma sessão para serem finalizadas, têm o prazo máximo de 30 dias corridos entre sessões para o melhor andamento do serviço. Caso o cliente extrapole esse prazo, por motivos alheios ao profissional, o valor da tatuagem será renegociado, de acordo com os valores por sessão conforme tabela em vigor na data em que o serviço for solicitado.</p>
+        <p>Tatuagens que tenham sido negociadas pelo valor total do serviço, e que necessitem de mais de uma sessão para serem finalizadas, têm o prazo máximo de 60 dias corridos entre sessões para o melhor andamento do serviço. Caso o cliente extrapole esse prazo, por motivos alheios ao profissional, o valor da tatuagem será renegociado, de acordo com os valores por sessão conforme tabela em vigor na data em que o serviço for solicitado.</p>
 
         <p>Para garantir o correto resultado na aplicação de uma tatuagem, existem padronizações técnicas e estéticas que devem ser seguidas, como o tamanho ideal do desenho em relação ao local do corpo e restrição das cores em relação ao tom da pele.</p>
 
@@ -434,32 +435,45 @@ Para o máximo de absorção de pigmento e boa cicatrização:
 
 🔁 Aplique camada fina de pomada, espalhando até a pele absorver, de 3 a 4 vezes ao dia.
 
-⚠️ *Retoques sem custo* têm validade de *30 dias* a partir da data do serviço, e apenas se a região *não tiver sido exposta ao sol* e não estiver bronzeada.
+⚠️ *Retoques sem custo* têm validade de *60 dias* a partir da data do serviço, e apenas se a região *não tiver sido exposta ao sol* e não estiver bronzeada.
 
 Qualquer dúvida, me chame no WhatsApp: (32) 99966-6946
 `.trim();
 
 // ────────────────────────────────────────────
-// TERMO (texto para WhatsApp)
+// TERMO NA ÍNTEGRA (texto para WhatsApp)
 // ────────────────────────────────────────────
 function gerarTermoWpp(nome, assinatura, data) {
   return `
-📋 *TERMO DE AUTORIZAÇÃO — MICAEL TATUAGEM*
+📋 *TERMO DE AUTORIZAÇÃO E CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE TATUAGEM*
+_Micael Faccio — Tatuador em Muriaé, MG_
 _Cópia para o cliente_
 
 *Cliente:* ${nome}
 *Assinatura:* ${assinatura}
 *Data:* ${data}
 
-Você concordou e autorizou o uso dos equipamentos, técnicas e produtos empregados na feitura da tatuagem contratada, estando ciente de que todos os cuidados de assepsia e segurança foram tomados.
+Autorizo e concordo com o serviço prestado, estando ciente dos cuidados listados.
 
-O processo de cicatrização é de responsabilidade do cliente. Retoques sem ônus têm validade de 30 dias, contados da data do serviço, e somente se a região não tiver sido exposta ao sol nem estiver em estado de bronzeamento.
+Concordo e autorizo o uso dos equipamentos, técnicas e produtos empregados na feitura das tatuagens por mim contratadas e estou ciente de que todos os cuidados para a assepsia e segurança do serviço foram tomados.
 
-Pessoa com compulsão por bronzeamento, ou que optar por exposição ao sol, banho de piscina/mar, álcool ou drogas no período de cicatrização assume total responsabilidade pelo resultado.
+Estou ciente de que devo acompanhar o processo de cicatrização, mantendo a higiene e cuidados diários conforme descritos no Guia de Cuidados, e de que o processo de cicatrização é de total responsabilidade do cliente.
 
-Este termo confirma ciência e aceite de todas as cláusulas de contrato de prestação de serviços de tatuagem firmadas com Micael Faccio — Tatuador em Muriaé, MG.
+Retoques, no caso de tatuagem, só serão efetuados sem ônus até o prazo máximo de *60 dias corridos*, contados a partir da data de realização do serviço, inclusive, e somente no caso de que a região onde o serviço tenha sido realizado não tenha sido submetido à exposição do Sol e não se encontre em estado de bronzeamento.
 
-Guarde esta mensagem como comprovante.
+Quaisquer retoques de tatuagens, não descritos no item acima, serão realizados apenas mediante pagamento do VALOR MÍNIMO DE SERVIÇOS DE TATUAGEM, conforme tabela em vigor na data em que o serviço for solicitado.
+
+Tatuagens que tenham sido negociadas pelo valor total do serviço, e que necessitem de mais de uma sessão para serem finalizadas, têm o prazo máximo de 60 dias corridos entre sessões para o melhor andamento do serviço. Caso o cliente extrapole esse prazo, por motivos alheios ao profissional, o valor da tatuagem será renegociado, de acordo com os valores por sessão conforme tabela em vigor na data em que o serviço for solicitado.
+
+Para garantir o correto resultado na aplicação de uma tatuagem, existem padronizações técnicas e estéticas que devem ser seguidas, como o tamanho ideal do desenho em relação ao local do corpo e restrição das cores em relação ao tom da pele.
+
+Caso, mesmo após ser informado disto, continue optando, insistindo e exigindo um desenho em uma escala que com certeza irá influenciar negativamente o resultado esperado, a responsabilidade deste fato é única e exclusiva do cliente.
+
+Pessoas com compulsão por bronzeamento, ou que, mesmo devidamente avisadas do resguardo necessário no período de cicatrização, optam por ficarem expostas ao Sol, tomar banho de piscina e/ou mar, abusarem do uso de álcool e/ou drogas, ficam totalmente responsáveis pelo resultado, positivo ou negativo, eventuais inflamações, infecções, baixa absorção de pigmento ou qualquer outro dano em um procedimento realizado em um ambiente estéril, que segue todas as regras de biossegurança.
+
+Neste caso o profissional fica livre de qualquer responsabilidade em relação ao resultado, podendo cobrar por um novo procedimento para corrigir o dano causado pela negligência do cliente, ou até mesmo optar por não realizar o serviço.
+
+_Este documento confirma a ciência e aceite integral das cláusulas acima. Guarde esta mensagem como comprovante._
   `.trim();
 }
 
