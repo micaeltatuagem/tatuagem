@@ -54,12 +54,20 @@
 
     .login-sub { font-size: .72rem; color: var(--muted); letter-spacing: .18em; text-transform: uppercase; margin-bottom: 32px; }
 
+    .login-box label {
+      display: block; font-size: .68rem; color: var(--muted);
+      letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px;
+    }
+
+    .login-field { margin-bottom: 16px; text-align: left; }
+
+    .login-hint { font-size: .72rem; color: var(--muted); margin-top: 5px; line-height: 1.4; }
+
     .login-box input[type="password"] {
       width: 100%; background: var(--bg); border: 1px solid var(--border);
       border-radius: var(--radius); color: var(--text);
       font-family: 'Inter', sans-serif; font-size: .9rem;
       padding: 11px 14px; outline: none; transition: border-color .2s;
-      margin-bottom: 14px;
     }
 
     .login-box input[type="password"]:focus { border-color: var(--gold); }
@@ -391,10 +399,21 @@
   <div class="login-box">
     <div class="login-logo">Micael Tatuagem</div>
     <div class="login-sub">Painel · Anamnese</div>
-    <input type="password" id="loginPass" placeholder="Senha de acesso" />
-    <br/>
-    <button class="btn" onclick="tryLogin()">Entrar</button>
-    <p class="login-err" id="loginErr">Senha incorreta.</p>
+
+    <div class="login-alert" id="loginAlert" style="display:none;padding:10px 14px;border-radius:4px;margin-bottom:16px;font-size:.82rem;"></div>
+
+    <form onsubmit="tryLogin(event)">
+      <div class="login-field">
+        <label for="loginPass">Senha de Acesso</label>
+        <input type="password" id="loginPass" placeholder="Digite sua senha" required autofocus />
+      </div>
+      <div class="login-field">
+        <label for="githubToken">Token do GitHub</label>
+        <input type="password" id="githubToken" placeholder="ghp_..." required />
+        <p class="login-hint">Usado apenas nesta sessão. Não é salvo em nenhum lugar.</p>
+      </div>
+      <button type="submit" class="btn" style="width:100%;margin-top:4px">Acessar</button>
+    </form>
   </div>
 </div>
 
@@ -453,35 +472,67 @@
 
 <script>
 // ─────────────────────────────────────
-// CONFIG — MESMO TOKEN DO admin.html
+// CONFIG
 // ─────────────────────────────────────
-const SUPA_URL  = 'https://SEU_PROJECT_ID.supabase.co';
-const SUPA_KEY  = 'SUA_ANON_KEY_PUBLICA'; // mesma chave pública
-const ADM_PASS  = 'SEU_TOKEN_ADMIN';      // mesma senha do admin.html
+const SUPA_URL   = 'https://SEU_PROJECT_ID.supabase.co';
+const SUPA_KEY   = 'SUA_ANON_KEY_PUBLICA';
+const ADM_PASS   = 'Salmo31@$2';          // mesma senha do admin.html
+const REPO_OWNER = 'micaeltatuagem';
+const REPO_NAME  = 'tatuagem';
 
 // ─────────────────────────────────────
-// AUTH (simples, client-side)
+// AUTH — mesmo fluxo do admin.html
 // ─────────────────────────────────────
-function tryLogin() {
-  const v = document.getElementById('loginPass').value;
-  if (v === ADM_PASS) {
+async function tryLogin(e) {
+  e.preventDefault();
+  const password = document.getElementById('loginPass').value;
+  const token    = document.getElementById('githubToken').value.trim();
+  const alertEl  = document.getElementById('loginAlert');
+
+  const showErr = (msg) => {
+    alertEl.textContent = msg;
+    alertEl.style.cssText = 'display:block;background:#2e0d0d;border:1px solid #8b1a1a;color:#e07070;padding:10px 14px;border-radius:4px;margin-bottom:16px;font-size:.82rem;';
+    setTimeout(() => { alertEl.style.display = 'none'; }, 4000);
+  };
+
+  if (password !== ADM_PASS) {
+    showErr('❌ Senha incorreta.');
+    document.getElementById('loginPass').value = '';
+    return;
+  }
+
+  if (!token.startsWith('ghp_') && !token.startsWith('github_pat_')) {
+    showErr('❌ Token inválido. Deve começar com ghp_ ou github_pat_');
+    return;
+  }
+
+  alertEl.textContent = '⏳ Validando token...';
+  alertEl.style.cssText = 'display:block;background:#111;border:1px solid #333;color:#aaa;padding:10px 14px;border-radius:4px;margin-bottom:16px;font-size:.82rem;';
+
+  try {
+    const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
+      headers: { Authorization: `token ${token}` }
+    });
+    if (!res.ok) throw new Error('Token sem acesso ao repositório.');
+
     sessionStorage.setItem('adm_anamnese', '1');
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('adminShell').style.display = 'block';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('githubToken').value = '';
     loadAll();
-  } else {
-    document.getElementById('loginErr').style.display = 'block';
+
+  } catch (err) {
+    showErr('❌ ' + err.message);
   }
 }
 
 function logout() {
-  sessionStorage.removeItem('adm_anamnese');
-  location.reload();
+  if (confirm('Deseja realmente sair?')) {
+    sessionStorage.removeItem('adm_anamnese');
+    location.reload();
+  }
 }
-
-document.getElementById('loginPass').addEventListener('keydown', e => {
-  if (e.key === 'Enter') tryLogin();
-});
 
 if (sessionStorage.getItem('adm_anamnese') === '1') {
   document.getElementById('loginScreen').style.display = 'none';
