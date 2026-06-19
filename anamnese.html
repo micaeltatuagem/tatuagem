@@ -9,6 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
 
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -414,6 +416,34 @@ const SUPA_KEY = 'SUA_ANON_KEY_PUBLICA';
 const db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
 // ────────────────────────────────────────────
+// EMAILJS CONFIG — crie conta gratuita em emailjs.com
+// Substitua os três valores abaixo
+// ────────────────────────────────────────────
+const EJS_PUBLIC_KEY  = 'SUA_PUBLIC_KEY_EMAILJS';   // Account → API Keys
+const EJS_SERVICE_ID  = 'SEU_SERVICE_ID';            // Email Services
+const EJS_TEMPLATE_ID = 'SEU_TEMPLATE_ID';           // Email Templates
+
+emailjs.init({ publicKey: EJS_PUBLIC_KEY });
+
+async function enviarEmailCliente(nome, email, assinatura, data, termoTexto, cuidadosTexto) {
+  if (!email) return { ok: false, motivo: 'sem e-mail' };
+  try {
+    await emailjs.send(EJS_SERVICE_ID, EJS_TEMPLATE_ID, {
+      to_name:    nome,
+      to_email:   email,
+      assinatura: assinatura,
+      data:       data,
+      termo:      termoTexto,
+      cuidados:   cuidadosTexto,
+    });
+    return { ok: true };
+  } catch (err) {
+    console.error('EmailJS erro:', err);
+    return { ok: false, motivo: err.text || err.message || 'erro desconhecido' };
+  }
+}
+
+// ────────────────────────────────────────────
 // FICHA DE CUIDADOS (texto fixo)
 // ────────────────────────────────────────────
 const CUIDADOS = `
@@ -588,28 +618,38 @@ document.getElementById('formAnamnese').addEventListener('submit', async (e) => 
   }
 
   // ── SUCESSO ──
+  const emailCliente = get('email');
+  const termoTexto   = gerarTermoWpp(nomeCliente, assinatura, dataHoje);
+  const msgWpp       = termoTexto + '\n\n──────────────────────\n\n' + CUIDADOS;
+
+  // ── E-MAIL ──
+  let statusEmail = '';
+  if (emailCliente) {
+    btn.textContent = 'Enviando e-mail…';
+    const res = await enviarEmailCliente(nomeCliente, emailCliente, assinatura, dataHoje, termoTexto, CUIDADOS);
+    statusEmail = res.ok
+      ? ' · Cópia enviada para ' + emailCliente
+      : ' · Falha no e-mail: ' + res.motivo;
+  }
+
   document.getElementById('msgOk').style.display = 'block';
   document.getElementById('msgErr').style.display = 'none';
 
-  // monta mensagem WhatsApp: termo + cuidados
-  const msgWpp = gerarTermoWpp(nomeCliente, assinatura, dataHoje)
-    + '\n\n──────────────────────\n\n'
-    + CUIDADOS;
-
+  // ── WHATSAPP ──
   const wppNumero = celularCliente ? formatarWpp(celularCliente) : '';
+  let extraMsg = statusEmail;
 
   if (wppNumero && wppNumero.length >= 12) {
     const link = `https://wa.me/${wppNumero}?text=${encodeURIComponent(msgWpp)}`;
     const btnWpp = document.getElementById('btnWpp');
     btnWpp.href = link;
     btnWpp.style.display = 'flex';
-
-    document.getElementById('msgOkExtra').textContent =
-      'Clique no botão abaixo para enviar o Termo + Guia de Cuidados via WhatsApp.';
-  } else {
-    document.getElementById('msgOkExtra').textContent =
-      'Ficha registrada. Número de celular não informado — envio por WhatsApp indisponível.';
+    extraMsg = 'Clique abaixo para enviar o Termo + Guia via WhatsApp.' + (statusEmail ? '\n' + statusEmail : '');
+  } else if (!statusEmail) {
+    extraMsg = 'Ficha registrada. Celular e e-mail não informados.';
   }
+
+  document.getElementById('msgOkExtra').textContent = extraMsg;
 
   e.target.reset();
   btn.disabled = false;
