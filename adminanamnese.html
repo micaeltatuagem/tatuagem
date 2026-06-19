@@ -405,13 +405,12 @@
 
     <form onsubmit="tryLogin(event)">
       <div class="login-field">
-        <label for="loginPass">Senha de Acesso</label>
-        <input type="password" id="loginPass" placeholder="Digite sua senha" required autofocus />
+        <label for="loginEmail">E-mail</label>
+        <input type="email" id="loginEmail" placeholder="seu@email.com" required autofocus />
       </div>
       <div class="login-field">
-        <label for="githubToken">Token do GitHub</label>
-        <input type="password" id="githubToken" placeholder="ghp_..." required />
-        <p class="login-hint">Usado apenas nesta sessão. Não é salvo em nenhum lugar.</p>
+        <label for="loginPass">Senha</label>
+        <input type="password" id="loginPass" placeholder="Digite sua senha" required />
       </div>
       <button type="submit" class="btn" style="width:100%;margin-top:4px">Acessar</button>
     </form>
@@ -475,19 +474,18 @@
 // ─────────────────────────────────────
 // CONFIG
 // ─────────────────────────────────────
-const SUPA_URL   = 'https://SEU_PROJECT_ID.supabase.co';
-const SUPA_KEY   = 'SUA_ANON_KEY_PUBLICA';
-const ADM_PASS   = 'Salmo31@$2';          // mesma senha do admin.html
-const REPO_OWNER = 'micaeltatuagem';
-const REPO_NAME  = 'tatuagem';
+const SUPA_URL   = 'https://rpgcsejfewltricfsdrd.supabase.co';
+const SUPA_KEY   = 'sb_publishable_7LF70sbQS_es_uco138rqw_YfbqnIsa';
+
+const db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
 // ─────────────────────────────────────
-// AUTH — mesmo fluxo do admin.html
+// AUTH — login real via Supabase Auth
 // ─────────────────────────────────────
 async function tryLogin(e) {
   e.preventDefault();
+  const email    = document.getElementById('loginEmail').value.trim();
   const password = document.getElementById('loginPass').value;
-  const token    = document.getElementById('githubToken').value.trim();
   const alertEl  = document.getElementById('loginAlert');
 
   const showErr = (msg) => {
@@ -496,55 +494,42 @@ async function tryLogin(e) {
     setTimeout(() => { alertEl.style.display = 'none'; }, 4000);
   };
 
-  if (password !== ADM_PASS) {
-    showErr('❌ Senha incorreta.');
-    document.getElementById('loginPass').value = '';
-    return;
-  }
-
-  if (!token.startsWith('ghp_') && !token.startsWith('github_pat_')) {
-    showErr('❌ Token inválido. Deve começar com ghp_ ou github_pat_');
-    return;
-  }
-
-  alertEl.textContent = '⏳ Validando token...';
+  alertEl.textContent = '⏳ Entrando...';
   alertEl.style.cssText = 'display:block;background:#111;border:1px solid #333;color:#aaa;padding:10px 14px;border-radius:4px;margin-bottom:16px;font-size:.82rem;';
 
-  try {
-    const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
-      headers: { Authorization: `token ${token}` }
-    });
-    if (!res.ok) throw new Error('Token sem acesso ao repositório.');
+  const { data, error } = await db.auth.signInWithPassword({ email, password });
 
-    sessionStorage.setItem('adm_anamnese', '1');
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('adminShell').style.display = 'block';
-    document.getElementById('loginPass').value = '';
-    document.getElementById('githubToken').value = '';
-    loadAll();
-
-  } catch (err) {
-    showErr('❌ ' + err.message);
+  if (error) {
+    showErr('❌ ' + (error.message === 'Invalid login credentials' ? 'E-mail ou senha incorretos.' : error.message));
+    return;
   }
+
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminShell').style.display = 'block';
+  document.getElementById('loginPass').value = '';
+  loadAll();
 }
 
-function logout() {
+async function logout() {
   if (confirm('Deseja realmente sair?')) {
-    sessionStorage.removeItem('adm_anamnese');
+    await db.auth.signOut();
     location.reload();
   }
 }
 
-if (sessionStorage.getItem('adm_anamnese') === '1') {
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('adminShell').style.display = 'block';
-}
+// ao carregar a página, verifica se já existe uma sessão válida
+(async () => {
+  const { data: { session } } = await db.auth.getSession();
+  if (session) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminShell').style.display = 'block';
+    loadAll();
+  }
+})();
 
 // ─────────────────────────────────────
-// SUPABASE
+// SUPABASE — dados
 // ─────────────────────────────────────
-const db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
-
 let allRecords = [];
 let sortCol = 'criado_em';
 let sortAsc = false;
@@ -951,11 +936,9 @@ function snack(msg) {
 }
 
 // ─────────────────────────────────────
-// INIT
+// FIM
 // ─────────────────────────────────────
-if (sessionStorage.getItem('adm_anamnese') === '1') {
-  loadAll();
-}
+
 </script>
 </body>
 </html>
