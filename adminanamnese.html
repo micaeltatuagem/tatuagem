@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Anamnese · Micael Tatuagem</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #080808;
+      --surface:   #111111;
+      --surface2:  #181818;
+      --border:    #242424;
+      --accent:    #8b1a1a;
+      --gold:      #c9a84c;
+      --gold-dim:  #7a6128;
+      --text:      #e0e0e0;
+      --muted:     #666;
+      --green:     #1e6b3a;
+      --green-t:   #0d2e1a;
+      --radius:    4px;
+    }
+
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 14px; }
+
+    /* ── LOGIN ── */
+    #loginScreen {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 20px;
+    }
+
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 36px;
+      width: 100%; max-width: 360px;
+      text-align: center;
+    }
+
+    .login-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem;
+      color: var(--gold);
+      letter-spacing: .14em;
+      margin-bottom: 4px;
+    }
+
+    .login-sub { font-size: .72rem; color: var(--muted); letter-spacing: .18em; text-transform: uppercase; margin-bottom: 32px; }
+
+    .login-box input[type="password"] {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--text);
+      font-family: 'Inter', sans-serif; font-size: .9rem;
+      padding: 11px 14px; outline: none; transition: border-color .2s;
+      margin-bottom: 14px;
+    }
+
+    .login-box input[type="password"]:focus { border-color: var(--gold); }
+
+    .btn {
+      display: inline-block; padding: 10px 20px;
+      background: var(--accent); color: #fff; border: none;
+      border-radius: var(--radius); cursor: pointer;
+      font-family: 'Cinzel', serif; font-size: .78rem;
+      letter-spacing: .1em; text-transform: uppercase;
+      transition: background .2s;
+    }
+    .btn:hover { background: #a31f1f; }
+    .btn-sm { padding: 6px 12px; font-size: .7rem; }
+    .btn-ghost {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--muted); font-family: 'Inter', sans-serif;
+      font-size: .75rem; letter-spacing: .04em; text-transform: none;
+    }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); background: transparent; }
+    .btn-danger { background: #5a1010; }
+    .btn-danger:hover { background: #7a1515; }
+    .btn-success { background: var(--green); }
+    .btn-success:hover { background: #246b42; }
+
+    .login-err { color: #e07070; font-size: .8rem; margin-top: 10px; display: none; }
+
+    /* ── ADMIN SHELL ── */
+    #adminShell { display: none; min-height: 100vh; }
+
+    /* header */
+    .adm-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex; align-items: center; gap: 20px;
+      position: sticky; top: 0; z-index: 100;
+    }
+
+    .adm-logo { font-family: 'Cinzel', serif; font-size: 1rem; color: var(--gold); letter-spacing: .1em; flex: 1; }
+    .adm-logo span { color: var(--muted); font-size: .7rem; letter-spacing: .14em; display: block; }
+
+    .adm-nav a {
+      font-size: .75rem; color: var(--muted); text-decoration: none;
+      padding: 4px 10px; border-radius: var(--radius);
+      transition: color .15s;
+    }
+    .adm-nav a:hover { color: var(--gold); }
+
+    /* main content */
+    .adm-body { padding: 28px 24px; max-width: 1200px; margin: 0 auto; }
+
+    /* toolbar */
+    .toolbar {
+      display: flex; gap: 12px; align-items: center;
+      margin-bottom: 24px; flex-wrap: wrap;
+    }
+
+    .search-wrap { position: relative; flex: 1; min-width: 220px; }
+
+    .search-wrap input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: .85rem;
+      padding: 9px 12px 9px 34px;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .search-wrap input:focus { border-color: var(--gold); }
+
+    .search-wrap::before {
+      content: '⌕';
+      position: absolute; left: 10px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted); font-size: 1rem; pointer-events: none;
+    }
+
+    .filter-select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem;
+      padding: 9px 12px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .count-badge {
+      font-size: .72rem; color: var(--muted);
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 3px 10px;
+      white-space: nowrap;
+    }
+
+    /* table */
+    .table-wrap { overflow-x: auto; }
+
+    table.list {
+      width: 100%; border-collapse: collapse;
+    }
+
+    table.list th {
+      background: var(--surface2);
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-size: .65rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    table.list th:hover { color: #e0c060; }
+
+    table.list td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+      font-size: .82rem;
+    }
+
+    table.list tr:hover td { background: var(--surface2); }
+
+    .td-name { font-weight: 500; color: var(--text); }
+    .td-doc { color: var(--muted); font-size: .78rem; }
+    .td-date { white-space: nowrap; color: var(--muted); }
+
+    .badge {
+      display: inline-block; padding: 2px 8px;
+      border-radius: 20px; font-size: .68rem;
+      letter-spacing: .06em; text-transform: uppercase;
+    }
+
+    .badge-sim { background: #0d2e1a; color: #5dbb7e; border: 1px solid #1e6b3a; }
+    .badge-nao { background: #1a1a1a; color: var(--muted); border: 1px solid var(--border); }
+    .badge-foto { background: #1a1200; color: #c9a84c; border: 1px solid var(--gold-dim); }
+
+    /* ── MODAL ── */
+    .modal-bg {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.85);
+      z-index: 200;
+      overflow-y: auto;
+      padding: 40px 16px;
+    }
+
+    .modal-bg.open { display: block; }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      max-width: 840px;
+      margin: 0 auto;
+      padding: 32px;
+    }
+
+    .modal-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .modal-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      color: var(--gold);
+    }
+
+    .modal-close {
+      background: none; border: none; color: var(--muted);
+      font-size: 1.4rem; cursor: pointer; padding: 0 4px;
+      transition: color .2s;
+    }
+
+    .modal-close:hover { color: var(--text); }
+
+    .modal-section {
+      margin-bottom: 24px;
+    }
+
+    .modal-section-title {
+      font-family: 'Cinzel', serif;
+      font-size: .68rem;
+      letter-spacing: .16em;
+      color: var(--gold);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 7px;
+      margin-bottom: 14px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .info-item label {
+      display: block; font-size: .68rem; color: var(--muted);
+      letter-spacing: .08em; text-transform: uppercase; margin-bottom: 2px;
+    }
+
+    .info-item span { font-size: .85rem; }
+
+    /* anamnese summary */
+    .anamnese-summary {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+    }
+
+    .anamnese-row {
+      display: flex; gap: 8px; align-items: flex-start;
+      font-size: .8rem; padding: 5px 8px;
+      background: var(--surface2); border-radius: var(--radius);
+    }
+
+    .anamnese-row .cond { flex: 1; color: #aaa; }
+    .anamnese-row .detail { color: var(--muted); font-size: .72rem; }
+
+    /* ── HISTÓRICO DE TATUAGENS ── */
+    .tatoo-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+
+    .tatoo-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      display: flex; align-items: center; gap: 16px;
+    }
+
+    .tatoo-date { font-size: .72rem; color: var(--muted); white-space: nowrap; min-width: 80px; }
+    .tatoo-desc { flex: 1; font-size: .85rem; }
+    .tatoo-value { font-size: .85rem; color: var(--gold); white-space: nowrap; }
+    .tatoo-del { background: none; border: none; color: #5a1010; cursor: pointer; font-size: 1rem; padding: 0 4px; transition: color .15s; }
+    .tatoo-del:hover { color: #c0392b; }
+
+    .add-tatoo-form {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 120px 1fr 120px auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .add-tatoo-form label {
+      display: block; font-size: .68rem; color: var(--muted);
+      letter-spacing: .06em; text-transform: uppercase; margin-bottom: 4px;
+    }
+
+    .add-tatoo-form input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem;
+      padding: 8px 10px;
+      outline: none;
+    }
+
+    .add-tatoo-form input:focus { border-color: var(--gold); }
+
+    /* termo viewer */
+    .termo-viewer {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      font-size: .78rem;
+      color: #999;
+      line-height: 1.75;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    /* print */
+    @media print {
+      #loginScreen, .adm-header, .toolbar, .btn, .tatoo-del { display: none !important; }
+      .modal-bg { position: static; background: white; padding: 0; }
+      .modal { border: none; }
+    }
+
+    /* empty state */
+    .empty {
+      text-align: center; padding: 60px 20px;
+      color: var(--muted); font-size: .9rem;
+    }
+
+    .empty .ico { font-size: 2.5rem; margin-bottom: 12px; }
+
+    /* loading */
+    .loading { text-align: center; padding: 40px; color: var(--muted); }
+
+    /* snackbar */
+    #snack {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text); padding: 10px 20px; border-radius: 24px;
+      font-size: .8rem; z-index: 999; display: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,.5);
+    }
+
+    @media (max-width: 600px) {
+      .add-tatoo-form { grid-template-columns: 1fr 1fr; }
+      .anamnese-summary { grid-template-columns: 1fr; }
+      .info-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Micael Tatuagem</div>
+    <div class="login-sub">Painel · Anamnese</div>
+    <input type="password" id="loginPass" placeholder="Senha de acesso" />
+    <br/>
+    <button class="btn" onclick="tryLogin()">Entrar</button>
+    <p class="login-err" id="loginErr">Senha incorreta.</p>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="adminShell">
+
+  <header class="adm-header">
+    <div class="adm-logo">
+      Micael Tatuagem
+      <span>Painel · Anamnese</span>
+    </div>
+    <nav class="adm-nav">
+      <a href="./admin.html">← Galeria</a>
+      <a href="./index.html" target="_blank">Site</a>
+    </nav>
+    <button class="btn btn-ghost btn-sm" onclick="logout()">Sair</button>
+  </header>
+
+  <div class="adm-body">
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="Buscar por nome, CPF, RG ou data (AAAA-MM-DD)…" oninput="applyFilter()" />
+      </div>
+      <select class="filter-select" id="filterFoto" onchange="applyFilter()">
+        <option value="">Todas as fichas</option>
+        <option value="sim">Autoriza foto</option>
+        <option value="nao">Não autoriza foto</option>
+      </select>
+      <span class="count-badge" id="countBadge">— fichas</span>
+      <button class="btn btn-sm" onclick="loadAll()">↻ Atualizar</button>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-wrap" id="tableWrap">
+      <div class="loading">Carregando…</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL FICHA -->
+<div class="modal-bg" id="modalBg" onclick="closeModalBg(event)">
+  <div class="modal" id="modalContent">
+    <div class="modal-header">
+      <div class="modal-name" id="mNome">—</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="mBody"></div>
+  </div>
+</div>
+
+<!-- SNACK -->
+<div id="snack"></div>
+
+<script>
+// ─────────────────────────────────────
+// CONFIG — MESMO TOKEN DO admin.html
+// ─────────────────────────────────────
+const SUPA_URL  = 'https://SEU_PROJECT_ID.supabase.co';
+const SUPA_KEY  = 'SUA_ANON_KEY_PUBLICA'; // mesma chave pública
+const ADM_PASS  = 'SEU_TOKEN_ADMIN';      // mesma senha do admin.html
+
+// ─────────────────────────────────────
+// AUTH (simples, client-side)
+// ─────────────────────────────────────
+function tryLogin() {
+  const v = document.getElementById('loginPass').value;
+  if (v === ADM_PASS) {
+    sessionStorage.setItem('adm_anamnese', '1');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminShell').style.display = 'block';
+    loadAll();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('adm_anamnese');
+  location.reload();
+}
+
+document.getElementById('loginPass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') tryLogin();
+});
+
+if (sessionStorage.getItem('adm_anamnese') === '1') {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminShell').style.display = 'block';
+}
+
+// ─────────────────────────────────────
+// SUPABASE
+// ─────────────────────────────────────
+const db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+let allRecords = [];
+let sortCol = 'criado_em';
+let sortAsc = false;
+
+async function loadAll() {
+  document.getElementById('tableWrap').innerHTML = '<div class="loading">Carregando…</div>';
+  const { data, error } = await db
+    .from('anamneses')
+    .select('*')
+    .order('criado_em', { ascending: false });
+
+  if (error) {
+    document.getElementById('tableWrap').innerHTML = `<div class="loading" style="color:#e07070">Erro: ${error.message}</div>`;
+    return;
+  }
+
+  allRecords = data || [];
+  applyFilter();
+}
+
+function applyFilter() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const foto = document.getElementById('filterFoto').value;
+
+  let list = allRecords.filter(r => {
+    const matchSearch = !q ||
+      (r.nome || '').toLowerCase().includes(q) ||
+      (r.cpf  || '').replace(/\D/g,'').includes(q.replace(/\D/g,'')) ||
+      (r.rg   || '').replace(/\D/g,'').includes(q.replace(/\D/g,'')) ||
+      (r.criado_em || '').includes(q);
+
+    const matchFoto = !foto ||
+      (foto === 'sim' && r.autoriza_foto === true) ||
+      (foto === 'nao' && r.autoriza_foto !== true);
+
+    return matchSearch && matchFoto;
+  });
+
+  // sort
+  list.sort((a, b) => {
+    let va = a[sortCol] || '';
+    let vb = b[sortCol] || '';
+    if (va < vb) return sortAsc ? -1 : 1;
+    if (va > vb) return sortAsc ?  1 : -1;
+    return 0;
+  });
+
+  document.getElementById('countBadge').textContent = `${list.length} ficha${list.length !== 1 ? 's' : ''}`;
+  renderTable(list);
+}
+
+function setSort(col) {
+  if (sortCol === col) sortAsc = !sortAsc;
+  else { sortCol = col; sortAsc = true; }
+  applyFilter();
+}
+
+function renderTable(list) {
+  if (!list.length) {
+    document.getElementById('tableWrap').innerHTML =
+      '<div class="empty"><div class="ico">📋</div>Nenhuma ficha encontrada.</div>';
+    return;
+  }
+
+  const rows = list.map(r => {
+    const data = r.criado_em ? new Date(r.criado_em).toLocaleDateString('pt-BR') : '—';
+    const foto = r.autoriza_foto
+      ? '<span class="badge badge-foto">Sim</span>'
+      : '<span class="badge badge-nao">Não</span>';
+    const tatuagens = (r.tatuagens || []).length;
+
+    return `
+      <tr style="cursor:pointer" onclick="openModal('${r.id}')">
+        <td class="td-name">${r.nome || '—'}</td>
+        <td class="td-doc">${r.cpf || '—'}</td>
+        <td class="td-doc">${r.rg  || '—'}</td>
+        <td>${r.celular || '—'}</td>
+        <td class="td-date">${data}</td>
+        <td>${foto}</td>
+        <td style="text-align:center;color:var(--muted)">${tatuagens}</td>
+        <td onclick="event.stopPropagation()">
+          <button class="btn btn-ghost btn-sm" onclick="openModal('${r.id}')">Ver</button>
+        </td>
+      </tr>`;
+  }).join('');
+
+  document.getElementById('tableWrap').innerHTML = `
+    <table class="list">
+      <thead>
+        <tr>
+          <th onclick="setSort('nome')">Nome ↕</th>
+          <th onclick="setSort('cpf')">CPF ↕</th>
+          <th onclick="setSort('rg')">RG ↕</th>
+          <th>Celular</th>
+          <th onclick="setSort('criado_em')">Cadastro ↕</th>
+          <th>Foto</th>
+          <th>Tatuagens</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+// ─────────────────────────────────────
+// MODAL
+// ─────────────────────────────────────
+let currentId = null;
+
+async function openModal(id) {
+  currentId = id;
+  const rec = allRecords.find(r => r.id === id);
+  if (!rec) return;
+
+  document.getElementById('mNome').textContent = rec.nome || '—';
+  document.getElementById('mBody').innerHTML = buildModalHTML(rec);
+  document.getElementById('modalBg').classList.add('open');
+
+  // init tatoo form
+  document.getElementById('btnAddTatoo').addEventListener('click', () => addTatoo(id));
+}
+
+function buildModalHTML(rec) {
+  const dataCad = rec.criado_em
+    ? new Date(rec.criado_em).toLocaleString('pt-BR')
+    : '—';
+
+  // anamnese
+  let anamneseHTML = '';
+  if (rec.anamnese && typeof rec.anamnese === 'object') {
+    const entries = Object.entries(rec.anamnese);
+    anamneseHTML = `<div class="anamnese-summary">` +
+      entries.map(([cond, val]) => {
+        const resp = (val.resposta || 'nao').toLowerCase();
+        const badgeClass = resp === 'sim' ? 'badge-sim' : 'badge-nao';
+        const detail = [val.tipo, val.observacoes].filter(Boolean).join(' · ');
+        return `
+          <div class="anamnese-row">
+            <span class="cond">${cond}</span>
+            <span class="badge ${badgeClass}">${resp}</span>
+            ${detail ? `<span class="detail">${detail}</span>` : ''}
+          </div>`;
+      }).join('') +
+    `</div>`;
+  } else {
+    anamneseHTML = '<p style="color:var(--muted);font-size:.8rem">Sem dados de anamnese.</p>';
+  }
+
+  // tatuagens
+  const tatoos = rec.tatuagens || [];
+  const tatooListHTML = tatoos.length
+    ? tatoos.map((t, i) => `
+        <div class="tatoo-card">
+          <span class="tatoo-date">${t.data || '—'}</span>
+          <span class="tatoo-desc">${t.descricao || '—'}</span>
+          <span class="tatoo-value">${t.valor ? 'R$ ' + parseFloat(t.valor).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '—'}</span>
+          <button class="tatoo-del" title="Remover" onclick="removeTatoo('${rec.id}', ${i})">✕</button>
+        </div>`).join('')
+    : '<p style="color:var(--muted);font-size:.8rem;padding:8px 0">Nenhuma tatuagem registrada ainda.</p>';
+
+  return `
+    <!-- DADOS -->
+    <div class="modal-section">
+      <p class="modal-section-title">Dados Pessoais</p>
+      <div class="info-grid">
+        <div class="info-item"><label>CPF</label><span>${rec.cpf || '—'}</span></div>
+        <div class="info-item"><label>RG</label><span>${rec.rg || '—'}</span></div>
+        <div class="info-item"><label>Nascimento</label><span>${rec.nascimento || '—'}</span></div>
+        <div class="info-item"><label>Idade</label><span>${rec.idade || '—'}</span></div>
+        <div class="info-item"><label>Celular</label><span>${rec.celular || '—'}</span></div>
+        <div class="info-item"><label>E-mail</label><span>${rec.email || '—'}</span></div>
+        <div class="info-item"><label>Profissão</label><span>${rec.profissao || '—'}</span></div>
+        <div class="info-item"><label>Indicação</label><span>${rec.indicacao || '—'}</span></div>
+        <div class="info-item col-span-2"><label>Endereço</label><span>${rec.endereco || '—'}</span></div>
+        <div class="info-item"><label>Emergência</label><span>${rec.emergencia_nome || '—'}</span></div>
+        <div class="info-item"><label>Fone emergência</label><span>${rec.emergencia_fone || '—'}</span></div>
+        <div class="info-item"><label>Autoriza foto</label><span>${rec.autoriza_foto ? '✅ Sim' : '❌ Não'}</span></div>
+        <div class="info-item"><label>Cadastrado em</label><span>${dataCad}</span></div>
+      </div>
+    </div>
+
+    <!-- ANAMNESE -->
+    <div class="modal-section">
+      <p class="modal-section-title">Anamnese</p>
+      ${anamneseHTML}
+    </div>
+
+    <!-- HISTÓRICO TATUAGENS -->
+    <div class="modal-section">
+      <p class="modal-section-title">Histórico de Tatuagens</p>
+      <div class="tatoo-list" id="tatooList-${rec.id}">${tatooListHTML}</div>
+
+      <div class="add-tatoo-form" id="addTatooForm">
+        <div>
+          <label>Data</label>
+          <input type="date" id="newTatooData" />
+        </div>
+        <div>
+          <label>Descrição</label>
+          <input type="text" id="newTatooDesc" placeholder="Ex: Crânio blackwork antebraço esquerdo" />
+        </div>
+        <div>
+          <label>Valor (R$)</label>
+          <input type="number" id="newTatooValor" placeholder="0,00" step="0.01" />
+        </div>
+        <button class="btn btn-success btn-sm" id="btnAddTatoo" style="white-space:nowrap">+ Adicionar</button>
+      </div>
+    </div>
+
+    <!-- TERMO -->
+    <div class="modal-section">
+      <p class="modal-section-title">Termo de Autorização</p>
+      <p style="font-size:.78rem;color:var(--muted);margin-bottom:10px">
+        Assinatura: <strong style="color:var(--text)">${rec.assinatura_nome || '—'}</strong>
+        &nbsp;·&nbsp; Aceite registrado: ${rec.aceite_termo ? '✅ Sim' : '❌ Não'}
+      </p>
+    </div>
+
+    <!-- AÇÕES -->
+    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨 Imprimir</button>
+      ${rec.celular ? `<a class="btn btn-success btn-sm" style="text-decoration:none" href="${gerarLinkWpp(rec)}" target="_blank">📲 WhatsApp — Termo + Guia</a>` : ''}
+      <button class="btn btn-danger btn-sm" onclick="deleteRecord('${rec.id}')">🗑 Excluir ficha</button>
+    </div>
+  `;
+}
+
+function closeModal() {
+  document.getElementById('modalBg').classList.remove('open');
+  currentId = null;
+}
+
+function closeModalBg(e) {
+  if (e.target === document.getElementById('modalBg')) closeModal();
+}
+
+// ─────────────────────────────────────
+// HISTÓRICO TATUAGENS
+// ─────────────────────────────────────
+async function addTatoo(id) {
+  const data    = document.getElementById('newTatooData').value;
+  const desc    = document.getElementById('newTatooDesc').value.trim();
+  const valor   = parseFloat(document.getElementById('newTatooValor').value) || null;
+
+  if (!desc) { snack('Preencha a descrição da tatuagem.'); return; }
+
+  const rec = allRecords.find(r => r.id === id);
+  if (!rec) return;
+
+  const novaTatoo = { data: data || null, descricao: desc, valor };
+  const lista = [...(rec.tatuagens || []), novaTatoo];
+
+  const { error } = await db
+    .from('anamneses')
+    .update({ tatuagens: lista })
+    .eq('id', id);
+
+  if (error) { snack('Erro: ' + error.message); return; }
+
+  rec.tatuagens = lista;
+  document.getElementById('newTatooData').value = '';
+  document.getElementById('newTatooDesc').value = '';
+  document.getElementById('newTatooValor').value = '';
+
+  // refresh tatoo list
+  const container = document.getElementById(`tatooList-${id}`);
+  container.innerHTML = lista.map((t, i) => `
+    <div class="tatoo-card">
+      <span class="tatoo-date">${t.data || '—'}</span>
+      <span class="tatoo-desc">${t.descricao || '—'}</span>
+      <span class="tatoo-value">${t.valor ? 'R$ ' + parseFloat(t.valor).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '—'}</span>
+      <button class="tatoo-del" title="Remover" onclick="removeTatoo('${id}', ${i})">✕</button>
+    </div>`).join('');
+
+  // re-attach listener
+  document.getElementById('btnAddTatoo').addEventListener('click', () => addTatoo(id));
+  snack('Tatuagem adicionada.');
+}
+
+async function removeTatoo(id, index) {
+  if (!confirm('Remover este registro?')) return;
+
+  const rec = allRecords.find(r => r.id === id);
+  if (!rec) return;
+
+  const lista = (rec.tatuagens || []).filter((_, i) => i !== index);
+
+  const { error } = await db
+    .from('anamneses')
+    .update({ tatuagens: lista })
+    .eq('id', id);
+
+  if (error) { snack('Erro: ' + error.message); return; }
+
+  rec.tatuagens = lista;
+  const container = document.getElementById(`tatooList-${id}`);
+  container.innerHTML = lista.length
+    ? lista.map((t, i) => `
+        <div class="tatoo-card">
+          <span class="tatoo-date">${t.data || '—'}</span>
+          <span class="tatoo-desc">${t.descricao || '—'}</span>
+          <span class="tatoo-value">${t.valor ? 'R$ ' + parseFloat(t.valor).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '—'}</span>
+          <button class="tatoo-del" title="Remover" onclick="removeTatoo('${id}', ${i})">✕</button>
+        </div>`).join('')
+    : '<p style="color:var(--muted);font-size:.8rem;padding:8px 0">Nenhuma tatuagem registrada ainda.</p>';
+
+  snack('Registro removido.');
+}
+
+// ─────────────────────────────────────
+// WHATSAPP — GUIA DE CUIDADOS + TERMO
+// ─────────────────────────────────────
+const CUIDADOS_WPP = `
+🩹 *GUIA DE CUIDADOS — MICAEL TATUAGEM*
+
+Sua tatuagem foi feita dentro dos protocolos de segurança, com materiais de primeira linha.
+
+Para o máximo de absorção de pigmento e boa cicatrização:
+
+✅ Mantenha a limpeza do local diariamente com água e sabão.
+
+✅ Faça a troca da bandagem oclusiva (plástico filme) enquanto o corpo estiver expelindo pigmento. Você sai do estúdio com a primeira bandagem — ao fazer a primeira troca, notará o exsudato (pigmento expelido pela pele), que deve ser lavado para não formar casquinha.
+
+✅ Aplique pomada à base de dexpantenol sem zinco (Bepantol ou genéricos). Use sempre camada *fina* de pomada — *NÃO EXAGERE NA POMADA.*
+
+✅ Ao trocar e notar o plástico limpo (sem excesso de pigmento), suspenda o uso do plástico — continue apenas com a pomada para controlar a hidratação até o fim da cicatrização.
+
+⏱️ O período do plástico varia de 1 a 3 dias, dependendo da quantidade de pigmento e do organismo de cada pessoa.
+
+🔁 Aplique camada fina de pomada, espalhando até a pele absorver, de 3 a 4 vezes ao dia.
+
+⚠️ *Retoques sem custo* têm validade de *30 dias* a partir da data do serviço, e apenas se a região *não tiver sido exposta ao sol* e não estiver bronzeada.
+
+Qualquer dúvida, me chame: (32) 99966-6946
+`.trim();
+
+function formatarWppNum(fone) {
+  const d = fone.replace(/\D/g, '');
+  return d.startsWith('55') ? d : '55' + d;
+}
+
+function gerarLinkWpp(rec) {
+  const dataHoje = new Date().toLocaleDateString('pt-BR');
+  const termo = `📋 *TERMO DE AUTORIZAÇÃO — MICAEL TATUAGEM*
+_Cópia para o cliente_
+
+*Cliente:* ${rec.nome || '—'}
+*Assinatura:* ${rec.assinatura_nome || '—'}
+*Data do cadastro:* ${rec.criado_em ? new Date(rec.criado_em).toLocaleDateString('pt-BR') : dataHoje}
+
+Você concordou e autorizou o uso dos equipamentos, técnicas e produtos empregados na feitura da tatuagem contratada, estando ciente de que todos os cuidados de assepsia e segurança foram tomados.
+
+O processo de cicatrização é de responsabilidade do cliente. Retoques sem ônus têm validade de 30 dias contados da data do serviço, e somente se a região não tiver sido exposta ao sol nem estiver bronzeada.
+
+Guarde esta mensagem como comprovante.`;
+
+  const msg = termo + '\n\n──────────────────────\n\n' + CUIDADOS_WPP;
+  const num = formatarWppNum(rec.celular);
+  return `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
+}
+
+// ─────────────────────────────────────
+// DELETE FICHA
+// ─────────────────────────────────────
+async function deleteRecord(id) {
+  if (!confirm('Excluir esta ficha permanentemente? Esta ação não pode ser desfeita.')) return;
+
+  const { error } = await db.from('anamneses').delete().eq('id', id);
+  if (error) { snack('Erro: ' + error.message); return; }
+
+  allRecords = allRecords.filter(r => r.id !== id);
+  closeModal();
+  applyFilter();
+  snack('Ficha excluída.');
+}
+
+// ─────────────────────────────────────
+// SNACKBAR
+// ─────────────────────────────────────
+let snackTimer;
+function snack(msg) {
+  const el = document.getElementById('snack');
+  el.textContent = msg;
+  el.style.display = 'block';
+  clearTimeout(snackTimer);
+  snackTimer = setTimeout(() => { el.style.display = 'none'; }, 3000);
+}
+
+// ─────────────────────────────────────
+// INIT
+// ─────────────────────────────────────
+if (sessionStorage.getItem('adm_anamnese') === '1') {
+  loadAll();
+}
+</script>
+</body>
+</html>

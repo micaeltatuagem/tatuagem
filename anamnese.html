@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ficha de Anamnese · Micael Tatuagem</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #0a0a0a;
+      --surface:  #111111;
+      --border:   #2a2a2a;
+      --accent:   #8b1a1a;
+      --gold:     #c9a84c;
+      --text:     #e0e0e0;
+      --muted:    #777;
+      --danger:   #c0392b;
+      --radius:   4px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 24px 20px;
+      text-align: center;
+    }
+
+    .logo-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      letter-spacing: .12em;
+      color: var(--gold);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .logo-sub {
+      font-size: .75rem;
+      color: var(--muted);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .page-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      letter-spacing: .1em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .page-sub {
+      color: var(--muted);
+      font-size: .85rem;
+      margin-bottom: 36px;
+    }
+
+    /* ---- sections ---- */
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: .8rem;
+      letter-spacing: .18em;
+      color: var(--gold);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+    .col-span-2 { grid-column: span 2; }
+    .col-span-3 { grid-column: span 3; }
+
+    label {
+      display: block;
+      font-size: .78rem;
+      color: var(--muted);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: .9rem;
+      padding: 10px 12px;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--gold);
+    }
+
+    textarea { resize: vertical; min-height: 80px; }
+
+    /* ---- anamnese table ---- */
+    .anamnese-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .anamnese-table th, .anamnese-table td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      font-size: .85rem;
+    }
+
+    .anamnese-table th {
+      background: #181818;
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-size: .7rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
+    .anamnese-table td:first-child { color: var(--text); }
+
+    .radio-group { display: flex; gap: 16px; align-items: center; }
+
+    .radio-group label {
+      display: flex; align-items: center; gap: 6px;
+      font-size: .85rem; color: var(--text);
+      text-transform: none; letter-spacing: 0;
+      cursor: pointer; margin: 0;
+    }
+
+    input[type="radio"] { accent-color: var(--gold); }
+
+    /* ---- termo ---- */
+    .termo-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      font-size: .82rem;
+      color: #aaa;
+      line-height: 1.75;
+      max-height: 280px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+    }
+
+    .termo-box p { margin-bottom: 12px; }
+    .termo-box strong { color: var(--text); }
+
+    .check-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .check-row input[type="checkbox"] {
+      accent-color: var(--gold);
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+
+    .check-row span { font-size: .85rem; line-height: 1.5; }
+
+    /* ---- button ---- */
+    .btn-primary {
+      display: block;
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'Cinzel', serif;
+      font-size: .85rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 16px;
+      cursor: pointer;
+      transition: background .2s, opacity .2s;
+      margin-top: 32px;
+    }
+
+    .btn-primary:hover { background: #a31f1f; }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* ---- feedback ---- */
+    .msg {
+      display: none;
+      padding: 14px 18px;
+      border-radius: var(--radius);
+      font-size: .85rem;
+      margin-top: 20px;
+    }
+
+    .msg.success { background: #0d2e1a; border: 1px solid #1e6b3a; color: #5dbb7e; display: block; }
+    .msg.error   { background: #2e0d0d; border: 1px solid #8b1a1a; color: #e07070; display: block; }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--muted);
+      font-size: .75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 560px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .col-span-2, .col-span-3 { grid-column: span 1; }
+      .anamnese-table { font-size: .78rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="logo-name" href="./index.html">Micael Tatuagem</a>
+  <span class="logo-sub">Muriaé · MG</span>
+</header>
+
+<main>
+  <p class="page-title">Ficha de Cadastro e Anamnese</p>
+  <p class="page-sub">Obrigatório apresentar documento original. Preencha todos os campos com atenção.</p>
+
+  <form id="formAnamnese" novalidate>
+
+    <!-- CADASTRO -->
+    <div class="section">
+      <p class="section-title">Dados Pessoais</p>
+      <div class="grid-2">
+        <div class="col-span-2">
+          <label for="nome">Nome completo *</label>
+          <input type="text" id="nome" name="nome" required placeholder="Seu nome completo" />
+        </div>
+        <div>
+          <label for="rg">RG *</label>
+          <input type="text" id="rg" name="rg" required placeholder="00.000.000-0" />
+        </div>
+        <div>
+          <label for="cpf">CPF *</label>
+          <input type="text" id="cpf" name="cpf" required placeholder="000.000.000-00" />
+        </div>
+        <div>
+          <label for="nascimento">Data de nascimento *</label>
+          <input type="date" id="nascimento" name="nascimento" required />
+        </div>
+        <div>
+          <label for="idade">Idade *</label>
+          <input type="text" id="idade" name="idade" required placeholder="Ex: 28" />
+        </div>
+        <div class="col-span-2">
+          <label for="endereco">Endereço completo</label>
+          <input type="text" id="endereco" name="endereco" placeholder="Rua, número, bairro, cidade — UF" />
+        </div>
+        <div>
+          <label for="celular">Celular / WhatsApp *</label>
+          <input type="tel" id="celular" name="celular" required placeholder="(00) 00000-0000" />
+        </div>
+        <div class="col-span-2">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" placeholder="seu@email.com" />
+        </div>
+        <div>
+          <label for="emergencia_nome">Em caso de emergência — Nome</label>
+          <input type="text" id="emergencia_nome" name="emergencia_nome" placeholder="Nome do contato" />
+        </div>
+        <div>
+          <label for="emergencia_fone">Fone de emergência</label>
+          <input type="tel" id="emergencia_fone" name="emergencia_fone" placeholder="(00) 00000-0000" />
+        </div>
+        <div>
+          <label for="profissao">Profissão</label>
+          <input type="text" id="profissao" name="profissao" placeholder="Sua profissão" />
+        </div>
+        <div>
+          <label for="indicacao">Indicação</label>
+          <input type="text" id="indicacao" name="indicacao" placeholder="Quem te indicou?" />
+        </div>
+        <div class="col-span-2">
+          <label>Autoriza a publicação da foto da tatuagem no site / redes sociais?</label>
+          <div class="radio-group">
+            <label><input type="radio" name="autoriza_foto" value="sim" /> Sim</label>
+            <label><input type="radio" name="autoriza_foto" value="nao" checked /> Não</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANAMNESE -->
+    <div class="section">
+      <p class="section-title">Ficha de Anamnese</p>
+      <p style="font-size:.82rem;color:var(--muted);margin-bottom:16px;">Marque Sim ou Não para cada item e preencha Tipo e Observações quando necessário.</p>
+
+      <table class="anamnese-table" id="anamneseTable">
+        <thead>
+          <tr>
+            <th style="width:38%">Condição</th>
+            <th style="width:8%">Sim</th>
+            <th style="width:8%">Não</th>
+            <th style="width:20%">Tipo</th>
+            <th>Observações</th>
+          </tr>
+        </thead>
+        <tbody id="anamneseTbody"></tbody>
+      </table>
+    </div>
+
+    <!-- TERMO -->
+    <div class="section">
+      <p class="section-title">Termo de Autorização e Contrato de Prestação de Serviços de Tatuagem</p>
+
+      <div class="termo-box" id="termoBox">
+        <p>Autorizo e concordo com o serviço prestado, estando ciente dos cuidados listados.</p>
+
+        <p>Concordo e autorizo o uso dos equipamentos, técnicas e produtos empregados na feitura das tatuagens por mim contratadas e estou ciente de que todos os cuidados para a assepsia e segurança do serviço foram tomados.</p>
+
+        <p>Estou ciente de que devo acompanhar o processo de cicatrização, mantendo a higiene e cuidados diários conforme descritos no GUIA DE CUIDADOS anexo, e de que o processo de cicatrização é de total responsabilidade do cliente.</p>
+
+        <p><strong>Retoques</strong>, no caso de tatuagem, só serão efetuados sem ônus até o prazo máximo de 30 dias corridos, contados a partir da data de realização do serviço, inclusive, e somente no caso de que a região onde o serviço tenha sido realizado não tenha sido submetido à exposição do Sol e não se encontre em estado de bronzeamento.</p>
+
+        <p>Quaisquer retoques de tatuagens, não descritos no item acima, serão realizados apenas mediante pagamento do VALOR MÍNIMO DE SERVIÇOS DE TATUAGEM, conforme tabela em vigor na data em que o serviço for solicitado.</p>
+
+        <p>Tatuagens que tenham sido negociadas pelo valor total do serviço, e que necessitem de mais de uma sessão para serem finalizadas, têm o prazo máximo de 30 dias corridos entre sessões para o melhor andamento do serviço. Caso o cliente extrapole esse prazo, por motivos alheios ao profissional, o valor da tatuagem será renegociado, de acordo com os valores por sessão conforme tabela em vigor na data em que o serviço for solicitado.</p>
+
+        <p>Para garantir o correto resultado na aplicação de uma tatuagem, existem padronizações técnicas e estéticas que devem ser seguidas, como o tamanho ideal do desenho em relação ao local do corpo e restrição das cores em relação ao tom da pele.</p>
+
+        <p>Caso, mesmo após ser informado disto, continue optando, insistindo e exigindo um desenho em uma escala que com certeza irá influenciar negativamente o resultado esperado, a responsabilidade deste fato é única e exclusiva do cliente.</p>
+
+        <p>Pessoas com compulsão por bronzeamento, ou que, mesmo devidamente avisadas do resguardo necessário no período de cicatrização (como consta na cláusula referente à validade do retoque sem ônus) optam por ficarem expostas ao Sol, tomar banho de piscina e/ou mar, abusarem do uso de álcool e/ou drogas, ficam totalmente responsáveis pelo resultado, positivo ou negativo, eventuais inflamações, infecções, baixa absorção de pigmento ou qualquer outro dano em um procedimento realizado em um ambiente estéril, que segue todas as regras de biossegurança.</p>
+
+        <p>Neste caso o profissional fica livre de qualquer responsabilidade em relação ao resultado, podendo cobrar por um novo procedimento para corrigir o dano causado pela negligência do cliente, ou até mesmo optar por não realizar o serviço.</p>
+      </div>
+
+      <div class="check-row">
+        <input type="checkbox" id="aceite_termo" name="aceite_termo" required />
+        <span>Li e concordo integralmente com o Termo de Autorização e Contrato de Prestação de Serviços de Tatuagem acima. Declaro que as informações prestadas na ficha de anamnese são verdadeiras.</span>
+      </div>
+
+      <div style="margin-top:16px">
+        <label for="assinatura_nome">Assinar com nome completo *</label>
+        <input type="text" id="assinatura_nome" name="assinatura_nome" required placeholder="Digite seu nome completo como assinatura" />
+      </div>
+    </div>
+
+    <button type="submit" class="btn-primary" id="btnEnviar">Enviar Ficha</button>
+
+    <div class="msg" id="msgOk">
+      Ficha enviada com sucesso!<br/>
+      <span id="msgOkExtra" style="font-size:.82rem;opacity:.85"></span>
+    </div>
+    <div class="msg error" id="msgErr">Erro ao enviar. Verifique os campos obrigatórios e tente novamente.</div>
+
+    <!-- botão WhatsApp — aparece após envio bem-sucedido -->
+    <a id="btnWpp" href="#" target="_blank" style="display:none;
+      margin-top:16px; padding:14px 20px;
+      background:#1a5c2b; color:#fff; border-radius:4px;
+      font-family:'Cinzel',serif; font-size:.82rem; letter-spacing:.1em;
+      text-decoration:none; text-align:center; text-transform:uppercase;
+      display:none; align-items:center; justify-content:center; gap:10px;">
+      📲 Enviar cópia ao cliente via WhatsApp
+    </a>
+
+  </form>
+</main>
+
+<footer>© Micael Faccio · Tatuador em Muriaé, MG · (32) 99966-6946</footer>
+
+<script>
+// ────────────────────────────────────────────
+// SUPABASE CONFIG — substitua pelas suas chaves
+// ────────────────────────────────────────────
+const SUPA_URL = 'https://SEU_PROJECT_ID.supabase.co';
+const SUPA_KEY = 'SUA_ANON_KEY_PUBLICA';
+
+const db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// ────────────────────────────────────────────
+// FICHA DE CUIDADOS (texto fixo)
+// ────────────────────────────────────────────
+const CUIDADOS = `
+🩹 *GUIA DE CUIDADOS — MICAEL TATUAGEM*
+
+Sua tatuagem foi feita dentro dos protocolos de segurança, com materiais de primeira linha.
+
+Para o máximo de absorção de pigmento e boa cicatrização:
+
+✅ Mantenha a limpeza do local diariamente com água e sabão.
+
+✅ Faça a troca da bandagem oclusiva (plástico filme) enquanto o corpo estiver expelindo pigmento. Você sai do estúdio com a primeira bandagem — ao fazer a primeira troca, notará o exsudato (pigmento expelido pela pele), que deve ser lavado para não formar casquinha.
+
+✅ Aplique pomada à base de dexpantenol sem zinco (Bepantol ou genéricos). Use sempre camada *fina* de pomada — *NÃO EXAGERE NA POMADA.*
+
+✅ Ao trocar e notar o plástico limpo (sem excesso de pigmento), suspenda o uso do plástico — continue apenas com a pomada para controlar a hidratação até o fim da cicatrização.
+
+⏱️ O período do plástico varia de 1 a 3 dias, dependendo da quantidade de pigmento e do organismo de cada pessoa.
+
+🔁 Aplique camada fina de pomada, espalhando até a pele absorver, de 3 a 4 vezes ao dia.
+
+⚠️ *Retoques sem custo* têm validade de *30 dias* a partir da data do serviço, e apenas se a região *não tiver sido exposta ao sol* e não estiver bronzeada.
+
+Qualquer dúvida, me chame no WhatsApp: (32) 99966-6946
+`.trim();
+
+// ────────────────────────────────────────────
+// TERMO (texto para WhatsApp)
+// ────────────────────────────────────────────
+function gerarTermoWpp(nome, assinatura, data) {
+  return `
+📋 *TERMO DE AUTORIZAÇÃO — MICAEL TATUAGEM*
+_Cópia para o cliente_
+
+*Cliente:* ${nome}
+*Assinatura:* ${assinatura}
+*Data:* ${data}
+
+Você concordou e autorizou o uso dos equipamentos, técnicas e produtos empregados na feitura da tatuagem contratada, estando ciente de que todos os cuidados de assepsia e segurança foram tomados.
+
+O processo de cicatrização é de responsabilidade do cliente. Retoques sem ônus têm validade de 30 dias, contados da data do serviço, e somente se a região não tiver sido exposta ao sol nem estiver em estado de bronzeamento.
+
+Pessoa com compulsão por bronzeamento, ou que optar por exposição ao sol, banho de piscina/mar, álcool ou drogas no período de cicatrização assume total responsabilidade pelo resultado.
+
+Este termo confirma ciência e aceite de todas as cláusulas de contrato de prestação de serviços de tatuagem firmadas com Micael Faccio — Tatuador em Muriaé, MG.
+
+Guarde esta mensagem como comprovante.
+  `.trim();
+}
+
+// ────────────────────────────────────────────
+// FORMATAR NÚMERO PARA WPP
+// ────────────────────────────────────────────
+function formatarWpp(fone) {
+  // remove tudo que não for dígito
+  const digitos = fone.replace(/\D/g, '');
+  // se já começa com 55, usa direto; senão adiciona 55 (Brasil)
+  return digitos.startsWith('55') ? digitos : '55' + digitos;
+}
+
+// ────────────────────────────────────────────
+// BUILD ANAMNESE TABLE
+// ────────────────────────────────────────────
+const condicoes = [
+  'Tem Diabetes?',
+  'Tem Hipertensão ou Hipotensão?',
+  'Tem Hepatite B ou C?',
+  'Tem algum tipo de alergia?',
+  'Tem problemas cardíacos?',
+  'Tem problemas de pele ou cicatrização?',
+  'Tem problemas circulatórios?',
+  'Está grávida?',
+  'Outras doenças infecto contagiosas?',
+  'Doador de Sangue?',
+];
+
+const tbody = document.getElementById('anamneseTbody');
+condicoes.forEach((c, i) => {
+  const key = 'anamnese_' + i;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${c}</td>
+    <td style="text-align:center"><input type="radio" name="${key}" value="sim" /></td>
+    <td style="text-align:center"><input type="radio" name="${key}" value="nao" checked /></td>
+    <td><input type="text" name="${key}_tipo" placeholder="—" style="min-width:0" /></td>
+    <td><input type="text" name="${key}_obs" placeholder="—" style="min-width:0" /></td>
+  `;
+  tbody.appendChild(tr);
+});
+
+// ────────────────────────────────────────────
+// FORM SUBMIT
+// ────────────────────────────────────────────
+document.getElementById('formAnamnese').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const btn = document.getElementById('btnEnviar');
+  btn.disabled = true;
+  btn.textContent = 'Enviando…';
+
+  const fd = new FormData(e.target);
+  const get = k => fd.get(k) || '';
+
+  // valida aceite
+  if (!fd.get('aceite_termo')) {
+    document.getElementById('msgErr').textContent = 'Você precisa aceitar o Termo de Autorização para continuar.';
+    document.getElementById('msgErr').style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Enviar Ficha';
+    return;
+  }
+
+  // monta objeto anamnese
+  const anamneseData = {};
+  condicoes.forEach((c, i) => {
+    const key = 'anamnese_' + i;
+    anamneseData[c] = {
+      resposta: get(key),
+      tipo: get(key + '_tipo'),
+      observacoes: get(key + '_obs'),
+    };
+  });
+
+  const nomeCliente    = get('nome');
+  const assinatura     = get('assinatura_nome');
+  const celularCliente = get('celular');
+  const dataHoje       = new Date().toLocaleDateString('pt-BR');
+
+  const payload = {
+    nome: nomeCliente,
+    rg: get('rg'),
+    cpf: get('cpf'),
+    nascimento: get('nascimento') || null,
+    idade: get('idade'),
+    endereco: get('endereco'),
+    celular: celularCliente,
+    email: get('email'),
+    emergencia_nome: get('emergencia_nome'),
+    emergencia_fone: get('emergencia_fone'),
+    profissao: get('profissao'),
+    indicacao: get('indicacao'),
+    autoriza_foto: get('autoriza_foto') === 'sim',
+    anamnese: anamneseData,
+    aceite_termo: true,
+    assinatura_nome: assinatura,
+    criado_em: new Date().toISOString(),
+  };
+
+  const { error } = await db.from('anamneses').insert([payload]);
+
+  if (error) {
+    console.error(error);
+    document.getElementById('msgErr').textContent = 'Erro ao enviar: ' + error.message;
+    document.getElementById('msgErr').style.display = 'block';
+    document.getElementById('msgOk').style.display = 'none';
+    btn.disabled = false;
+    btn.textContent = 'Enviar Ficha';
+    return;
+  }
+
+  // ── SUCESSO ──
+  document.getElementById('msgOk').style.display = 'block';
+  document.getElementById('msgErr').style.display = 'none';
+
+  // monta mensagem WhatsApp: termo + cuidados
+  const msgWpp = gerarTermoWpp(nomeCliente, assinatura, dataHoje)
+    + '\n\n──────────────────────\n\n'
+    + CUIDADOS;
+
+  const wppNumero = celularCliente ? formatarWpp(celularCliente) : '';
+
+  if (wppNumero && wppNumero.length >= 12) {
+    const link = `https://wa.me/${wppNumero}?text=${encodeURIComponent(msgWpp)}`;
+    const btnWpp = document.getElementById('btnWpp');
+    btnWpp.href = link;
+    btnWpp.style.display = 'flex';
+
+    document.getElementById('msgOkExtra').textContent =
+      'Clique no botão abaixo para enviar o Termo + Guia de Cuidados via WhatsApp.';
+  } else {
+    document.getElementById('msgOkExtra').textContent =
+      'Ficha registrada. Número de celular não informado — envio por WhatsApp indisponível.';
+  }
+
+  e.target.reset();
+  btn.disabled = false;
+  btn.textContent = 'Enviar Ficha';
+});
+</script>
+</body>
+</html>
