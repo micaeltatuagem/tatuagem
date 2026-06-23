@@ -759,13 +759,32 @@
 
   // ── LOAD GALLERY ── 
   async function loadGallery() {
+    const grid = document.getElementById('galleryGrid');
     try {
       const res = await fetch(`${DATA_PATH}?t=${Date.now()}`, { cache: 'no-store' });
-      galleryData = res.ok ? await res.json() : [];
+      if (!res.ok) {
+        console.warn(`gallery-data.json retornou HTTP ${res.status}`);
+        galleryData = [];
+      } else {
+        const parsed = await res.json();
+        galleryData = Array.isArray(parsed) ? parsed : (parsed.images || parsed.fotos || []);
+        if (!galleryData.length) {
+          console.warn('gallery-data.json carregado mas lista vazia.');
+        }
+      }
     } catch (err) {
       console.warn('Não foi possível carregar gallery-data.json:', err);
       galleryData = [];
     }
+
+    if (!galleryData.length) {
+      grid.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">🖼</div>
+          <p class="empty-state-text">Galeria em preparação. Em breve os trabalhos estarão disponíveis aqui.</p>
+        </div>`;
+    }
+
     filteredData = [...galleryData];
   }
 
@@ -837,22 +856,37 @@
   // ── RENDER GALLERY ── 
   function renderGallery() {
     const grid = document.getElementById('galleryGrid');
-    
+
     if (filteredData.length === 0) {
-      grid.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-state-icon">🎨</div>
-          <p class="empty-state-text">Nenhuma imagem neste estilo ainda.</p>
-        </div>
-      `;
+      // Só mostra empty-state de "nenhum neste estilo" se há dados globais
+      if (galleryData.length > 0) {
+        grid.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🎨</div>
+            <p class="empty-state-text">Nenhuma imagem neste estilo ainda.</p>
+          </div>`;
+      }
+      // Se galleryData também está vazio, a mensagem já foi colocada em loadGallery
       return;
     }
 
-    grid.innerHTML = filteredData.map((img, idx) => `
-      <div class="gallery-item" onclick="openLightbox(${idx})">
-        <img src="${img.imageUrl || img.image}" alt="${buildAltText(img)}" loading="lazy" />
-      </div>
-    `).join('');
+    grid.innerHTML = filteredData.map((img, idx) => {
+      const src = img.imageUrl || img.image || '';
+      const alt = buildAltText(img);
+      const title = escapeHtml(img.title || '');
+      const tags  = (img.styles || []).map(s => `<span class="tag">${escapeHtml(s)}</span>`).join('');
+      return `
+        <div class="gallery-item" onclick="openLightbox(${idx})">
+          <img src="${src}" alt="${alt}" loading="lazy" />
+          <div class="gallery-info">
+            ${title ? `<div class="gallery-info-title">${title}</div>` : ''}
+            <div class="gallery-info-tags">${tags}</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    // Garante que o grid (que tem fade-in) apareça após receber conteúdo
+    observeGrid();
   }
 
   // ── LIGHTBOX FUNCTIONS ── 
@@ -910,17 +944,23 @@
   }
 
   // ── FADE IN OBSERVER ── 
-  function setupFadeInObserver() {
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          obs.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12 });
+  const fadeObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        fadeObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+  function setupFadeInObserver() {
+    document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+  }
+
+  // Reobserva o grid depois de cada render (itens novos não estavam no observer)
+  function observeGrid() {
+    const grid = document.getElementById('galleryGrid');
+    if (grid) fadeObs.observe(grid);
   }
 
   // ── INITIALIZE ── 

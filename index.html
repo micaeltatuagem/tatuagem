@@ -283,84 +283,71 @@
       .pilares { grid-template-columns: 1fr; }
     }
 
-    /* ── Galeria ─────────────────────────────────────────────── */
-    #galeria .galeria-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
+    /* ── Galeria — carrossel ─────────────────────────────────── */
+    .carousel-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 560px;
+      margin: 0 auto 1.5rem;
       border: 1px solid var(--border);
-      margin-bottom: 1.5rem;
-      min-height: 280px;
+      background: var(--surface);
     }
-    .galeria-item {
+    .carousel-frame {
+      width: 100%;
       aspect-ratio: 1;
       overflow: hidden;
       position: relative;
-      background: var(--surface);
-      cursor: pointer;
     }
-    .galeria-item img {
+    .carousel-frame img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform .4s ease;
+      display: block;
+      transition: opacity .3s ease;
     }
-    .galeria-item:hover img { transform: scale(1.04); }
+    .carousel-frame img.fade { opacity: 0; }
 
-    /* Lightbox simples */
-    .lightbox {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.92);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
-    .lightbox.open { display: flex; }
-    .lightbox img {
-      max-width: 90vw;
-      max-height: 88vh;
-      object-fit: contain;
-      border-radius: var(--radius);
-    }
-    .lb-close {
-      position: absolute;
-      top: 1rem; right: 1.5rem;
-      font-size: 1.6rem;
-      color: var(--ink-muted);
-      cursor: pointer;
-      background: none;
-      border: none;
-      line-height: 1;
-    }
-    .lb-nav {
+    .carousel-nav {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 1.8rem;
+      background: rgba(10,10,10,.55);
+      border: 1px solid var(--border-hi);
       color: var(--ink-muted);
+      font-size: 1.2rem;
+      line-height: 1;
+      padding: .55rem .7rem;
       cursor: pointer;
-      background: none;
-      border: none;
-      padding: .5rem;
-      transition: color .2s;
+      transition: background .2s, color .2s;
+      z-index: 2;
     }
-    .lb-nav:hover { color: var(--ink); }
-    .lb-prev { left: 1rem; }
-    .lb-next { right: 1rem; }
+    .carousel-nav:hover { background: rgba(10,10,10,.85); color: var(--ink); }
+    .carousel-prev { left: .6rem; }
+    .carousel-next { right: .6rem; }
+
+    .carousel-counter {
+      position: absolute;
+      bottom: .7rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-ui);
+      font-size: .68rem;
+      letter-spacing: .1em;
+      color: rgba(232,232,232,.55);
+      background: rgba(10,10,10,.45);
+      padding: .2rem .6rem;
+      border-radius: 2px;
+      pointer-events: none;
+    }
 
     .galeria-loading {
-      grid-column: 1 / -1;
       display: flex;
       align-items: center;
       justify-content: center;
+      min-height: 260px;
       color: var(--ink-muted);
       font-family: var(--font-ui);
       font-size: .85rem;
-      padding: 3rem;
     }
     .galeria-link {
       font-family: var(--font-ui);
@@ -381,10 +368,6 @@
       color: var(--ink-muted);
       margin-top: 1rem;
       line-height: 1.6;
-    }
-
-    @media (max-width: 600px) {
-      #galeria .galeria-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
     /* ── Processo ────────────────────────────────────────────── */
@@ -695,9 +678,11 @@
 <section id="galeria">
   <div class="inner">
     <p class="eyebrow">Galeria</p>
-    <div class="galeria-grid" id="galeria-grid">
+
+    <div id="galeria-carousel">
       <div class="galeria-loading">Carregando galeria…</div>
     </div>
+
     <a class="galeria-link" href="galeria.html">↗ ver galeria completa</a>
     <p class="galeria-desc">
       Micael Faccio tatua nos estilos blackwork, dark art, colorido (neo-tradicional) e ornamental,
@@ -705,14 +690,6 @@
     </p>
   </div>
 </section>
-
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox">
-  <button class="lb-close" id="lb-close">✕</button>
-  <button class="lb-nav lb-prev" id="lb-prev">❮</button>
-  <img src="" alt="" id="lb-img" />
-  <button class="lb-nav lb-next" id="lb-next">❯</button>
-</div>
 
 <!-- ── Processo ──────────────────────────────────────────────── -->
 <section id="processo">
@@ -879,69 +856,75 @@
     });
   });
 
-  // ── Galeria via GitHub API ───────────────────────────────────
-  (async function carregarGaleria() {
-    const grid = document.getElementById('galeria-grid');
-    try {
-      const OWNER = 'micaeltatuagem';
-      const REPO  = 'tatuagem';
-      const PATH  = 'galeria';
-      const DATA_FILE = `${PATH}/gallery-data.json`;
+  // ── Galeria — carrossel ──────────────────────────────────────
+  (async function carregarCarrossel() {
+    const wrap = document.getElementById('galeria-carousel');
+    const OWNER = 'micaeltatuagem';
+    const REPO  = 'tatuagem';
+    const BASE  = `https://raw.githubusercontent.com/${OWNER}/${REPO}/main/galeria`;
 
-      // Tenta carregar gallery-data.json
+    try {
       const res = await fetch(
-        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${DATA_FILE}`,
+        `https://api.github.com/repos/${OWNER}/${REPO}/contents/galeria/gallery-data.json`,
         { headers: { 'Accept': 'application/vnd.github.v3+json' } }
       );
-
       if (!res.ok) throw new Error('sem gallery-data.json');
       const meta = await res.json();
       const json = JSON.parse(atob(meta.content.replace(/\n/g, '')));
       const fotos = Array.isArray(json) ? json : (json.images || json.fotos || []);
-
       if (!fotos.length) throw new Error('lista vazia');
 
-      // Mostra só as primeiras 6 na index
-      const amostra = fotos.slice(0, 6);
-      grid.innerHTML = '';
-      const imgs = [];
+      // Monta array de {src, alt}
+      const imgs = fotos.map((f, i) => ({
+        src: typeof f === 'string' ? `${BASE}/${f}` : (f.src || f.url || ''),
+        alt: (typeof f === 'object' && f.alt) ? f.alt : `Tatuagem ${i + 1} — Micael Faccio`
+      }));
 
-      amostra.forEach((foto, i) => {
-        const src = typeof foto === 'string'
-          ? `https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${PATH}/${foto}`
-          : (foto.src || foto.url || '');
-        const alt = (typeof foto === 'object' && foto.alt) ? foto.alt : `Tatuagem ${i + 1} — Micael Faccio`;
-        imgs.push(src);
+      let idx = 0;
 
-        const div = document.createElement('div');
-        div.className = 'galeria-item';
-        div.innerHTML = `<img src="${src}" alt="${alt}" loading="lazy" width="320" height="320" />`;
-        div.addEventListener('click', () => abrirLb(i));
-        grid.appendChild(div);
+      wrap.innerHTML = `
+        <div class="carousel-wrap">
+          <div class="carousel-frame">
+            <img id="car-img" src="${imgs[0].src}" alt="${imgs[0].alt}" loading="lazy" />
+          </div>
+          <button class="carousel-nav carousel-prev" id="car-prev" aria-label="Anterior">❮</button>
+          <button class="carousel-nav carousel-next" id="car-next" aria-label="Próxima">❯</button>
+          <div class="carousel-counter" id="car-count">1 / ${imgs.length}</div>
+        </div>`;
+
+      const img   = document.getElementById('car-img');
+      const count = document.getElementById('car-count');
+
+      function ir(novoIdx) {
+        idx = (novoIdx + imgs.length) % imgs.length;
+        img.classList.add('fade');
+        setTimeout(() => {
+          img.src = imgs[idx].src;
+          img.alt = imgs[idx].alt;
+          count.textContent = `${idx + 1} / ${imgs.length}`;
+          img.classList.remove('fade');
+        }, 180);
+      }
+
+      document.getElementById('car-prev').onclick = () => ir(idx - 1);
+      document.getElementById('car-next').onclick = () => ir(idx + 1);
+
+      // Swipe touch
+      let tsx = 0;
+      img.addEventListener('touchstart', e => { tsx = e.touches[0].clientX; }, { passive: true });
+      img.addEventListener('touchend',   e => {
+        const dx = e.changedTouches[0].clientX - tsx;
+        if (Math.abs(dx) > 40) ir(dx < 0 ? idx + 1 : idx - 1);
       });
 
-      // Lightbox
-      let lbIdx = 0;
-      const lb    = document.getElementById('lightbox');
-      const lbImg = document.getElementById('lb-img');
-      function abrirLb(i) {
-        lbIdx = i;
-        lbImg.src = imgs[i];
-        lb.classList.add('open');
-      }
-      document.getElementById('lb-close').onclick = () => lb.classList.remove('open');
-      document.getElementById('lb-prev').onclick  = () => { lbIdx = (lbIdx - 1 + imgs.length) % imgs.length; lbImg.src = imgs[lbIdx]; };
-      document.getElementById('lb-next').onclick  = () => { lbIdx = (lbIdx + 1) % imgs.length; lbImg.src = imgs[lbIdx]; };
-      lb.addEventListener('click', e => { if (e.target === lb) lb.classList.remove('open'); });
+      // Teclado (quando galeria visível)
       document.addEventListener('keydown', e => {
-        if (!lb.classList.contains('open')) return;
-        if (e.key === 'Escape') lb.classList.remove('open');
-        if (e.key === 'ArrowLeft')  document.getElementById('lb-prev').click();
-        if (e.key === 'ArrowRight') document.getElementById('lb-next').click();
+        if (e.key === 'ArrowLeft')  ir(idx - 1);
+        if (e.key === 'ArrowRight') ir(idx + 1);
       });
 
     } catch (e) {
-      grid.innerHTML = `<div class="galeria-loading">
+      wrap.innerHTML = `<div class="galeria-loading">
         <a href="galeria.html" style="color:var(--accent);text-decoration:none;">Ver galeria completa →</a>
       </div>`;
     }
