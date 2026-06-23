@@ -859,25 +859,21 @@
   // ── Galeria — carrossel ──────────────────────────────────────
   (async function carregarCarrossel() {
     const wrap = document.getElementById('galeria-carousel');
-    const OWNER = 'micaeltatuagem';
-    const REPO  = 'tatuagem';
-    const BASE  = `https://raw.githubusercontent.com/${OWNER}/${REPO}/main/galeria`;
 
     try {
-      const res = await fetch(
-        `https://api.github.com/repos/${OWNER}/${REPO}/contents/galeria/gallery-data.json`,
-        { headers: { 'Accept': 'application/vnd.github.v3+json' } }
-      );
+      // Fetch direto — sem GitHub API, sem rate limit
+      const res = await fetch(`galeria/gallery-data.json?t=${Date.now()}`, { cache: 'no-store' });
       if (!res.ok) throw new Error('sem gallery-data.json');
-      const meta = await res.json();
-      const json = JSON.parse(atob(meta.content.replace(/\n/g, '')));
-      const fotos = Array.isArray(json) ? json : (json.images || json.fotos || []);
+      const parsed = await res.json();
+      const fotos = Array.isArray(parsed) ? parsed : (parsed.images || parsed.fotos || []);
       if (!fotos.length) throw new Error('lista vazia');
 
       // Monta array de {src, alt}
       const imgs = fotos.map((f, i) => ({
-        src: typeof f === 'string' ? `${BASE}/${f}` : (f.src || f.url || ''),
-        alt: (typeof f === 'object' && f.alt) ? f.alt : `Tatuagem ${i + 1} — Micael Faccio`
+        src: typeof f === 'string' ? `galeria/${f}` : (f.imageUrl || f.src || f.url || f.image || ''),
+        alt: (typeof f === 'object' && (f.alt || f.title))
+          ? `${f.alt || f.title} — Micael Faccio, tatuador em Muriaé MG`
+          : `Tatuagem ${i + 1} — Micael Faccio`
       }));
 
       let idx = 0;
