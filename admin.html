@@ -594,6 +594,58 @@
       border-color: var(--rust);
     }
 
+    /* ── CLIENTES TABLE ── */
+    .cliente-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      gap: .5rem 1rem;
+      align-items: center;
+      padding: .8rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: .88rem;
+    }
+    .cliente-row:last-child { border-bottom: none; }
+    .cliente-nome { color: var(--bone); font-weight: 500; }
+    .cliente-cod  { color: var(--muted); font-family: monospace; font-size: .8rem; }
+    .cliente-contagem {
+      font-family: monospace;
+      font-size: 1rem;
+      color: var(--bone);
+      text-align: center;
+      min-width: 3rem;
+    }
+    .contagem-completa { color: #4ade80; font-weight: bold; }
+    .btn-marcar {
+      background: none;
+      border: 1px solid rgba(212,201,176,.3);
+      color: var(--bone);
+      padding: .35rem .7rem;
+      border-radius: 4px;
+      font-size: .8rem;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      white-space: nowrap;
+    }
+    .btn-marcar:hover { border-color: var(--bone); background: rgba(212,201,176,.06); }
+    .btn-zap {
+      background: #25d366;
+      border: none;
+      color: #fff;
+      padding: .35rem .8rem;
+      border-radius: 4px;
+      font-size: .8rem;
+      cursor: pointer;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .cliente-whats { font-size:.78rem; color: var(--muted); }
+    @media (max-width: 600px) {
+      .cliente-row { grid-template-columns: 1fr auto; row-gap: .3rem; }
+      .cliente-row > *:nth-child(3) { grid-column: 1; }
+      .cliente-row > *:nth-child(4) { grid-column: 2; grid-row: 1; }
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
       .admin-header {
@@ -785,6 +837,28 @@
     <button class="btn btn-secondary" onclick="exportData()">📥 Fazer Backup</button>
     <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 Restaurar Backup</button>
     <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(event)" />
+  </div>
+
+  <!-- ── CLIENTES / PROMOÇÕES ─────────────────────────────── -->
+  <div class="form-section" id="secao-clientes">
+    <h2>Clientes — Promoção Vitalícia (5 indicações)</h2>
+    <p style="margin-bottom:1.2rem;color:rgba(212,201,176,0.7);font-size:0.9rem;">
+      Cada vez que atender e tatuar um cliente indicado por alguém, marque abaixo.
+      Ao chegar a 5, o botão de WhatsApp aparece para você avisar o indicante.
+    </p>
+
+    <!-- Busca -->
+    <div style="display:flex;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+      <input type="text" id="busca-cliente" placeholder="Buscar por nome ou código..."
+        style="flex:1;min-width:180px;background:#1a1818;border:1px solid var(--border);
+               color:var(--bone);padding:.65rem .9rem;border-radius:4px;font-size:.9rem;outline:none;" />
+      <button class="btn btn-secondary" onclick="carregarClientes()">🔄 Atualizar</button>
+    </div>
+
+    <!-- Tabela -->
+    <div id="clientes-lista" style="font-size:.88rem;">
+      <p style="color:var(--muted);">Clique em "Atualizar" para carregar os clientes cadastrados.</p>
+    </div>
   </div>
 
 </div>
@@ -1570,6 +1644,129 @@ ${imageEntries}
     el.textContent = message;
     el.classList.add('visible');
     setTimeout(() => el.classList.remove('visible'), 6000);
+  }
+</script>
+
+<!-- ── CLIENTES / PROMOÇÕES SCRIPT ── -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ── Supabase (mesmas credenciais do cadastro.html) ──
+  const SB_URL  = 'https://rpgcsejfewltricfsdrd.supabase.co';
+  const SB_ANON = 'sb_publishable_7LF70sbQS_es_uco138rqw_YfbqnIsa';
+  const { createClient: sbCreate } = supabase;
+  const db = sbCreate(SB_URL, SB_ANON);
+
+  // Cache local dos clientes carregados
+  let todosClientes = [];
+
+  // ── Carregar clientes ───────────────────────────────────────
+  async function carregarClientes() {
+    const lista = document.getElementById('clientes-lista');
+    lista.innerHTML = '<p style="color:var(--muted);">Carregando...</p>';
+
+    const { data, error } = await db
+      .from('clientes_promo')
+      .select('id, nome, whatsapp, codigo_indicacao, indicacoes_tatuadas, created_at')
+      .order('nome', { ascending: true });
+
+    if (error) {
+      lista.innerHTML = `<p style="color:#e05555;">Erro ao carregar: ${error.message}</p>`;
+      return;
+    }
+
+    todosClientes = data || [];
+    renderClientes(todosClientes);
+  }
+
+  // ── Renderizar lista ────────────────────────────────────────
+  function renderClientes(clientes) {
+    const lista = document.getElementById('clientes-lista');
+    const busca = (document.getElementById('busca-cliente').value || '').toLowerCase();
+
+    const filtrados = clientes.filter(c =>
+      c.nome.toLowerCase().includes(busca) ||
+      (c.codigo_indicacao || '').toLowerCase().includes(busca)
+    );
+
+    if (!filtrados.length) {
+      lista.innerHTML = '<p style="color:var(--muted);">Nenhum cliente encontrado.</p>';
+      return;
+    }
+
+    // Ordenar: quem tem mais indicações primeiro, depois alfabético
+    filtrados.sort((a, b) => {
+      const da = a.indicacoes_tatuadas || 0;
+      const db_ = b.indicacoes_tatuadas || 0;
+      if (db_ !== da) return db_ - da;
+      return a.nome.localeCompare(b.nome);
+    });
+
+    lista.innerHTML = filtrados.map(c => {
+      const count = c.indicacoes_tatuadas || 0;
+      const completo = count >= 5;
+      const numeroWhats = (c.whatsapp || '').replace(/\D/g, '');
+      const msgZap = encodeURIComponent(
+        `Olá ${c.nome.split(' ')[0]}! 🖤\n\n` +
+        `Você atingiu 5 indicações de amigos que tatuaram aqui — parabéns!\n` +
+        `Sua sessão grátis está liberada. Me chame para agendar. 🎉`
+      );
+
+      return `
+        <div class="cliente-row" id="row-${c.id}">
+          <div>
+            <div class="cliente-nome">${c.nome}</div>
+            <div class="cliente-cod">${c.codigo_indicacao || '—'} · <span class="cliente-whats">${formatarExibicao(c.whatsapp)}</span></div>
+          </div>
+          <div class="cliente-contagem ${completo ? 'contagem-completa' : ''}">
+            ${count}/5 ${completo ? '✓' : ''}
+          </div>
+          <button class="btn-marcar" onclick="marcarAtendimento('${c.id}', ${count})"
+            ${completo ? 'disabled style="opacity:.4;cursor:not-allowed;"' : ''}>
+            +1 tatuou
+          </button>
+          ${completo
+            ? `<a class="btn-zap" href="https://wa.me/55${numeroWhats}?text=${msgZap}" target="_blank" rel="noopener">🎉 Avisar</a>`
+            : `<span></span>`
+          }
+        </div>`;
+    }).join('');
+  }
+
+  // ── Marcar +1 atendimento ───────────────────────────────────
+  async function marcarAtendimento(clienteId, countAtual) {
+    const novoCount = (countAtual || 0) + 1;
+    const { error } = await db
+      .from('clientes_promo')
+      .update({ indicacoes_tatuadas: novoCount })
+      .eq('id', clienteId);
+
+    if (error) {
+      alert('Erro ao atualizar: ' + error.message);
+      return;
+    }
+
+    // Atualiza o cache e re-renderiza sem recarregar tudo
+    const idx = todosClientes.findIndex(c => c.id === clienteId);
+    if (idx !== -1) todosClientes[idx].indicacoes_tatuadas = novoCount;
+    renderClientes(todosClientes);
+
+    if (novoCount >= 5) {
+      alert(`✅ ${todosClientes[idx]?.nome || 'Cliente'} chegou a 5 indicações! Clique em "Avisar" para mandar o WhatsApp.`);
+    }
+  }
+
+  // ── Filtro em tempo real ────────────────────────────────────
+  document.getElementById('busca-cliente').addEventListener('input', () => {
+    renderClientes(todosClientes);
+  });
+
+  // ── Utilitário: formatar WhatsApp para exibição ─────────────
+  function formatarExibicao(v) {
+    if (!v) return '—';
+    const n = v.replace(/\D/g, '');
+    if (n.length === 11) return `(${n.slice(0,2)}) ${n.slice(2,7)}-${n.slice(7)}`;
+    if (n.length === 10) return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
+    return v;
   }
 </script>
 </body>
