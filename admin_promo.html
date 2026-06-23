@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Promoções · Micael Tatuagem</title>
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --bg:        #0a0a0a;
+      --surface:   #111111;
+      --surface2:  #161616;
+      --border:    #222222;
+      --border-hi: #333333;
+      --ink:       #e8e8e8;
+      --ink-muted: #777777;
+      --ink-faint: #333333;
+      --accent:    #c8a96e;
+      --accent-dim:#7a6340;
+      --success:   #4caf7d;
+      --warning:   #e0a020;
+      --error:     #e05555;
+      --info:      #5599e0;
+      --radius:    4px;
+      --font-body: 'Georgia', serif;
+      --font-ui:   system-ui, -apple-system, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); min-height: 100vh; }
+
+    /* ── Auth ──────────────────────────────────────────────── */
+    #tela-login {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 2rem;
+    }
+    .login-box {
+      width: 100%; max-width: 380px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 2.5rem 2rem;
+    }
+    .login-box h1 {
+      font-family: var(--font-body); font-size: 1.4rem; font-weight: normal;
+      margin-bottom: 0.4rem; color: var(--ink);
+    }
+    .login-box p { font-size: 0.82rem; color: var(--ink-muted); margin-bottom: 2rem; }
+    .login-box label {
+      display: block; font-size: 0.72rem; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--ink-muted); margin-bottom: .4rem;
+    }
+    .login-box input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--ink); font-family: var(--font-ui);
+      font-size: 0.95rem; padding: .7rem 1rem; outline: none; margin-bottom: 1rem;
+      transition: border-color .2s;
+    }
+    .login-box input:focus { border-color: var(--border-hi); }
+    .btn-login {
+      width: 100%; background: var(--accent); color: #0a0a0a; border: none;
+      border-radius: var(--radius); font-family: var(--font-ui); font-size: .9rem;
+      font-weight: 600; padding: .85rem; cursor: pointer; transition: opacity .2s;
+    }
+    .btn-login:hover { opacity: .88; }
+    .btn-login:disabled { opacity: .4; cursor: not-allowed; }
+    .login-err { font-size: .8rem; color: var(--error); margin-top: .6rem; min-height: 1.2em; }
+
+    /* ── Layout admin ──────────────────────────────────────── */
+    #tela-admin { display: none; }
+
+    .topbar {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: .9rem 1.5rem; display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .topbar-left { display: flex; align-items: baseline; gap: 1rem; }
+    .topbar h1 { font-family: var(--font-body); font-size: 1rem; font-weight: normal; color: var(--ink); }
+    .topbar-sep { color: var(--ink-faint); }
+    .topbar-section { font-size: .8rem; color: var(--ink-muted); }
+    .btn-logout {
+      background: none; border: 1px solid var(--border); color: var(--ink-muted);
+      border-radius: var(--radius); font-family: var(--font-ui); font-size: .75rem;
+      padding: .35rem .9rem; cursor: pointer; transition: border-color .2s, color .2s;
+    }
+    .btn-logout:hover { border-color: var(--border-hi); color: var(--ink); }
+
+    .main-wrap { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+    /* ── Stats ──────────────────────────────────────────────── */
+    .stats {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1px; background: var(--border); border: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+    }
+    .stat {
+      background: var(--surface); padding: 1.2rem 1.4rem;
+    }
+    .stat .s-label {
+      font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--ink-muted); margin-bottom: .4rem;
+    }
+    .stat .s-value {
+      font-size: 2rem; font-weight: bold; color: var(--ink); letter-spacing: -.02em;
+    }
+    .stat .s-value.accent { color: var(--accent); }
+    .stat .s-value.success { color: var(--success); }
+    .stat .s-value.warning { color: var(--warning); }
+
+    /* ── Alertas sessão grátis ──────────────────────────────── */
+    #alertas { margin-bottom: 2rem; }
+    .alerta-gratis {
+      background: #0d1a0f; border: 1px solid var(--success);
+      border-radius: var(--radius); padding: 1rem 1.2rem; margin-bottom: .8rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .alerta-gratis .a-texto { font-size: .88rem; color: var(--success); }
+    .alerta-gratis .a-texto strong { display: block; font-size: 1rem; margin-bottom: .2rem; }
+    .btn-usar-gratis {
+      background: var(--success); color: #fff; border: none;
+      border-radius: var(--radius); font-family: var(--font-ui); font-size: .8rem;
+      font-weight: 600; padding: .5rem 1rem; cursor: pointer; white-space: nowrap;
+      transition: opacity .2s;
+    }
+    .btn-usar-gratis:hover { opacity: .85; }
+
+    /* ── Filtros ────────────────────────────────────────────── */
+    .filtros {
+      display: flex; gap: .6rem; flex-wrap: wrap; margin-bottom: 1.5rem;
+      align-items: center;
+    }
+    .filtros input[type="text"] {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      color: var(--ink); font-family: var(--font-ui); font-size: .88rem;
+      padding: .55rem .9rem; outline: none; transition: border-color .2s; flex: 1; min-width: 180px;
+    }
+    .filtros input:focus { border-color: var(--border-hi); }
+    .filtro-btn {
+      background: var(--surface); border: 1px solid var(--border); color: var(--ink-muted);
+      border-radius: var(--radius); font-family: var(--font-ui); font-size: .78rem;
+      padding: .5rem 1rem; cursor: pointer; transition: border-color .2s, color .2s, background .2s;
+      white-space: nowrap;
+    }
+    .filtro-btn:hover, .filtro-btn.ativo {
+      border-color: var(--accent); color: var(--accent); background: #1a1408;
+    }
+    .btn-reload {
+      background: none; border: 1px solid var(--border); color: var(--ink-muted);
+      border-radius: var(--radius); font-family: var(--font-ui); font-size: .78rem;
+      padding: .5rem .9rem; cursor: pointer; transition: border-color .2s, color .2s;
+    }
+    .btn-reload:hover { border-color: var(--border-hi); color: var(--ink); }
+
+    /* ── Tabela ─────────────────────────────────────────────── */
+    .tabela-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+    thead th {
+      font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--ink-muted); font-weight: normal; text-align: left;
+      padding: .6rem .9rem; border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid var(--ink-faint); transition: background .15s; }
+    tbody tr:hover { background: var(--surface); }
+    tbody td { padding: .75rem .9rem; vertical-align: middle; }
+
+    .td-nome { font-weight: 600; color: var(--ink); }
+    .td-whats a { color: var(--ink-muted); text-decoration: none; font-size: .82rem; }
+    .td-whats a:hover { color: var(--accent); }
+    .td-codigo { font-family: monospace; color: var(--accent); font-size: .9rem; }
+    .td-canal { color: var(--ink-muted); font-size: .78rem; }
+    .td-data { color: var(--ink-muted); font-size: .78rem; white-space: nowrap; }
+
+    /* badges */
+    .badge {
+      display: inline-block; border-radius: 2px; font-size: .68rem; font-weight: 600;
+      letter-spacing: .06em; text-transform: uppercase; padding: .2rem .5rem;
+    }
+    .badge-disponivel { background: #0d1a0f; color: var(--success); }
+    .badge-usado      { background: #1a1408; color: var(--accent-dim); }
+    .badge-gratis     { background: #0d1a14; color: var(--success); }
+    .badge-pendente   { background: #1a130d; color: var(--warning); }
+
+    /* ações */
+    .td-acoes { white-space: nowrap; }
+    .btn-acao {
+      background: none; border: 1px solid var(--border); color: var(--ink-muted);
+      border-radius: var(--radius); font-family: var(--font-ui); font-size: .72rem;
+      padding: .3rem .7rem; cursor: pointer; margin-right: .3rem; margin-bottom: .2rem;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-acao:hover { border-color: var(--border-hi); color: var(--ink); }
+    .btn-acao.destaque { border-color: var(--accent-dim); color: var(--accent); }
+    .btn-acao.destaque:hover { background: #1a1408; }
+    .btn-acao.danger { border-color: #4a1a1a; color: var(--error); }
+    .btn-acao.danger:hover { background: #1a0e0e; }
+
+    /* indicações contador */
+    .td-ind { text-align: center; }
+    .ind-bar-wrap { display: flex; align-items: center; gap: .5rem; }
+    .ind-bar {
+      flex: 1; height: 4px; background: var(--ink-faint); border-radius: 2px; min-width: 60px;
+      overflow: hidden;
+    }
+    .ind-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .3s; }
+    .ind-num { font-size: .78rem; color: var(--ink-muted); white-space: nowrap; }
+
+    /* ── Modal detalhes ─────────────────────────────────────── */
+    .modal-bg {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.8);
+      z-index: 100; align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal-bg.open { display: flex; }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); width: 100%; max-width: 560px;
+      max-height: 90vh; overflow-y: auto; padding: 2rem;
+    }
+    .modal-header {
+      display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.5rem;
+    }
+    .modal-header h2 { font-family: var(--font-body); font-size: 1.2rem; font-weight: normal; }
+    .btn-fechar {
+      background: none; border: none; color: var(--ink-muted); cursor: pointer;
+      font-size: 1.2rem; line-height: 1; padding: .2rem;
+    }
+    .modal-section { margin-bottom: 1.5rem; }
+    .modal-section h3 {
+      font-size: .7rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--ink-muted); margin-bottom: .8rem; padding-bottom: .4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .4rem 0; border-bottom: 1px solid var(--ink-faint); font-size: .86rem;
+    }
+    .modal-row:last-child { border-bottom: none; }
+    .modal-row .k { color: var(--ink-muted); }
+    .modal-row .v { color: var(--ink); font-weight: 500; }
+    .modal-row .v.cod { font-family: monospace; color: var(--accent); }
+
+    .indicados-list { list-style: none; }
+    .indicados-list li {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .55rem 0; border-bottom: 1px solid var(--ink-faint); font-size: .84rem;
+    }
+    .indicados-list li:last-child { border-bottom: none; }
+    .ind-nome { color: var(--ink); }
+    .ind-status { font-size: .72rem; }
+
+    .modal-acoes { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
+    .btn-modal {
+      flex: 1; min-width: 120px; background: var(--surface2);
+      border: 1px solid var(--border); color: var(--ink-muted); border-radius: var(--radius);
+      font-family: var(--font-ui); font-size: .8rem; padding: .65rem 1rem;
+      cursor: pointer; transition: border-color .2s, color .2s;
+    }
+    .btn-modal:hover { border-color: var(--border-hi); color: var(--ink); }
+    .btn-modal.primary { border-color: var(--accent-dim); color: var(--accent); }
+    .btn-modal.primary:hover { background: #1a1408; }
+    .btn-modal.success { border-color: #1a4a28; color: var(--success); }
+    .btn-modal.success:hover { background: #0d1a0f; }
+
+    /* ── Empty / loading ────────────────────────────────────── */
+    .empty {
+      text-align: center; padding: 4rem 2rem; color: var(--ink-muted); font-size: .9rem;
+    }
+    .loading-row td { text-align: center; padding: 3rem; color: var(--ink-muted); }
+
+    /* ── Toast ──────────────────────────────────────────────── */
+    #toast {
+      position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: .75rem 1.4rem; font-size: .84rem;
+      color: var(--ink); z-index: 200; opacity: 0; transition: opacity .3s;
+      pointer-events: none; white-space: nowrap;
+    }
+    #toast.show { opacity: 1; }
+    #toast.ok   { border-color: var(--success); color: var(--success); }
+    #toast.err  { border-color: var(--error); color: var(--error); }
+
+    @media (max-width: 600px) {
+      .topbar h1 { font-size: .88rem; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      table { font-size: .78rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Login ─────────────────────────────────────────────────── -->
+<div id="tela-login">
+  <div class="login-box">
+    <h1>Micael Tatuagem</h1>
+    <p>Painel de Promoções · Acesso restrito</p>
+    <label for="l-email">E-mail</label>
+    <input type="email" id="l-email" autocomplete="username" />
+    <label for="l-senha">Senha</label>
+    <input type="password" id="l-senha" autocomplete="current-password" />
+    <button class="btn-login" id="btn-entrar">Entrar</button>
+    <p class="login-err" id="login-err"></p>
+  </div>
+</div>
+
+<!-- ── Admin ─────────────────────────────────────────────────── -->
+<div id="tela-admin">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Micael Tatuagem</h1>
+      <span class="topbar-sep">/</span>
+      <span class="topbar-section">Promoções</span>
+    </div>
+    <button class="btn-logout" id="btn-logout">Sair</button>
+  </div>
+
+  <div class="main-wrap">
+
+    <!-- Stats -->
+    <div class="stats" id="stats">
+      <div class="stat"><div class="s-label">Clientes</div><div class="s-value" id="st-total">—</div></div>
+      <div class="stat"><div class="s-label">Descontos disponíveis</div><div class="s-value accent" id="st-desc-disp">—</div></div>
+      <div class="stat"><div class="s-label">Descontos usados</div><div class="s-value" id="st-desc-usado">—</div></div>
+      <div class="stat"><div class="s-label">Tatuagens realizadas</div><div class="s-value success" id="st-tats">—</div></div>
+      <div class="stat"><div class="s-label">Sessões grátis liberadas</div><div class="s-value warning" id="st-gratis-lib">—</div></div>
+      <div class="stat"><div class="s-label">Sessões grátis usadas</div><div class="s-value" id="st-gratis-usado">—</div></div>
+    </div>
+
+    <!-- Alertas sessão grátis -->
+    <div id="alertas"></div>
+
+    <!-- Filtros -->
+    <div class="filtros">
+      <input type="text" id="busca" placeholder="Buscar por nome, WhatsApp ou código…" />
+      <button class="filtro-btn ativo" data-filtro="todos">Todos</button>
+      <button class="filtro-btn" data-filtro="desconto-disponivel">Desconto disponível</button>
+      <button class="filtro-btn" data-filtro="desconto-usado">Desconto usado</button>
+      <button class="filtro-btn" data-filtro="gratis-liberado">Sessão grátis</button>
+      <button class="btn-reload" id="btn-reload">↺ Atualizar</button>
+    </div>
+
+    <!-- Tabela -->
+    <div class="tabela-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>WhatsApp</th>
+            <th>Código</th>
+            <th>Canal</th>
+            <th>Desconto</th>
+            <th>Tatuagens</th>
+            <th>Indicações (confirmadas)</th>
+            <th>Cadastro</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Modal detalhes ─────────────────────────────────────────── -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-nome">Cliente</h2>
+      <button class="btn-fechar" id="btn-fechar">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- ── Scripts ───────────────────────────────────────────────── -->
+<script>
+  // ── Config ──────────────────────────────────────────────────
+  // SUBSTITUA pelas suas credenciais
+  const SUPABASE_URL  = 'https://SEU_PROJETO.supabase.co';
+  const SUPABASE_ANON = 'SUA_ANON_KEY';
+
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  // ── Estado ──────────────────────────────────────────────────
+  let todos = [];
+  let filtroAtivo = 'todos';
+  let clienteModal = null;
+
+  // ── Utilitários ─────────────────────────────────────────────
+  function toast(msg, tipo = '') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'show' + (tipo ? ' ' + tipo : '');
+    clearTimeout(el._t);
+    el._t = setTimeout(() => { el.className = ''; }, 3000);
+  }
+
+  function fmtData(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('pt-BR');
+  }
+
+  function fmtWhats(w) {
+    const d = w.replace(/\D/g, '');
+    if (d.length === 11) return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
+    if (d.length === 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;
+    return w;
+  }
+
+  function canalLabel(c) {
+    return { panfleto:'Panfleto', instagram:'Instagram', indicacao:'Indicação', outro:'Outro' }[c] || c;
+  }
+
+  // ── Auth ─────────────────────────────────────────────────────
+  sb.auth.onAuthStateChange((event, session) => {
+    if (session) {
+      document.getElementById('tela-login').style.display = 'none';
+      document.getElementById('tela-admin').style.display = 'block';
+      carregarClientes();
+    } else {
+      document.getElementById('tela-login').style.display = 'flex';
+      document.getElementById('tela-admin').style.display = 'none';
+    }
+  });
+
+  document.getElementById('btn-entrar').addEventListener('click', async () => {
+    const email = document.getElementById('l-email').value.trim();
+    const senha = document.getElementById('l-senha').value;
+    const btn = document.getElementById('btn-entrar');
+    const err = document.getElementById('login-err');
+    btn.disabled = true; btn.textContent = 'Entrando...'; err.textContent = '';
+    const { error } = await sb.auth.signInWithPassword({ email, password: senha });
+    btn.disabled = false; btn.textContent = 'Entrar';
+    if (error) err.textContent = 'Credenciais inválidas.';
+  });
+
+  document.getElementById('btn-logout').addEventListener('click', async () => {
+    await sb.auth.signOut();
+  });
+
+  document.getElementById('l-senha').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('btn-entrar').click();
+  });
+
+  // ── Carregar clientes ────────────────────────────────────────
+  async function carregarClientes() {
+    const tbody = document.getElementById('tbody');
+    tbody.innerHTML = '<tr class="loading-row"><td colspan="9">Carregando…</td></tr>';
+
+    const { data, error } = await sb
+      .from('clientes_promo')
+      .select('*')
+      .order('criado_em', { ascending: false });
+
+    if (error) {
+      tbody.innerHTML = `<tr class="loading-row"><td colspan="9">Erro ao carregar: ${error.message}</td></tr>`;
+      return;
+    }
+
+    todos = data || [];
+    atualizarStats();
+    atualizarAlertas();
+    renderTabela();
+  }
+
+  // ── Stats ────────────────────────────────────────────────────
+  function atualizarStats() {
+    document.getElementById('st-total').textContent      = todos.length;
+    document.getElementById('st-desc-disp').textContent  = todos.filter(c => c.status_desconto === 'disponivel').length;
+    document.getElementById('st-desc-usado').textContent = todos.filter(c => c.status_desconto === 'usado').length;
+    document.getElementById('st-tats').textContent       = todos.reduce((s, c) => s + (c.tatuagens_feitas || 0), 0);
+    document.getElementById('st-gratis-lib').textContent = todos.filter(c => c.sessao_gratis_liberada && !c.sessao_gratis_usada).length;
+    document.getElementById('st-gratis-usado').textContent = todos.filter(c => c.sessao_gratis_usada).length;
+  }
+
+  // ── Alertas sessão grátis ─────────────────────────────────────
+  function atualizarAlertas() {
+    const el = document.getElementById('alertas');
+    const pendentes = todos.filter(c => c.sessao_gratis_liberada && !c.sessao_gratis_usada);
+    el.innerHTML = pendentes.map(c => `
+      <div class="alerta-gratis">
+        <div class="a-texto">
+          <strong>✦ ${c.nome} — sessão grátis disponível!</strong>
+          Código ${c.codigo_indicacao} · ${c.indicacoes_confirmadas} amigos tatuaram
+        </div>
+        <button class="btn-usar-gratis" onclick="usarGratis('${c.id}')">Marcar como usada</button>
+      </div>
+    `).join('');
+  }
+
+  // ── Render tabela ────────────────────────────────────────────
+  function renderTabela() {
+    const busca = document.getElementById('busca').value.toLowerCase();
+    const tbody = document.getElementById('tbody');
+
+    let lista = todos.filter(c => {
+      if (filtroAtivo === 'desconto-disponivel') return c.status_desconto === 'disponivel';
+      if (filtroAtivo === 'desconto-usado')      return c.status_desconto === 'usado';
+      if (filtroAtivo === 'gratis-liberado')     return c.sessao_gratis_liberada && !c.sessao_gratis_usada;
+      return true;
+    });
+
+    if (busca) {
+      lista = lista.filter(c =>
+        c.nome.toLowerCase().includes(busca) ||
+        c.whatsapp.includes(busca) ||
+        c.codigo_indicacao.toLowerCase().includes(busca)
+      );
+    }
+
+    if (!lista.length) {
+      tbody.innerHTML = '<tr class="loading-row"><td colspan="9">Nenhum cliente encontrado.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = lista.map(c => {
+      const indPct = Math.min(100, (c.indicacoes_confirmadas / 5) * 100);
+      const badgeDesc = c.status_desconto === 'disponivel'
+        ? '<span class="badge badge-disponivel">Disponível</span>'
+        : '<span class="badge badge-usado">Usado</span>';
+      const badgeGratis = c.sessao_gratis_usada
+        ? '<span class="badge badge-usado">Usada</span>'
+        : c.sessao_gratis_liberada
+          ? '<span class="badge badge-gratis">✦ Liberada</span>'
+          : '';
+
+      return `
+      <tr>
+        <td class="td-nome">${c.nome}${badgeGratis ? ' ' + badgeGratis : ''}</td>
+        <td class="td-whats"><a href="https://wa.me/55${c.whatsapp.replace(/\D/g,'')}" target="_blank">${fmtWhats(c.whatsapp)}</a></td>
+        <td class="td-codigo">${c.codigo_indicacao}</td>
+        <td class="td-canal">${canalLabel(c.canal)}</td>
+        <td>${badgeDesc}</td>
+        <td style="text-align:center;">${c.tatuagens_feitas}</td>
+        <td class="td-ind">
+          <div class="ind-bar-wrap">
+            <div class="ind-bar"><div class="ind-bar-fill" style="width:${indPct}%"></div></div>
+            <span class="ind-num">${c.indicacoes_confirmadas}/5</span>
+          </div>
+        </td>
+        <td class="td-data">${fmtData(c.criado_em)}</td>
+        <td class="td-acoes">
+          <button class="btn-acao" onclick="abrirModal('${c.id}')">Detalhes</button>
+          <button class="btn-acao destaque" onclick="registrarTatuagem('${c.id}')">+ Tattoo</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Filtros
+  document.querySelectorAll('.filtro-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('ativo'));
+      this.classList.add('ativo');
+      filtroAtivo = this.dataset.filtro;
+      renderTabela();
+    });
+  });
+
+  document.getElementById('busca').addEventListener('input', renderTabela);
+  document.getElementById('btn-reload').addEventListener('click', carregarClientes);
+
+  // ── Ação: registrar tatuagem feita ──────────────────────────
+  async function registrarTatuagem(id) {
+    const cliente = todos.find(c => c.id === id);
+    if (!cliente) return;
+
+    const novoTotal = (cliente.tatuagens_feitas || 0) + 1;
+    const confirm = window.confirm(`Registrar nova tatuagem para ${cliente.nome}?\n\nTotal: ${novoTotal}`);
+    if (!confirm) return;
+
+    // Marca desconto como usado na primeira
+    const updates = { tatuagens_feitas: novoTotal };
+    if (novoTotal === 1 && cliente.status_desconto === 'disponivel') {
+      updates.status_desconto = 'usado';
+      updates.data_uso_desconto = new Date().toISOString();
+    }
+
+    const { error } = await sb.from('clientes_promo').update(updates).eq('id', id);
+    if (error) return toast('Erro ao atualizar: ' + error.message, 'err');
+
+    // Se este cliente foi indicado por alguém, incrementa indicacoes_confirmadas do indicador
+    if (novoTotal === 1 && cliente.indicado_por) {
+      const indicador = todos.find(c => c.codigo_indicacao === cliente.indicado_por);
+      if (indicador) {
+        const novasInd = (indicador.indicacoes_confirmadas || 0) + 1;
+        await sb.from('clientes_promo')
+          .update({ indicacoes_confirmadas: novasInd })
+          .eq('id', indicador.id);
+        toast(`Tatuagem registrada ✓ · Indicação de ${indicador.nome} atualizada (${novasInd}/5)`, 'ok');
+      } else {
+        toast('Tatuagem registrada ✓', 'ok');
+      }
+    } else {
+      toast('Tatuagem registrada ✓', 'ok');
+    }
+
+    await carregarClientes();
+    if (clienteModal) abrirModal(id);
+  }
+
+  // ── Ação: marcar sessão grátis como usada ────────────────────
+  async function usarGratis(id) {
+    const cliente = todos.find(c => c.id === id);
+    if (!cliente) return;
+    const confirm = window.confirm(`Marcar sessão grátis de ${cliente.nome} como utilizada?`);
+    if (!confirm) return;
+
+    const { error } = await sb.from('clientes_promo').update({
+      sessao_gratis_usada: true,
+      data_uso_gratis: new Date().toISOString()
+    }).eq('id', id);
+
+    if (error) return toast('Erro: ' + error.message, 'err');
+    toast('Sessão grátis marcada como usada ✓', 'ok');
+    await carregarClientes();
+  }
+
+  // ── Modal detalhes ───────────────────────────────────────────
+  async function abrirModal(id) {
+    clienteModal = id;
+    const c = todos.find(x => x.id === id);
+    if (!c) return;
+
+    document.getElementById('modal-nome').textContent = c.nome;
+
+    // Buscar indicados
+    const { data: indicados } = await sb
+      .from('clientes_promo')
+      .select('id, nome, whatsapp, tatuagens_feitas, criado_em')
+      .eq('indicado_por', c.codigo_indicacao)
+      .order('criado_em', { ascending: false });
+
+    const listaInd = (indicados || []).map(ind => {
+      const tatou = ind.tatuagens_feitas > 0;
+      const badge = tatou
+        ? '<span class="badge badge-gratis" style="font-size:.65rem;">✓ tatuou</span>'
+        : '<span class="badge badge-pendente" style="font-size:.65rem;">ainda não</span>';
+      return `<li><span class="ind-nome">${ind.nome}</span>${badge}</li>`;
+    }).join('') || '<li style="color:var(--ink-muted);font-size:.83rem;">Nenhum indicado ainda.</li>';
+
+    document.getElementById('modal-body').innerHTML = `
+      <div class="modal-section">
+        <h3>Dados</h3>
+        <div class="modal-row"><span class="k">Nome</span><span class="v">${c.nome}</span></div>
+        <div class="modal-row"><span class="k">WhatsApp</span><span class="v"><a href="https://wa.me/55${c.whatsapp.replace(/\D/g,'')}" target="_blank" style="color:var(--accent);">${fmtWhats(c.whatsapp)}</a></span></div>
+        ${c.email ? `<div class="modal-row"><span class="k">E-mail</span><span class="v">${c.email}</span></div>` : ''}
+        <div class="modal-row"><span class="k">Código</span><span class="v cod">${c.codigo_indicacao}</span></div>
+        <div class="modal-row"><span class="k">Canal</span><span class="v">${canalLabel(c.canal)}</span></div>
+        ${c.indicado_por ? `<div class="modal-row"><span class="k">Indicado por</span><span class="v cod">${c.indicado_por}</span></div>` : ''}
+        <div class="modal-row"><span class="k">Cadastro</span><span class="v">${fmtData(c.criado_em)}</span></div>
+      </div>
+
+      <div class="modal-section">
+        <h3>Promoções</h3>
+        <div class="modal-row">
+          <span class="k">Desconto 20%</span>
+          <span class="v">${c.status_desconto === 'disponivel' ? '✓ Disponível' : `Usado em ${fmtData(c.data_uso_desconto)}`}</span>
+        </div>
+        <div class="modal-row">
+          <span class="k">Tatuagens feitas</span>
+          <span class="v">${c.tatuagens_feitas}</span>
+        </div>
+        <div class="modal-row">
+          <span class="k">Indicações confirmadas</span>
+          <span class="v">${c.indicacoes_confirmadas} / 5</span>
+        </div>
+        <div class="modal-row">
+          <span class="k">Sessão grátis</span>
+          <span class="v">${c.sessao_gratis_usada ? `Usada em ${fmtData(c.data_uso_gratis)}` : c.sessao_gratis_liberada ? '✦ Liberada!' : 'Não liberada'}</span>
+        </div>
+      </div>
+
+      <div class="modal-section">
+        <h3>Amigos indicados (${(indicados||[]).length})</h3>
+        <ul class="indicados-list">${listaInd}</ul>
+      </div>
+
+      <div class="modal-acoes">
+        <button class="btn-modal primary" onclick="registrarTatuagem('${c.id}')">+ Registrar tatuagem</button>
+        ${c.sessao_gratis_liberada && !c.sessao_gratis_usada
+          ? `<button class="btn-modal success" onclick="usarGratis('${c.id}')">Marcar sessão grátis como usada</button>`
+          : ''}
+        <a class="btn-modal" href="https://wa.me/55${c.whatsapp.replace(/\D/g,'')}" target="_blank" style="text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;">Abrir WhatsApp</a>
+      </div>
+    `;
+
+    document.getElementById('modal-bg').classList.add('open');
+  }
+
+  document.getElementById('btn-fechar').addEventListener('click', () => {
+    document.getElementById('modal-bg').classList.remove('open');
+    clienteModal = null;
+  });
+  document.getElementById('modal-bg').addEventListener('click', function (e) {
+    if (e.target === this) {
+      this.classList.remove('open');
+      clienteModal = null;
+    }
+  });
+
+  // Expor funções ao escopo global (chamadas nos onclick)
+  window.registrarTatuagem = registrarTatuagem;
+  window.usarGratis = usarGratis;
+  window.abrirModal = abrirModal;
+</script>
+
+</body>
+</html>
