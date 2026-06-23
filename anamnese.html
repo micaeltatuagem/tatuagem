@@ -250,11 +250,23 @@
       .col-span-2, .col-span-3 { grid-column: span 1; }
       .anamnese-table { font-size: .78rem; }
     }
+
+    /* ── Flash decorativo (sutil — página funcional) ── */
+    header { position: relative; overflow: hidden; }
+    .flash-deco {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      opacity: .04;
+      filter: invert(1);
+    }
   </style>
 </head>
 <body>
 
 <header>
+  <img class="flash-deco" src="serpente.png" alt="" style="width:clamp(120px,18vw,220px);right:0;top:0;transform:rotate(12deg);" loading="lazy" />
+  <img class="flash-deco" src="estrela.png"  alt="" style="width:clamp(60px,9vw,110px);left:1rem;bottom:0;transform:rotate(-6deg);" loading="lazy" />
   <a class="logo-name" href="./index.html">Micael Tatuagem</a>
   <span class="logo-sub">Muriaé · MG</span>
 </header>

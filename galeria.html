@@ -569,6 +569,33 @@
       .gallery-item, .lightbox { transition: none; }
     }
 
+    /* ── Flash decorativo ── */
+    .flash-deco {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      opacity: .06;
+      filter: invert(1);
+    }
+    .header { position: relative; overflow: hidden; }
+
+    /* ── Caveiras base ── */
+    .skull-base {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid var(--border);
+      background: var(--ink);
+      overflow: hidden;
+    }
+    .skull-base img {
+      width: clamp(130px, 20vw, 240px);
+      height: auto;
+      display: block;
+      opacity: .85;
+      filter: grayscale(15%);
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .header {
@@ -630,6 +657,9 @@
 
 <!-- ── HEADER ── -->
 <header class="header">
+  <img class="flash-deco" src="serpente.png" alt="" style="width:clamp(160px,24vw,300px);right:-1rem;top:2rem;transform:rotate(15deg);" loading="lazy" />
+  <img class="flash-deco" src="estrela.png"  alt="" style="width:clamp(80px,12vw,160px);left:2rem;bottom:2rem;transform:rotate(-10deg);" loading="lazy" />
+  <img class="flash-deco" src="flor.png"     alt="" style="width:clamp(90px,13vw,170px);left:4rem;top:2rem;transform:rotate(8deg);" loading="lazy" />
   <p class="header-label">Galeria</p>
   <h1 class="header-title">Trabalhos Realizados</h1>
   <p class="header-subtitle">
@@ -722,6 +752,12 @@
   <div class="lightbox-counter">
     <span id="lightboxCounter">1 / 1</span>
   </div>
+</div>
+
+<!-- ── Caveiras base ── -->
+<div class="skull-base">
+  <img src="caveiraEsquerda.png" alt="" loading="lazy" />
+  <img src="caveiraDireita.png"  alt="" loading="lazy" />
 </div>
 
 <!-- Navigation back to home -->

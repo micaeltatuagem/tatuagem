@@ -585,29 +585,6 @@
     }
     .contato-extras a:hover { color: var(--ink); }
 
-    /* ── Skull divider ───────────────────────────────────────── */
-    .skull-divider {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0;
-      border-top: 1px solid var(--border);
-      background: var(--bg);
-      overflow: hidden;
-      max-height: 520px;
-    }
-    .skull-divider img {
-      width: 100%;
-      max-width: 960px;
-      height: auto;
-      max-height: 520px;
-      object-fit: cover;
-      object-position: center;
-      display: block;
-      filter: grayscale(15%);
-      opacity: .88;
-    }
-
     /* ── Footer ──────────────────────────────────────────────── */
     footer {
       border-top: 1px solid var(--border);
@@ -631,6 +608,34 @@
       transition: color .2s;
     }
     footer a:hover { color: var(--ink); }
+
+    /* ── Flash decorativo ────────────────────────────────────── */
+    .flash-deco {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      opacity: .06;
+      filter: invert(1);
+    }
+    section, #hero { position: relative; overflow: hidden; }
+
+    /* ── Caveiras base ───────────────────────────────────────── */
+    .skull-base {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 0;
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+      overflow: hidden;
+    }
+    .skull-base img {
+      width: clamp(130px, 20vw, 240px);
+      height: auto;
+      display: block;
+      opacity: .88;
+      filter: grayscale(15%);
+    }
   </style>
 </head>
 <body>
@@ -649,6 +654,8 @@
 
 <!-- ── Hero ─────────────────────────────────────────────────── -->
 <section id="hero">
+  <img class="flash-deco" src="serpente.png" alt="" style="width:clamp(180px,28vw,340px);right:-2rem;top:3rem;transform:rotate(18deg);" loading="lazy" />
+  <img class="flash-deco" src="estrela.png"  alt="" style="width:clamp(90px,14vw,170px);left:1rem;bottom:3rem;transform:rotate(-12deg);" loading="lazy" />
   <div class="hero-inner">
     <div>
       <p class="hero-tag">Atendimento privado · Muriaé, MG</p>
@@ -668,6 +675,7 @@
 
 <!-- ── Sobre ─────────────────────────────────────────────────── -->
 <section id="sobre">
+  <img class="flash-deco" src="flor.png" alt="" style="width:clamp(120px,18vw,220px);right:-1rem;bottom:1rem;transform:rotate(10deg);" loading="lazy" />
   <div class="inner">
     <p class="eyebrow">Sobre</p>
     <div class="sobre-grid">
@@ -717,6 +725,8 @@
 
 <!-- ── Processo ──────────────────────────────────────────────── -->
 <section id="processo">
+  <img class="flash-deco" src="serpente.png" alt="" style="width:clamp(140px,20vw,260px);left:-1rem;top:2rem;transform:scaleX(-1) rotate(-15deg);" loading="lazy" />
+  <img class="flash-deco" src="estrela.png"  alt="" style="width:clamp(70px,10vw,130px);right:1rem;bottom:1rem;" loading="lazy" />
   <div class="inner">
     <p class="eyebrow">Processo</p>
     <h2>Como funciona</h2>
@@ -747,6 +757,7 @@
 
 <!-- ── FAQ ───────────────────────────────────────────────────── -->
 <section id="faq">
+  <img class="flash-deco" src="flor.png" alt="" style="width:clamp(100px,15vw,190px);left:-0.5rem;top:50%;transform:translateY(-50%) rotate(-8deg);" loading="lazy" />
   <div class="inner">
     <p class="eyebrow">Perguntas Frequentes</p>
     <h2>Dúvidas comuns</h2>
@@ -796,13 +807,10 @@
   </div>
 </section>
 
-<!-- ── Skull divider ──────────────────────────────────────────── -->
-<div class="skull-divider">
-  <img src="skull.webp" alt="Caveira — Micael Faccio, tatuador em Muriaé MG" loading="lazy" />
-</div>
-
 <!-- ── PROMOÇÕES ─────────────────────────────────────────────── -->
 <section id="promocoes">
+  <img class="flash-deco" src="estrela.png" alt="" style="width:clamp(80px,12vw,150px);right:2rem;top:2rem;transform:rotate(20deg);" loading="lazy" />
+  <img class="flash-deco" src="flor.png"    alt="" style="width:clamp(100px,15vw,180px);left:-0.5rem;bottom:1rem;transform:rotate(-5deg);" loading="lazy" />
   <div class="inner">
 
     <p class="promo-eyebrow">Novos clientes</p>
@@ -869,6 +877,12 @@
     </div>
   </div>
 </section>
+
+<!-- ── Caveiras base ──────────────────────────────────────────── -->
+<div class="skull-base">
+  <img src="caveiraEsquerda.png" alt="" loading="lazy" />
+  <img src="caveiraDireita.png"  alt="" loading="lazy" />
+</div>
 
 <!-- ── Footer ───────────────────────────────────────────────── -->
 <footer>

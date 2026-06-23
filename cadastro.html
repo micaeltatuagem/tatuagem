@@ -440,6 +440,59 @@
     @media (max-width: 480px) {
       .promos { grid-template-columns: 1fr; }
     }
+
+    /* ── Flash decorativo ── */
+    .flash-deco {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      opacity: .05;
+      filter: invert(1);
+    }
+    .hero { position: relative; overflow: hidden; }
+
+    /* ── Preview da imagem Stories ── */
+    .stories-preview {
+      margin-bottom: 1.4rem;
+      border: 1px solid var(--accent-dim);
+      border-radius: 4px;
+      overflow: hidden;
+      max-width: 260px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .stories-preview img {
+      width: 100%;
+      display: block;
+    }
+    .stories-preview-label {
+      font-family: var(--font-ui);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      text-align: center;
+      padding: 0.4rem;
+      background: var(--surface);
+    }
+
+    /* ── Skull-base ── */
+    .skull-base {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+      overflow: hidden;
+      margin-top: auto;
+    }
+    .skull-base img {
+      width: clamp(120px, 18vw, 220px);
+      height: auto;
+      display: block;
+      opacity: .85;
+      filter: grayscale(15%);
+    }
   </style>
 </head>
 <body>
@@ -455,6 +508,8 @@
 <main id="tela-form">
 
   <div class="hero">
+    <img class="flash-deco" src="serpente.png" alt="" style="width:clamp(140px,22vw,260px);right:-1rem;top:0;transform:rotate(20deg);" loading="lazy" />
+    <img class="flash-deco" src="estrela.png"  alt="" style="width:clamp(70px,10vw,130px);left:0;bottom:0;transform:rotate(-8deg);" loading="lazy" />
     <p class="hero-eyebrow">Micael Tatuagem · Muriaé, MG</p>
     <h1>Promoções para<br>novos clientes</h1>
     <p>Cadastre-se uma vez e tenha acesso a dois benefícios que não têm prazo de validade.</p>
@@ -566,8 +621,12 @@
       </div>
     </div>
 
-    <!-- Botão baixar imagem promo -->
-    <a id="btn-baixar-img" href="promo-stories.webp" download="micael-tatuagem-promo.webp"
+    <!-- Preview + Botão baixar imagem para Stories -->
+    <div class="stories-preview">
+      <img src="arteparapostarInsta.webp" alt="Imagem para postar no Stories" loading="lazy" />
+      <div class="stories-preview-label">Esta é a imagem para postar</div>
+    </div>
+    <a id="btn-baixar-img" href="arteparapostarInsta.webp" download="micael-tatuagem-stories.webp"
        style="display:flex;align-items:center;justify-content:center;gap:.6rem;
               width:100%;padding:.9rem;border-radius:4px;
               background:var(--surface);border:1px solid var(--accent-dim);
@@ -614,6 +673,11 @@
       O Micael confirma manualmente no seu cadastro e te avisa quando chegar a 5.
     </p>
   </div>
+</div>
+
+<div class="skull-base">
+  <img src="caveiraEsquerda.png" alt="" loading="lazy" />
+  <img src="caveiraDireita.png"  alt="" loading="lazy" />
 </div>
 
 <footer>
