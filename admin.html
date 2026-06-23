@@ -698,6 +698,12 @@
     </div>
 
     <div class="form-group">
+      <label for="imageAltText">Alt Text (SEO) *</label>
+      <input type="text" id="imageAltText" placeholder="Ex: Tatuagem blackwork crânio — Micael Faccio, Muriaé MG" />
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:0.4rem;">Texto que o Google usa para indexar a imagem. Descreva o que está na foto.</p>
+    </div>
+
+    <div class="form-group">
       <label for="imageDescription">Descrição (opcional)</label>
       <textarea id="imageDescription" placeholder="Descreva a tatuagem, significado, etc." rows="3"></textarea>
     </div>
@@ -750,6 +756,12 @@
       <div class="form-group">
         <label>Estilos *</label>
         <div class="tags-container" id="editTagsContainer"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="editAltText">Alt Text (SEO)</label>
+        <input type="text" id="editAltText" placeholder="Ex: Tatuagem blackwork crânio — Micael Faccio, Muriaé MG" />
+        <p style="font-size:0.78rem;color:var(--muted);margin-top:0.4rem;">Texto que o Google usa para indexar a imagem.</p>
       </div>
 
       <div class="form-group">
@@ -1132,6 +1144,8 @@
       return;
     }
 
+    const altText = document.getElementById('imageAltText').value.trim();
+
     const file = fileInput.files[0];
     const ext  = file.name.split('.').pop().toLowerCase();
     const slug = titleInput.value.trim()
@@ -1160,6 +1174,7 @@
       gallery.unshift({
         id: Date.now(),
         title: titleInput.value.trim(),
+        altText,
         filename,
         imageUrl,
         styles: selectedTags,
@@ -1270,6 +1285,7 @@
   function resetForm() {
     document.getElementById('imageFile').value = '';
     document.getElementById('imageTitle').value = '';
+    document.getElementById('imageAltText').value = '';
     document.getElementById('imageDescription').value = '';
     document.querySelectorAll('#tagsContainer input').forEach(cb => cb.checked = false);
     const preview = document.getElementById('previewImage');
@@ -1496,6 +1512,7 @@ ${imageEntries}
 
     document.getElementById('editId').value = id;
     document.getElementById('editTitle').value = img.title;
+    document.getElementById('editAltText').value = img.altText || '';
     document.getElementById('editDescription').value = img.description || '';
 
     // Render tags with current selection
@@ -1516,10 +1533,11 @@ ${imageEntries}
   }
 
   async function saveEdit() {
-    const id    = parseInt(document.getElementById('editId').value);
-    const title = document.getElementById('editTitle').value.trim();
-    const desc  = document.getElementById('editDescription').value;
-    const styles = Array.from(document.querySelectorAll('#editTagsContainer input:checked')).map(cb => cb.value);
+    const id      = parseInt(document.getElementById('editId').value);
+    const title   = document.getElementById('editTitle').value.trim();
+    const altText = document.getElementById('editAltText').value.trim();
+    const desc    = document.getElementById('editDescription').value;
+    const styles  = Array.from(document.querySelectorAll('#editTagsContainer input:checked')).map(cb => cb.value);
 
     if (!title) { showAlert('error', '❌ O título não pode ser vazio.'); return; }
     if (styles.length === 0) { showAlert('error', '❌ Selecione pelo menos um estilo.'); return; }
@@ -1528,7 +1546,7 @@ ${imageEntries}
     const idx = gallery.findIndex(i => i.id === id);
     if (idx === -1) return;
 
-    gallery[idx] = { ...gallery[idx], title, description: desc, styles };
+    gallery[idx] = { ...gallery[idx], title, altText, description: desc, styles };
     try {
       await saveGallery(gallery);
       closeEditModal();
