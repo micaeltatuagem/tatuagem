@@ -651,16 +651,41 @@
       }
     }
 
+    /* ── Flash sheet ─────────────────────────────────────────── */
+    .f {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      filter: invert(1);
+      height: auto;
+    }
+    .f.xs  { width: clamp(55px,  7vw,  95px);  }
+    .f.sm  { width: clamp(85px,  11vw, 150px); }
+    .f.md  { width: clamp(120px, 16vw, 210px); }
+    .f.lg  { width: clamp(170px, 24vw, 300px); }
+    .f.xl  { width: clamp(220px, 32vw, 400px); }
+    .f.lo  { opacity: .055; }
+    .f.mi  { opacity: .085; }
+    .f.hi  { opacity: .12;  }
+    section, header, .header { position: relative; overflow: hidden; }
   </style>
 </head>
 <body>
 
 <!-- ── HEADER ── -->
 <header class="header">
-  <img class="flash-deco" src="serpente.png" alt="" style="width:clamp(160px,24vw,300px);right:-1rem;top:2rem;transform:rotate(15deg);" loading="lazy" />
-  <img class="flash-deco" src="estrela.png"  alt="" style="width:clamp(80px,12vw,160px);left:2rem;bottom:2rem;transform:rotate(-10deg);" loading="lazy" />
-  <img class="flash-deco" src="flor.png"     alt="" style="width:clamp(90px,13vw,170px);left:4rem;top:2rem;transform:rotate(8deg);" loading="lazy" />
-  <p class="header-label">Galeria</p>
+  <!-- flash: galeria header -->
+  <img class="f xl lo"  src="flash/dragao5.webp"     alt="" style="right:-3rem;top:-1rem;transform:rotate(10deg);" loading="lazy">
+  <img class="f xl mi"  src="flash/serpente7.webp"   alt="" style="left:-3rem;bottom:-2rem;transform:rotate(-8deg) scaleX(-1);" loading="lazy">
+  <img class="f lg lo"  src="flash/aguia2.webp"       alt="" style="left:-1rem;top:5%;transform:rotate(6deg);" loading="lazy">
+  <img class="f lg mi"  src="flash/pantera2.webp"     alt="" style="right:2%;bottom:5%;transform:rotate(-12deg) scaleX(-1);" loading="lazy">
+  <img class="f md lo"  src="flash/aranha.webp"       alt="" style="right:20%;top:3%;transform:rotate(25deg);" loading="lazy">
+  <img class="f md mi"  src="flash/lua.webp"          alt="" style="left:20%;bottom:4%;transform:rotate(-20deg);" loading="lazy">
+  <img class="f sm lo"  src="flash/ancora3.webp"      alt="" style="left:8%;top:8%;transform:rotate(18deg);" loading="lazy">
+  <img class="f sm mi"  src="flash/flames.webp"       alt="" style="right:10%;bottom:8%;transform:rotate(-8deg);" loading="lazy">
+  <img class="f xs lo"  src="flash/estrela.webp"      alt="" style="right:38%;top:5%;transform:rotate(35deg);" loading="lazy">
+  <img class="f xs mi"  src="flash/teia.webp"         alt="" style="left:40%;bottom:5%;transform:rotate(-25deg);" loading="lazy">
+<p class="header-label">Galeria</p>
   <h1 class="header-title">Trabalhos Realizados</h1>
   <p class="header-subtitle">
     Cada tatuagem é uma história. Aqui estão os projetos que marcaram peles e corações.
@@ -756,8 +781,8 @@
 
 <!-- ── Caveiras base ── -->
 <div class="skull-base">
-  <img src="caveiraDireita.png"   alt="" loading="lazy" />
-  <img src="caveiraEsquerda.png" alt="" loading="lazy" />
+  <img src="flash/caveiraDireita.webp"  alt="" loading="lazy">
+  <img src="flash/caveiraEsquerda.webp" alt="" loading="lazy">
 </div>
 
 <!-- Navigation back to home -->
