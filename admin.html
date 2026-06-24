@@ -1837,6 +1837,7 @@ ${imageEntries}
   const SB_ANON = 'sb_publishable_7LF70sbQS_es_uco138rqw_YfbqnIsa';
   const { createClient: sbCreate } = supabase;
   const db = sbCreate(SB_URL, SB_ANON);
+  window.db = db; // expõe para outros blocos script
 
   // Cache local dos clientes carregados
   let todosClientes = [];
@@ -1896,7 +1897,7 @@ ${imageEntries}
       );
 
       return `
-        <div class="cliente-row" id="row-${c.id}">
+        <div class="cliente-row" id="row-${c.id}" data-id="${c.id}">
           <div>
             <div class="cliente-nome">${c.nome}</div>
             <div class="cliente-cod">${c.codigo_indicacao || '—'} · <span class="cliente-whats">${formatarExibicao(c.whatsapp)}</span></div>
@@ -1904,7 +1905,7 @@ ${imageEntries}
           <div class="cliente-contagem ${completo ? 'contagem-completa' : ''}">
             ${count}/5 ${completo ? '✓' : ''}
           </div>
-          <button class="btn-marcar" onclick="marcarAtendimento('${c.id}', ${count})"
+          <button class="btn-marcar" data-action="marcar" data-id="${c.id}" data-count="${count}"
             ${completo ? 'disabled style="opacity:.4;cursor:not-allowed;"' : ''}>
             +1 tatuou
           </button>
@@ -1912,9 +1913,26 @@ ${imageEntries}
             ? `<a class="btn-zap" href="https://wa.me/55${numeroWhats}?text=${msgZap}" target="_blank" rel="noopener">🎉 Avisar</a>`
             : `<span></span>`
           }
-          <button class="btn-deletar" onclick="deletarCliente('${c.id}', '${c.nome.replace(/'/g, "\\'")}')">🗑</button>
+          <button class="btn-deletar" data-action="deletar" data-id="${c.id}">🗑</button>
         </div>`;
     }).join('');
+
+    // Event delegation — um único listener na lista
+    lista.removeEventListener('click', _clienteClickHandler);
+    lista.addEventListener('click', _clienteClickHandler);
+  }
+
+  function _clienteClickHandler(e) {
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    const id = btn.dataset.id;
+    const action = btn.dataset.action;
+    if (action === 'marcar') {
+      marcarAtendimento(id, parseInt(btn.dataset.count || '0'));
+    } else if (action === 'deletar') {
+      const cliente = todosClientes.find(c => String(c.id) === String(id));
+      deletarCliente(id, cliente ? cliente.nome : id);
+    }
   }
 
   // ── Marcar +1 atendimento ───────────────────────────────────
@@ -2017,7 +2035,7 @@ ${imageEntries}
     const lista = document.getElementById('anamneses-lista');
     lista.innerHTML = '<p style="color:var(--muted);">Carregando...</p>';
 
-    const { data, error } = await db
+    const { data, error } = await window.db
       .from('anamneses')
       .select('*')
       .order('created_at', { ascending: false });
@@ -2057,10 +2075,24 @@ ${imageEntries}
           <div class="registro-sub">${a.cpf || ''} ${a.whatsapp ? '· ' + formatarExibicao(a.whatsapp) : ''}</div>
         </div>
         <div class="registro-data">${fmtData(a.created_at)}</div>
-        <button class="btn-ver" onclick="verAnamnese('${a.id}')">Ver</button>
-        <button class="btn-del-reg" onclick="deletarAnamnese('${a.id}', '${(a.nome||'').replace(/'/g,"\\'")}')">🗑</button>
+        <button class="btn-ver" data-action="ver-anamnese" data-id="${a.id}">Ver</button>
+        <button class="btn-del-reg" data-action="del-anamnese" data-id="${a.id}">🗑</button>
       </div>`
     ).join('');
+
+    lista.removeEventListener('click', _anamneseClickHandler);
+    lista.addEventListener('click', _anamneseClickHandler);
+  }
+
+  function _anamneseClickHandler(e) {
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    const id = btn.dataset.id;
+    if (btn.dataset.action === 'ver-anamnese') verAnamnese(id);
+    else if (btn.dataset.action === 'del-anamnese') {
+      const a = todasAnamneses.find(x => String(x.id) === String(id));
+      deletarAnamnese(id, a ? a.nome : id);
+    }
   }
 
   function verAnamnese(id) {
@@ -2092,7 +2124,7 @@ ${imageEntries}
 
   async function deletarAnamnese(id, nome) {
     if (!confirm(`Deletar ficha de "${nome}" permanentemente?`)) return;
-    const { error } = await db.from('anamneses').delete().eq('id', id);
+    const { error } = await window.db.from('anamneses').delete().eq('id', id);
     if (error) { alert('Erro: ' + error.message); return; }
     todasAnamneses = todasAnamneses.filter(a => String(a.id) !== String(id));
     document.getElementById('statAnamneses').textContent = todasAnamneses.length;
@@ -2110,7 +2142,7 @@ ${imageEntries}
     const lista = document.getElementById('reservas-lista');
     lista.innerHTML = '<p style="color:var(--muted);">Carregando...</p>';
 
-    const { data, error } = await db
+    const { data, error } = await window.db
       .from('reservas')
       .select('*')
       .order('created_at', { ascending: false });
@@ -2150,10 +2182,24 @@ ${imageEntries}
           <div class="registro-sub">${r.estilo || ''} ${r.tamanho ? '· ' + r.tamanho : ''}</div>
         </div>
         <div class="registro-data">${fmtData(r.created_at)}</div>
-        <button class="btn-ver" onclick="verReserva('${r.id}')">Ver</button>
-        <button class="btn-del-reg" onclick="deletarReserva('${r.id}', '${(r.nome||'').replace(/'/g,"\\'")}')">🗑</button>
+        <button class="btn-ver" data-action="ver-reserva" data-id="${r.id}">Ver</button>
+        <button class="btn-del-reg" data-action="del-reserva" data-id="${r.id}">🗑</button>
       </div>`
     ).join('');
+
+    lista.removeEventListener('click', _reservaClickHandler);
+    lista.addEventListener('click', _reservaClickHandler);
+  }
+
+  function _reservaClickHandler(e) {
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    const id = btn.dataset.id;
+    if (btn.dataset.action === 'ver-reserva') verReserva(id);
+    else if (btn.dataset.action === 'del-reserva') {
+      const r = todasReservas.find(x => String(x.id) === String(id));
+      deletarReserva(id, r ? r.nome : id);
+    }
   }
 
   function verReserva(id) {
@@ -2176,7 +2222,7 @@ ${imageEntries}
 
   async function deletarReserva(id, nome) {
     if (!confirm(`Deletar reserva de "${nome}" permanentemente?`)) return;
-    const { error } = await db.from('reservas').delete().eq('id', id);
+    const { error } = await window.db.from('reservas').delete().eq('id', id);
     if (error) { alert('Erro: ' + error.message); return; }
     todasReservas = todasReservas.filter(r => String(r.id) !== String(id));
     document.getElementById('statReservas').textContent = todasReservas.length;
