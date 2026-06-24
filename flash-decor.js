@@ -68,7 +68,7 @@
   // ── Passagens fractais ───────────────────────────────────────
   // Cada passagem tem: raio de colisão, tamanho CSS, opacidade, quantidade base
   // OVERLAP: 0.92 = quase sem sobreposição (só encosta levemente)
-  const OVERLAP = 0.88;
+  const OVERLAP = 1.05;
 
   const PASSES = [
     // [r_colisão_px, width_css,                        op_range,        n_base]
