@@ -510,6 +510,22 @@
       transition: color .3s;
     }
     .skull-cta a:hover { color: #e8e8e8; }
+    @media (max-width: 600px) {
+      .skull-base {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+      }
+      .skull-base img {
+        width: clamp(100px, 40vw, 180px);
+      }
+      .skull-cta {
+        padding: 1.5rem 1rem;
+      }
+      .skull-cta a {
+        font-size: clamp(1.3rem, 6vw, 1.8rem);
+      }
+    }
   </style>
 </head>
 <body>
