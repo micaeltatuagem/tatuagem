@@ -237,15 +237,57 @@
       filter: invert(1);
       z-index: 0;
     }
+    /* ── Flash sheet ─────────────────────────────────────────── */
+    .f {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      filter: invert(1);
+      height: auto;
+    }
+    .f.xs  { width: clamp(55px,  7vw,  95px);  }
+    .f.sm  { width: clamp(85px,  11vw, 150px); }
+    .f.md  { width: clamp(120px, 16vw, 210px); }
+    .f.lg  { width: clamp(170px, 24vw, 300px); }
+    .f.xl  { width: clamp(220px, 32vw, 400px); }
+    .f.lo  { opacity: .055; }
+    .f.mi  { opacity: .085; }
+    .f.hi  { opacity: .12;  }
+    section, header, .header { position: relative; overflow: hidden; }
+
+    /* ── Caveiras base ───────────────────────────────────────── */
+    .skull-base {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid #222;
+      background: #0a0a0a;
+      overflow: hidden;
+    }
+    .skull-base img {
+      width: clamp(130px, 20vw, 240px);
+      height: auto;
+      display: block;
+      opacity: .75;
+      filter: invert(1) brightness(0.85);
+    }
   </style>
 </head>
 <body>
 
 <header class="header">
-  <img class="flash-deco" src="serpente.png" alt="" style="width:clamp(160px,24vw,300px);right:-1rem;top:1rem;transform:rotate(18deg);" loading="lazy" />
-  <img class="flash-deco" src="estrela.png"  alt="" style="width:clamp(80px,12vw,160px);left:2rem;bottom:1rem;transform:rotate(-12deg);" loading="lazy" />
-  <img class="flash-deco" src="flor.png"     alt="" style="width:clamp(90px,13vw,170px);left:5%;top:1.5rem;transform:rotate(8deg);" loading="lazy" />
-  <p class="header-label">Reserva</p>
+  <!-- flash: reserva header -->
+  <img class="f xl mi"  src="flash/dragao7.webp"     alt="" style="right:-3rem;top:-1rem;transform:rotate(12deg);" loading="lazy">
+  <img class="f xl lo"  src="flash/serpente5.webp"   alt="" style="left:-3rem;bottom:-2rem;transform:rotate(-8deg);" loading="lazy">
+  <img class="f lg lo"  src="flash/tigre.webp"        alt="" style="left:-1rem;top:5%;transform:rotate(5deg);" loading="lazy">
+  <img class="f lg mi"  src="flash/pinup3.webp"       alt="" style="right:2%;bottom:5%;transform:rotate(-10deg) scaleX(-1);" loading="lazy">
+  <img class="f md mi"  src="flash/rosaAdaga2.webp"  alt="" style="right:20%;top:3%;transform:rotate(18deg);" loading="lazy">
+  <img class="f md lo"  src="flash/mao.webp"          alt="" style="left:20%;bottom:5%;transform:rotate(-20deg);" loading="lazy">
+  <img class="f sm lo"  src="flash/caravela2.webp"   alt="" style="right:38%;top:4%;transform:rotate(-28deg);" loading="lazy">
+  <img class="f sm mi"  src="flash/chapeu.webp"       alt="" style="left:40%;bottom:4%;transform:rotate(15deg);" loading="lazy">
+  <img class="f xs mi"  src="flash/bota.webp"         alt="" style="left:8%;top:6%;transform:rotate(22deg);" loading="lazy">
+  <img class="f xs lo"  src="flash/sol.webp"          alt="" style="right:10%;bottom:6%;transform:rotate(-12deg);" loading="lazy">
+<p class="header-label">Reserva</p>
   <h1 class="header-title">Vamos começar<br>seu projeto</h1>
   <p class="header-subtitle">Conte sua ideia. No final, isso vira uma mensagem pronta — você só revisa e envia no WhatsApp.</p>
 </header>
@@ -308,6 +350,12 @@
 
   <a href="index.html" class="back-link">← Voltar para o início</a>
 </section>
+
+<!-- ── Caveiras base ── -->
+<div class="skull-base">
+  <img src="flash/caveiraDireita.webp"  alt="" loading="lazy">
+  <img src="flash/caveiraEsquerda.webp" alt="" loading="lazy">
+</div>
 
 <footer>
   <p>© Micael Faccio · Tatuador em Muriaé, MG</p>
