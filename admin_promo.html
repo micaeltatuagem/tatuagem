@@ -263,6 +263,19 @@
     .btn-modal.danger { border-color: #4a1a1a; color: var(--error); }
     .btn-modal.danger:hover { background: #1a0e0e; }
 
+    /* ── campos novo cliente ────────────────────────────────── */
+    .campo-label {
+      display: block; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--ink-muted); margin-bottom: .4rem;
+    }
+    .campo-input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--ink); font-family: var(--font-ui);
+      font-size: .93rem; padding: .65rem 1rem; outline: none; transition: border-color .2s;
+    }
+    .campo-input:focus { border-color: var(--border-hi); }
+    select.campo-input { cursor: pointer; }
+
     /* ── Empty / loading ────────────────────────────────────── */
     .empty {
       text-align: center; padding: 4rem 2rem; color: var(--ink-muted); font-size: .9rem;
@@ -339,6 +352,7 @@
       <button class="filtro-btn" data-filtro="desconto-usado">Desconto usado</button>
       <button class="filtro-btn" data-filtro="gratis-liberado">Sessão grátis</button>
       <button class="btn-reload" id="btn-reload">↺ Atualizar</button>
+      <button class="btn-reload" id="btn-novo" style="border-color:var(--accent-dim);color:var(--accent);">+ Novo cliente</button>
     </div>
 
     <!-- Tabela -->
@@ -372,6 +386,45 @@
       <button class="btn-fechar" id="btn-fechar">✕</button>
     </div>
     <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ── Modal novo cliente ──────────────────────────────────────── -->
+<div class="modal-bg" id="modal-novo-bg">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Novo cliente</h2>
+      <button class="btn-fechar" id="btn-fechar-novo">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.9rem;">
+      <div>
+        <label class="campo-label">Nome *</label>
+        <input class="campo-input" id="nc-nome" type="text" placeholder="Nome completo" />
+      </div>
+      <div>
+        <label class="campo-label">WhatsApp *</label>
+        <input class="campo-input" id="nc-whats" type="text" placeholder="32999666946" />
+      </div>
+      <div>
+        <label class="campo-label">E-mail</label>
+        <input class="campo-input" id="nc-email" type="email" placeholder="opcional" />
+      </div>
+      <div>
+        <label class="campo-label">Canal</label>
+        <select class="campo-input" id="nc-canal">
+          <option value="instagram">Instagram</option>
+          <option value="indicacao">Indicação</option>
+          <option value="panfleto">Panfleto</option>
+          <option value="outro">Outro</option>
+        </select>
+      </div>
+      <div>
+        <label class="campo-label">Código de quem indicou <span style="color:var(--ink-muted);font-size:.75rem;">(se houver)</span></label>
+        <input class="campo-input" id="nc-indicado-por" type="text" placeholder="ex: MT-1234" style="text-transform:uppercase;" />
+      </div>
+      <p id="nc-err" style="font-size:.8rem;color:var(--error);min-height:1.2em;"></p>
+      <button class="btn-login" id="btn-salvar-novo">Cadastrar cliente</button>
+    </div>
   </div>
 </div>
 
@@ -729,6 +782,79 @@
   window.usarGratis = usarGratis;
   window.abrirModal = abrirModal;
   window.deletarCliente = deletarCliente;
+
+  // ── Modal novo cliente ───────────────────────────────────────
+  function gerarCodigo() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let cod = 'MT-';
+    for (let i = 0; i < 4; i++) cod += chars[Math.floor(Math.random() * chars.length)];
+    return cod;
+  }
+
+  document.getElementById('btn-novo').addEventListener('click', () => {
+    document.getElementById('nc-nome').value = '';
+    document.getElementById('nc-whats').value = '';
+    document.getElementById('nc-email').value = '';
+    document.getElementById('nc-canal').value = 'instagram';
+    document.getElementById('nc-indicado-por').value = '';
+    document.getElementById('nc-err').textContent = '';
+    document.getElementById('modal-novo-bg').classList.add('open');
+  });
+
+  document.getElementById('btn-fechar-novo').addEventListener('click', () => {
+    document.getElementById('modal-novo-bg').classList.remove('open');
+  });
+  document.getElementById('modal-novo-bg').addEventListener('click', function (e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+
+  document.getElementById('btn-salvar-novo').addEventListener('click', async () => {
+    const nome      = document.getElementById('nc-nome').value.trim();
+    const whatsapp  = document.getElementById('nc-whats').value.replace(/\D/g, '');
+    const email     = document.getElementById('nc-email').value.trim() || null;
+    const canal     = document.getElementById('nc-canal').value;
+    const indicadoPor = document.getElementById('nc-indicado-por').value.trim().toUpperCase() || null;
+    const err       = document.getElementById('nc-err');
+
+    if (!nome) return (err.textContent = 'Nome obrigatório.');
+    if (whatsapp.length < 10) return (err.textContent = 'WhatsApp inválido.');
+
+    // Validar código indicador se informado
+    if (indicadoPor) {
+      const existe = todos.find(c => c.codigo_indicacao === indicadoPor);
+      if (!existe) return (err.textContent = `Código "${indicadoPor}" não encontrado.`);
+    }
+
+    // Gerar código único
+    let codigo;
+    let tentativas = 0;
+    do {
+      codigo = gerarCodigo();
+      tentativas++;
+    } while (todos.find(c => c.codigo_indicacao === codigo) && tentativas < 20);
+
+    const btn = document.getElementById('btn-salvar-novo');
+    btn.disabled = true; btn.textContent = 'Cadastrando…';
+
+    const { error } = await sb.from('clientes_promo').insert({
+      nome, whatsapp, email, canal,
+      codigo_indicacao: codigo,
+      indicado_por: indicadoPor,
+      status_desconto: 'disponivel',
+      tatuagens_feitas: 0,
+      indicacoes_confirmadas: 0,
+      sessao_gratis_liberada: false,
+      sessao_gratis_usada: false
+    });
+
+    btn.disabled = false; btn.textContent = 'Cadastrar cliente';
+
+    if (error) return (err.textContent = 'Erro: ' + error.message);
+
+    document.getElementById('modal-novo-bg').classList.remove('open');
+    toast(`${nome} cadastrado ✓ · Código: ${codigo}`, 'ok');
+    await carregarClientes();
+  });
 </script>
 
 </body>
