@@ -78,10 +78,7 @@
   const SIZE_KEYS = Object.keys(SIZES);
 
   // Opacidades
-  const IS_MOBILE = window.innerWidth < 768;
-  const OPS = IS_MOBILE
-    ? [0.18, 0.22, 0.26, 0.30, 0.34]
-    : [0.08, 0.10, 0.13, 0.16, 0.18];
+  const OPS = [0.08, 0.10, 0.13, 0.16, 0.18];
 
   // Tolerância de sobreposição: os círculos podem se tocar e
   // até cruzar levemente (fator < 1 = permite sobreposição parcial)
@@ -250,6 +247,71 @@
 
     // Fallback genérico — funciona em qualquer página nova
     return [{ sel: 'main, body > section, .page-wrap', n: 10 }];
+  }
+
+
+  // ── Segunda passagem — só xs/sm para preencher buracos ──────
+  function packSectionXS(el, pool, count, guardRects) {
+    const rect = el.getBoundingClientRect();
+    const W = rect.width  || el.offsetWidth  || window.innerWidth;
+    const H = rect.height || el.offsetHeight || 400;
+    if (W < 10 || H < 10) return;
+
+    const imgs   = shuffle(pool).slice(0, count);
+    const placed = [];
+
+    // Lê círculos já colocados dos filhos existentes (aproximação por posição)
+    el.querySelectorAll('img[style*="position:absolute"]').forEach(img => {
+      const l = parseFloat(img.style.left) / 100 * W;
+      const t = parseFloat(img.style.top)  / 100 * H;
+      placed.push({ cx: l, cy: t, r: 55 });
+    });
+
+    imgs.forEach(src => {
+      for (let t = 0; t < 120; t++) {
+        const cx = rnd(W * 0.04, W * 0.96);
+        const cy = rnd(H * 0.04, H * 0.96);
+        const szKey = pick(['xs','xs','sm']);
+        const sz = SIZES[szKey];
+        const r  = sz.r;
+
+        if (overlaps(placed, cx, cy, r)) continue;
+
+        const elTop  = rect.top  + window.scrollY;
+        const elLeft = rect.left + window.scrollX;
+        let bloqueado = false;
+        for (const g of (guardRects || [])) {
+          if ((elLeft+cx) > g.left-r && (elLeft+cx) < g.right+r &&
+              (elTop+cy)  > g.top-r  && (elTop+cy)  < g.bottom+r) {
+            bloqueado = true; break;
+          }
+        }
+        if (bloqueado) continue;
+
+        placed.push({ cx, cy, r });
+
+        const img = document.createElement('img');
+        img.src      = src;
+        img.alt      = '';
+        img.loading  = 'lazy';
+        img.decoding = 'async';
+
+        const rot  = rnd(-35, 35).toFixed(1);
+        const flip = Math.random() > 0.5 ? ' scaleX(-1)' : '';
+        const op   = pick([0.06, 0.08, 0.10, 0.12]);
+
+        img.style.cssText = [
+          'position:absolute','pointer-events:none','user-select:none',
+          'filter:invert(1)','height:auto','z-index:0',
+          `width:${sz.css}`,`opacity:${op}`,
+          `left:${((cx/W)*100).toFixed(2)}%`,`top:${((cy/H)*100).toFixed(2)}%`,
+          `transform:translate(-50%,-50%) rotate(${rot}deg)${flip}`,
+        ].join(';');
+
+        el.appendChild(img);
+        break;
+      }
+    });
   }
 
   // ── Init ─────────────────────────────────────────────────────
