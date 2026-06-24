@@ -177,8 +177,8 @@
       font-size: 1.05rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--bone);
-      background: transparent;
+      color: #fff;
+      background: #7a8c3a;
       border: 1px solid var(--blood);
       padding: 1.1rem 2.5rem;
       text-decoration: none;
@@ -188,7 +188,7 @@
       -webkit-appearance: none;
     }
     .btn-primary:hover {
-      background: #7a8c3a;
+      background: #5a6e2a;
       color: #fff;
     }
 
@@ -242,6 +242,19 @@
       z-index: 0;
     }
 
+
+
+    /* ── Decorativos cobrem a página inteira ────────────────── */
+    header, section, footer {
+      position: relative;
+      overflow: hidden;
+    }
+    /* ── Textos pequenos bold ───────────────────────────────── */
+    p, label, span, li, input, textarea, select,
+    .form-note, .field, .back-link, header p, footer p {
+      font-weight: 600;
+    }
+    h1, h2, h3 { font-weight: 700; }
     /* ── Legibilidade sobre decorativos ─────────────────────── */
     body {
       text-shadow: 0 0 12px var(--bg), 0 0 8px var(--bg), 0 0 4px var(--bg);
