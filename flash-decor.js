@@ -78,7 +78,7 @@
   const SIZE_KEYS = Object.keys(SIZES);
 
   // Opacidades
-  const OPS = [0.055, 0.07, 0.085, 0.10, 0.115];
+  const OPS = [0.15, 0.18, 0.22, 0.26, 0.30];
 
   // Tolerância de sobreposição: os círculos podem se tocar e
   // até cruzar levemente (fator < 1 = permite sobreposição parcial)
