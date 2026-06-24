@@ -609,14 +609,27 @@
     }
     footer a:hover { color: var(--ink); }
 
-    /* ── Flash decorativo ────────────────────────────────────── */
-    .flash-deco {
+    /* ── Flash sheet ─────────────────────────────────────────── */
+    .f {
       position: absolute;
       pointer-events: none;
       user-select: none;
-      opacity: .06;
       filter: invert(1);
+      height: auto;
     }
+    /* Tamanhos */
+    .f.xs  { width: clamp(55px,  7vw,  95px);  }
+    .f.sm  { width: clamp(85px,  11vw, 150px); }
+    .f.md  { width: clamp(120px, 16vw, 210px); }
+    .f.lg  { width: clamp(170px, 24vw, 300px); }
+    .f.xl  { width: clamp(220px, 32vw, 400px); }
+    /* Opacidade — três camadas de profundidade */
+    .f.lo  { opacity: .055; }
+    .f.mi  { opacity: .085; }
+    .f.hi  { opacity: .12;  }
+    /* Utilidades */
+    .f.flip { transform-origin: center; }
+
     section, #hero { position: relative; overflow: hidden; }
 
     /* ── Caveiras base ───────────────────────────────────────── */
@@ -654,8 +667,16 @@
 
 <!-- ── Hero ─────────────────────────────────────────────────── -->
 <section id="hero">
-  <img class="flash-deco" src="serpente.png" alt="" style="width:clamp(180px,28vw,340px);right:-2rem;top:3rem;transform:rotate(18deg);" loading="lazy" />
-  <img class="flash-deco" src="estrela.png"  alt="" style="width:clamp(90px,14vw,170px);left:1rem;bottom:3rem;transform:rotate(-12deg);" loading="lazy" />
+  <img class="f xl hi"  src="flash/dragao1.webp"     alt="" style="right:-4rem;top:-1rem;transform:rotate(12deg);" loading="lazy">
+  <img class="f xl lo"  src="flash/serpente1.webp"   alt="" style="left:-3rem;bottom:-2rem;transform:rotate(-8deg) scaleX(-1);" loading="lazy">
+  <img class="f lg mi"  src="flash/tigre.webp"        alt="" style="left:-1rem;top:5%;transform:rotate(6deg);" loading="lazy">
+  <img class="f md mi"  src="flash/caveira.webp"      alt="" style="right:2%;bottom:8%;transform:rotate(-15deg);" loading="lazy">
+  <img class="f md lo"  src="flash/andorinha1.webp"   alt="" style="right:20%;top:3%;transform:rotate(-22deg);" loading="lazy">
+  <img class="f sm hi"  src="flash/rosa1.webp"        alt="" style="left:22%;bottom:5%;transform:rotate(18deg);" loading="lazy">
+  <img class="f sm lo"  src="flash/ancora1.webp"      alt="" style="left:8%;top:12%;transform:rotate(-30deg);" loading="lazy">
+  <img class="f xs mi"  src="flash/estrela.webp"      alt="" style="right:35%;top:6%;transform:rotate(45deg);" loading="lazy">
+  <img class="f xs lo"  src="flash/dados.webp"        alt="" style="left:38%;bottom:10%;transform:rotate(20deg);" loading="lazy">
+  <img class="f sm mi"  src="flash/serpente4.webp"    alt="" style="right:8%;top:30%;transform:rotate(180deg);" loading="lazy">
   <div class="hero-inner">
     <div>
       <p class="hero-tag">Atendimento privado · Muriaé, MG</p>
@@ -675,7 +696,15 @@
 
 <!-- ── Sobre ─────────────────────────────────────────────────── -->
 <section id="sobre">
-  <img class="flash-deco" src="flor.png" alt="" style="width:clamp(120px,18vw,220px);right:-1rem;bottom:1rem;transform:rotate(10deg);" loading="lazy" />
+  <img class="f xl lo"  src="flash/serpente2.webp"   alt="" style="right:-3rem;top:-1rem;transform:rotate(-10deg);" loading="lazy">
+  <img class="f lg mi"  src="flash/cigana1.webp"      alt="" style="left:-2rem;bottom:-1rem;transform:rotate(8deg) scaleX(-1);" loading="lazy">
+  <img class="f md hi"  src="flash/flor.webp"         alt="" style="right:3%;bottom:5%;transform:rotate(15deg);" loading="lazy">
+  <img class="f md lo"  src="flash/borboleta.webp"    alt="" style="left:4%;top:5%;transform:rotate(-12deg);" loading="lazy">
+  <img class="f sm mi"  src="flash/mariposa.webp"     alt="" style="right:18%;top:4%;transform:rotate(25deg);" loading="lazy">
+  <img class="f sm lo"  src="flash/rosa2.webp"        alt="" style="left:28%;bottom:3%;transform:rotate(-18deg);" loading="lazy">
+  <img class="f sm mi"  src="flash/ferradura1.webp"   alt="" style="right:30%;bottom:6%;transform:rotate(10deg);" loading="lazy">
+  <img class="f xs lo"  src="flash/estrela.webp"      alt="" style="left:45%;top:3%;transform:rotate(-40deg);" loading="lazy">
+  <img class="f xs mi"  src="flash/forever.webp"      alt="" style="right:5%;top:8%;transform:rotate(-8deg);" loading="lazy">
   <div class="inner">
     <p class="eyebrow">Sobre</p>
     <div class="sobre-grid">
@@ -708,6 +737,13 @@
 
 <!-- ── Galeria ───────────────────────────────────────────────── -->
 <section id="galeria">
+  <img class="f lg lo"  src="flash/aguia1.webp"       alt="" style="left:-2rem;top:0;transform:rotate(-5deg);" loading="lazy">
+  <img class="f lg mi"  src="flash/pantera.webp"       alt="" style="right:-2rem;bottom:0;transform:rotate(10deg) scaleX(-1);" loading="lazy">
+  <img class="f md lo"  src="flash/caravela.webp"      alt="" style="right:5%;top:3%;transform:rotate(-18deg);" loading="lazy">
+  <img class="f sm mi"  src="flash/ampulheta.webp"     alt="" style="left:5%;bottom:5%;transform:rotate(22deg);" loading="lazy">
+  <img class="f sm lo"  src="flash/ancora2.webp"       alt="" style="right:25%;top:2%;transform:rotate(30deg);" loading="lazy">
+  <img class="f xs mi"  src="flash/teia.webp"          alt="" style="left:35%;bottom:3%;transform:rotate(-15deg);" loading="lazy">
+  <img class="f xs lo"  src="flash/sol.webp"           alt="" style="left:18%;top:4%;transform:rotate(12deg);" loading="lazy">
   <div class="inner">
     <p class="eyebrow">Galeria</p>
 
@@ -725,8 +761,15 @@
 
 <!-- ── Processo ──────────────────────────────────────────────── -->
 <section id="processo">
-  <img class="flash-deco" src="serpente.png" alt="" style="width:clamp(140px,20vw,260px);left:-1rem;top:2rem;transform:scaleX(-1) rotate(-15deg);" loading="lazy" />
-  <img class="flash-deco" src="estrela.png"  alt="" style="width:clamp(70px,10vw,130px);right:1rem;bottom:1rem;" loading="lazy" />
+  <img class="f xl mi"  src="flash/serpente3.webp"   alt="" style="left:-3rem;top:-2rem;transform:scaleX(-1) rotate(-12deg);" loading="lazy">
+  <img class="f xl lo"  src="flash/dragao2.webp"      alt="" style="right:-3rem;bottom:-2rem;transform:rotate(8deg);" loading="lazy">
+  <img class="f lg lo"  src="flash/tubarao.webp"      alt="" style="right:0;top:5%;transform:rotate(-5deg) scaleX(-1);" loading="lazy">
+  <img class="f md mi"  src="flash/farol.webp"        alt="" style="left:3%;bottom:3%;transform:rotate(10deg);" loading="lazy">
+  <img class="f md lo"  src="flash/ancora3.webp"      alt="" style="right:22%;top:2%;transform:rotate(-20deg);" loading="lazy">
+  <img class="f sm hi"  src="flash/farol2.webp"      alt="" style="left:20%;top:3%;transform:rotate(15deg);" loading="lazy">
+  <img class="f sm lo"  src="flash/andorinha2.webp"   alt="" style="right:10%;bottom:5%;transform:rotate(25deg);" loading="lazy">
+  <img class="f xs mi"  src="flash/estrela.webp"      alt="" style="left:40%;bottom:4%;transform:rotate(-35deg);" loading="lazy">
+  <img class="f xs lo"  src="flash/ferradura2.webp"   alt="" style="right:40%;top:4%;transform:rotate(20deg);" loading="lazy">
   <div class="inner">
     <p class="eyebrow">Processo</p>
     <h2>Como funciona</h2>
@@ -757,7 +800,14 @@
 
 <!-- ── FAQ ───────────────────────────────────────────────────── -->
 <section id="faq">
-  <img class="flash-deco" src="flor.png" alt="" style="width:clamp(100px,15vw,190px);left:-0.5rem;top:50%;transform:translateY(-50%) rotate(-8deg);" loading="lazy" />
+  <img class="f xl lo"  src="flash/dragao3.webp"       alt="" style="right:-3rem;top:-1rem;transform:rotate(10deg);" loading="lazy">
+  <img class="f lg mi"  src="flash/caveira3quartos.webp" alt="" style="left:-2rem;bottom:-1rem;transform:rotate(-8deg);" loading="lazy">
+  <img class="f md lo"  src="flash/escorpiao.webp"      alt="" style="left:2%;top:5%;transform:rotate(15deg) scaleX(-1);" loading="lazy">
+  <img class="f md mi"  src="flash/morte.webp"          alt="" style="right:4%;bottom:5%;transform:rotate(-12deg);" loading="lazy">
+  <img class="f sm lo"  src="flash/veneno.webp"         alt="" style="right:20%;top:3%;transform:rotate(-25deg);" loading="lazy">
+  <img class="f sm mi"  src="flash/rip.webp"            alt="" style="left:25%;bottom:4%;transform:rotate(8deg);" loading="lazy">
+  <img class="f xs lo"  src="flash/olho.webp"           alt="" style="left:42%;top:5%;transform:rotate(30deg);" loading="lazy">
+  <img class="f xs mi"  src="flash/dados2.webp"         alt="" style="right:35%;bottom:6%;transform:rotate(-18deg);" loading="lazy">
   <div class="inner">
     <p class="eyebrow">Perguntas Frequentes</p>
     <h2>Dúvidas comuns</h2>
@@ -809,8 +859,15 @@
 
 <!-- ── PROMOÇÕES ─────────────────────────────────────────────── -->
 <section id="promocoes">
-  <img class="flash-deco" src="estrela.png" alt="" style="width:clamp(80px,12vw,150px);right:2rem;top:2rem;transform:rotate(20deg);" loading="lazy" />
-  <img class="flash-deco" src="flor.png"    alt="" style="width:clamp(100px,15vw,180px);left:-0.5rem;bottom:1rem;transform:rotate(-5deg);" loading="lazy" />
+  <img class="f xl lo"  src="flash/pinup.webp"         alt="" style="right:-2rem;top:-1rem;transform:rotate(-8deg);" loading="lazy">
+  <img class="f xl mi"  src="flash/serpente5.webp"     alt="" style="left:-3rem;bottom:-2rem;transform:rotate(10deg);" loading="lazy">
+  <img class="f lg lo"  src="flash/cigana2.webp"       alt="" style="left:-1rem;top:3%;transform:rotate(5deg) scaleX(-1);" loading="lazy">
+  <img class="f md mi"  src="flash/coracaoAdaga.webp"  alt="" style="right:3%;bottom:6%;transform:rotate(-18deg);" loading="lazy">
+  <img class="f md lo"  src="flash/rosaAdaga.webp"     alt="" style="right:22%;top:3%;transform:rotate(20deg);" loading="lazy">
+  <img class="f sm hi"  src="flash/love.webp"          alt="" style="left:22%;top:4%;transform:rotate(-12deg);" loading="lazy">
+  <img class="f sm lo"  src="flash/hula.webp"          alt="" style="left:8%;bottom:4%;transform:rotate(8deg);" loading="lazy">
+  <img class="f xs mi"  src="flash/ferradura3.webp"    alt="" style="right:40%;bottom:5%;transform:rotate(25deg);" loading="lazy">
+  <img class="f xs lo"  src="flash/trueLove.webp"      alt="" style="left:40%;top:5%;transform:rotate(-20deg);" loading="lazy">
   <div class="inner">
 
     <p class="promo-eyebrow">Novos clientes</p>
@@ -861,6 +918,14 @@
 
 <!-- ── Contato ───────────────────────────────────────────────── -->
 <section id="contato">
+  <img class="f xl lo"  src="flash/dragao4.webp"      alt="" style="left:-3rem;top:-1rem;transform:rotate(-8deg) scaleX(-1);" loading="lazy">
+  <img class="f lg mi"  src="flash/serpente6.webp"    alt="" style="right:-2rem;bottom:-1rem;transform:rotate(12deg);" loading="lazy">
+  <img class="f md lo"  src="flash/marinheira.webp"   alt="" style="right:4%;top:4%;transform:rotate(-15deg);" loading="lazy">
+  <img class="f md mi"  src="flash/tigre2.webp"       alt="" style="left:2%;bottom:4%;transform:rotate(8deg);" loading="lazy">
+  <img class="f sm lo"  src="flash/rosa3.webp"        alt="" style="right:22%;bottom:5%;transform:rotate(20deg);" loading="lazy">
+  <img class="f sm mi"  src="flash/olho2.webp"        alt="" style="left:20%;top:5%;transform:rotate(-10deg);" loading="lazy">
+  <img class="f xs lo"  src="flash/vela.webp"         alt="" style="right:42%;top:4%;transform:rotate(15deg);" loading="lazy">
+  <img class="f xs mi"  src="flash/zippo.webp"        alt="" style="left:40%;bottom:6%;transform:rotate(-25deg);" loading="lazy">
   <div class="inner">
     <p class="eyebrow">Contato</p>
     <h2>Tem um projeto<br>em mente?</h2>
@@ -880,8 +945,8 @@
 
 <!-- ── Caveiras base ──────────────────────────────────────────── -->
 <div class="skull-base">
-  <img src="caveiraDireita.png"   alt="" loading="lazy" />
-  <img src="caveiraEsquerda.png" alt="" loading="lazy" />
+  <img src="flash/caveiraDireita.webp"  alt="" loading="lazy">
+  <img src="flash/caveiraEsquerda.webp" alt="" loading="lazy">
 </div>
 
 <!-- ── Footer ───────────────────────────────────────────────── -->
