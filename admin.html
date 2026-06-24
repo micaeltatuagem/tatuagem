@@ -1048,6 +1048,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   // ── CONFIG ──
   const STORAGE_KEY  = 'micaelGallery_v2';
@@ -1830,11 +1831,7 @@ ${imageEntries}
     el.classList.add('visible');
     setTimeout(() => el.classList.remove('visible'), 6000);
   }
-</script>
 
-<!-- ── CLIENTES / PROMOÇÕES SCRIPT ── -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
   // ── Supabase (mesmas credenciais do cadastro.html) ──
   const SB_URL  = 'https://rpgcsejfewltricfsdrd.supabase.co';
   const SB_ANON = 'sb_publishable_7LF70sbQS_es_uco138rqw_YfbqnIsa';
@@ -1860,6 +1857,8 @@ ${imageEntries}
     }
 
     todosClientes = data || [];
+    window._todosClientes = todosClientes;
+    document.getElementById('statClientes').textContent = todosClientes.length;
     renderClientes(todosClientes);
   }
 
@@ -1973,8 +1972,6 @@ ${imageEntries}
     return v;
   }
 </script>
-
-<!-- ── ABAS + ANAMNESES + RESERVAS ── -->
 <script>
   // ── Navegação por abas ──────────────────────────────────────
   function mudarAba(id, btn) {
@@ -2189,18 +2186,6 @@ ${imageEntries}
   document.getElementById('busca-reserva').addEventListener('input', () => {
     renderReservas(todasReservas);
   });
-
-  // ── Atualizar stats de clientes ao carregar ─────────────────
-  // Já feito via carregarClientes() — só atualiza o stat-card
-  const _carregarClientesOrig = carregarClientes;
-  async function carregarClientesComStat() {
-    await _carregarClientesOrig();
-    document.getElementById('statClientes').textContent = todosClientes.length;
-  }
-  // Sobrescreve o botão para usar versão com stat
-  document.querySelector('#tab-promocoes .btn.btn-secondary, button[onclick="carregarClientes()"]');
-  // Patch simples: redefine a função globalmente
-  window.carregarClientes = carregarClientesComStat;
 </script>
 </body>
 </html>
