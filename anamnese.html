@@ -260,14 +260,55 @@
       opacity: .04;
       filter: invert(1);
     }
+    /* ── Flash sheet ─────────────────────────────────────────── */
+    .f {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      filter: invert(1);
+      height: auto;
+    }
+    .f.xs  { width: clamp(55px,  7vw,  95px);  }
+    .f.sm  { width: clamp(85px,  11vw, 150px); }
+    .f.md  { width: clamp(120px, 16vw, 210px); }
+    .f.lg  { width: clamp(170px, 24vw, 300px); }
+    .f.xl  { width: clamp(220px, 32vw, 400px); }
+    .f.lo  { opacity: .055; }
+    .f.mi  { opacity: .085; }
+    .f.hi  { opacity: .12;  }
+    section, header, .header { position: relative; overflow: hidden; }
+
+    /* ── Caveiras base ───────────────────────────────────────── */
+    .skull-base {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-top: 1px solid #222;
+      background: #0a0a0a;
+      overflow: hidden;
+    }
+    .skull-base img {
+      width: clamp(130px, 20vw, 240px);
+      height: auto;
+      display: block;
+      opacity: .75;
+      filter: invert(1) brightness(0.85);
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <img class="flash-deco" src="serpente.png" alt="" style="width:clamp(120px,18vw,220px);right:0;top:0;transform:rotate(12deg);" loading="lazy" />
-  <img class="flash-deco" src="estrela.png"  alt="" style="width:clamp(60px,9vw,110px);left:1rem;bottom:0;transform:rotate(-6deg);" loading="lazy" />
-  <a class="logo-name" href="./index.html">Micael Tatuagem</a>
+  <!-- flash: anamnese header -->
+  <img class="f xl lo"  src="flash/dragao6.webp"     alt="" style="right:-3rem;top:-1rem;transform:rotate(8deg);" loading="lazy">
+  <img class="f lg mi"  src="flash/serpente4.webp"   alt="" style="left:-2rem;bottom:-1rem;transform:rotate(-10deg) scaleX(-1);" loading="lazy">
+  <img class="f md lo"  src="flash/maosOracao.webp"  alt="" style="right:5%;bottom:5%;transform:rotate(-15deg);" loading="lazy">
+  <img class="f md mi"  src="flash/calice.webp"       alt="" style="left:5%;top:5%;transform:rotate(12deg);" loading="lazy">
+  <img class="f sm lo"  src="flash/morte.webp"        alt="" style="right:22%;top:3%;transform:rotate(20deg);" loading="lazy">
+  <img class="f sm mi"  src="flash/olho.webp"         alt="" style="left:22%;bottom:4%;transform:rotate(-8deg);" loading="lazy">
+  <img class="f xs lo"  src="flash/estrela.webp"      alt="" style="left:42%;top:4%;transform:rotate(40deg);" loading="lazy">
+  <img class="f xs mi"  src="flash/veneno.webp"       alt="" style="right:40%;bottom:5%;transform:rotate(-20deg);" loading="lazy">
+<a class="logo-name" href="./index.html">Micael Tatuagem</a>
   <span class="logo-sub">Muriaé · MG</span>
 </header>
 
@@ -415,6 +456,12 @@
 
   </form>
 </main>
+
+<!-- ── Caveiras base ── -->
+<div class="skull-base">
+  <img src="flash/caveiraDireita.webp"  alt="" loading="lazy">
+  <img src="flash/caveiraEsquerda.webp" alt="" loading="lazy">
+</div>
 
 <footer>© Micael Faccio · Tatuador em Muriaé, MG · (32) 99966-6946</footer>
 
