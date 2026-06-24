@@ -182,11 +182,12 @@
     .badge-pendente   { background: #1a130d; color: var(--warning); }
 
     /* ações */
-    .td-acoes { white-space: nowrap; }
+    .td-acoes { white-space: normal; }
+    .td-acoes-inner { display: flex; flex-wrap: wrap; gap: .3rem; }
     .btn-acao {
       background: none; border: 1px solid var(--border); color: var(--ink-muted);
       border-radius: var(--radius); font-family: var(--font-ui); font-size: .72rem;
-      padding: .3rem .7rem; cursor: pointer; margin-right: .3rem; margin-bottom: .2rem;
+      padding: .3rem .7rem; cursor: pointer;
       transition: border-color .2s, color .2s;
     }
     .btn-acao:hover { border-color: var(--border-hi); color: var(--ink); }
@@ -546,9 +547,11 @@
         </td>
         <td class="td-data">${fmtData(c.criado_em)}</td>
         <td class="td-acoes">
+          <div class="td-acoes-inner">
           <button class="btn-acao" onclick="abrirModal('${c.id}')">Detalhes</button>
           <button class="btn-acao destaque" onclick="registrarTatuagem('${c.id}')">+ Tattoo</button>
           <button class="btn-acao danger" onclick="deletarCliente('${c.id}', '${c.nome}')">Deletar</button>
+          </div>
         </td>
       </tr>`;
     }).join('');
