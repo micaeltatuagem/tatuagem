@@ -270,6 +270,50 @@
     nav, .pilar, .etapa, .promo-card, footer {
       text-shadow: none;
     }
+
+    /* ── LEGIBILIDADE GLOBAL ────────────────────────────────── */
+
+    /* Bold em todos os textos pequenos */
+    p, li, label, span, td, th, caption,
+    input, textarea, select, option,
+    .eyebrow, .hero-tag, .hero-styles, .hero-quote,
+    .pilar p, .etapa p, .pc-desc, .pc-regra, .pc-label,
+    .promo-intro, .promo-cta-sub, .contato-sub,
+    .galeria-desc, .faq-a, .faq-q,
+    .form-note, .back-link, footer p, footer a,
+    .nav-links a, .nav-logo,
+    .skull-cta a {
+      font-weight: 700 !important;
+    }
+
+    /* Layer escuro atrás de todo conteúdo textual de seção */
+    .inner, .sobre-grid, .pilares, .etapas,
+    .promo-cards, .promo-cta-wrap, .faq-list,
+    .contato-ctas, .contato-extras,
+    .carousel-wrap, .galeria-desc,
+    form, .form-section, .field,
+    header > *, .page-header > * {
+      position: relative;
+      z-index: 1;
+    }
+    .inner::before, form::before, .form-section::before {
+      content: '';
+      position: absolute;
+      inset: -2rem -1.5rem;
+      background: rgba(10,10,10,0.72);
+      border-radius: 4px;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Boxes com fundo próprio — reforça opacidade */
+    .pilar, .etapa, .promo-card {
+      background: rgba(17,17,17,0.92) !important;
+    }
+    nav {
+      background: rgba(10,10,10,0.96) !important;
+    }
+
   </style>
 </head>
 <body>
