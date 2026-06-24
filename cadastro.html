@@ -523,6 +523,16 @@
         font-size: clamp(0.9rem, 3.8vw, 1.2rem);
       }
     }
+
+    /* ── Legibilidade sobre decorativos ─────────────────────── */
+    body {
+      text-shadow: 0 0 12px var(--bg), 0 0 8px var(--bg), 0 0 4px var(--bg);
+    }
+    /* Botões e elementos com fundo próprio não precisam */
+    .btn-primary, .btn-secondary, .btn-promo-cta,
+    nav, .pilar, .etapa, .promo-card, footer {
+      text-shadow: none;
+    }
   </style>
 </head>
 <body>
