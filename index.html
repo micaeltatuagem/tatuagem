@@ -617,19 +617,6 @@
       filter: invert(1);
       height: auto;
     }
-    /* Tamanhos */
-    .f.xs  { width: clamp(55px,  7vw,  95px);  }
-    .f.sm  { width: clamp(85px,  11vw, 150px); }
-    .f.md  { width: clamp(120px, 16vw, 210px); }
-    .f.lg  { width: clamp(170px, 24vw, 300px); }
-    .f.xl  { width: clamp(220px, 32vw, 400px); }
-    /* Opacidade — três camadas de profundidade */
-    .f.lo  { opacity: .055; }
-    .f.mi  { opacity: .085; }
-    .f.hi  { opacity: .12;  }
-    /* Utilidades */
-    .f.flip { transform-origin: center; }
-
     section, #hero { position: relative; overflow: hidden; }
 
     /* ── Caveiras base ───────────────────────────────────────── */
@@ -667,15 +654,6 @@
 
 <!-- ── Hero ─────────────────────────────────────────────────── -->
 <section id="hero">
-
-
-
-
-
-
-
-
-
   <div class="hero-inner">
     <div>
       <p class="hero-tag">Atendimento privado · Muriaé, MG</p>
@@ -695,14 +673,6 @@
 
 <!-- ── Sobre ─────────────────────────────────────────────────── -->
 <section id="sobre">
-
-
-
-
-
-
-
-
   <div class="inner">
     <p class="eyebrow">Sobre</p>
     <div class="sobre-grid">
@@ -735,12 +705,6 @@
 
 <!-- ── Galeria ───────────────────────────────────────────────── -->
 <section id="galeria">
-
-
-
-
-
-
   <div class="inner">
     <p class="eyebrow">Galeria</p>
 
@@ -758,14 +722,6 @@
 
 <!-- ── Processo ──────────────────────────────────────────────── -->
 <section id="processo">
-
-
-
-
-
-
-
-
   <div class="inner">
     <p class="eyebrow">Processo</p>
     <h2>Como funciona</h2>
@@ -796,13 +752,6 @@
 
 <!-- ── FAQ ───────────────────────────────────────────────────── -->
 <section id="faq">
-
-
-
-
-
-
-
   <div class="inner">
     <p class="eyebrow">Perguntas Frequentes</p>
     <h2>Dúvidas comuns</h2>
@@ -854,14 +803,6 @@
 
 <!-- ── PROMOÇÕES ─────────────────────────────────────────────── -->
 <section id="promocoes">
-
-
-
-
-
-
-
-
   <div class="inner">
 
     <p class="promo-eyebrow">Novos clientes</p>
@@ -912,13 +853,6 @@
 
 <!-- ── Contato ───────────────────────────────────────────────── -->
 <section id="contato">
-
-
-
-
-
-
-
   <div class="inner">
     <p class="eyebrow">Contato</p>
     <h2>Tem um projeto<br>em mente?</h2>
@@ -1081,39 +1015,38 @@
 }
 </script>
 
-
-<!-- ── Flash Sheet — aleatório sem sobreposição ──────────────── -->
+<!-- ── Flash Sheet ── aleatorio, sem sobreposicao, auto-atualiza com novos arquivos ── -->
 <script>
-(function() {
-  // Todos os arquivos disponíveis na pasta flash/
-  // Caveiras ficam só no skull-base, não entram no pool
-  const POOL = [
-    'adaga','aguia1','aguia2','aguia3','ampulheta',
-    'ancora1','ancora2','ancora3','andorinha1','andorinha2','andorinha3',
-    'anjinho','aranha','bola8','bolaCristal','borboleta','bota',
-    'calice','caravela','caravela2','cartas',
-    'caveira','caveira3quartos','caveiraChamas','caveiraFrontal','caveiraOssos','caveiraSerpente',
-    'chapeu','cigana1','cigana2','cigana3','clown',
-    'coracao','coracaoAdaga','coracaoPartido',
-    'dados','dados2',
-    'dragao1','dragao2','dragao3','dragao4','dragao5','dragao6',
-    'dragao7','dragao8','dragao9','dragao10','dragao11','dragao12',
-    'escorpiao','escorpiao2','espadaCoracao','estrela',
-    'faca','fantasminha','farol','farol2',
-    'ferradura1','ferradura2','ferradura3','flames','flor','forever',
-    'HangBones','hula',
-    'lobo','love','lua','lua2',
-    'mao','maosOracao','marinheira','mariposa','mariposa2',
-    'mom','mom2','morte','morte2',
-    'olho','olho2','palmeira','pantera','pantera2',
-    'pinup','pinup2','pinup3','pinup4','rip',
-    'rosa1','rosa2','rosa3','rosaAdaga','rosaAdaga2','rosaAdaga3','rosinha',
-    'serpente1','serpente2','serpente3','serpente4','serpente5','serpente6','serpente7',
-    'sol','teia','tigre','tigre2','trueLove','tubarao',
-    'vela','veneno','zippo'
-  ].map(n => 'flash/' + n + '.webp');
+(function () {
+  'use strict';
 
-  // Embaralha array (Fisher-Yates)
+  // ── Busca lista de arquivos da pasta flash/ via GitHub API ──────
+  // Cache em sessionStorage: só busca uma vez por sessão
+  const CACHE_KEY = 'flash_pool_v1';
+  const REPO_API  = 'https://api.github.com/repos/micaeltatuagem/tatuagem/contents/flash';
+  // Caveiras ficam só no skull-base
+  const EXCLUIR   = new Set(['caveiraDireita.webp','caveiraEsquerda.webp']);
+
+  async function getPool() {
+    const cached = sessionStorage.getItem(CACHE_KEY);
+    if (cached) return JSON.parse(cached);
+    try {
+      const r = await fetch(REPO_API);
+      if (!r.ok) throw new Error();
+      const data = await r.json();
+      const pool = data
+        .filter(f => f.name.endsWith('.webp') && !EXCLUIR.has(f.name))
+        .map(f => 'flash/' + f.name);
+      sessionStorage.setItem(CACHE_KEY, JSON.stringify(pool));
+      return pool;
+    } catch {
+      // Fallback: lista embutida para não quebrar offline
+      return 'adaga aguia1 aguia2 aguia3 ampulheta ancora1 ancora2 ancora3 andorinha1 andorinha2 andorinha3 anjinho aranha bola8 bolaCristal borboleta bota calice caravela caravela2 cartas caveira caveira3quartos caveiraChamas caveiraFrontal caveiraOssos caveiraSerpente chapeu cigana1 cigana2 cigana3 clown coracao coracaoAdaga coracaoPartido dados dados2 dragao1 dragao2 dragao3 dragao4 dragao5 dragao6 dragao7 dragao8 dragao9 dragao10 dragao11 dragao12 escorpiao escorpiao2 espadaCoracao estrela faca fantasminha farol farol2 ferradura1 ferradura2 ferradura3 flames flor forever HangBones hula lobo love lua lua2 mao maosOracao marinheira mariposa mariposa2 mom mom2 morte morte2 olho olho2 palmeira pantera pantera2 pinup pinup2 pinup3 pinup4 rip rosa1 rosa2 rosa3 rosaAdaga rosaAdaga2 rosaAdaga3 rosinha serpente1 serpente2 serpente3 serpente4 serpente5 serpente6 serpente7 sol teia tigre tigre2 trueLove tubarao vela veneno zippo'
+        .split(' ').map(n => 'flash/' + n + '.webp');
+    }
+  }
+
+  // ── Embaralha (Fisher-Yates) ─────────────────────────────────────
   function shuffle(arr) {
     const a = [...arr];
     for (let i = a.length - 1; i > 0; i--) {
@@ -1123,82 +1056,131 @@
     return a;
   }
 
-  // Zonas: divide a seção em células de grid e sorteia quais usar
-  // cols × rows = total de células; n = quantas vamos preencher (sem repetição de célula)
-  function placerFlash(section, n, cols, rows) {
-    const imgs = shuffle(POOL).slice(0, n);
+  // ── Packing sem sobreposição ─────────────────────────────────────
+  // Tamanhos em px (valores médios para cálculo de colisão)
+  const SZ = { xs: 75, sm: 120, md: 165, lg: 230, xl: 300 };
+  const SZ_CSS = {
+    xs: 'clamp(50px,6vw,85px)',
+    sm: 'clamp(80px,10vw,140px)',
+    md: 'clamp(110px,15vw,195px)',
+    lg: 'clamp(155px,22vw,280px)',
+    xl: 'clamp(200px,29vw,370px)',
+  };
+  const OPS = [.05, .065, .08, .095, .11, .12];
 
-    // Gera todas as células e sorteia n delas
-    const cells = [];
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        cells.push({ c, r });
-      }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function rnd(min, max) { return min + Math.random() * (max - min); }
+
+  function overlaps(placed, cx, cy, r) {
+    for (const p of placed) {
+      const dx = cx - p.cx, dy = cy - p.cy;
+      if (Math.sqrt(dx * dx + dy * dy) < r + p.r + 4) return true;
     }
-    const chosen = shuffle(cells).slice(0, n);
+    return false;
+  }
 
-    const sizes = ['xs','sm','sm','md','md','lg','lg'];
-    const opacities = ['.055','.07','.085','.095','.11','.12'];
+  function packSection(el, pool, count) {
+    const W = el.offsetWidth  || el.getBoundingClientRect().width  || window.innerWidth;
+    const H = el.offsetHeight || el.getBoundingClientRect().height || 400;
+    if (!W || !H) return;
 
-    chosen.forEach(({ c, r }, i) => {
-      const img = document.createElement('img');
-      img.src = imgs[i];
-      img.alt = '';
-      img.loading = 'lazy';
+    const imgs   = shuffle(pool).slice(0, count);
+    const placed = [];
 
-      // Posição dentro da célula com jitter aleatório
-      const cellW = 100 / cols;
-      const cellH = 100 / rows;
-      const jitterX = (Math.random() - 0.5) * cellW * 0.5;
-      const jitterY = (Math.random() - 0.5) * cellH * 0.5;
-      const left = cellW * c + cellW / 2 + jitterX;
-      const top  = cellH * r + cellH / 2 + jitterY;
+    imgs.forEach(src => {
+      // Tenta posicionar sem sobrepor — até 80 tentativas
+      // Bordas têm mais chance de tamanho grande
+      const MAX_TRIES = 80;
+      let ok = false;
 
-      // Tamanho: bordas e cantos ganham elementos maiores
-      const isBorda = c === 0 || c === cols-1 || r === 0 || r === rows-1;
-      const sizePool = isBorda
-        ? ['md','lg','lg','xl','xl']
-        : ['xs','xs','sm','sm','md'];
-      const sz = sizePool[Math.floor(Math.random() * sizePool.length)];
-      const szMap = { xs:'clamp(50px,7vw,90px)', sm:'clamp(80px,11vw,145px)', md:'clamp(115px,16vw,200px)', lg:'clamp(160px,23vw,290px)', xl:'clamp(210px,30vw,380px)' };
+      for (let t = 0; t < MAX_TRIES; t++) {
+        // Zona: bordas (20% da largura/altura) ou interior
+        const borda = Math.random() < 0.55;
+        let cx, cy;
+        if (borda) {
+          // sorteia qual borda
+          const lado = Math.floor(Math.random() * 4);
+          if (lado === 0) { cx = rnd(0, W * 0.2);       cy = rnd(0, H); }       // esq
+          else if (lado === 1) { cx = rnd(W * 0.8, W);  cy = rnd(0, H); }       // dir
+          else if (lado === 2) { cx = rnd(0, W);         cy = rnd(0, H * 0.2); } // top
+          else                 { cx = rnd(0, W);         cy = rnd(H * 0.8, H); } // bot
+        } else {
+          cx = rnd(W * 0.08, W * 0.92);
+          cy = rnd(H * 0.08, H * 0.92);
+        }
 
-      const rot  = (Math.random() * 60 - 30).toFixed(1);
-      const flip = Math.random() > 0.6 ? ' scaleX(-1)' : '';
-      const op   = opacities[Math.floor(Math.random() * opacities.length)];
+        // Tamanho: bordas preferem lg/xl, interior xs/sm
+        const szPool = borda ? ['lg','lg','xl','xl','md'] : ['xs','xs','sm','sm','md'];
+        const sz = pick(szPool);
+        const r  = SZ[sz] / 2;
 
-      img.style.cssText = [
-        'position:absolute',
-        'pointer-events:none',
-        'user-select:none',
-        'filter:invert(1)',
-        'height:auto',
-        `width:${szMap[sz]}`,
-        `opacity:${op}`,
-        `left:${left.toFixed(1)}%`,
-        `top:${top.toFixed(1)}%`,
-        `transform:translate(-50%,-50%) rotate(${rot}deg)${flip}`,
-      ].join(';');
+        if (!overlaps(placed, cx, cy, r)) {
+          placed.push({ cx, cy, r });
 
-      section.appendChild(img);
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = '';
+          img.loading = 'lazy';
+
+          const rot  = rnd(-32, 32).toFixed(1);
+          const flip = Math.random() > 0.55 ? ' scaleX(-1)' : '';
+          const op   = pick(OPS);
+
+          img.style.cssText = [
+            'position:absolute',
+            'pointer-events:none',
+            'user-select:none',
+            'filter:invert(1)',
+            'height:auto',
+            `width:${SZ_CSS[sz]}`,
+            `opacity:${op}`,
+            `left:${((cx / W) * 100).toFixed(2)}%`,
+            `top:${((cy / H) * 100).toFixed(2)}%`,
+            `transform:translate(-50%,-50%) rotate(${rot}deg)${flip}`,
+          ].join(';');
+
+          el.appendChild(img);
+          ok = true;
+          break;
+        }
+      }
     });
   }
 
-  // Aplica em cada seção após o DOM carregar
-  document.addEventListener('DOMContentLoaded', function() {
-    const configs = [
-      { id: 'hero',      n: 10, cols: 4, rows: 3 },
-      { id: 'sobre',     n: 8,  cols: 4, rows: 3 },
-      { id: 'galeria',   n: 7,  cols: 4, rows: 2 },
-      { id: 'processo',  n: 9,  cols: 4, rows: 3 },
-      { id: 'faq',       n: 8,  cols: 4, rows: 3 },
-      { id: 'promocoes', n: 9,  cols: 4, rows: 3 },
-      { id: 'contato',   n: 7,  cols: 4, rows: 2 },
-    ];
-    configs.forEach(({ id, n, cols, rows }) => {
-      const sec = document.getElementById(id);
-      if (sec) placerFlash(sec, n, cols, rows);
+  // ── Configuração por seção ───────────────────────────────────────
+  // n = elementos por seção; aumenta se a seção for alta
+  const SECTIONS = [
+    { id: 'hero',      n: 12 },
+    { id: 'sobre',     n: 10 },
+    { id: 'galeria',   n: 8  },
+    { id: 'processo',  n: 10 },
+    { id: 'faq',       n: 10 },
+    { id: 'promocoes', n: 10 },
+    { id: 'contato',   n: 8  },
+  ];
+
+  // ── Inicializa após layout estabilizar ───────────────────────────
+  async function init() {
+    const pool = await getPool();
+
+    // Usa requestAnimationFrame para garantir que as seções têm altura
+    requestAnimationFrame(() => {
+      SECTIONS.forEach(({ id, n }) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        // Ajusta n proporcionalmente à altura real da seção
+        const H = el.offsetHeight;
+        const nAjustado = Math.round(n * Math.max(1, H / 500));
+        packSection(el, pool, Math.min(nAjustado, pool.length));
+      });
     });
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 })();
 </script>
 
