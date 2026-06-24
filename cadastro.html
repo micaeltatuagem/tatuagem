@@ -493,6 +493,23 @@
       opacity: .75;
       filter: invert(1) brightness(0.85);
     }
+    /* ── Flash sheet ─────────────────────────────────────────── */
+    .f {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      filter: invert(1);
+      height: auto;
+    }
+    .f.xs  { width: clamp(55px,  7vw,  95px);  }
+    .f.sm  { width: clamp(85px,  11vw, 150px); }
+    .f.md  { width: clamp(120px, 16vw, 210px); }
+    .f.lg  { width: clamp(170px, 24vw, 300px); }
+    .f.xl  { width: clamp(220px, 32vw, 400px); }
+    .f.lo  { opacity: .055; }
+    .f.mi  { opacity: .085; }
+    .f.hi  { opacity: .12;  }
+    section, header, .header { position: relative; overflow: hidden; }
   </style>
 </head>
 <body>
@@ -508,9 +525,18 @@
 <main id="tela-form">
 
   <div class="hero">
-    <img class="flash-deco" src="serpente.png" alt="" style="width:clamp(140px,22vw,260px);right:-1rem;top:0;transform:rotate(20deg);" loading="lazy" />
-    <img class="flash-deco" src="estrela.png"  alt="" style="width:clamp(70px,10vw,130px);left:0;bottom:0;transform:rotate(-8deg);" loading="lazy" />
-    <p class="hero-eyebrow">Micael Tatuagem · Muriaé, MG</p>
+    <!-- flash: cadastro hero -->
+    <img class="f xl mi"  src="flash/cigana3.webp"      alt="" style="right:-2rem;top:-1rem;transform:rotate(-10deg);" loading="lazy">
+    <img class="f xl lo"  src="flash/serpente2.webp"    alt="" style="left:-3rem;bottom:-1rem;transform:rotate(8deg);" loading="lazy">
+    <img class="f lg lo"  src="flash/lobo.webp"          alt="" style="left:-1rem;top:8%;transform:rotate(5deg);" loading="lazy">
+    <img class="f lg mi"  src="flash/pinup2.webp"        alt="" style="right:2%;bottom:8%;transform:rotate(-8deg) scaleX(-1);" loading="lazy">
+    <img class="f md mi"  src="flash/coracaoPartido.webp" alt="" style="right:22%;top:3%;transform:rotate(20deg);" loading="lazy">
+    <img class="f md lo"  src="flash/mariposa2.webp"    alt="" style="left:22%;bottom:5%;transform:rotate(-15deg);" loading="lazy">
+    <img class="f sm lo"  src="flash/lua2.webp"          alt="" style="right:40%;top:4%;transform:rotate(-30deg);" loading="lazy">
+    <img class="f sm mi"  src="flash/anjinho.webp"       alt="" style="left:40%;bottom:4%;transform:rotate(12deg);" loading="lazy">
+    <img class="f xs mi"  src="flash/ferradura3.webp"   alt="" style="left:10%;top:5%;transform:rotate(25deg);" loading="lazy">
+    <img class="f xs lo"  src="flash/mom.webp"           alt="" style="right:12%;bottom:5%;transform:rotate(-18deg);" loading="lazy">
+<p class="hero-eyebrow">Micael Tatuagem · Muriaé, MG</p>
     <h1>Promoções para<br>novos clientes</h1>
     <p>Cadastre-se uma vez e tenha acesso a dois benefícios que não têm prazo de validade.</p>
   </div>
@@ -676,8 +702,8 @@
 </div>
 
 <div class="skull-base">
-  <img src="caveiraDireita.png"   alt="" loading="lazy" />
-  <img src="caveiraEsquerda.png" alt="" loading="lazy" />
+  <img src="flash/caveiraDireita.webp"  alt="" loading="lazy">
+  <img src="flash/caveiraEsquerda.webp" alt="" loading="lazy">
 </div>
 
 <footer>
