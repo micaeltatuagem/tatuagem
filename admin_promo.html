@@ -260,6 +260,8 @@
     .btn-modal.primary:hover { background: #1a1408; }
     .btn-modal.success { border-color: #1a4a28; color: var(--success); }
     .btn-modal.success:hover { background: #0d1a0f; }
+    .btn-modal.danger { border-color: #4a1a1a; color: var(--error); }
+    .btn-modal.danger:hover { background: #1a0e0e; }
 
     /* ── Empty / loading ────────────────────────────────────── */
     .empty {
@@ -546,6 +548,7 @@
         <td class="td-acoes">
           <button class="btn-acao" onclick="abrirModal('${c.id}')">Detalhes</button>
           <button class="btn-acao destaque" onclick="registrarTatuagem('${c.id}')">+ Tattoo</button>
+          <button class="btn-acao danger" onclick="deletarCliente('${c.id}', '${c.nome}')">Deletar</button>
         </td>
       </tr>`;
     }).join('');
@@ -686,6 +689,7 @@
           ? `<button class="btn-modal success" onclick="usarGratis('${c.id}')">Marcar sessão grátis como usada</button>`
           : ''}
         <a class="btn-modal" href="https://wa.me/55${c.whatsapp.replace(/\D/g,'')}" target="_blank" style="text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;">Abrir WhatsApp</a>
+        <button class="btn-modal danger" onclick="deletarCliente('${c.id}', '${c.nome}')">Deletar cliente</button>
       </div>
     `;
 
@@ -703,10 +707,29 @@
     }
   });
 
+  // ── Ação: deletar cliente ────────────────────────────────────
+  async function deletarCliente(id, nome) {
+    const confirm = window.confirm(`Deletar permanentemente o cliente "${nome}"?\n\nEssa ação não pode ser desfeita.`);
+    if (!confirm) return;
+
+    const { error } = await sb.from('clientes_promo').delete().eq('id', id);
+    if (error) return toast('Erro ao deletar: ' + error.message, 'err');
+
+    // Fechar modal se estiver aberto para esse cliente
+    if (clienteModal === id) {
+      document.getElementById('modal-bg').classList.remove('open');
+      clienteModal = null;
+    }
+
+    toast(`${nome} removido ✓`, 'ok');
+    await carregarClientes();
+  }
+
   // Expor funções ao escopo global (chamadas nos onclick)
   window.registrarTatuagem = registrarTatuagem;
   window.usarGratis = usarGratis;
   window.abrirModal = abrirModal;
+  window.deletarCliente = deletarCliente;
 </script>
 
 </body>
