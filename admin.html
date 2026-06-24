@@ -659,24 +659,144 @@
       .cliente-row > *:nth-child(5) { grid-column: 3; grid-row: 1; }
     }
 
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--muted);
+      font-family: 'Inter', sans-serif;
+      font-size: .85rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .9rem 1.4rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color .2s, border-color .2s;
+    }
+    .tab-btn:hover { color: var(--bone); }
+    .tab-btn.active { color: var(--rust); border-bottom-color: var(--rust); }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── ANAMNESES / RESERVAS table ── */
+    .registros-lista { margin-top: 1rem; }
+    .registro-row {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1rem 1.2rem;
+      margin-bottom: .7rem;
+      cursor: pointer;
+      transition: border-color .2s;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: .5rem 1rem;
+      align-items: center;
+    }
+    .registro-row:hover { border-color: rgba(212,201,176,.3); }
+    .registro-nome { color: var(--bone); font-weight: 500; font-size: .95rem; }
+    .registro-sub { color: var(--muted); font-size: .8rem; margin-top: .15rem; }
+    .registro-data { color: var(--muted); font-size: .78rem; white-space: nowrap; }
+    .btn-ver {
+      background: none;
+      border: 1px solid rgba(212,201,176,.25);
+      color: var(--bone);
+      padding: .3rem .7rem;
+      border-radius: 4px;
+      font-size: .78rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: border-color .2s;
+    }
+    .btn-ver:hover { border-color: var(--bone); }
+    .btn-del-reg {
+      background: none;
+      border: 1px solid rgba(192,57,43,.35);
+      color: rgba(192,57,43,.7);
+      padding: .3rem .55rem;
+      border-radius: 4px;
+      font-size: .78rem;
+      cursor: pointer;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-del-reg:hover { border-color: var(--rust); color: var(--rust); }
+
+    /* ── Modal detalhe ── */
+    .detalhe-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.88);
+      z-index: 20000;
+      overflow-y: auto;
+      padding: 2rem 1rem;
+    }
+    .detalhe-modal.open { display: flex; align-items: flex-start; justify-content: center; }
+    .detalhe-card {
+      background: var(--deep);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      width: 100%;
+      max-width: 620px;
+      padding: 2rem;
+      position: relative;
+    }
+    .detalhe-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem;
+      color: var(--bone);
+    }
+    .detalhe-fechar {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .2s, color .2s;
+    }
+    .detalhe-fechar:hover { border-color: var(--bone); color: var(--bone); }
+    .detalhe-campo {
+      margin-bottom: .9rem;
+      font-size: .88rem;
+      line-height: 1.6;
+    }
+    .detalhe-label {
+      font-size: .72rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: .15rem;
+    }
+    .detalhe-valor { color: var(--bone); }
+    .detalhe-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 1.2rem 0;
+    }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 768px) {
-      .admin-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-      }
-
-      .admin-header-links {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-
-      .gallery-list {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      }
+      .admin-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .admin-header-links { flex-direction: column; gap: 0.5rem; }
+      .gallery-list { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+      .registro-row { grid-template-columns: 1fr auto auto; }
     }
-  </style>
 </head>
 <body>
 
@@ -709,9 +829,9 @@
 <div class="container" id="adminPanel" style="display: none;">
 
   <div class="admin-header">
-    <h1>Gerenciar Galeria</h1>
+    <h1>Painel Admin</h1>
     <div class="admin-header-links">
-      <a href="galeria.html" target="_blank">👁️ Ver Galeria</a>
+      <a href="galeria.html" target="_blank">👁️ Galeria</a>
       <a href="index.html">🏠 Home</a>
       <a onclick="logout()" style="color: var(--blood);">🔐 Sair</a>
     </div>
@@ -727,7 +847,7 @@
   <div class="alert error" id="alertError"></div>
   <div class="alert info" id="alertInfo"></div>
 
-  <!-- Stats -->
+  <!-- Stats globais -->
   <div class="stats">
     <div class="stat-card">
       <div class="stat-number" id="totalImages">0</div>
@@ -737,143 +857,195 @@
       <div class="stat-number" id="pendingSync">0</div>
       <div class="stat-label">Aguardando Sync</div>
     </div>
-  </div>
-
-  <!-- Form -->
-  <div class="form-section">
-    <h2>Adicionar Nova Imagem</h2>
-
-    <div class="form-group">
-      <label for="imageFile">Selecionar Imagem *</label>
-      <input type="file" id="imageFile" accept="image/jpeg,image/png,image/webp,image/gif" required />
-      <div class="preview-container">
-        <img id="previewImage" class="preview-image" alt="Preview" />
-        <p id="previewPlaceholder" style="color:var(--muted);font-size:0.9rem;">Nenhuma imagem selecionada</p>
-      </div>
+    <div class="stat-card">
+      <div class="stat-number" id="statClientes">—</div>
+      <div class="stat-label">Clientes Promo</div>
     </div>
-
-    <div class="form-group">
-      <label for="imageTitle">Título da Tatuagem *</label>
-      <input type="text" id="imageTitle" placeholder="Ex: Crânio Mitológico" required />
+    <div class="stat-card">
+      <div class="stat-number" id="statAnamneses">—</div>
+      <div class="stat-label">Anamneses</div>
     </div>
-
-    <div class="form-group">
-      <label>Estilos (selecione um ou mais) *</label>
-      <div class="tags-container" id="tagsContainer"></div>
-    </div>
-
-    <div class="form-group">
-      <label for="imageAltText">Alt Text (SEO) *</label>
-      <input type="text" id="imageAltText" placeholder="Ex: Tatuagem blackwork crânio — Micael Faccio, Muriaé MG" />
-      <p style="font-size:0.78rem;color:var(--muted);margin-top:0.4rem;">Texto que o Google usa para indexar a imagem. Descreva o que está na foto.</p>
-    </div>
-
-    <div class="form-group">
-      <label for="imageDescription">Descrição (opcional)</label>
-      <textarea id="imageDescription" placeholder="Descreva a tatuagem, significado, etc." rows="3"></textarea>
-    </div>
-
-    <!-- Upload progress -->
-    <div class="upload-progress" id="uploadProgress">
-      <p class="progress-label" id="progressLabel">Fazendo upload...</p>
-      <div class="progress-bar-wrap">
-        <div class="progress-bar" id="progressBar"></div>
-      </div>
-    </div>
-
-    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
-      <button class="btn btn-primary" id="btnAdd" onclick="addImage()">Adicionar e Publicar</button>
-      <button class="btn btn-secondary" onclick="resetForm()">Limpar</button>
+    <div class="stat-card">
+      <div class="stat-number" id="statReservas">—</div>
+      <div class="stat-label">Reservas</div>
     </div>
   </div>
 
-  <!-- Tag Manager -->
-  <div class="form-section">
-    <h2>Gerenciar Estilos / Tags</h2>
-    <p style="margin-bottom:1.2rem;color:rgba(212,201,176,0.7);font-size:0.9rem;">
-      As tags criadas aqui aparecem automaticamente no formulário de upload.
-    </p>
-    <div class="tag-manager-list" id="tagManagerList"></div>
-    <div class="tag-add-row">
-      <input type="text" id="newTagInput" placeholder="Nova tag (ex: Realismo, Fine Line...)" maxlength="40"
-        onkeydown="if(event.key==='Enter'){event.preventDefault();addTag();}" />
-      <button class="btn btn-primary" onclick="addTag()">Adicionar</button>
-    </div>
+  <!-- ── ABAS ── -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="mudarAba('galeria', this)">Galeria</button>
+    <button class="tab-btn" onclick="mudarAba('promocoes', this)">Promoções</button>
+    <button class="tab-btn" onclick="mudarAba('anamneses', this)">Anamneses</button>
+    <button class="tab-btn" onclick="mudarAba('reservas', this)">Reservas</button>
   </div>
 
-  <!-- Gallery list -->
-  <div class="form-section">
-    <h2>Imagens na Galeria</h2>
-    <div class="gallery-list" id="galleryList"></div>
-  </div>
+  <!-- ══ ABA GALERIA ══ -->
+  <div class="tab-panel active" id="tab-galeria">
 
-  <!-- Edit Modal -->
-  <div id="editModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:20000;align-items:center;justify-content:center;padding:2rem;">
-    <div style="background:var(--deep);border:1px solid var(--border);border-radius:4px;width:100%;max-width:500px;padding:2rem;max-height:90vh;overflow-y:auto;">
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:1.5rem;">Editar Imagem</h2>
-      <input type="hidden" id="editId" />
-
+    <!-- Form -->
+    <div class="form-section">
+      <h2>Adicionar Nova Imagem</h2>
       <div class="form-group">
-        <label for="editTitle">Título *</label>
-        <input type="text" id="editTitle" />
+        <label for="imageFile">Selecionar Imagem *</label>
+        <input type="file" id="imageFile" accept="image/jpeg,image/png,image/webp,image/gif" required />
+        <div class="preview-container">
+          <img id="previewImage" class="preview-image" alt="Preview" />
+          <p id="previewPlaceholder" style="color:var(--muted);font-size:0.9rem;">Nenhuma imagem selecionada</p>
+        </div>
       </div>
-
       <div class="form-group">
-        <label>Estilos *</label>
-        <div class="tags-container" id="editTagsContainer"></div>
+        <label for="imageTitle">Título da Tatuagem *</label>
+        <input type="text" id="imageTitle" placeholder="Ex: Crânio Mitológico" required />
       </div>
-
       <div class="form-group">
-        <label for="editAltText">Alt Text (SEO)</label>
-        <input type="text" id="editAltText" placeholder="Ex: Tatuagem blackwork crânio — Micael Faccio, Muriaé MG" />
+        <label>Estilos (selecione um ou mais) *</label>
+        <div class="tags-container" id="tagsContainer"></div>
+      </div>
+      <div class="form-group">
+        <label for="imageAltText">Alt Text (SEO) *</label>
+        <input type="text" id="imageAltText" placeholder="Ex: Tatuagem blackwork crânio — Micael Faccio, Muriaé MG" />
         <p style="font-size:0.78rem;color:var(--muted);margin-top:0.4rem;">Texto que o Google usa para indexar a imagem.</p>
       </div>
-
       <div class="form-group">
-        <label for="editDescription">Descrição</label>
-        <textarea id="editDescription" rows="3"></textarea>
+        <label for="imageDescription">Descrição (opcional)</label>
+        <textarea id="imageDescription" placeholder="Descreva a tatuagem, significado, etc." rows="3"></textarea>
       </div>
-
+      <div class="upload-progress" id="uploadProgress">
+        <p class="progress-label" id="progressLabel">Fazendo upload...</p>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
-        <button class="btn btn-primary" onclick="saveEdit()">Salvar</button>
-        <button class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
+        <button class="btn btn-primary" id="btnAdd" onclick="addImage()">Adicionar e Publicar</button>
+        <button class="btn btn-secondary" onclick="resetForm()">Limpar</button>
       </div>
     </div>
-  </div>
 
-  <!-- Backup -->
-  <div class="form-section">
-    <h2>Backup Local</h2>
-    <p style="margin-bottom:1rem;color:rgba(212,201,176,0.8);font-size:0.95rem;">
-      Exporta os metadados (títulos, estilos, nomes de arquivo) em JSON. As imagens ficam no GitHub.
-    </p>
-    <button class="btn btn-secondary" onclick="exportData()">📥 Fazer Backup</button>
-    <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 Restaurar Backup</button>
-    <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(event)" />
-  </div>
-
-  <!-- ── CLIENTES / PROMOÇÕES ─────────────────────────────── -->
-  <div class="form-section" id="secao-clientes">
-    <h2>Clientes — Promoção Vitalícia (5 indicações)</h2>
-    <p style="margin-bottom:1.2rem;color:rgba(212,201,176,0.7);font-size:0.9rem;">
-      Cada vez que atender e tatuar um cliente indicado por alguém, marque abaixo.
-      Ao chegar a 5, o botão de WhatsApp aparece para você avisar o indicante.
-    </p>
-
-    <!-- Busca -->
-    <div style="display:flex;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap;">
-      <input type="text" id="busca-cliente" placeholder="Buscar por nome ou código..."
-        style="flex:1;min-width:180px;background:#1a1818;border:1px solid var(--border);
-               color:var(--bone);padding:.65rem .9rem;border-radius:4px;font-size:.9rem;outline:none;" />
-      <button class="btn btn-secondary" onclick="carregarClientes()">🔄 Atualizar</button>
+    <!-- Tag Manager -->
+    <div class="form-section">
+      <h2>Gerenciar Estilos / Tags</h2>
+      <p style="margin-bottom:1.2rem;color:rgba(212,201,176,0.7);font-size:0.9rem;">As tags criadas aqui aparecem automaticamente no formulário de upload.</p>
+      <div class="tag-manager-list" id="tagManagerList"></div>
+      <div class="tag-add-row">
+        <input type="text" id="newTagInput" placeholder="Nova tag (ex: Realismo, Fine Line...)" maxlength="40"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();addTag();}" />
+        <button class="btn btn-primary" onclick="addTag()">Adicionar</button>
+      </div>
     </div>
 
-    <!-- Tabela -->
-    <div id="clientes-lista" style="font-size:.88rem;">
-      <p style="color:var(--muted);">Clique em "Atualizar" para carregar os clientes cadastrados.</p>
+    <!-- Gallery list -->
+    <div class="form-section">
+      <h2>Imagens na Galeria</h2>
+      <div class="gallery-list" id="galleryList"></div>
     </div>
-  </div>
 
+    <!-- Edit Modal -->
+    <div id="editModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:20000;align-items:center;justify-content:center;padding:2rem;">
+      <div style="background:var(--deep);border:1px solid var(--border);border-radius:4px;width:100%;max-width:500px;padding:2rem;max-height:90vh;overflow-y:auto;">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:1.5rem;">Editar Imagem</h2>
+        <input type="hidden" id="editId" />
+        <div class="form-group">
+          <label for="editTitle">Título *</label>
+          <input type="text" id="editTitle" />
+        </div>
+        <div class="form-group">
+          <label>Estilos *</label>
+          <div class="tags-container" id="editTagsContainer"></div>
+        </div>
+        <div class="form-group">
+          <label for="editAltText">Alt Text (SEO)</label>
+          <input type="text" id="editAltText" placeholder="Ex: Tatuagem blackwork crânio — Micael Faccio, Muriaé MG" />
+          <p style="font-size:0.78rem;color:var(--muted);margin-top:0.4rem;">Texto que o Google usa para indexar a imagem.</p>
+        </div>
+        <div class="form-group">
+          <label for="editDescription">Descrição</label>
+          <textarea id="editDescription" rows="3"></textarea>
+        </div>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
+          <button class="btn btn-primary" onclick="saveEdit()">Salvar</button>
+          <button class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Backup -->
+    <div class="form-section">
+      <h2>Backup Local</h2>
+      <p style="margin-bottom:1rem;color:rgba(212,201,176,0.8);font-size:0.95rem;">Exporta os metadados (títulos, estilos, nomes de arquivo) em JSON.</p>
+      <button class="btn btn-secondary" onclick="exportData()">📥 Fazer Backup</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 Restaurar Backup</button>
+      <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(event)" />
+    </div>
+
+  </div><!-- /tab-galeria -->
+
+  <!-- ══ ABA PROMOÇÕES ══ -->
+  <div class="tab-panel" id="tab-promocoes">
+    <div class="form-section">
+      <h2>Clientes — Promoção Vitalícia</h2>
+      <p style="margin-bottom:1.2rem;color:rgba(212,201,176,0.7);font-size:0.9rem;">
+        Marque +1 sempre que tatuar um amigo indicado por um cliente. Chegando a 5, avise pelo WhatsApp. Para remover um cadastro, clique em 🗑.
+      </p>
+      <div style="display:flex;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+        <input type="text" id="busca-cliente" placeholder="Buscar por nome ou código..."
+          style="flex:1;min-width:180px;background:#1a1818;border:1px solid var(--border);
+                 color:var(--bone);padding:.65rem .9rem;border-radius:4px;font-size:.9rem;outline:none;" />
+        <button class="btn btn-secondary" onclick="carregarClientes()">🔄 Atualizar</button>
+      </div>
+      <div id="clientes-lista" style="font-size:.88rem;">
+        <p style="color:var(--muted);">Clique em "Atualizar" para carregar os clientes.</p>
+      </div>
+    </div>
+  </div><!-- /tab-promocoes -->
+
+  <!-- ══ ABA ANAMNESES ══ -->
+  <div class="tab-panel" id="tab-anamneses">
+    <div class="form-section">
+      <h2>Fichas de Anamnese</h2>
+      <p style="margin-bottom:1.2rem;color:rgba(212,201,176,0.7);font-size:0.9rem;">
+        Fichas preenchidas pelos clientes antes da sessão. Clique em "Ver" para expandir. 🗑 remove permanentemente.
+      </p>
+      <div style="display:flex;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+        <input type="text" id="busca-anamnese" placeholder="Buscar por nome ou CPF..."
+          style="flex:1;min-width:180px;background:#1a1818;border:1px solid var(--border);
+                 color:var(--bone);padding:.65rem .9rem;border-radius:4px;font-size:.9rem;outline:none;" />
+        <button class="btn btn-secondary" onclick="carregarAnamneses()">🔄 Atualizar</button>
+      </div>
+      <div id="anamneses-lista" class="registros-lista">
+        <p style="color:var(--muted);">Clique em "Atualizar" para carregar as fichas.</p>
+      </div>
+    </div>
+  </div><!-- /tab-anamneses -->
+
+  <!-- ══ ABA RESERVAS ══ -->
+  <div class="tab-panel" id="tab-reservas">
+    <div class="form-section">
+      <h2>Formulários de Reserva</h2>
+      <p style="margin-bottom:1.2rem;color:rgba(212,201,176,0.7);font-size:0.9rem;">
+        Pedidos de reserva enviados pelo site. Atenção: o formulário de reserva atual abre o WhatsApp direto — estas entradas só existem se você tiver configurado gravação no Supabase. Clique em "Ver" para detalhes.
+      </p>
+      <div style="display:flex;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+        <input type="text" id="busca-reserva" placeholder="Buscar por nome ou estilo..."
+          style="flex:1;min-width:180px;background:#1a1818;border:1px solid var(--border);
+                 color:var(--bone);padding:.65rem .9rem;border-radius:4px;font-size:.9rem;outline:none;" />
+        <button class="btn btn-secondary" onclick="carregarReservas()">🔄 Atualizar</button>
+      </div>
+      <div id="reservas-lista" class="registros-lista">
+        <p style="color:var(--muted);">Clique em "Atualizar" para carregar as reservas.</p>
+      </div>
+    </div>
+  </div><!-- /tab-reservas -->
+
+</div><!-- /adminPanel -->
+
+<!-- ── Modal detalhe (anamnese / reserva) ── -->
+<div class="detalhe-modal" id="detalheModal">
+  <div class="detalhe-card">
+    <button class="detalhe-fechar" onclick="fecharDetalhe()">×</button>
+    <h3 id="detalhe-titulo">—</h3>
+    <div id="detalhe-corpo"></div>
+  </div>
 </div>
 
 <script>
@@ -1800,6 +1972,235 @@ ${imageEntries}
     if (n.length === 10) return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
     return v;
   }
+</script>
+
+<!-- ── ABAS + ANAMNESES + RESERVAS ── -->
+<script>
+  // ── Navegação por abas ──────────────────────────────────────
+  function mudarAba(id, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + id).classList.add('active');
+  }
+
+  // ── Utilitário: formatar data ───────────────────────────────
+  function fmtData(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric' })
+      + ' ' + d.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+  }
+
+  // ── Modal de detalhe ────────────────────────────────────────
+  function abrirDetalhe(titulo, camposHtml) {
+    document.getElementById('detalhe-titulo').textContent = titulo;
+    document.getElementById('detalhe-corpo').innerHTML = camposHtml;
+    document.getElementById('detalheModal').classList.add('open');
+  }
+  function fecharDetalhe() {
+    document.getElementById('detalheModal').classList.remove('open');
+  }
+  document.getElementById('detalheModal').addEventListener('click', function(e) {
+    if (e.target === this) fecharDetalhe();
+  });
+
+  function campo(label, valor) {
+    if (!valor) return '';
+    return `<div class="detalhe-campo">
+      <div class="detalhe-label">${label}</div>
+      <div class="detalhe-valor">${String(valor).replace(/\n/g,'<br>')}</div>
+    </div>`;
+  }
+
+  // ══ ANAMNESES ═══════════════════════════════════════════════
+  let todasAnamneses = [];
+
+  async function carregarAnamneses() {
+    const lista = document.getElementById('anamneses-lista');
+    lista.innerHTML = '<p style="color:var(--muted);">Carregando...</p>';
+
+    const { data, error } = await db
+      .from('anamneses')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      // Tabela pode não existir ainda
+      lista.innerHTML = `<p style="color:#e05555;">Erro: ${error.message}</p>
+        <p style="color:var(--muted);font-size:.82rem;margin-top:.5rem;">
+          Verifique se a tabela "anamneses" existe no Supabase com as colunas corretas.
+        </p>`;
+      return;
+    }
+
+    todasAnamneses = data || [];
+    document.getElementById('statAnamneses').textContent = todasAnamneses.length;
+    renderAnamneses(todasAnamneses);
+  }
+
+  function renderAnamneses(lista_) {
+    const lista = document.getElementById('anamneses-lista');
+    const busca = (document.getElementById('busca-anamnese').value || '').toLowerCase();
+
+    const filtrados = lista_.filter(a =>
+      (a.nome || '').toLowerCase().includes(busca) ||
+      (a.cpf  || '').toLowerCase().includes(busca)
+    );
+
+    if (!filtrados.length) {
+      lista.innerHTML = '<p style="color:var(--muted);">Nenhuma ficha encontrada.</p>';
+      return;
+    }
+
+    lista.innerHTML = filtrados.map(a => `
+      <div class="registro-row">
+        <div>
+          <div class="registro-nome">${a.nome || '—'}</div>
+          <div class="registro-sub">${a.cpf || ''} ${a.whatsapp ? '· ' + formatarExibicao(a.whatsapp) : ''}</div>
+        </div>
+        <div class="registro-data">${fmtData(a.created_at)}</div>
+        <button class="btn-ver" onclick="verAnamnese('${a.id}')">Ver</button>
+        <button class="btn-del-reg" onclick="deletarAnamnese('${a.id}', '${(a.nome||'').replace(/'/g,"\\'")}')">🗑</button>
+      </div>`
+    ).join('');
+  }
+
+  function verAnamnese(id) {
+    const a = todasAnamneses.find(x => String(x.id) === String(id));
+    if (!a) return;
+    const html = `
+      ${campo('Nome', a.nome)}
+      ${campo('Data de nascimento', a.data_nascimento)}
+      ${campo('CPF', a.cpf)}
+      ${campo('WhatsApp', formatarExibicao(a.whatsapp))}
+      ${campo('E-mail', a.email)}
+      <hr class="detalhe-divider">
+      ${campo('Alergia a tinta / pigmento', a.alergia_tinta)}
+      ${campo('Alergia a látex', a.alergia_latex)}
+      ${campo('Alergia a antisséptico', a.alergia_antisseptico)}
+      ${campo('Condições de saúde', a.condicoes_saude)}
+      ${campo('Medicamentos em uso', a.medicamentos)}
+      ${campo('Gestante / Amamentando', a.gestante)}
+      ${campo('Diabetes', a.diabetes)}
+      ${campo('Problemas de cicatrização', a.cicatrizacao)}
+      ${campo('Doenças autoimunes', a.autoimune)}
+      ${campo('Cardiopatias', a.cardiopatia)}
+      ${campo('Observações adicionais', a.observacoes)}
+      <hr class="detalhe-divider">
+      ${campo('Autorização', a.autorizacao ? '✓ Autorizado' : '—')}
+      ${campo('Data do preenchimento', fmtData(a.created_at))}`;
+    abrirDetalhe(a.nome || 'Anamnese', html);
+  }
+
+  async function deletarAnamnese(id, nome) {
+    if (!confirm(`Deletar ficha de "${nome}" permanentemente?`)) return;
+    const { error } = await db.from('anamneses').delete().eq('id', id);
+    if (error) { alert('Erro: ' + error.message); return; }
+    todasAnamneses = todasAnamneses.filter(a => String(a.id) !== String(id));
+    document.getElementById('statAnamneses').textContent = todasAnamneses.length;
+    renderAnamneses(todasAnamneses);
+  }
+
+  document.getElementById('busca-anamnese').addEventListener('input', () => {
+    renderAnamneses(todasAnamneses);
+  });
+
+  // ══ RESERVAS ════════════════════════════════════════════════
+  let todasReservas = [];
+
+  async function carregarReservas() {
+    const lista = document.getElementById('reservas-lista');
+    lista.innerHTML = '<p style="color:var(--muted);">Carregando...</p>';
+
+    const { data, error } = await db
+      .from('reservas')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      lista.innerHTML = `<p style="color:#e05555;">Erro: ${error.message}</p>
+        <p style="color:var(--muted);font-size:.82rem;margin-top:.5rem;">
+          A tabela "reservas" ainda não existe no Supabase — o formulário atual abre o WhatsApp direto, sem gravar.
+          Para ativar esta aba, crie a tabela e adicione um fetch POST ao reserva.html.
+        </p>`;
+      return;
+    }
+
+    todasReservas = data || [];
+    document.getElementById('statReservas').textContent = todasReservas.length;
+    renderReservas(todasReservas);
+  }
+
+  function renderReservas(lista_) {
+    const lista = document.getElementById('reservas-lista');
+    const busca = (document.getElementById('busca-reserva').value || '').toLowerCase();
+
+    const filtrados = lista_.filter(r =>
+      (r.nome   || '').toLowerCase().includes(busca) ||
+      (r.estilo || '').toLowerCase().includes(busca)
+    );
+
+    if (!filtrados.length) {
+      lista.innerHTML = '<p style="color:var(--muted);">Nenhuma reserva encontrada.</p>';
+      return;
+    }
+
+    lista.innerHTML = filtrados.map(r => `
+      <div class="registro-row">
+        <div>
+          <div class="registro-nome">${r.nome || '—'}</div>
+          <div class="registro-sub">${r.estilo || ''} ${r.tamanho ? '· ' + r.tamanho : ''}</div>
+        </div>
+        <div class="registro-data">${fmtData(r.created_at)}</div>
+        <button class="btn-ver" onclick="verReserva('${r.id}')">Ver</button>
+        <button class="btn-del-reg" onclick="deletarReserva('${r.id}', '${(r.nome||'').replace(/'/g,"\\'")}')">🗑</button>
+      </div>`
+    ).join('');
+  }
+
+  function verReserva(id) {
+    const r = todasReservas.find(x => String(x.id) === String(id));
+    if (!r) return;
+    const html = `
+      ${campo('Nome', r.nome)}
+      ${campo('WhatsApp', formatarExibicao(r.whatsapp))}
+      <hr class="detalhe-divider">
+      ${campo('Ideia', r.ideia)}
+      ${campo('Estilo', r.estilo)}
+      ${campo('Tamanho', r.tamanho)}
+      ${campo('Local do corpo', r.local)}
+      ${campo('Referências', r.referencias)}
+      ${campo('Disponibilidade', r.disponibilidade)}
+      <hr class="detalhe-divider">
+      ${campo('Data do envio', fmtData(r.created_at))}`;
+    abrirDetalhe(r.nome || 'Reserva', html);
+  }
+
+  async function deletarReserva(id, nome) {
+    if (!confirm(`Deletar reserva de "${nome}" permanentemente?`)) return;
+    const { error } = await db.from('reservas').delete().eq('id', id);
+    if (error) { alert('Erro: ' + error.message); return; }
+    todasReservas = todasReservas.filter(r => String(r.id) !== String(id));
+    document.getElementById('statReservas').textContent = todasReservas.length;
+    renderReservas(todasReservas);
+  }
+
+  document.getElementById('busca-reserva').addEventListener('input', () => {
+    renderReservas(todasReservas);
+  });
+
+  // ── Atualizar stats de clientes ao carregar ─────────────────
+  // Já feito via carregarClientes() — só atualiza o stat-card
+  const _carregarClientesOrig = carregarClientes;
+  async function carregarClientesComStat() {
+    await _carregarClientesOrig();
+    document.getElementById('statClientes').textContent = todosClientes.length;
+  }
+  // Sobrescreve o botão para usar versão com stat
+  document.querySelector('#tab-promocoes .btn.btn-secondary, button[onclick="carregarClientes()"]');
+  // Patch simples: redefine a função globalmente
+  window.carregarClientes = carregarClientesComStat;
 </script>
 </body>
 </html>

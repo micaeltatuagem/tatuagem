@@ -227,11 +227,24 @@
       .header { min-height: 32vh; padding: 4rem 1.5rem 3rem; }
       .form-section { padding: 3.5rem 1.5rem 4rem; }
     }
+
+    /* ── Flash decorativo ── */
+    .flash-deco {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      opacity: .06;
+      filter: invert(1);
+      z-index: 0;
+    }
   </style>
 </head>
 <body>
 
 <header class="header">
+  <img class="flash-deco" src="serpente.png" alt="" style="width:clamp(160px,24vw,300px);right:-1rem;top:1rem;transform:rotate(18deg);" loading="lazy" />
+  <img class="flash-deco" src="estrela.png"  alt="" style="width:clamp(80px,12vw,160px);left:2rem;bottom:1rem;transform:rotate(-12deg);" loading="lazy" />
+  <img class="flash-deco" src="flor.png"     alt="" style="width:clamp(90px,13vw,170px);left:5%;top:1.5rem;transform:rotate(8deg);" loading="lazy" />
   <p class="header-label">Reserva</p>
   <h1 class="header-title">Vamos começar<br>seu projeto</h1>
   <p class="header-subtitle">Conte sua ideia. No final, isso vira uma mensagem pronta — você só revisa e envia no WhatsApp.</p>
