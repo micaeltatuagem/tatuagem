@@ -78,11 +78,14 @@
   const SIZE_KEYS = Object.keys(SIZES);
 
   // Opacidades
-  const OPS = [0.15, 0.18, 0.22, 0.26, 0.30];
+  const IS_MOBILE = window.innerWidth < 768;
+  const OPS = IS_MOBILE
+    ? [0.18, 0.22, 0.26, 0.30, 0.34]
+    : [0.08, 0.10, 0.13, 0.16, 0.18];
 
   // Tolerância de sobreposição: os círculos podem se tocar e
   // até cruzar levemente (fator < 1 = permite sobreposição parcial)
-  const OVERLAP_FACTOR = 0.72; // 1.0 = só toca; 0 = pode encavalhar total
+  const OVERLAP_FACTOR = 0.58; // 1.0 = só toca; 0 = pode encavalhar total
 
   function overlaps(placed, cx, cy, r) {
     for (const p of placed) {
@@ -108,7 +111,7 @@
     const placed = [];
 
     imgs.forEach(src => {
-      const MAX_TRIES = 100;
+      const MAX_TRIES = 140;
 
       for (let t = 0; t < MAX_TRIES; t++) {
         // Bordas têm 60% de chance — preenchimento natural sem sobrar centro vazio
@@ -213,13 +216,13 @@
     // n = elementos por seção (ajustado proporcionalmente pela altura real)
     const cfg = {
       'index':     [
-        { sel: '#hero',      n: 14 },
-        { sel: '#sobre',     n: 10 },
-        { sel: '#galeria',   n: 6  },
-        { sel: '#processo',  n: 10 },
-        { sel: '#faq',       n: 10 },
-        { sel: '#promocoes', n: 10 },
-        { sel: '#contato',   n: 8  },
+        { sel: '#hero',      n: 18 },
+        { sel: '#sobre',     n: 14 },
+        { sel: '#galeria',   n: 8  },
+        { sel: '#processo',  n: 14 },
+        { sel: '#faq',       n: 14 },
+        { sel: '#promocoes', n: 14 },
+        { sel: '#contato',   n: 10 },
       ],
       'galeria':   [
         { sel: 'header, .page-header, .galeria-header', n: 10 },
