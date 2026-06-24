@@ -176,10 +176,10 @@
   // ── Config por página ────────────────────────────────────────
   function getSelectors() {
     const path = window.location.pathname;
-    if (path.includes('galeria'))  return ['header','main','.galeria-wrap','body > section'];
-    if (path.includes('cadastro')) return ['header','main','.promo-wrap','body > section'];
-    if (path.includes('reserva'))  return ['main','body > section','.reserva-wrap'];
-    if (path.includes('anamnese')) return ['main','body > section','.anamnese-wrap'];
+    if (path.includes('galeria'))  return ['header','section','main','footer'];
+    if (path.includes('cadastro')) return ['header','section','main','footer'];
+    if (path.includes('reserva'))  return ['header','section','main','footer'];
+    if (path.includes('anamnese')) return ['header','section','main','footer'];
     // index / default
     return ['#hero','#sobre','#galeria','#processo','#faq','#promocoes','#contato'];
   }
