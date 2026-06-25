@@ -744,8 +744,8 @@
       </div>
     </div>
 
-    <div class="field" id="campo-codigo" style="display:none;">
-      <label for="codigo-indicador">Código de quem te indicou</label>
+    <div class="field" id="campo-codigo">
+      <label for="codigo-indicador">Tem um código de indicação? <span style="color:var(--ink-faint);font-size:.85em;">(opcional)</span></label>
       <div class="codigo-wrap">
         <input type="text" id="codigo-indicador" placeholder="MT-XXXX" style="text-transform:uppercase;" />
         <button type="button" class="btn-verificar" id="btn-verificar">Verificar</button>
@@ -769,11 +769,39 @@
 <div id="tela-sucesso">
   <div class="sucesso-icon">✦</div>
   <h2>Cadastro confirmado</h2>
-  <p>Você já tem os dois benefícios garantidos.<br>Guarde seu código — é com ele que seus amigos te indicam.</p>
+  <p>Você já tem os dois benefícios garantidos.</p>
 
+  <!-- ── Código de indicação em destaque ───────────────────────── -->
   <div class="codigo-gerado">
     <div class="label-cod">Seu código de indicação</div>
     <div class="cod" id="cod-exibido">MT-0000</div>
+  </div>
+
+  <div class="share-section" style="margin-top:0;padding-top:1rem;">
+    <p style="font-family:var(--font-ui);font-size:.9rem;color:var(--ink-muted);line-height:1.6;margin-bottom:1rem;text-align:center;">
+      Guarde este código e compartilhe com amigos.<br>
+      A cada <strong style="color:var(--ink);">5 que tatuarem</strong>, você ganha uma sessão grátis.
+    </p>
+
+    <div class="share-link-box" style="margin-bottom:.8rem;">
+      <span id="share-link-txt">…</span>
+      <button class="btn-copiar" id="btn-copiar-link">Copiar</button>
+    </div>
+
+    <div class="share-btns" style="grid-template-columns:1fr;">
+      <a class="share-btn whats" id="share-whats" href="#" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Compartilhar no WhatsApp
+      </a>
+      <button class="share-btn native" id="share-native">
+        ↑ Compartilhar via…
+      </button>
+    </div>
+
+    <p class="share-hint" style="margin-top:.8rem;">
+      Cada amigo que <strong style="color:var(--ink);">efetivamente tatuar</strong> conta +1.
+      O Micael confirma manualmente e te avisa quando chegar a 5.
+    </p>
   </div>
 
   <!-- ── Como usar o desconto de 20% ──────────────────────────── -->
@@ -801,7 +829,6 @@
       </div>
     </div>
 
-    <!-- Preview + Botão baixar imagem para Stories -->
     <div class="stories-preview">
       <img src="arteparapostarInsta.webp" alt="Imagem para postar no Stories" loading="lazy" />
       <div class="stories-preview-label">Esta é a imagem para postar</div>
@@ -814,39 +841,6 @@
               font-weight:600;text-decoration:none;transition:opacity .2s;margin-bottom:1.6rem;">
       ↓ Baixar imagem para o Stories
     </a>
-
-
-  <!-- ── Seção de indicação ─────────────────────────────────────── -->
-  <div class="share-section">
-    <p class="share-label">Promoção vitalícia — indique amigos</p>
-    <p style="font-family:var(--font-ui);font-size:.9rem;color:var(--ink-muted);line-height:1.6;margin-bottom:1.2rem;">
-      Compartilhe seu link ou código com amigos. A cada um que
-      <strong style="color:var(--ink);">tatuar comigo</strong>, marco no seu cadastro.
-      Chegando a <strong style="color:var(--ink);">5</strong>, você ganha uma sessão grátis.
-    </p>
-
-    <div class="share-link-box">
-      <span id="share-link-txt">…</span>
-      <button class="btn-copiar" id="btn-copiar-link">Copiar</button>
-    </div>
-
-    <div class="share-btns" style="grid-template-columns:1fr;">
-      <!-- WhatsApp: abre o próprio WhatsApp do cliente com mensagem pronta para encaminhar -->
-      <a class="share-btn whats" id="share-whats" href="#" target="_blank">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Compartilhar no WhatsApp
-      </a>
-
-      <!-- Compartilhamento nativo (Web Share API — funciona no celular) -->
-      <button class="share-btn native" id="share-native">
-        ↑ Compartilhar via…
-      </button>
-    </div>
-
-    <p class="share-hint">
-      Cada amigo que <strong style="color:var(--ink);">efetivamente tatuar</strong> conta +1.
-      O Micael confirma manualmente no seu cadastro e te avisa quando chegar a 5.
-    </p>
   </div>
 </div>
 
@@ -912,12 +906,8 @@
 
   // ── Mostrar campo código quando "indicação" ──────────────────
   document.getElementById('canal').addEventListener('change', function () {
-    const campo = document.getElementById('campo-codigo');
-    campo.style.display = this.value === 'indicacao' ? 'block' : 'none';
-    if (this.value !== 'indicacao') {
-      document.getElementById('codigo-indicador').value = '';
-      document.getElementById('codigo-status').textContent = '';
-      document.getElementById('codigo-status').className = 'codigo-status';
+    if (this.value === 'indicacao' && !document.getElementById('codigo-indicador').value) {
+      document.getElementById('codigo-indicador').focus();
     }
   });
 
