@@ -414,7 +414,7 @@
     .share-btn.insta  { background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); color: #fff; }
     .share-btn.copiar { background: var(--surface); border: 1px solid var(--border); color: var(--ink-muted); }
     .share-btn.copiar:hover { border-color: var(--border-focus); color: var(--ink); }
-    .share-btn.native { background: var(--accent); color: #0a0a0a; grid-column: 1 / -1; }
+    .share-btn.native { background: #7a8c3a; color: #fff; grid-column: 1 / -1; }
 
     .share-hint {
       font-family: var(--font-ui);
@@ -575,6 +575,38 @@
     }
     nav {
       background: rgba(10,10,10,0.96) !important;
+    }
+
+
+    /* ── Checkbox concordo com feedback visual ── */
+    input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border-focus, #7a8c3a);
+      border-radius: 3px;
+      background: transparent;
+      cursor: pointer;
+      position: relative;
+      flex-shrink: 0;
+      transition: background .2s, border-color .2s;
+    }
+    input[type="checkbox"]:checked {
+      background: #7a8c3a;
+      border-color: #7a8c3a;
+    }
+    input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 3px;
+      top: 0px;
+      width: 5px;
+      height: 10px;
+      border: 2px solid #fff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
     }
 
   </style>
