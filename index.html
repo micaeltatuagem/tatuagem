@@ -720,6 +720,22 @@
       background: rgba(10,10,10,0.96) !important;
     }
 
+
+    /* ── Layer translúcido atrás do texto do hero ───────────── */
+    .hero-inner > div:first-child {
+      position: relative;
+      z-index: 2;
+    }
+    .hero-inner > div:first-child::before {
+      content: '';
+      position: absolute;
+      inset: -2rem -1.5rem;
+      background: rgba(10,10,10,0.68);
+      border-radius: 4px;
+      z-index: -1;
+      pointer-events: none;
+    }
+
   </style>
 </head>
 <body>
