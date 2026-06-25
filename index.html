@@ -224,11 +224,20 @@
       margin-bottom: 2rem;
     }
     .hero-img {
-      width: 100%;
-      aspect-ratio: 3/4;
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 100%;
+      width: auto;
+      max-width: 55%;
       object-fit: cover;
-      border-radius: var(--radius);
+      object-position: left center;
+      z-index: 2;
       filter: grayscale(20%);
+      pointer-events: none;
+    }
+    .hero-inner > div:last-child {
+      position: static;
     }
 
     @media (max-width: 700px) {
