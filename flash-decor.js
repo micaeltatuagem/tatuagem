@@ -97,11 +97,7 @@
   }
 
   function isHeroCenterBlocked(el, cx, cy) {
-    if (!el.id || el.id !== 'hero') return false;
-    const W = el.offsetWidth  || window.innerWidth;
-    const H = el.offsetHeight || 600;
-    // Protege só o lado direito onde está a imagem (50%–100%) e o centro vertical
-    return cx > W * 0.48 && cy > H * 0.08 && cy < H * 0.92;
+    return false; // sem zona protegida no hero — imagem fica acima via z-index
   }
 
   function runPass(el, pool, placed, passR, passCss, opRange, nBase, guardRects) {
@@ -128,7 +124,7 @@
         const cy = rnd(passR, H - passR);
         if (overlaps(placed, cx, cy, passR)) continue;
         if (guardRects.length && inGuard(cx, cy, passR, guardRects, elLeft, elTop)) continue;
-        if (isHeroCenterBlocked(el, cx, cy)) continue;
+        // isHeroCenterBlocked desativado
 
         placed.push({ cx, cy, r: passR });
         placed_count++;
