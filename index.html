@@ -765,9 +765,8 @@
     }
     .sobre-compare img {
       width: 100%;
-      height: 220px;
-      object-fit: cover;
-      object-position: top;
+      height: auto;
+      object-fit: contain;
       border-radius: 3px;
       filter: grayscale(15%);
       display: block;
@@ -782,7 +781,7 @@
     }
     @media (max-width: 600px) {
       .sobre-compare { flex-direction: column; }
-      .sobre-compare img { height: 180px; }
+      .sobre-compare img { height: auto; }
     }
 
   </style>
