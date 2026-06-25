@@ -609,7 +609,56 @@
       transform: rotate(45deg);
     }
 
+
+    /* ── Legibilidade do formulário (padrão reserva.html) ───── */
+    .form-wrap {
+      background: #181616;
+      border: 1px solid rgba(212,201,176,0.12);
+      border-radius: 4px;
+      padding: 2.5rem 2rem;
+    }
+    .form-wrap label,
+    .form-wrap .field label {
+      font-family: 'Georgia', serif;
+      font-size: 1.05rem;
+      color: #d4c9b0;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .form-wrap input[type="text"],
+    .form-wrap input[type="email"],
+    .form-wrap input[type="tel"],
+    .form-wrap input[type="number"],
+    .form-wrap select,
+    .form-wrap textarea {
+      background: #111010;
+      border: 1px solid rgba(212,201,176,0.18);
+      color: #d4c9b0;
+      border-radius: 3px;
+      padding: 0.85rem 1rem;
+      width: 100%;
+      font-family: 'Georgia', serif;
+      font-size: 0.97rem;
+      transition: border-color .2s;
+    }
+    .form-wrap input:focus,
+    .form-wrap select:focus,
+    .form-wrap textarea:focus {
+      outline: none;
+      border-color: rgba(212,201,176,0.45);
+    }
+    .form-wrap .form-note,
+    .form-wrap .hint {
+      color: #6b6560;
+      font-size: 0.83rem;
+      line-height: 1.5;
+      margin-top: 0.4rem;
+    }
+
   </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
