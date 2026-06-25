@@ -15,7 +15,7 @@
   })();
 
   const MANIFEST  = BASE + 'flash/manifest.json';
-  const CACHE_KEY = 'flash_pool_v4';
+  const CACHE_KEY = 'flash_pool_v5';
   const EXCLUIR   = new Set(['caveiraDireita.webp', 'caveiraEsquerda.webp']);
 
   // ── Pool ────────────────────────────────────────────────────
