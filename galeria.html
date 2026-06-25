@@ -191,7 +191,7 @@
       font-family: 'IM Fell English', serif;
       font-size: 1.3rem;
       color: rgba(212,201,176,0.9);
-      font-style: italic;
+      font-style: normal;
       max-width: 600px;
       margin: 0 auto;
       line-height: 1.8;
@@ -222,8 +222,8 @@
 
     .filter-btn:hover,
     .filter-btn.active {
-      background: var(--blood);
-      border-color: var(--blood);
+      background: #7a8c3a;
+      border-color: #7a8c3a;
       color: #fff;
     }
 
@@ -397,9 +397,9 @@
       font-size: 1rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--bone);
-      background: transparent;
-      border: 1px solid var(--blood);
+      color: #fff;
+      background: #7a8c3a;
+      border: 1px solid #7a8c3a;
       padding: 1rem 2.5rem;
       text-decoration: none;
       transition: background 0.3s, color 0.3s, border-color 0.3s;
@@ -407,7 +407,7 @@
     }
 
     .btn-primary:hover {
-      background: #7a8c3a;
+      background: #5a6e2a;
       color: #fff;
       border-color: #7a8c3a;
     }
@@ -475,8 +475,8 @@
     }
 
     .lightbox-close:hover {
-      background: var(--blood);
-      border-color: var(--blood);
+      background: #7a8c3a;
+      border-color: #7a8c3a;
     }
 
     /* Navigation arrows */
@@ -500,8 +500,8 @@
     }
 
     .lightbox-nav:hover {
-      background: var(--blood);
-      border-color: var(--blood);
+      background: #7a8c3a;
+      border-color: #7a8c3a;
     }
 
     .lightbox-prev {
@@ -735,6 +735,24 @@
       background: rgba(10,10,10,0.96) !important;
     }
 
+
+    /* ── Layer na faixa intro/filtros da galeria ── */
+    .gallery-intro, .filter-section {
+      position: relative;
+    }
+    .gallery-intro::before, .filter-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(10,10,10,0.70);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .gallery-intro > *, .filter-section > * {
+      position: relative;
+      z-index: 1;
+    }
+
   </style>
 </head>
 <body>
@@ -753,7 +771,7 @@
 <!-- ── GALLERY SECTION ── -->
 <section class="gallery-section">
   <div class="gallery-intro fade-in">
-    <p class="gallery-intro-label">Portfólio</p>
+    <p class="gallery-intro-label" style="font-family:var(--font-body,Georgia,serif);font-style:normal;color:rgba(212,201,176,0.55);letter-spacing:0.18em;font-size:0.75rem;text-transform:uppercase;font-weight:600;">Portfólio</p>
     <p class="gallery-intro-text">
       Clique em qualquer obra para visualizar em detalhes
     </p>
