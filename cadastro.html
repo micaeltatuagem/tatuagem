@@ -1008,19 +1008,33 @@
       this.disabled = false;
       this.textContent = 'Cadastrar e garantir benefícios';
       if (error.code === '23505') {
+        // WhatsApp já cadastrado — busca os dados e abre o painel
+        const { data: existente } = await sb
+          .from('clientes_promo')
+          .select('nome, codigo_indicacao')
+          .eq('whatsapp', whatsapp)
+          .maybeSingle();
+        if (existente) {
+          document.getElementById('tela-form').style.display = 'none';
+          mostrarPainel(existente.codigo_indicacao);
+          return;
+        }
         return mostrarErro('Este WhatsApp já está cadastrado. Se precisar de ajuda, entre em contato.');
       }
       return mostrarErro('Erro ao cadastrar. Tente novamente ou entre em contato pelo WhatsApp.');
     }
 
-    // Sucesso
+    // Sucesso — novo cadastro
     document.getElementById('tela-form').style.display = 'none';
+    mostrarPainel(codigo);
+  });
+
+  // ── Monta e exibe o painel de indicação ──────────────────────
+  function mostrarPainel(codigo) {
     const tela = document.getElementById('tela-sucesso');
     tela.style.display = 'block';
     document.getElementById('cod-exibido').textContent = codigo;
 
-    // WhatsApp para mandar print do Stories (desconto 20%)
-    // ── Compartilhamento (indicação vitalícia) ────────────────
     const BASE_URL = 'https://micaeltatuagem.github.io/tatuagem/cadastro.html';
     const shareUrl = `${BASE_URL}?ref=${codigo}`;
 
@@ -1073,7 +1087,7 @@
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+  } // fim mostrarPainel
 
   // ── Ler ?ref= da URL e pré-preencher código ────────────────
   (function preencherRef() {
