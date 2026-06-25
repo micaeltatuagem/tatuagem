@@ -100,7 +100,8 @@
     if (!el.id || el.id !== 'hero') return false;
     const W = el.offsetWidth  || window.innerWidth;
     const H = el.offsetHeight || 600;
-    return cx > W * 0.25 && cx < W * 0.75 && cy > H * 0.15 && cy < H * 0.85;
+    // Protege só o lado direito onde está a imagem (50%–100%) e o centro vertical
+    return cx > W * 0.48 && cy > H * 0.08 && cy < H * 0.92;
   }
 
   function runPass(el, pool, placed, passR, passCss, opRange, nBase, guardRects) {
