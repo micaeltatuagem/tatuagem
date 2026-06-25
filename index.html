@@ -745,6 +745,46 @@
       pointer-events: none;
     }
 
+
+    /* ── Bloco comparativo Dürer / tatuagem ─────────────────── */
+    .sobre-compare {
+      display: flex;
+      gap: 1rem;
+      margin: 1.8rem 0;
+      background: rgba(10,10,10,0.68);
+      border: 1px solid rgba(212,201,176,0.10);
+      border-radius: 4px;
+      padding: 1rem;
+    }
+    .sobre-compare figure {
+      flex: 1;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .sobre-compare img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      object-position: top;
+      border-radius: 3px;
+      filter: grayscale(15%);
+      display: block;
+    }
+    .sobre-compare figcaption {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      text-align: center;
+    }
+    @media (max-width: 600px) {
+      .sobre-compare { flex-direction: column; }
+      .sobre-compare img { height: 180px; }
+    }
+
   </style>
 </head>
 <body>
@@ -787,7 +827,18 @@
     <div class="sobre-grid">
       <div>
         <h2>Intenção antes<br>de agulha</h2>
-        <p>Quando trabalho com referências, vou atrás da origem de cada arte. Aquelas mãos em oração que todo mundo tatua são de Albrecht Dürer, desenhadas em homenagem ao irmão que trabalhou nas minas de carvão para pagar seus estudos. Quando faço esse desenho, sei de onde veio.</p>
+        
+      <div class="sobre-compare">
+        <figure>
+          <img src="img/praying_hands_durer.webp" alt="Mãos em Oração — Albrecht Dürer, 1508" loading="lazy" />
+          <figcaption>Albrecht Dürer, 1508</figcaption>
+        </figure>
+        <figure>
+          <img src="img/maoTatuagem.webp" alt="Mãos em oração — tatuagem autoral Micael Faccio" loading="lazy" />
+          <figcaption>Tatuagem · Micael Faccio</figcaption>
+        </figure>
+      </div>
+      <p>Quando trabalho com referências, vou atrás da origem de cada arte. Aquelas mãos em oração que todo mundo tatua são de Albrecht Dürer, desenhadas em homenagem ao irmão que trabalhou nas minas de carvão para pagar seus estudos. Quando faço esse desenho, sei de onde veio.</p>
         <p>Quase três décadas dedicadas à tatuagem e à pesquisa de símbolos religiosos, espirituais e mitológicos. Atendimento privativo, agenda limitada. Uma conversa sem compromisso para começar.</p>
       </div>
       <div class="pilares">
