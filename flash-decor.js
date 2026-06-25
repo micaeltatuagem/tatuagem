@@ -96,6 +96,13 @@
     return false;
   }
 
+  function isHeroCenterBlocked(el, cx, cy) {
+    if (!el.id || el.id !== 'hero') return false;
+    const W = el.offsetWidth  || window.innerWidth;
+    const H = el.offsetHeight || 600;
+    return cx > W * 0.25 && cx < W * 0.75 && cy > H * 0.15 && cy < H * 0.85;
+  }
+
   function runPass(el, pool, placed, passR, passCss, opRange, nBase, guardRects) {
     const rect  = el.getBoundingClientRect();
     const W     = rect.width  || el.offsetWidth  || window.innerWidth;
@@ -120,6 +127,7 @@
         const cy = rnd(passR, H - passR);
         if (overlaps(placed, cx, cy, passR)) continue;
         if (guardRects.length && inGuard(cx, cy, passR, guardRects, elLeft, elTop)) continue;
+        if (isHeroCenterBlocked(el, cx, cy)) continue;
 
         placed.push({ cx, cy, r: passR });
         placed_count++;
