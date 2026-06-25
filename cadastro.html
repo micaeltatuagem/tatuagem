@@ -656,6 +656,22 @@
       margin-top: 0.4rem;
     }
 
+
+    /* ── Box translúcido atrás do formulário ────────────────── */
+    .form-wrap {
+      position: relative;
+      z-index: 1;
+    }
+    .form-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -2rem -1.5rem;
+      background: rgba(10,10,10,0.72);
+      border-radius: 6px;
+      z-index: -1;
+      pointer-events: none;
+    }
+
   </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap" rel="stylesheet">
