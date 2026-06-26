@@ -392,13 +392,19 @@
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('hubScreen').style.display = 'block';
 
+    const card = document.getElementById('card-galeria');
+
     if (!token) {
       document.getElementById('tokenNotice').style.display = 'block';
-      // Disable gallery card visually
-      const card = document.getElementById('card-galeria');
-      card.style.opacity = '0.45';
-      card.style.pointerEvents = 'none';
-      card.title = 'Token GitHub necessário para acessar a galeria.';
+      card.style.opacity = '0.55';
+      card.removeAttribute('href');
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('Para acessar a Galeria é preciso informar o Token GitHub no login.\n\nClique em "Sair" e faça login novamente, preenchendo o campo Token.');
+      });
+    } else {
+      card.href = 'admin.html';
     }
   }
 
