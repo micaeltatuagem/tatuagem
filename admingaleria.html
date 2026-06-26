@@ -1,0 +1,2012 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <title>Admin Galeria · Micael Tatuagem</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:       #0a0a0a;
+      --deep:      #111010;
+      --surface:   #181616;
+      --bone:      #d4c9b0;
+      --blood:     #8b1a1a;
+      --rust:      #c0392b;
+      --muted:     #6b6560;
+      --border:    rgba(212,201,176,0.12);
+      --success:   #4ade80;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ink);
+      color: var(--bone);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── LOGIN SCREEN ── */
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--ink);
+      z-index: 10000;
+      padding: 2rem;
+    }
+
+    .login-screen.hidden { display: none; }
+
+    .login-card {
+      background: var(--deep);
+      border: 1px solid var(--border);
+      padding: 3rem 2rem;
+      border-radius: 4px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+
+    .login-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--bone);
+    }
+
+    .login-subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+
+    .login-form-group {
+      margin-bottom: 1.2rem;
+      text-align: left;
+    }
+
+    .login-form-group label {
+      display: block;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .login-form-group input {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--bone);
+      font-family: 'Inter', sans-serif;
+      border-radius: 4px;
+      transition: border-color 0.3s;
+      font-size: 0.95rem;
+    }
+
+    .login-form-group input:focus {
+      outline: none;
+      border-color: var(--rust);
+    }
+
+    .login-hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+      line-height: 1.4;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--blood);
+      color: #fff;
+      border: 1px solid var(--blood);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 0.5rem;
+    }
+
+    .btn-login:hover {
+      background: transparent;
+      color: var(--blood);
+    }
+
+    .login-alert {
+      padding: 0.8rem;
+      background: rgba(139, 26, 26, 0.2);
+      border: 1px solid var(--blood);
+      color: var(--blood);
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      display: none;
+    }
+
+    .login-alert.visible { display: block; }
+
+    /* ── CONTAINER ── */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── HEADER ── */
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .admin-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .admin-header-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .admin-header-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      cursor: pointer;
+    }
+
+    .admin-header-links a:hover { color: var(--bone); }
+
+    /* ── GITHUB STATUS BAR ── */
+    .github-status {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.7rem 1rem;
+      border-radius: 4px;
+      margin-bottom: 2rem;
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
+      background: var(--deep);
+    }
+
+    .github-status .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .github-status.connected { border-color: rgba(74,222,128,0.3); }
+    .github-status.connected .dot { background: var(--success); }
+    .github-status.disconnected { border-color: rgba(139,26,26,0.3); }
+    .github-status.disconnected .dot { background: var(--blood); }
+
+    /* ── FORM SECTION ── */
+    .form-section {
+      background: var(--deep);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      margin-bottom: 3rem;
+      border-radius: 4px;
+    }
+
+    .form-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--bone);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input[type="file"],
+    .form-group input[type="text"],
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--bone);
+      font-family: 'Inter', sans-serif;
+      border-radius: 4px;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input[type="text"]:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--rust);
+    }
+
+    /* ── TAGS ── */
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 0.8rem;
+    }
+
+    .tag-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .tag-option input[type="checkbox"] {
+      cursor: pointer;
+      accent-color: var(--rust);
+    }
+
+    .tag-option:has(input:checked) {
+      background: rgba(192, 57, 43, 0.2);
+      border-color: var(--rust);
+    }
+
+    .tag-option label {
+      margin: 0;
+      text-transform: none;
+      letter-spacing: 0;
+      color: var(--bone);
+      cursor: pointer;
+    }
+
+    /* ── PREVIEW ── */
+    .preview-container {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .preview-image {
+      max-width: 200px;
+      max-height: 200px;
+      margin: 0 auto 1rem;
+      border-radius: 4px;
+      display: none;
+    }
+
+    .preview-image.visible { display: block; }
+
+    /* ── UPLOAD PROGRESS ── */
+    .upload-progress {
+      display: none;
+      margin-top: 1rem;
+    }
+
+    .upload-progress.visible { display: block; }
+
+    .progress-bar-wrap {
+      background: var(--surface);
+      border-radius: 4px;
+      height: 6px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--rust);
+      border-radius: 4px;
+      transition: width 0.3s;
+      width: 0%;
+    }
+
+    .progress-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 1.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background: var(--blood);
+      color: #fff;
+      border: 1px solid var(--blood);
+    }
+
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--blood);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--bone);
+      border: 1px solid var(--muted);
+    }
+
+    .btn-secondary:hover { border-color: var(--bone); }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--blood);
+      border: 1px solid var(--blood);
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-danger:hover {
+      background: var(--blood);
+      color: #fff;
+    }
+
+    /* ── GALLERY LIST ── */
+    .gallery-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .gallery-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: all 0.3s;
+    }
+
+    .gallery-item:hover {
+      border-color: var(--rust);
+      transform: translateY(-4px);
+    }
+
+    .gallery-item-image {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      display: block;
+    }
+
+    .gallery-item-info { padding: 1rem; }
+
+    .gallery-item-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--bone);
+      word-break: break-word;
+    }
+
+    .gallery-item-filename {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      word-break: break-all;
+    }
+
+    .gallery-item-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 0.3rem 0.6rem;
+      background: rgba(192, 57, 43, 0.2);
+      border: 1px solid var(--rust);
+      border-radius: 3px;
+      font-size: 0.75rem;
+      color: var(--rust);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .gallery-item-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* ── ALERTS ── */
+    .alert {
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+      display: none;
+    }
+
+    .alert.visible { display: block; }
+
+    .alert.success {
+      background: rgba(74, 222, 128, 0.1);
+      border-color: var(--success);
+      color: var(--success);
+    }
+
+    .alert.error {
+      background: rgba(139, 26, 26, 0.1);
+      border-color: var(--blood);
+      color: var(--blood);
+    }
+
+    .alert.info {
+      background: rgba(212, 201, 176, 0.05);
+      border-color: var(--border);
+      color: var(--bone);
+    }
+
+    /* ── STATS ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: var(--deep);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      text-align: center;
+      border-radius: 4px;
+    }
+
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--rust);
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+
+    /* ── TAG MANAGER ── */
+    .tag-manager-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+      min-height: 2.5rem;
+    }
+
+    .tag-manager-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      background: rgba(192,57,43,0.15);
+      border: 1px solid var(--rust);
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: var(--bone);
+    }
+
+    .tag-manager-item button {
+      background: none;
+      border: none;
+      color: var(--rust);
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      padding: 0;
+      transition: color 0.2s;
+    }
+
+    .tag-manager-item button:hover { color: var(--blood); }
+
+    .tag-add-row {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+    }
+
+    .tag-add-row input {
+      flex: 1;
+      padding: 0.7rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--bone);
+      font-family: 'Inter', sans-serif;
+      border-radius: 4px;
+      transition: border-color 0.3s;
+    }
+
+    .tag-add-row input:focus {
+      outline: none;
+      border-color: var(--rust);
+    }
+
+    /* ── CLIENTES TABLE ── */
+    .cliente-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto auto auto;
+      gap: .5rem 1rem;
+      align-items: center;
+      padding: .8rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: .88rem;
+    }
+    .cliente-row:last-child { border-bottom: none; }
+    .cliente-nome { color: var(--bone); font-weight: 500; }
+    .cliente-cod  { color: var(--muted); font-family: monospace; font-size: .8rem; }
+    .cliente-contagem {
+      font-family: monospace;
+      font-size: 1rem;
+      color: var(--bone);
+      text-align: center;
+      min-width: 3rem;
+    }
+    .contagem-completa { color: #4ade80; font-weight: bold; }
+    .btn-marcar {
+      background: none;
+      border: 1px solid rgba(212,201,176,.3);
+      color: var(--bone);
+      padding: .35rem .7rem;
+      border-radius: 4px;
+      font-size: .8rem;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      white-space: nowrap;
+    }
+    .btn-marcar:hover { border-color: var(--bone); background: rgba(212,201,176,.06); }
+    .btn-zap {
+      background: #25d366;
+      border: none;
+      color: #fff;
+      padding: .35rem .8rem;
+      border-radius: 4px;
+      font-size: .8rem;
+      cursor: pointer;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-deletar {
+      background: none;
+      border: 1px solid rgba(192,57,43,.4);
+      color: rgba(192,57,43,.7);
+      padding: .35rem .55rem;
+      border-radius: 4px;
+      font-size: .8rem;
+      cursor: pointer;
+      transition: border-color .2s, color .2s, background .2s;
+      line-height: 1;
+    }
+    .btn-deletar:hover { border-color: var(--rust); color: var(--rust); background: rgba(192,57,43,.08); }
+    .cliente-whats { font-size:.78rem; color: var(--muted); }
+    @media (max-width: 600px) {
+      .cliente-row { grid-template-columns: 1fr auto auto; row-gap: .3rem; }
+      .cliente-row > *:nth-child(3) { grid-column: 1; }
+      .cliente-row > *:nth-child(4) { grid-column: 2; grid-row: 1; }
+      .cliente-row > *:nth-child(5) { grid-column: 3; grid-row: 1; }
+    }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--muted);
+      font-family: 'Inter', sans-serif;
+      font-size: .85rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .9rem 1.4rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color .2s, border-color .2s;
+    }
+    .tab-btn:hover { color: var(--bone); }
+    .tab-btn.active { color: var(--rust); border-bottom-color: var(--rust); }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── ANAMNESES / RESERVAS table ── */
+    .registros-lista { margin-top: 1rem; }
+    .registro-row {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1rem 1.2rem;
+      margin-bottom: .7rem;
+      cursor: pointer;
+      transition: border-color .2s;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: .5rem 1rem;
+      align-items: center;
+    }
+    .registro-row:hover { border-color: rgba(212,201,176,.3); }
+    .registro-nome { color: var(--bone); font-weight: 500; font-size: .95rem; }
+    .registro-sub { color: var(--muted); font-size: .8rem; margin-top: .15rem; }
+    .registro-data { color: var(--muted); font-size: .78rem; white-space: nowrap; }
+    .btn-ver {
+      background: none;
+      border: 1px solid rgba(212,201,176,.25);
+      color: var(--bone);
+      padding: .3rem .7rem;
+      border-radius: 4px;
+      font-size: .78rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: border-color .2s;
+    }
+    .btn-ver:hover { border-color: var(--bone); }
+    .btn-del-reg {
+      background: none;
+      border: 1px solid rgba(192,57,43,.35);
+      color: rgba(192,57,43,.7);
+      padding: .3rem .55rem;
+      border-radius: 4px;
+      font-size: .78rem;
+      cursor: pointer;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-del-reg:hover { border-color: var(--rust); color: var(--rust); }
+
+    /* ── Modal detalhe ── */
+    .detalhe-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.88);
+      z-index: 20000;
+      overflow-y: auto;
+      padding: 2rem 1rem;
+    }
+    .detalhe-modal.open { display: flex; align-items: flex-start; justify-content: center; }
+    .detalhe-card {
+      background: var(--deep);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      width: 100%;
+      max-width: 620px;
+      padding: 2rem;
+      position: relative;
+    }
+    .detalhe-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      margin-bottom: 1.2rem;
+      color: var(--bone);
+    }
+    .detalhe-fechar {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .2s, color .2s;
+    }
+    .detalhe-fechar:hover { border-color: var(--bone); color: var(--bone); }
+    .detalhe-campo {
+      margin-bottom: .9rem;
+      font-size: .88rem;
+      line-height: 1.6;
+    }
+    .detalhe-label {
+      font-size: .72rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: .15rem;
+    }
+    .detalhe-valor { color: var(--bone); }
+    .detalhe-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 1.2rem 0;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .admin-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .admin-header-links { flex-direction: column; gap: 0.5rem; }
+      .gallery-list { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+      .registro-row { grid-template-columns: 1fr auto auto; }
+    }
+</head>
+<body>
+
+<!-- ── LOGIN SCREEN ── -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <h2 class="login-title">Acesso Restrito</h2>
+    <p class="login-subtitle">Admin Galeria</p>
+    <div class="login-alert" id="loginAlert"></div>
+    <form onsubmit="handleLogin(event)">
+      <div class="login-form-group">
+        <label for="adminPassword">Senha de Acesso</label>
+        <input type="password" id="adminPassword" placeholder="Digite sua senha" required autofocus />
+      </div>
+      <div class="login-form-group">
+        <label for="githubToken">Token do GitHub</label>
+        <input type="password" id="githubToken" placeholder="ghp_..." required />
+        <p class="login-hint">Usado apenas nesta sessão. Não é salvo em nenhum lugar.</p>
+      </div>
+      <button type="submit" class="btn-login">Acessar</button>
+    </form>
+  </div>
+</div>
+
+<!-- ── ADMIN PANEL ── -->
+<div class="container" id="adminPanel" style="display: none;">
+
+  <div class="admin-header">
+    <h1>Admin · Galeria</h1>
+    <div class="admin-header-links">
+      <a href="galeria.html" target="_blank">👁️ Galeria</a>
+      <a href="admin-hub.html">⬅ Hub</a>
+      <a onclick="logout()" style="color: var(--blood);">🔐 Sair</a>
+    </div>
+  </div>
+
+  <!-- GitHub status -->
+  <div class="github-status disconnected" id="githubStatus">
+    <span class="github-status-dot"></span>
+    <span id="githubStatusText">Verificando conexão com GitHub...</span>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-number" id="totalImages">0</div>
+      <div class="stat-label">imagens</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" id="pendingSync">0</div>
+      <div class="stat-label">sem URL</div>
+    </div>
+  </div>
+
+  <!-- Conteúdo da galeria -->
+  <div class="tab-panel active" id="tab-galeria">
+
+    <!-- Form -->
+    <div class="form-section">
+      <h2>Adicionar Nova Imagem</h2>
+      <div class="form-group">
+        <label for="imageFile">Selecionar Imagem *</label>
+        <input type="file" id="imageFile" accept="image/jpeg,image/png,image/webp,image/gif" required />
+        <div class="preview-container">
+          <img id="previewImage" class="preview-image" alt="Preview" />
+          <p id="previewPlaceholder" style="color:var(--muted);font-size:0.9rem;">Nenhuma imagem selecionada</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="imageTitle">Título da Tatuagem *</label>
+        <input type="text" id="imageTitle" placeholder="Ex: Crânio Mitológico" required />
+      </div>
+      <div class="form-group">
+        <label>Estilos (selecione um ou mais) *</label>
+        <div class="tags-container" id="tagsContainer"></div>
+      </div>
+      <div class="form-group">
+        <label for="imageAltText">Alt Text (SEO) *</label>
+        <input type="text" id="imageAltText" placeholder="Ex: Tatuagem blackwork crânio — Micael Faccio, Muriaé MG" />
+        <p style="font-size:0.78rem;color:var(--muted);margin-top:0.4rem;">Texto que o Google usa para indexar a imagem.</p>
+      </div>
+      <div class="form-group">
+        <label for="imageDescription">Descrição (opcional)</label>
+        <textarea id="imageDescription" placeholder="Descreva a tatuagem, significado, etc." rows="3"></textarea>
+      </div>
+      <div class="upload-progress" id="uploadProgress">
+        <p class="progress-label" id="progressLabel">Fazendo upload...</p>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
+        <button class="btn btn-primary" id="btnAdd" onclick="addImage()">Adicionar e Publicar</button>
+        <button class="btn btn-secondary" onclick="resetForm()">Limpar</button>
+      </div>
+    </div>
+
+    <!-- Tag Manager -->
+    <div class="form-section">
+      <h2>Gerenciar Estilos / Tags</h2>
+      <p style="margin-bottom:1.2rem;color:rgba(212,201,176,0.7);font-size:0.9rem;">As tags criadas aqui aparecem automaticamente no formulário de upload.</p>
+      <div class="tag-manager-list" id="tagManagerList"></div>
+      <div class="tag-add-row">
+        <input type="text" id="newTagInput" placeholder="Nova tag (ex: Realismo, Fine Line...)" maxlength="40"
+          onkeydown="if(event.key==='Enter'){event.preventDefault();addTag();}" />
+        <button class="btn btn-primary" onclick="addTag()">Adicionar</button>
+      </div>
+    </div>
+
+    <!-- Gallery list -->
+    <div class="form-section">
+      <h2>Imagens na Galeria</h2>
+      <div class="gallery-list" id="galleryList"></div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:20000;align-items:center;justify-content:center;padding:2rem;">
+      <div style="background:var(--deep);border:1px solid var(--border);border-radius:4px;width:100%;max-width:500px;padding:2rem;max-height:90vh;overflow-y:auto;">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:1.5rem;">Editar Imagem</h2>
+        <input type="hidden" id="editId" />
+        <div class="form-group">
+          <label for="editTitle">Título *</label>
+          <input type="text" id="editTitle" />
+        </div>
+        <div class="form-group">
+          <label>Estilos *</label>
+          <div class="tags-container" id="editTagsContainer"></div>
+        </div>
+        <div class="form-group">
+          <label for="editAltText">Alt Text (SEO)</label>
+          <input type="text" id="editAltText" placeholder="Ex: Tatuagem blackwork crânio — Micael Faccio, Muriaé MG" />
+          <p style="font-size:0.78rem;color:var(--muted);margin-top:0.4rem;">Texto que o Google usa para indexar a imagem.</p>
+        </div>
+        <div class="form-group">
+          <label for="editDescription">Descrição</label>
+          <textarea id="editDescription" rows="3"></textarea>
+        </div>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
+          <button class="btn btn-primary" onclick="saveEdit()">Salvar</button>
+          <button class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Backup -->
+    <div class="form-section">
+      <h2>Backup Local</h2>
+      <p style="margin-bottom:1rem;color:rgba(212,201,176,0.8);font-size:0.95rem;">Exporta os metadados (títulos, estilos, nomes de arquivo) em JSON.</p>
+      <button class="btn btn-secondary" onclick="exportData()">📥 Fazer Backup</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 Restaurar Backup</button>
+      <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(event)" />
+    </div>
+
+  </div><!-- /tab-galeria -->
+
+  <!-- Modal de edição -->
+  <div id="editModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:20000;align-items:center;justify-content:center;padding:2rem;">
+      <div style="background:var(--deep);border:1px solid var(--border);border-radius:4px;width:100%;max-width:500px;padding:2rem;max-height:90vh;overflow-y:auto;">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:1.5rem;">Editar Imagem</h2>
+        <input type="hidden" id="editId" />
+        <div class="form-group">
+          <label for="editTitle">Título *</label>
+          <input type="text" id="editTitle" />
+        </div>
+        <div class="form-group">
+          <label>Estilos *</label>
+          <div class="tags-container" id="editTagsContainer"></div>
+        </div>
+        <div class="form-group">
+          <label for="editAltText">Alt Text (SEO)</label>
+          <input type="text" id="editAltText" placeholder="Ex: Tatuagem blackwork crânio — Micael Faccio, Muriaé MG" />
+          <p style="font-size:0.78rem;color:var(--muted);margin-top:0.4rem;">Texto que o Google usa para indexar a imagem.</p>
+        </div>
+        <div class="form-group">
+          <label for="editDescription">Descrição</label>
+          <textarea id="editDescription" rows="3"></textarea>
+        </div>
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
+          <button class="btn btn-primary" onclick="saveEdit()">Salvar</button>
+          <button class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Backup -->
+    <div class="form-section">
+      <h2>Backup Local</h2>
+      <p style="margin-bottom:1rem;color:rgba(212,201,176,0.8);font-size:0.95rem;">Exporta os metadados (títulos, estilos, nomes de arquivo) em JSON.</p>
+      <button class="btn btn-secondary" onclick="exportData()">📥 Fazer Backup</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📤 Restaurar Backup</button>
+      <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(event)" />
+    </div>
+
+  </div><!-- /tab-galeria -->
+
+  <!-- ══ ABA PROMOÇÕES ══ -->
+  <div class="tab-panel" id="tab-promocoes">
+    <div class="form-section">
+      <h2>Clientes — Promoção Vitalícia</h2>
+      <p style="margin-bottom:1.2rem;color:rgba(212,201,176,0.7);font-size:0.9rem;">
+        Marque +1 sempre que tatuar um amigo indicado por um cliente. Chegando a 5, avise pelo WhatsApp. Para remover um cadastro, clique em 🗑.
+      </p>
+      <div style="display:flex;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+        <input type="text" id="busca-cliente" placeholder="Buscar por nome ou código..."
+          style="flex:1;min-width:180px;background:#1a1818;border:1px solid var(--border);
+                 color:var(--bone);padding:.65rem .9rem;border-radius:4px;font-size:.9rem;outline:none;" />
+        <button class="btn btn-secondary" onclick="carregarClientes()">🔄 Atualizar</button>
+      </div>
+      <div id="clientes-lista" style="font-size:.88rem;">
+        <p style="color:var(--muted);">Clique em "Atualizar" para carregar os clientes.</p>
+      </div>
+    </div>
+  </div><!-- /tab-promocoes -->
+
+  <!-- ══ ABA ANAMNESES ══ -->
+  <div class="tab-panel" id="tab-anamneses">
+    <div class="form-section">
+      <h2>Fichas de Anamnese</h2>
+      <p style="margin-bottom:1.2rem;color:rgba(212,201,176,0.7);font-size:0.9rem;">
+        Fichas preenchidas pelos clientes antes da sessão. Clique em "Ver" para expandir. 🗑 remove permanentemente.
+      </p>
+      <div style="display:flex;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+        <input type="text" id="busca-anamnese" placeholder="Buscar por nome ou CPF..."
+          style="flex:1;min-width:180px;background:#1a1818;border:1px solid var(--border);
+                 color:var(--bone);padding:.65rem .9rem;border-radius:4px;font-size:.9rem;outline:none;" />
+        <button class="btn btn-secondary" onclick="carregarAnamneses()">🔄 Atualizar</button>
+      </div>
+      <div id="anamneses-lista" class="registros-lista">
+        <p style="color:var(--muted);">Clique em "Atualizar" para carregar as fichas.</p>
+      </div>
+    </div>
+  </div><!-- /tab-anamneses -->
+
+  <!-- ══ ABA RESERVAS ══ -->
+  <div class="tab-panel" id="tab-reservas">
+    <div class="form-section">
+      <h2>Formulários de Reserva</h2>
+      <p style="margin-bottom:1.2rem;color:rgba(212,201,176,0.7);font-size:0.9rem;">
+        Pedidos de reserva enviados pelo site. Atenção: o formulário de reserva atual abre o WhatsApp direto — estas entradas só existem se você tiver configurado gravação no Supabase. Clique em "Ver" para detalhes.
+      </p>
+      <div style="display:flex;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+        <input type="text" id="busca-reserva" placeholder="Buscar por nome ou estilo..."
+          style="flex:1;min-width:180px;background:#1a1818;border:1px solid var(--border);
+                 color:var(--bone);padding:.65rem .9rem;border-radius:4px;font-size:.9rem;outline:none;" />
+        <button class="btn btn-secondary" onclick="carregarReservas()">🔄 Atualizar</button>
+      </div>
+      <div id="reservas-lista" class="registros-lista">
+        <p style="color:var(--muted);">Clique em "Atualizar" para carregar as reservas.</p>
+      </div>
+    </div>
+  </div><!-- /tab-reservas -->
+
+
+
+</div><!-- /adminPanel -->
+
+<!-- Modal detalhe -->
+<div class="detalhe-modal" id="detalheModal">
+  <div class="detalhe-card">
+    <button class="detalhe-fechar" onclick="fecharDetalhe()">×</button>
+    <h3 id="detalhe-titulo">—</h3>
+    <div id="detalhe-corpo"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+
+  // ── CONFIG ──
+  const STORAGE_KEY  = 'micaelGallery_v2';
+  const TAGS_KEY     = 'micaelTags';
+  const AUTH_KEY     = 'micaelAdminAuth';
+  const REPO_OWNER   = 'micaeltatuagem';
+  const REPO_NAME    = 'tatuagem';
+  const BRANCH       = 'main';
+  const IMAGE_FOLDER = 'galeria';
+  const DATA_PATH    = `${IMAGE_FOLDER}/gallery-data.json`;
+  const SITEMAP_PATH = 'sitemap.xml';
+  const TAGS_PATH    = `${IMAGE_FOLDER}/tags.json`;
+  const SITE_URL     = 'https://micaeltatuagem.github.io/tatuagem';
+
+  const DEFAULT_TAGS = ['Dark Art', 'Blackwork', 'Colorido', 'Ornamental'];
+
+  let GH_TOKEN = '';
+
+  // ── TAG STORAGE ──
+  function getTags() {
+    try { return JSON.parse(localStorage.getItem(TAGS_KEY)) || DEFAULT_TAGS; }
+    catch { return DEFAULT_TAGS; }
+  }
+
+  function saveTags(tags) {
+    localStorage.setItem(TAGS_KEY, JSON.stringify(tags));
+    return commitTags(tags);
+  }
+
+  // Busca o tags.json publicado no repo e sincroniza o localStorage local —
+  // mesmo padrão usado para a galeria, pro admin nunca ficar dessincronizado
+  // de outro navegador/dispositivo.
+  async function seedTagsFromRepo() {
+    try {
+      const res = await fetch(`${TAGS_PATH}?t=${Date.now()}`, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          localStorage.setItem(TAGS_KEY, JSON.stringify(data));
+        }
+      }
+    } catch (err) {
+      console.warn('Não foi possível carregar tags.json do repositório:', err);
+    }
+  }
+
+  // Comita o tags.json no repositório — é esse arquivo que a reserva.html lê
+  // para montar as opções de estilo no formulário, sempre em sincronia com
+  // as tags reais usadas aqui no admin.
+  async function commitTags(tags) {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(tags, null, 2))));
+    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${TAGS_PATH}`;
+
+    let sha = null;
+    try {
+      const checkRes = await fetch(url, { headers: { Authorization: `token ${GH_TOKEN}` } });
+      if (checkRes.ok) {
+        const existing = await checkRes.json();
+        sha = existing.sha;
+      }
+    } catch {}
+
+    const body = {
+      message: 'Atualiza tags.json',
+      content,
+      branch: BRANCH
+    };
+    if (sha) body.sha = sha;
+
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        Authorization: `token ${GH_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error('Falha ao sincronizar tags.json: ' + (err.message || 'erro desconhecido'));
+    }
+  }
+
+  async function addTag() {
+    const input = document.getElementById('newTagInput');
+    const name  = input.value.trim();
+    if (!name) return;
+
+    const tags = getTags();
+    if (tags.includes(name)) {
+      showAlert('error', '❌ Essa tag já existe.');
+      return;
+    }
+    tags.push(name);
+    input.value = '';
+    renderTagManager();
+    renderTags();
+    try {
+      await saveTags(tags);
+      showAlert('success', `✅ Tag "${name}" criada!`);
+    } catch (err) {
+      showAlert('error', '⚠️ Tag criada localmente, mas falhou ao sincronizar: ' + err.message);
+    }
+  }
+
+  async function deleteTag(name) {
+    if (!confirm(`Deletar a tag "${name}"? Ela será removida das imagens que a usam.`)) return;
+    const tags = getTags().filter(t => t !== name);
+
+    // Remove from existing gallery items
+    const gallery = getGallery();
+    gallery.forEach(img => {
+      img.styles = (img.styles || []).filter(s => s !== name);
+    });
+
+    try {
+      await saveTags(tags);
+      await saveGallery(gallery);
+      renderTagManager();
+      renderTags();
+      renderGallery();
+      showAlert('success', `✅ Tag "${name}" removida.`);
+    } catch (err) {
+      renderTagManager();
+      renderTags();
+      renderGallery();
+      showAlert('error', '⚠️ Tag removida localmente, mas falhou ao sincronizar: ' + err.message);
+    }
+  }
+
+  function renderTagManager() {
+    const tags = getTags();
+    const container = document.getElementById('tagManagerList');
+    if (tags.length === 0) {
+      container.innerHTML = '<p style="color:var(--muted);font-size:0.9rem;">Nenhuma tag ainda.</p>';
+      return;
+    }
+    container.innerHTML = tags.map(t => `
+      <div class="tag-manager-item">
+        <span>${t}</span>
+        <button onclick="deleteTag('${t.replace(/'/g, "\\'")}')" title="Deletar tag">✕</button>
+      </div>
+    `).join('');
+  }
+
+  // ── AUTH ──
+  function checkAuth() {
+    const auth = sessionStorage.getItem(AUTH_KEY);
+    const token = sessionStorage.getItem('ghToken');
+    if (auth && token) {
+      GH_TOKEN = token;
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('adminPanel').style.display = 'block';
+      init();
+    }
+    // Se não há auth+token, mantém a login-screen visível para o usuário autenticar aqui
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    const password = document.getElementById('adminPassword').value;
+    const token    = document.getElementById('githubToken').value.trim();
+    const alertEl  = document.getElementById('loginAlert');
+
+    if (password !== 'Salmo31@$2') {
+      alertEl.textContent = '❌ Senha incorreta.';
+      alertEl.classList.add('visible');
+      document.getElementById('adminPassword').value = '';
+      setTimeout(() => alertEl.classList.remove('visible'), 3000);
+      return;
+    }
+
+    if (!token.startsWith('ghp_') && !token.startsWith('github_pat_')) {
+      alertEl.textContent = '❌ Token inválido. Deve começar com ghp_ ou github_pat_';
+      alertEl.classList.add('visible');
+      setTimeout(() => alertEl.classList.remove('visible'), 4000);
+      return;
+    }
+
+    // Validate token against GitHub API
+    alertEl.textContent = '⏳ Validando token...';
+    alertEl.style.background = 'rgba(212,201,176,0.05)';
+    alertEl.style.borderColor = 'var(--border)';
+    alertEl.style.color = 'var(--bone)';
+    alertEl.classList.add('visible');
+
+    try {
+      const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
+        headers: { Authorization: `token ${token}` }
+      });
+
+      if (!res.ok) throw new Error('Token sem acesso ao repositório');
+
+      GH_TOKEN = token;
+      sessionStorage.setItem(AUTH_KEY, 'true');
+      sessionStorage.setItem('ghToken', token);
+
+      document.getElementById('loginScreen').classList.add('hidden');
+      document.getElementById('adminPanel').style.display = 'block';
+      document.getElementById('adminPassword').value = '';
+      document.getElementById('githubToken').value = '';
+      init();
+
+    } catch (err) {
+      alertEl.textContent = '❌ ' + err.message;
+      alertEl.style.background = 'rgba(139,26,26,0.2)';
+      alertEl.style.borderColor = 'var(--blood)';
+      alertEl.style.color = 'var(--blood)';
+      setTimeout(() => alertEl.classList.remove('visible'), 4000);
+    }
+  }
+
+  function logout() {
+    if (confirm('Deseja realmente sair?')) {
+      sessionStorage.clear();
+      location.reload();
+    }
+  }
+
+  // ── INIT ──
+  async function init() {
+    await seedGalleryFromRepo();
+    await seedTagsFromRepo();
+    renderTagManager();
+    renderTags();
+    renderGallery();
+    updateStats();
+    await checkGitHubStatus();
+  }
+
+  // ── GITHUB STATUS ──
+  async function checkGitHubStatus() {
+    const statusEl   = document.getElementById('githubStatus');
+    const statusText = document.getElementById('githubStatusText');
+
+    try {
+      const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
+        headers: { Authorization: `token ${GH_TOKEN}` }
+      });
+
+      if (res.ok) {
+        statusEl.className = 'github-status connected';
+        statusText.textContent = `✓ Conectado · micaeltatuagem/tatuagem`;
+      } else {
+        throw new Error();
+      }
+    } catch {
+      statusEl.className = 'github-status disconnected';
+      statusText.textContent = '✗ Sem conexão com GitHub. Uploads não funcionarão.';
+    }
+  }
+
+  // ── TAGS ──
+  function renderTags() {
+    const tags = getTags();
+    document.getElementById('tagsContainer').innerHTML = tags.map(s => `
+      <div class="tag-option">
+        <input type="checkbox" id="tag-${s}" value="${s}" />
+        <label for="tag-${s}">${s}</label>
+      </div>
+    `).join('');
+  }
+
+  // ── FILE PREVIEW ──
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('imageFile').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const preview = document.getElementById('previewImage');
+        preview.src = ev.target.result;
+        preview.classList.add('visible');
+        document.getElementById('previewPlaceholder').style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    checkAuth();
+  });
+
+  // ── UPLOAD TO GITHUB ──
+  async function uploadToGitHub(file, filename) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        // e.target.result is a data URL: "data:image/jpeg;base64,XXXX"
+        const base64 = e.target.result.split(',')[1];
+
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${IMAGE_FOLDER}/${filename}`;
+
+        // Check if file already exists (need SHA for update)
+        let sha = null;
+        try {
+          const checkRes = await fetch(url, {
+            headers: { Authorization: `token ${GH_TOKEN}` }
+          });
+          if (checkRes.ok) {
+            const existing = await checkRes.json();
+            sha = existing.sha;
+          }
+        } catch {}
+
+        const body = {
+          message: `Adiciona imagem: ${filename}`,
+          content: base64,
+          branch: BRANCH
+        };
+        if (sha) body.sha = sha;
+
+        const res = await fetch(url, {
+          method: 'PUT',
+          headers: {
+            Authorization: `token ${GH_TOKEN}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(body)
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          reject(new Error(err.message || 'Erro no upload'));
+          return;
+        }
+
+        const data = await res.json();
+        // Caminho relativo, servido pelo próprio GitHub Pages (mesma origem do site,
+        // sem depender do CDN separado do raw.githubusercontent.com)
+        const rawUrl = `${IMAGE_FOLDER}/${filename}`;
+        resolve(rawUrl);
+      };
+      reader.onerror = () => reject(new Error('Erro ao ler arquivo'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ── ADD IMAGE ──
+  async function addImage() {
+    const fileInput  = document.getElementById('imageFile');
+    const titleInput = document.getElementById('imageTitle');
+    const descInput  = document.getElementById('imageDescription');
+    const btnAdd     = document.getElementById('btnAdd');
+
+    if (!fileInput.files[0] || !titleInput.value.trim()) {
+      showAlert('error', '❌ Preencha o título e selecione uma imagem!');
+      return;
+    }
+
+    const selectedTags = Array.from(document.querySelectorAll('#tagsContainer input:checked')).map(cb => cb.value);
+    if (selectedTags.length === 0) {
+      showAlert('error', '❌ Selecione pelo menos um estilo!');
+      return;
+    }
+
+    const altText = document.getElementById('imageAltText').value.trim();
+
+    const file = fileInput.files[0];
+    const ext  = file.name.split('.').pop().toLowerCase();
+    const slug = titleInput.value.trim()
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+    const filename = `${Date.now()}-${slug}.${ext}`;
+
+    // Show progress
+    btnAdd.disabled = true;
+    const progressEl = document.getElementById('uploadProgress');
+    const progressBar = document.getElementById('progressBar');
+    const progressLabel = document.getElementById('progressLabel');
+    progressEl.classList.add('visible');
+    progressLabel.textContent = '⏳ Fazendo upload para o GitHub...';
+    progressBar.style.width = '30%';
+
+    try {
+      progressBar.style.width = '60%';
+      const imageUrl = await uploadToGitHub(file, filename);
+      progressBar.style.width = '90%';
+
+      // Save metadata locally and publish to GitHub
+      const gallery = getGallery();
+      gallery.unshift({
+        id: Date.now(),
+        title: titleInput.value.trim(),
+        altText,
+        filename,
+        imageUrl,
+        styles: selectedTags,
+        description: descInput.value,
+        createdAt: new Date().toISOString()
+      });
+      progressLabel.textContent = '⏳ Publicando dados da galeria...';
+      await saveGallery(gallery);
+
+      progressBar.style.width = '100%';
+      progressLabel.textContent = '✅ Publicado!';
+
+      setTimeout(() => {
+        progressEl.classList.remove('visible');
+        progressBar.style.width = '0%';
+      }, 2000);
+
+      renderGallery();
+      updateStats();
+      resetForm();
+      showAlert('success', `✅ "${titleInput.value.trim()}" publicada no GitHub Pages!`);
+
+    } catch (err) {
+      progressEl.classList.remove('visible');
+      progressBar.style.width = '0%';
+      showAlert('error', '❌ Erro no upload: ' + err.message);
+    } finally {
+      btnAdd.disabled = false;
+    }
+  }
+
+  // ── DELETE IMAGE ──
+  async function deleteImage(id) {
+    if (!confirm('Deletar esta imagem do GitHub também?')) return;
+
+    const gallery = getGallery();
+    const img = gallery.find(i => i.id === id);
+    if (!img) return;
+
+    // Try to delete from GitHub
+    if (img.filename) {
+      try {
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${IMAGE_FOLDER}/${img.filename}`;
+        const checkRes = await fetch(url, { headers: { Authorization: `token ${GH_TOKEN}` } });
+
+        if (checkRes.ok) {
+          const existing = await checkRes.json();
+          await fetch(url, {
+            method: 'DELETE',
+            headers: {
+              Authorization: `token ${GH_TOKEN}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              message: `Remove imagem: ${img.filename}`,
+              sha: existing.sha,
+              branch: BRANCH
+            })
+          });
+        }
+      } catch (err) {
+        console.warn('Não foi possível deletar do GitHub:', err);
+      }
+    }
+
+    const filtered = gallery.filter(i => i.id !== id);
+    try {
+      await saveGallery(filtered);
+      renderGallery();
+      updateStats();
+      showAlert('success', '✅ Imagem removida!');
+    } catch (err) {
+      renderGallery();
+      updateStats();
+      showAlert('error', '⚠️ Removida localmente, mas falhou ao sincronizar: ' + err.message);
+    }
+  }
+
+  // ── RENDER GALLERY ──
+  function renderGallery() {
+    const gallery   = getGallery();
+    const container = document.getElementById('galleryList');
+
+    if (gallery.length === 0) {
+      container.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--muted);padding:2rem;">Nenhuma imagem ainda. Adicione a primeira acima! 👆</p>';
+      return;
+    }
+
+    container.innerHTML = gallery.map(img => `
+      <div class="gallery-item">
+        <img src="${img.imageUrl || img.image || ''}" class="gallery-item-image" alt="${img.title}" loading="lazy" />
+        <div class="gallery-item-info">
+          <div class="gallery-item-title">${img.title}</div>
+          <div class="gallery-item-filename">${img.filename || '(local)'}</div>
+          <div class="gallery-item-tags">
+            ${(img.styles || []).map(s => `<span class="tag">${s}</span>`).join('')}
+          </div>
+          <div class="gallery-item-actions">
+            <button class="btn btn-secondary" style="padding:0.4rem 0.8rem;font-size:0.8rem;" onclick="openEditModal(${img.id})">Editar</button>
+            <button class="btn btn-danger" onclick="deleteImage(${img.id})">Deletar</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── RESET FORM ──
+  function resetForm() {
+    document.getElementById('imageFile').value = '';
+    document.getElementById('imageTitle').value = '';
+    document.getElementById('imageAltText').value = '';
+    document.getElementById('imageDescription').value = '';
+    document.querySelectorAll('#tagsContainer input').forEach(cb => cb.checked = false);
+    const preview = document.getElementById('previewImage');
+    preview.classList.remove('visible');
+    preview.src = '';
+    document.getElementById('previewPlaceholder').style.display = '';
+  }
+
+  // ── STATS ──
+  function updateStats() {
+    const gallery = getGallery();
+    document.getElementById('totalImages').textContent = gallery.length;
+    document.getElementById('pendingSync').textContent = gallery.filter(i => !i.imageUrl).length;
+  }
+
+  // ── EXPORT / IMPORT ──
+  function exportData() {
+    const gallery = getGallery();
+    // Export without base64 data (just metadata + URLs)
+    const exportGallery = gallery.map(({ image, ...rest }) => rest);
+    const blob = new Blob([JSON.stringify(exportGallery, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `galeria-backup-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    showAlert('success', '✅ Backup realizado!');
+  }
+
+  function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!Array.isArray(data)) throw new Error('Formato inválido');
+        await saveGallery(data);
+        renderGallery();
+        updateStats();
+        showAlert('success', '✅ Backup restaurado!');
+        document.getElementById('importFile').value = '';
+      } catch (err) {
+        showAlert('error', '❌ Erro ao restaurar: ' + err.message);
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // ── STORAGE ──
+  function getGallery() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
+  }
+
+  // Salva localmente (cache rápido para a própria tela de admin) E publica
+  // o gallery-data.json no repositório — é esse arquivo que galeria.html lê.
+  // Sem isso, os dados ficavam só no localStorage deste navegador e nunca
+  // chegavam ao GitHub, então a galeria pública nunca via as imagens.
+  async function saveGallery(gallery) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(gallery));
+    await commitGalleryData(gallery);
+    // O sitemap de imagens é importante para SEO, mas não deve travar o
+    // salvamento principal se a chamada falhar por algum motivo pontual.
+    try {
+      await commitSitemap(gallery);
+    } catch (err) {
+      console.warn('Não foi possível atualizar o sitemap.xml:', err);
+    }
+  }
+
+  function escapeXml(str) {
+    return String(str || '').replace(/[<>&'"]/g, c => ({
+      '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;'
+    }[c]));
+  }
+
+  // Monta o sitemap.xml com uma entrada <image:image> para cada foto da
+  // galeria, aninhada dentro da URL da galeria.html — é o jeito mais direto
+  // de avisar o Google Imagens sobre cada foto, sem depender do tempo de
+  // rastreamento/renderização de JavaScript.
+  function buildSitemapXml(gallery) {
+    const today = new Date().toISOString().split('T')[0];
+
+    const imageEntries = gallery.map(item => {
+      const loc = `${SITE_URL}/${item.imageUrl || ''}`;
+      const styles = (item.styles || []).join(', ');
+      const caption = escapeXml(
+        `Tatuagem ${styles ? styles + ' ' : ''}— ${item.title || ''} — Micael Faccio, tatuador em Muriaé MG`.trim()
+      );
+      const title = escapeXml(item.title || '');
+      return `      <image:image>
+        <image:loc>${escapeXml(loc)}</image:loc>
+        <image:title>${title}</image:title>
+        <image:caption>${caption}</image:caption>
+      </image:image>`;
+    }).join('\n');
+
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>${SITE_URL}/</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>${SITE_URL}/galeria.html</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+${imageEntries}
+  </url>
+  <url>
+    <loc>${SITE_URL}/reserva.html</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>
+`;
+  }
+
+  // Comita o sitemap.xml atualizado no repositório, mesmo padrão usado para
+  // imagens e para o gallery-data.json (checa SHA existente, depois PUT).
+  async function commitSitemap(gallery) {
+    const xml = buildSitemapXml(gallery);
+    const content = btoa(unescape(encodeURIComponent(xml)));
+    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${SITEMAP_PATH}`;
+
+    let sha = null;
+    try {
+      const checkRes = await fetch(url, { headers: { Authorization: `token ${GH_TOKEN}` } });
+      if (checkRes.ok) {
+        const existing = await checkRes.json();
+        sha = existing.sha;
+      }
+    } catch {}
+
+    const body = {
+      message: 'Atualiza sitemap.xml com imagens da galeria',
+      content,
+      branch: BRANCH
+    };
+    if (sha) body.sha = sha;
+
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        Authorization: `token ${GH_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error('Falha ao atualizar sitemap.xml: ' + (err.message || 'erro desconhecido'));
+    }
+  }
+
+  // Busca o gallery-data.json publicado no repo e sincroniza o localStorage
+  // local com ele. Assim o painel admin sempre reflete o estado real
+  // publicado, mesmo se aberto em outro navegador/dispositivo.
+  async function seedGalleryFromRepo() {
+    try {
+      const res = await fetch(`${DATA_PATH}?t=${Date.now()}`, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+      }
+    } catch (err) {
+      console.warn('Não foi possível carregar gallery-data.json do repositório:', err);
+    }
+  }
+
+  // Comita o JSON de metadados no repositório, usando o mesmo padrão de
+  // upload (PUT na Contents API, com SHA se o arquivo já existir).
+  async function commitGalleryData(gallery) {
+    const exportGallery = gallery.map(({ image, ...rest }) => rest);
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(exportGallery, null, 2))));
+    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${DATA_PATH}`;
+
+    let sha = null;
+    try {
+      const checkRes = await fetch(url, { headers: { Authorization: `token ${GH_TOKEN}` } });
+      if (checkRes.ok) {
+        const existing = await checkRes.json();
+        sha = existing.sha;
+      }
+    } catch {}
+
+    const body = {
+      message: 'Atualiza dados da galeria (gallery-data.json)',
+      content,
+      branch: BRANCH
+    };
+    if (sha) body.sha = sha;
+
+    const res = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        Authorization: `token ${GH_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error('Falha ao sincronizar dados com o GitHub: ' + (err.message || 'erro desconhecido'));
+    }
+  }
+
+  // ── EDIT MODAL ──
+  function openEditModal(id) {
+    const gallery = getGallery();
+    const img = gallery.find(i => i.id === id);
+    if (!img) return;
+
+    document.getElementById('editId').value = id;
+    document.getElementById('editTitle').value = img.title;
+    document.getElementById('editAltText').value = img.altText || '';
+    document.getElementById('editDescription').value = img.description || '';
+
+    // Render tags with current selection
+    const tags = getTags();
+    document.getElementById('editTagsContainer').innerHTML = tags.map(s => `
+      <div class="tag-option">
+        <input type="checkbox" id="etag-${s}" value="${s}" ${(img.styles||[]).includes(s) ? 'checked' : ''} />
+        <label for="etag-${s}">${s}</label>
+      </div>
+    `).join('');
+
+    const modal = document.getElementById('editModal');
+    modal.style.display = 'flex';
+  }
+
+  function closeEditModal() {
+    document.getElementById('editModal').style.display = 'none';
+  }
+
+  async function saveEdit() {
+    const id      = parseInt(document.getElementById('editId').value);
+    const title   = document.getElementById('editTitle').value.trim();
+    const altText = document.getElementById('editAltText').value.trim();
+    const desc    = document.getElementById('editDescription').value;
+    const styles  = Array.from(document.querySelectorAll('#editTagsContainer input:checked')).map(cb => cb.value);
+
+    if (!title) { showAlert('error', '❌ O título não pode ser vazio.'); return; }
+    if (styles.length === 0) { showAlert('error', '❌ Selecione pelo menos um estilo.'); return; }
+
+    const gallery = getGallery();
+    const idx = gallery.findIndex(i => i.id === id);
+    if (idx === -1) return;
+
+    gallery[idx] = { ...gallery[idx], title, altText, description: desc, styles };
+    try {
+      await saveGallery(gallery);
+      closeEditModal();
+      renderGallery();
+      showAlert('success', '✅ Informações atualizadas!');
+    } catch (err) {
+      closeEditModal();
+      renderGallery();
+      showAlert('error', '⚠️ Atualizado localmente, mas falhou ao sincronizar: ' + err.message);
+    }
+  }
+
+  // Close modal clicking outside
+  document.getElementById('editModal').addEventListener('click', function(e) {
+    if (e.target === this) closeEditModal();
+  });
+
+  // ── ALERTS ──
+  function showAlert(type, message) {
+    const el = document.getElementById(`alert${type.charAt(0).toUpperCase() + type.slice(1)}`);
+    el.textContent = message;
+    el.classList.add('visible');
+    setTimeout(() => el.classList.remove('visible'), 6000);
+  }
+
+  // ── Supabase (mesmas credenciais do cadastro.html) ──
+  const SB_URL  = 'https://rpgcsejfewltricfsdrd.supabase.co';
+  const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwZ2NzZWpmZXdsdHJpY2ZzZHJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4OTU0MzAsImV4cCI6MjA5NzQ3MTQzMH0.BHg2X0MVIokfnBjTK0DPt1NDB1H9sjXeUVZ1lJ3jKo0';
+  const { createClient: sbCreate } = supabase;
+  const db = sbCreate(SB_URL, SB_ANON);
+  window.db = db; // expõe para outros blocos script
+
+  // Cache local dos clientes carregados
+  let todosClientes = [];
+
+  // ── Carregar clientes ───────────────────────────────────────
+  async function carregarClientes() {
+    const lista = document.getElementById('clientes-lista');
+    lista.innerHTML = '<p style="color:var(--muted);">Carregando...</p>';
+
+    const { data, error } = await db
+      .from('clientes_promo')
+      .select('id, nome, whatsapp, codigo_indicacao, indicacoes_tatuadas, created_at')
+      .order('nome', { ascending: true });
+
+    if (error) {
+      lista.innerHTML = `<p style="color:#e05555;">Erro ao carregar: ${error.message}</p>`;
+      return;
+    }
+
+    todosClientes = data || [];
+    window._todosClientes = todosClientes;
+    document.getElementById('statClientes').textContent = todosClientes.length;
+    renderClientes(todosClientes);
+  }
+
+  // ── Renderizar lista ────────────────────────────────────────
+  function renderClientes(clientes) {
+    const lista = document.getElementById('clientes-lista');
+    const busca = (document.getElementById('busca-cliente').value || '').toLowerCase();
+
+    const filtrados = clientes.filter(c =>
+      c.nome.toLowerCase().includes(busca) ||
+      (c.codigo_indicacao || '').toLowerCase().includes(busca)
+    );
+
+    if (!filtrados.length) {
+      lista.innerHTML = '<p style="color:var(--muted);">Nenhum cliente encontrado.</p>';
+      return;
+    }
+
+    // Ordenar: quem tem mais indicações primeiro, depois alfabético
+    filtrados.sort((a, b) => {
+      const da = a.indicacoes_tatuadas || 0;
+      const db_ = b.indicacoes_tatuadas || 0;
+      if (db_ !== da) return db_ - da;
+      return a.nome.localeCompare(b.nome);
+    });
+
+    lista.innerHTML = filtrados.map(c => {
+      const count = c.indicacoes_tatuadas || 0;
+      const completo = count >= 5;
+      const numeroWhats = (c.whatsapp || '').replace(/\D/g, '');
+      const msgZap = encodeURIComponent(
+        `Olá ${c.nome.split(' ')[0]}! 🖤\n\n` +
+        `Você atingiu 5 indicações de amigos que tatuaram aqui — parabéns!\n` +
+        `Sua sessão grátis está liberada. Me chame para agendar. 🎉`
+      );
+
+      return `
+        <div class="cliente-row" id="row-${c.id}" data-id="${c.id}">
+          <div>
+            <div class="cliente-nome">${c.nome}</div>
+            <div class="cliente-cod">${c.codigo_indicacao || '—'} · <span class="cliente-whats">${formatarExibicao(c.whatsapp)}</span></div>
+          </div>
+          <div class="cliente-contagem ${completo ? 'contagem-completa' : ''}">
+            ${count}/5 ${completo ? '✓' : ''}
+          </div>
+          <button class="btn-marcar" data-action="marcar" data-id="${c.id}" data-count="${count}"
+            ${completo ? 'disabled style="opacity:.4;cursor:not-allowed;"' : ''}>
+            +1 tatuou
+          </button>
+          ${completo
+            ? `<a class="btn-zap" href="https://wa.me/55${numeroWhats}?text=${msgZap}" target="_blank" rel="noopener">🎉 Avisar</a>`
+            : `<span></span>`
+          }
+          <button class="btn-deletar" data-action="deletar" data-id="${c.id}">🗑</button>
+        </div>`;
+    }).join('');
+
+    // Event delegation — um único listener na lista
+    lista.removeEventListener('click', _clienteClickHandler);
+    lista.addEventListener('click', _clienteClickHandler);
+  }
+
+  function _clienteClickHandler(e) {
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    const id = btn.dataset.id;
+    const action = btn.dataset.action;
+    if (action === 'marcar') {
+      marcarAtendimento(id, parseInt(btn.dataset.count || '0'));
+    } else if (action === 'deletar') {
+      const cliente = todosClientes.find(c => String(c.id) === String(id));
+      deletarCliente(id, cliente ? cliente.nome : id);
+    }
+  }
+
+  // ── Marcar +1 atendimento ───────────────────────────────────
+  async function marcarAtendimento(clienteId, countAtual) {
+    const novoCount = (countAtual || 0) + 1;
+    const { error } = await db
+      .from('clientes_promo')
+      .update({ indicacoes_tatuadas: novoCount })
+      .eq('id', clienteId);
+
+    if (error) {
+      alert('Erro ao atualizar: ' + error.message);
+      return;
+    }
+
+    // Atualiza o cache e re-renderiza sem recarregar tudo
+    const idx = todosClientes.findIndex(c => c.id === clienteId);
+    if (idx !== -1) todosClientes[idx].indicacoes_tatuadas = novoCount;
+    renderClientes(todosClientes);
+
+    if (novoCount >= 5) {
+      alert(`✅ ${todosClientes[idx]?.nome || 'Cliente'} chegou a 5 indicações! Clique em "Avisar" para mandar o WhatsApp.`);
+    }
+  }
+
+  // ── Deletar cliente ─────────────────────────────────────────
+  async function deletarCliente(clienteId, nome) {
+    if (!confirm(`Deletar "${nome}" permanentemente? Esta ação não pode ser desfeita.`)) return;
+
+    const { error } = await db
+      .from('clientes_promo')
+      .delete()
+      .eq('id', clienteId);
+
+    if (error) {
+      alert('Erro ao deletar: ' + error.message);
+      return;
+    }
+
+    todosClientes = todosClientes.filter(c => c.id !== clienteId);
+    renderClientes(todosClientes);
+  }
+
+  // ── Filtro em tempo real ────────────────────────────────────
+  document.getElementById('busca-cliente').addEventListener('input', () => {
+    renderClientes(todosClientes);
+  });
+
+  // ── Utilitário: formatar WhatsApp para exibição ─────────────
+  function formatarExibicao(v) {
+    if (!v) return '—';
+    const n = v.replace(/\D/g, '');
+    if (n.length === 11) return `(${n.slice(0,2)}) ${n.slice(2,7)}-${n.slice(7)}`;
+    if (n.length === 10) return `(${n.slice(0,2)}) ${n.slice(2,6)}-${n.slice(6)}`;
+    return v;
+  }
+
+</script>
+
+</body>
+</html>
