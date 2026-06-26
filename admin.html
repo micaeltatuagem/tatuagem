@@ -1835,7 +1835,7 @@ ${imageEntries}
 
   // ── Supabase (mesmas credenciais do cadastro.html) ──
   const SB_URL  = 'https://rpgcsejfewltricfsdrd.supabase.co';
-  const SB_ANON = 'sb_publishable_7LF70sbQS_es_uco138rqw_YfbqnIsa';
+  const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwZ2NzZWpmZXdsdHJpY2ZzZHJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4OTU0MzAsImV4cCI6MjA5NzQ3MTQzMH0.BHg2X0MVIokfnBjTK0DPt1NDB1H9sjXeUVZ1lJ3jKo0';
   const { createClient: sbCreate } = supabase;
   const db = sbCreate(SB_URL, SB_ANON);
   window.db = db; // expõe para outros blocos script
