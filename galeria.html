@@ -684,7 +684,7 @@
 
     /* ── Legibilidade sobre decorativos ─────────────────────── */
     body {
-      text-shadow: 0 0 12px var(--bg), 0 0 8px var(--bg), 0 0 4px var(--bg);
+      text-shadow: 0 0 12px var(--ink), 0 0 8px var(--ink), 0 0 4px var(--ink);
     }
     /* Botões e elementos com fundo próprio não precisam */
     .btn-primary, .btn-secondary, .btn-promo-cta,
@@ -723,8 +723,16 @@
       inset: -2rem -1.5rem;
       background: rgba(10,10,10,0.72);
       border-radius: 4px;
-      z-index: -1;
+      z-index: 0;
       pointer-events: none;
+    }
+
+    /* Filhos diretos do .inner ficam acima do overlay */
+    .inner > *,
+    form > *,
+    .form-section > * {
+      position: relative;
+      z-index: 1;
     }
 
     /* Boxes com fundo próprio — reforça opacidade */
