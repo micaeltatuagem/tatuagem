@@ -2135,8 +2135,9 @@ ${imageEntries}
     renderAnamneses(todasAnamneses);
   }
 
-  document.getElementById('busca-anamnese').addEventListener('input', () => {
-    renderAnamneses(todasAnamneses);
+  document.addEventListener('DOMContentLoaded', function() {
+    const ba = document.getElementById('busca-anamnese');
+    if (ba) ba.addEventListener('input', () => { renderAnamneses(todasAnamneses); });
   });
 
   // ══ RESERVAS ════════════════════════════════════════════════
@@ -2233,8 +2234,9 @@ ${imageEntries}
     renderReservas(todasReservas);
   }
 
-  document.getElementById('busca-reserva').addEventListener('input', () => {
-    renderReservas(todasReservas);
+  document.addEventListener('DOMContentLoaded', function() {
+    const br = document.getElementById('busca-reserva');
+    if (br) br.addEventListener('input', () => { renderReservas(todasReservas); });
   });
 </script>
 </body>
