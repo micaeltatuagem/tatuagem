@@ -1204,6 +1204,9 @@
       document.getElementById('loginScreen').classList.add('hidden');
       document.getElementById('adminPanel').style.display = 'block';
       init();
+    } else if (auth && !token) {
+      // Sessão ativa mas sem token — volta ao hub para informar o token
+      window.location.href = 'admin-hub.html';
     }
   }
 
