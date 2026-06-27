@@ -117,13 +117,13 @@
 
     /* ── HEADER ── */
     .header {
-      min-height: 50vh;
+      min-height: 20vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 5rem 2rem 4rem;
+      padding: 2.5rem 2rem 2rem;
       position: relative;
       border-bottom: 1px solid var(--border);
     }
@@ -970,7 +970,7 @@
 
   // ── RENDER FILTERS ── 
   function renderFilters() {
-    const styles = [...new Set(galleryData.flatMap(img => img.styles || []))];
+    const styles = [...new Set(galleryData.flatMap(img => img.styles || []))].sort();
     const container = document.getElementById('filtersContainer');
     
     let html = '<button class="filter-btn active" onclick="filterGallery(null)">Todas</button>';
@@ -1028,7 +1028,6 @@
           <img src="${src}" alt="${alt}" loading="lazy" />
           <div class="gallery-info">
             ${title ? `<div class="gallery-info-title">${title}</div>` : ''}
-            <div class="gallery-info-tags">${tags}</div>
           </div>
         </div>`;
     }).join('');
