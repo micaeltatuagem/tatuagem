@@ -889,20 +889,30 @@
 
 <script>
   const DATA_PATH = 'galeria/gallery-data.json';
+  const TAGS_PATH = 'galeria/tags.json';
   const SITE_URL  = 'https://micaeltatuagem.github.io/tatuagem';
   let galleryData = [];
   let filteredData = [];
+  let allTags = [];
   let currentFilterStyle = null;
   let currentImageIndex = 0;
 
   // ── INITIALIZE ── 
   async function init() {
-    await loadGallery();
+    await Promise.all([loadGallery(), loadTags()]);
     renderFilters();
     renderGallery();
     setupLightboxListeners();
     setupFadeInObserver();
     injectStructuredData();
+  }
+
+  // ── LOAD TAGS ──
+  async function loadTags() {
+    try {
+      const res = await fetch(`${TAGS_PATH}?t=${Date.now()}`, { cache: 'no-store' });
+      if (res.ok) allTags = await res.json();
+    } catch {}
   }
 
   // ── LOAD GALLERY ── 
@@ -970,7 +980,8 @@
 
   // ── RENDER FILTERS ── 
   function renderFilters() {
-    const styles = [...new Set(galleryData.flatMap(img => img.styles || []))].sort();
+    const fromJson = [...new Set(galleryData.flatMap(img => img.styles || []))];
+    const styles = allTags.length ? [...new Set([...allTags, ...fromJson])].sort() : fromJson.sort();
     const container = document.getElementById('filtersContainer');
     
     let html = '<button class="filter-btn active" onclick="filterGallery(null)">Todas</button>';
