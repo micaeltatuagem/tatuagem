@@ -348,15 +348,13 @@
 
   const TOKEN_KEY = 'ghToken';
 
-  // ── INIT ──
-  sb.auth.onAuthStateChange((event, session) => {
+  // ── INIT (restaura sessão em caso de reload) ──
+  (async () => {
+    const { data: { session } } = await sb.auth.getSession();
     if (session) {
       showHub(sessionStorage.getItem(TOKEN_KEY) || '');
-    } else {
-      document.getElementById('loginScreen').style.display = 'flex';
-      document.getElementById('hubScreen').style.display = 'none';
     }
-  });
+  })();
 
   // ── LOGIN ──
   async function handleLogin(e) {
@@ -402,6 +400,7 @@
     document.getElementById('inputEmail').value = '';
     document.getElementById('inputSenha').value = '';
     document.getElementById('inputToken').value = '';
+    showHub(token);
   }
 
   // ── SHOW HUB ──
