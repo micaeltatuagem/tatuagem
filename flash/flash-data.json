@@ -6,7 +6,10 @@
     "title": "Hang Bones",
     "altText": "Tatuagem flash de hang bones — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art"
+    ]
   },
   {
     "id": 2,
@@ -15,7 +18,11 @@
     "title": "Adaga",
     "altText": "Tatuagem flash de adaga — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Old School"
+    ]
   },
   {
     "id": 3,
@@ -24,7 +31,11 @@
     "title": "Águia 1",
     "altText": "Tatuagem flash de águia 1 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 4,
@@ -33,7 +44,11 @@
     "title": "Águia 2",
     "altText": "Tatuagem flash de águia 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 5,
@@ -42,7 +57,11 @@
     "title": "Águia 3",
     "altText": "Tatuagem flash de águia 3 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 6,
@@ -51,7 +70,11 @@
     "title": "Ampulheta",
     "altText": "Tatuagem flash de ampulheta — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Old School"
+    ]
   },
   {
     "id": 7,
@@ -60,7 +83,11 @@
     "title": "Âncora 1",
     "altText": "Tatuagem flash de âncora 1 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Old School"
+    ]
   },
   {
     "id": 8,
@@ -69,7 +96,11 @@
     "title": "Âncora 2",
     "altText": "Tatuagem flash de âncora 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Old School"
+    ]
   },
   {
     "id": 9,
@@ -78,7 +109,11 @@
     "title": "Âncora 3",
     "altText": "Tatuagem flash de âncora 3 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Old School"
+    ]
   },
   {
     "id": 10,
@@ -87,7 +122,11 @@
     "title": "Andorinha 1",
     "altText": "Tatuagem flash de andorinha 1 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Old School"
+    ]
   },
   {
     "id": 11,
@@ -96,7 +135,11 @@
     "title": "Andorinha 2",
     "altText": "Tatuagem flash de andorinha 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Old School"
+    ]
   },
   {
     "id": 12,
@@ -105,7 +148,11 @@
     "title": "Andorinha 3",
     "altText": "Tatuagem flash de andorinha 3 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Old School"
+    ]
   },
   {
     "id": 13,
@@ -114,7 +161,10 @@
     "title": "Anjinho",
     "altText": "Tatuagem flash de anjinho — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Religioso"
+    ]
   },
   {
     "id": 14,
@@ -123,7 +173,11 @@
     "title": "Aranha",
     "altText": "Tatuagem flash de aranha — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Animais"
+    ]
   },
   {
     "id": 15,
@@ -132,7 +186,10 @@
     "title": "Bíblia",
     "altText": "Tatuagem flash de bíblia — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Religioso"
+    ]
   },
   {
     "id": 16,
@@ -141,7 +198,10 @@
     "title": "Bola 8",
     "altText": "Tatuagem flash de bola 8 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 17,
@@ -150,7 +210,11 @@
     "title": "Bola de Cristal",
     "altText": "Tatuagem flash de bola de cristal — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Old School"
+    ]
   },
   {
     "id": 18,
@@ -159,7 +223,11 @@
     "title": "Borboleta",
     "altText": "Tatuagem flash de borboleta — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 19,
@@ -168,7 +236,10 @@
     "title": "Bota",
     "altText": "Tatuagem flash de bota — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 20,
@@ -177,7 +248,10 @@
     "title": "Cálice",
     "altText": "Tatuagem flash de cálice — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Religioso"
+    ]
   },
   {
     "id": 21,
@@ -186,7 +260,11 @@
     "title": "Caravela",
     "altText": "Tatuagem flash de caravela — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Old School"
+    ]
   },
   {
     "id": 22,
@@ -195,7 +273,11 @@
     "title": "Caravela 2",
     "altText": "Tatuagem flash de caravela 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Old School"
+    ]
   },
   {
     "id": 23,
@@ -204,7 +286,10 @@
     "title": "Cartas de Baralho",
     "altText": "Tatuagem flash de cartas de baralho — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 24,
@@ -213,7 +298,10 @@
     "title": "Caveira",
     "altText": "Tatuagem flash de caveira — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art"
+    ]
   },
   {
     "id": 25,
@@ -222,7 +310,10 @@
     "title": "Caveira de Perfil (3/4)",
     "altText": "Tatuagem flash de caveira de perfil (3/4) — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art"
+    ]
   },
   {
     "id": 26,
@@ -231,7 +322,10 @@
     "title": "Caveira em Chamas",
     "altText": "Tatuagem flash de caveira em chamas — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art"
+    ]
   },
   {
     "id": 27,
@@ -240,7 +334,10 @@
     "title": "Caveira de Perfil (Direita)",
     "altText": "Tatuagem flash de caveira de perfil (direita) — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art"
+    ]
   },
   {
     "id": 28,
@@ -249,7 +346,10 @@
     "title": "Caveira de Perfil (Esquerda)",
     "altText": "Tatuagem flash de caveira de perfil (esquerda) — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art"
+    ]
   },
   {
     "id": 29,
@@ -258,7 +358,10 @@
     "title": "Caveira de Frente",
     "altText": "Tatuagem flash de caveira de frente — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art"
+    ]
   },
   {
     "id": 30,
@@ -267,7 +370,10 @@
     "title": "Caveira com Ossos",
     "altText": "Tatuagem flash de caveira com ossos — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art"
+    ]
   },
   {
     "id": 31,
@@ -276,7 +382,10 @@
     "title": "Caveira com Serpente",
     "altText": "Tatuagem flash de caveira com serpente — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art"
+    ]
   },
   {
     "id": 32,
@@ -285,7 +394,10 @@
     "title": "Chapéu",
     "altText": "Tatuagem flash de chapéu — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 33,
@@ -294,7 +406,10 @@
     "title": "Cigana 1",
     "altText": "Tatuagem flash de cigana 1 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 34,
@@ -303,7 +418,10 @@
     "title": "Cigana 2",
     "altText": "Tatuagem flash de cigana 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 35,
@@ -312,7 +430,10 @@
     "title": "Cigana 3",
     "altText": "Tatuagem flash de cigana 3 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 36,
@@ -321,7 +442,11 @@
     "title": "Palhaço",
     "altText": "Tatuagem flash de palhaço — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Old School"
+    ]
   },
   {
     "id": 37,
@@ -330,7 +455,10 @@
     "title": "Coração",
     "altText": "Tatuagem flash de coração — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 38,
@@ -339,7 +467,11 @@
     "title": "Coração com Adaga",
     "altText": "Tatuagem flash de coração com adaga — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Old School"
+    ]
   },
   {
     "id": 39,
@@ -348,7 +480,10 @@
     "title": "Coração Partido",
     "altText": "Tatuagem flash de coração partido — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 40,
@@ -357,7 +492,10 @@
     "title": "Cruz",
     "altText": "Tatuagem flash de cruz — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Religioso"
+    ]
   },
   {
     "id": 41,
@@ -366,7 +504,10 @@
     "title": "Cruz INRI",
     "altText": "Tatuagem flash de cruz inri — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Religioso"
+    ]
   },
   {
     "id": 42,
@@ -375,7 +516,10 @@
     "title": "Dados",
     "altText": "Tatuagem flash de dados — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 43,
@@ -384,7 +528,10 @@
     "title": "Dados 2",
     "altText": "Tatuagem flash de dados 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 44,
@@ -393,7 +540,11 @@
     "title": "Dragão 1",
     "altText": "Tatuagem flash de dragão 1 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 45,
@@ -402,7 +553,11 @@
     "title": "Dragão 10",
     "altText": "Tatuagem flash de dragão 10 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 46,
@@ -411,7 +566,11 @@
     "title": "Dragão 11",
     "altText": "Tatuagem flash de dragão 11 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 47,
@@ -420,7 +579,11 @@
     "title": "Dragão 12",
     "altText": "Tatuagem flash de dragão 12 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 48,
@@ -429,7 +592,11 @@
     "title": "Dragão 2",
     "altText": "Tatuagem flash de dragão 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 49,
@@ -438,7 +605,11 @@
     "title": "Dragão 3",
     "altText": "Tatuagem flash de dragão 3 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 50,
@@ -447,7 +618,11 @@
     "title": "Dragão 4",
     "altText": "Tatuagem flash de dragão 4 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 51,
@@ -456,7 +631,11 @@
     "title": "Dragão 5",
     "altText": "Tatuagem flash de dragão 5 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 52,
@@ -465,7 +644,11 @@
     "title": "Dragão 6",
     "altText": "Tatuagem flash de dragão 6 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 53,
@@ -474,7 +657,11 @@
     "title": "Dragão 7",
     "altText": "Tatuagem flash de dragão 7 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 54,
@@ -483,7 +670,11 @@
     "title": "Dragão 8",
     "altText": "Tatuagem flash de dragão 8 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 55,
@@ -492,7 +683,11 @@
     "title": "Dragão 9",
     "altText": "Tatuagem flash de dragão 9 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 56,
@@ -501,7 +696,11 @@
     "title": "Escorpião",
     "altText": "Tatuagem flash de escorpião — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Dark Art"
+    ]
   },
   {
     "id": 57,
@@ -510,7 +709,11 @@
     "title": "Escorpião 2",
     "altText": "Tatuagem flash de escorpião 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Dark Art"
+    ]
   },
   {
     "id": 58,
@@ -519,7 +722,10 @@
     "title": "Espada e Coração",
     "altText": "Tatuagem flash de espada e coração — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 59,
@@ -528,7 +734,10 @@
     "title": "Espírito Santo",
     "altText": "Tatuagem flash de espírito santo — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Religioso"
+    ]
   },
   {
     "id": 60,
@@ -537,7 +746,10 @@
     "title": "Estrela",
     "altText": "Tatuagem flash de estrela — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 61,
@@ -546,7 +758,10 @@
     "title": "Faca",
     "altText": "Tatuagem flash de faca — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art"
+    ]
   },
   {
     "id": 62,
@@ -555,7 +770,10 @@
     "title": "Fantasminha",
     "altText": "Tatuagem flash de fantasminha — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art"
+    ]
   },
   {
     "id": 63,
@@ -564,7 +782,11 @@
     "title": "Farol",
     "altText": "Tatuagem flash de farol — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Old School"
+    ]
   },
   {
     "id": 64,
@@ -573,7 +795,11 @@
     "title": "Farol 2",
     "altText": "Tatuagem flash de farol 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Old School"
+    ]
   },
   {
     "id": 65,
@@ -582,7 +808,10 @@
     "title": "Ferradura 1",
     "altText": "Tatuagem flash de ferradura 1 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 66,
@@ -591,7 +820,10 @@
     "title": "Ferradura 2",
     "altText": "Tatuagem flash de ferradura 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 67,
@@ -600,7 +832,10 @@
     "title": "Ferradura 3",
     "altText": "Tatuagem flash de ferradura 3 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 68,
@@ -609,7 +844,11 @@
     "title": "Chamas",
     "altText": "Tatuagem flash de chamas — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Old School"
+    ]
   },
   {
     "id": 69,
@@ -618,7 +857,10 @@
     "title": "Flor",
     "altText": "Tatuagem flash de flor — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 70,
@@ -627,7 +869,10 @@
     "title": "Forever",
     "altText": "Tatuagem flash de forever — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 71,
@@ -636,7 +881,10 @@
     "title": "Nossa Senhora de Guadalupe",
     "altText": "Tatuagem flash de nossa senhora de guadalupe — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Religioso"
+    ]
   },
   {
     "id": 72,
@@ -645,7 +893,10 @@
     "title": "Hula Girl",
     "altText": "Tatuagem flash de hula girl — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 73,
@@ -654,7 +905,10 @@
     "title": "Jesus Cristo",
     "altText": "Tatuagem flash de jesus cristo — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Religioso"
+    ]
   },
   {
     "id": 74,
@@ -663,7 +917,11 @@
     "title": "Lobo",
     "altText": "Tatuagem flash de lobo — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Dark Art"
+    ]
   },
   {
     "id": 75,
@@ -672,7 +930,10 @@
     "title": "Love",
     "altText": "Tatuagem flash de love — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 76,
@@ -681,7 +942,10 @@
     "title": "Lua",
     "altText": "Tatuagem flash de lua — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 77,
@@ -690,7 +954,10 @@
     "title": "Lua 2",
     "altText": "Tatuagem flash de lua 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 78,
@@ -699,7 +966,11 @@
     "title": "Lula 1",
     "altText": "Tatuagem flash de lula 1 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Animais"
+    ]
   },
   {
     "id": 79,
@@ -708,7 +979,11 @@
     "title": "Lula 2",
     "altText": "Tatuagem flash de lula 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Animais"
+    ]
   },
   {
     "id": 80,
@@ -717,7 +992,11 @@
     "title": "Lula 3",
     "altText": "Tatuagem flash de lula 3 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Animais"
+    ]
   },
   {
     "id": 81,
@@ -726,7 +1005,10 @@
     "title": "Mão",
     "altText": "Tatuagem flash de mão — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 82,
@@ -735,7 +1017,10 @@
     "title": "Mão com Terço",
     "altText": "Tatuagem flash de mão com terço — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Religioso"
+    ]
   },
   {
     "id": 83,
@@ -744,7 +1029,10 @@
     "title": "Mãos em Oração",
     "altText": "Tatuagem flash de mãos em oração — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Religioso"
+    ]
   },
   {
     "id": 84,
@@ -753,7 +1041,10 @@
     "title": "Nossa Senhora",
     "altText": "Tatuagem flash de nossa senhora — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Religioso"
+    ]
   },
   {
     "id": 85,
@@ -762,7 +1053,11 @@
     "title": "Marinheira",
     "altText": "Tatuagem flash de marinheira — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Old School"
+    ]
   },
   {
     "id": 86,
@@ -771,7 +1066,11 @@
     "title": "Mariposa",
     "altText": "Tatuagem flash de mariposa — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 87,
@@ -780,7 +1079,11 @@
     "title": "Mariposa 2",
     "altText": "Tatuagem flash de mariposa 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 88,
@@ -789,7 +1092,10 @@
     "title": "São Miguel Arcanjo",
     "altText": "Tatuagem flash de são miguel arcanjo — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Religioso"
+    ]
   },
   {
     "id": 89,
@@ -798,7 +1104,10 @@
     "title": "Mom",
     "altText": "Tatuagem flash de mom — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 90,
@@ -807,7 +1116,10 @@
     "title": "Mom 2",
     "altText": "Tatuagem flash de mom 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 91,
@@ -816,7 +1128,10 @@
     "title": "Morte",
     "altText": "Tatuagem flash de morte — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art"
+    ]
   },
   {
     "id": 92,
@@ -825,7 +1140,10 @@
     "title": "Morte 2",
     "altText": "Tatuagem flash de morte 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art"
+    ]
   },
   {
     "id": 93,
@@ -834,7 +1152,10 @@
     "title": "Náutilo 1",
     "altText": "Tatuagem flash de náutilo 1 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico"
+    ]
   },
   {
     "id": 94,
@@ -843,7 +1164,10 @@
     "title": "Náutilo 2",
     "altText": "Tatuagem flash de náutilo 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico"
+    ]
   },
   {
     "id": 95,
@@ -852,7 +1176,11 @@
     "title": "Olho",
     "altText": "Tatuagem flash de olho — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Old School"
+    ]
   },
   {
     "id": 96,
@@ -861,7 +1189,11 @@
     "title": "Olho 2",
     "altText": "Tatuagem flash de olho 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Old School"
+    ]
   },
   {
     "id": 97,
@@ -870,7 +1202,10 @@
     "title": "Palmeira",
     "altText": "Tatuagem flash de palmeira — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 98,
@@ -879,7 +1214,11 @@
     "title": "Pantera",
     "altText": "Tatuagem flash de pantera — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Dark Art"
+    ]
   },
   {
     "id": 99,
@@ -888,7 +1227,11 @@
     "title": "Pantera 2",
     "altText": "Tatuagem flash de pantera 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Dark Art"
+    ]
   },
   {
     "id": 100,
@@ -897,7 +1240,10 @@
     "title": "Pin-up",
     "altText": "Tatuagem flash de pin-up — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 101,
@@ -906,7 +1252,10 @@
     "title": "Pin-up 2",
     "altText": "Tatuagem flash de pin-up 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 102,
@@ -915,7 +1264,10 @@
     "title": "Pin-up 3",
     "altText": "Tatuagem flash de pin-up 3 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 103,
@@ -924,7 +1276,10 @@
     "title": "Pin-up 4",
     "altText": "Tatuagem flash de pin-up 4 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 104,
@@ -933,7 +1288,11 @@
     "title": "Polvo 1",
     "altText": "Tatuagem flash de polvo 1 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Animais"
+    ]
   },
   {
     "id": 105,
@@ -942,7 +1301,11 @@
     "title": "Polvo 2",
     "altText": "Tatuagem flash de polvo 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Animais"
+    ]
   },
   {
     "id": 106,
@@ -951,7 +1314,11 @@
     "title": "Polvo 3",
     "altText": "Tatuagem flash de polvo 3 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Animais"
+    ]
   },
   {
     "id": 107,
@@ -960,7 +1327,10 @@
     "title": "R.I.P.",
     "altText": "Tatuagem flash de r.i.p. — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art"
+    ]
   },
   {
     "id": 108,
@@ -969,7 +1339,10 @@
     "title": "Rosa 1",
     "altText": "Tatuagem flash de rosa 1 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 109,
@@ -978,7 +1351,10 @@
     "title": "Rosa 2",
     "altText": "Tatuagem flash de rosa 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 110,
@@ -987,7 +1363,10 @@
     "title": "Rosa 3",
     "altText": "Tatuagem flash de rosa 3 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 111,
@@ -996,7 +1375,11 @@
     "title": "Rosa com Adaga",
     "altText": "Tatuagem flash de rosa com adaga — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Old School"
+    ]
   },
   {
     "id": 112,
@@ -1005,7 +1388,11 @@
     "title": "Rosa com Adaga 2",
     "altText": "Tatuagem flash de rosa com adaga 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Old School"
+    ]
   },
   {
     "id": 113,
@@ -1014,7 +1401,11 @@
     "title": "Rosa com Adaga 3",
     "altText": "Tatuagem flash de rosa com adaga 3 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Old School"
+    ]
   },
   {
     "id": 114,
@@ -1023,7 +1414,10 @@
     "title": "Rosinha",
     "altText": "Tatuagem flash de rosinha — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 115,
@@ -1032,7 +1426,10 @@
     "title": "Sagrado Coração",
     "altText": "Tatuagem flash de sagrado coração — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Religioso"
+    ]
   },
   {
     "id": 116,
@@ -1041,7 +1438,10 @@
     "title": "São José",
     "altText": "Tatuagem flash de são josé — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Religioso"
+    ]
   },
   {
     "id": 117,
@@ -1050,7 +1450,11 @@
     "title": "Serpente 1",
     "altText": "Tatuagem flash de serpente 1 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Animais"
+    ]
   },
   {
     "id": 118,
@@ -1059,7 +1463,11 @@
     "title": "Serpente 2",
     "altText": "Tatuagem flash de serpente 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Animais"
+    ]
   },
   {
     "id": 119,
@@ -1068,7 +1476,11 @@
     "title": "Serpente 3",
     "altText": "Tatuagem flash de serpente 3 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Animais"
+    ]
   },
   {
     "id": 120,
@@ -1077,7 +1489,11 @@
     "title": "Serpente 4",
     "altText": "Tatuagem flash de serpente 4 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Animais"
+    ]
   },
   {
     "id": 121,
@@ -1086,7 +1502,11 @@
     "title": "Serpente 5",
     "altText": "Tatuagem flash de serpente 5 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Animais"
+    ]
   },
   {
     "id": 122,
@@ -1095,7 +1515,11 @@
     "title": "Serpente 6",
     "altText": "Tatuagem flash de serpente 6 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Animais"
+    ]
   },
   {
     "id": 123,
@@ -1104,7 +1528,11 @@
     "title": "Serpente 7",
     "altText": "Tatuagem flash de serpente 7 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art",
+      "Animais"
+    ]
   },
   {
     "id": 124,
@@ -1113,7 +1541,10 @@
     "title": "Sol",
     "altText": "Tatuagem flash de sol — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 125,
@@ -1122,7 +1553,10 @@
     "title": "Teia de Aranha",
     "altText": "Tatuagem flash de teia de aranha — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art"
+    ]
   },
   {
     "id": 126,
@@ -1131,7 +1565,11 @@
     "title": "Tigre",
     "altText": "Tatuagem flash de tigre — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 127,
@@ -1140,7 +1578,11 @@
     "title": "Tigre 2",
     "altText": "Tatuagem flash de tigre 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Animais",
+      "Old School"
+    ]
   },
   {
     "id": 128,
@@ -1149,7 +1591,10 @@
     "title": "True Love",
     "altText": "Tatuagem flash de true love — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   },
   {
     "id": 129,
@@ -1158,7 +1603,11 @@
     "title": "Tubarão",
     "altText": "Tatuagem flash de tubarão — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Animais"
+    ]
   },
   {
     "id": 130,
@@ -1167,7 +1616,11 @@
     "title": "Tubarão 2",
     "altText": "Tatuagem flash de tubarão 2 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Animais"
+    ]
   },
   {
     "id": 131,
@@ -1176,7 +1629,11 @@
     "title": "Tubarão 3",
     "altText": "Tatuagem flash de tubarão 3 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Animais"
+    ]
   },
   {
     "id": 132,
@@ -1185,7 +1642,11 @@
     "title": "Tubarão 4",
     "altText": "Tatuagem flash de tubarão 4 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Animais"
+    ]
   },
   {
     "id": 133,
@@ -1194,7 +1655,11 @@
     "title": "Tubarão 5",
     "altText": "Tatuagem flash de tubarão 5 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Animais"
+    ]
   },
   {
     "id": 134,
@@ -1203,7 +1668,11 @@
     "title": "Tubarão 6",
     "altText": "Tatuagem flash de tubarão 6 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Animais"
+    ]
   },
   {
     "id": 135,
@@ -1212,7 +1681,11 @@
     "title": "Tubarão 7",
     "altText": "Tatuagem flash de tubarão 7 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Animais"
+    ]
   },
   {
     "id": 136,
@@ -1221,7 +1694,11 @@
     "title": "Tubarão 8",
     "altText": "Tatuagem flash de tubarão 8 — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Animais"
+    ]
   },
   {
     "id": 137,
@@ -1230,7 +1707,11 @@
     "title": "Vela",
     "altText": "Tatuagem flash de vela — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Náutico",
+      "Old School"
+    ]
   },
   {
     "id": 138,
@@ -1239,7 +1720,10 @@
     "title": "Veneno",
     "altText": "Tatuagem flash de veneno — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Dark Art"
+    ]
   },
   {
     "id": 139,
@@ -1248,6 +1732,9 @@
     "title": "Zippo (Isqueiro)",
     "altText": "Tatuagem flash de zippo (isqueiro) — desenho disponível na Micael Tatuagem, Muriaé MG",
     "description": "",
-    "date": "2025-01-01"
+    "date": "2025-01-01",
+    "styles": [
+      "Old School"
+    ]
   }
 ]
