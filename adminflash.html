@@ -202,12 +202,26 @@
       <label>Descrição (opcional)</label>
       <textarea id="imageDescription" placeholder="Detalhe, tamanho aproximado, estilo..."></textarea>
     </div>
+    <div class="form-group">
+      <label>Estilos</label>
+      <div class="tags-container" id="tagsContainer"></div>
+    </div>
     <div class="upload-progress" id="uploadProgress">
       <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
       <div class="progress-text" id="progressText">Enviando...</div>
     </div>
     <button class="btn btn-primary" id="btnAdd" style="margin-top:1rem;" onclick="addImage()">Adicionar e Publicar</button>
     <div class="alert" id="mainAlert"></div>
+  </div>
+
+  <!-- Gerenciar tags -->
+  <div class="form-section">
+    <h2>Estilos / Tags</h2>
+    <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;">
+      <input type="text" id="newTagInput" placeholder="Nova tag..." style="flex:1;min-width:150px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--bone);padding:8px 12px;font-size:.85rem;outline:none;" />
+      <button class="btn btn-secondary" onclick="addTag()">+ Adicionar</button>
+    </div>
+    <div class="tag-manager-list" id="tagManagerList"></div>
   </div>
 
   <!-- Flash existentes -->
@@ -238,6 +252,10 @@
       <label>Descrição</label>
       <textarea id="editDescription"></textarea>
     </div>
+    <div class="form-group">
+      <label>Estilos</label>
+      <div class="tags-container" id="editTagsContainer"></div>
+    </div>
     <div class="modal-actions">
       <button class="btn btn-primary" onclick="saveEdit()">Salvar</button>
       <button class="btn btn-secondary" onclick="closeEditModal()">Cancelar</button>
@@ -248,6 +266,7 @@
 <script>
   // ── CONFIG ──
   const STORAGE_KEY = 'micaelFlash_v1';
+  const TAGS_KEY    = 'micaelFlashTags';
   const TOKEN_KEY   = 'ghToken';
   const REPO_OWNER  = 'micaeltatuagem';
   const REPO_NAME   = 'tatuagem';
@@ -255,8 +274,10 @@
   const IMAGE_FOLDER = 'flash';
   const DATA_PATH    = `${IMAGE_FOLDER}/flash-data.json`;
   const MANIFEST_PATH = `${IMAGE_FOLDER}/manifest.json`;
+  const TAGS_PATH     = `${IMAGE_FOLDER}/tags.json`;
   const CATALOG_PAGE  = 'flash.html';
   const SITE_URL    = 'https://micaeltatuagem.github.io/tatuagem';
+  const DEFAULT_TAGS = ['Old School', 'Dark Art', 'Religioso', 'Náutico', 'Animais'];
 
   const SUPABASE_URL  = 'https://rpgcsejfewltricfsdrd.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwZ2NzZWpmZXdsdHJpY2ZzZHJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4OTU0MzAsImV4cCI6MjA5NzQ3MTQzMH0.BHg2X0MVIokfnBjTK0DPt1NDB1H9sjXeUVZ1lJ3jKo0';
@@ -353,6 +374,9 @@
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('adminPanel').style.display = 'block';
     await seedFromRepo();
+    await seedTagsFromRepo();
+    renderTagManager();
+    renderTags();
     renderGallery();
     updateStats();
     checkGitHubStatus();
@@ -399,6 +423,77 @@
     } catch {}
   }
 
+  function getTags() {
+    try { return JSON.parse(localStorage.getItem(TAGS_KEY)) || DEFAULT_TAGS; }
+    catch { return DEFAULT_TAGS; }
+  }
+
+  async function saveTags(tags) {
+    localStorage.setItem(TAGS_KEY, JSON.stringify(tags));
+    await commitTags(tags);
+  }
+
+  async function seedTagsFromRepo() {
+    try {
+      const res = await fetch(`${TAGS_PATH}?t=${Date.now()}`, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) localStorage.setItem(TAGS_KEY, JSON.stringify(data));
+      }
+    } catch {}
+  }
+
+  function renderTags() {
+    const tags = getTags();
+    document.getElementById('tagsContainer').innerHTML = tags.map(s => `
+      <div class="tag-option">
+        <input type="checkbox" id="tag-${s}" value="${s}" />
+        <label for="tag-${s}">${s}</label>
+      </div>`).join('');
+  }
+
+  function renderTagManager() {
+    const tags = getTags();
+    const el = document.getElementById('tagManagerList');
+    if (!tags.length) { el.innerHTML = '<p style="color:var(--muted);font-size:.85rem;">Nenhuma tag.</p>'; return; }
+    el.innerHTML = tags.map(t => `
+      <div class="tag-manager-item">
+        <span>${t}</span>
+        <button onclick="deleteTag('${t.replace(/'/g, "\\'")}')">✕</button>
+      </div>`).join('');
+  }
+
+  async function addTag() {
+    const input = document.getElementById('newTagInput');
+    const val   = input.value.trim();
+    if (!val) return;
+    const tags = getTags();
+    if (tags.includes(val)) { input.value = ''; return; }
+    tags.push(val);
+    await saveTags(tags);
+    renderTagManager();
+    renderTags();
+    input.value = '';
+  }
+
+  async function deleteTag(tag) {
+    if (!confirm(`Deletar tag "${tag}"?`)) return;
+    const tags = getTags().filter(t => t !== tag);
+    await saveTags(tags);
+    renderTagManager();
+    renderTags();
+  }
+
+  async function commitTags(tags) {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(tags, null, 2))));
+    const url     = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${TAGS_PATH}`;
+    let sha = null;
+    try { const r = await fetch(url,{headers:{Authorization:`token ${GH_TOKEN}`}}); if(r.ok) sha=(await r.json()).sha; } catch {}
+    const body = { message: 'Atualiza flash/tags.json', content, branch: BRANCH };
+    if (sha) body.sha = sha;
+    await fetch(url, { method:'PUT', headers:{Authorization:`token ${GH_TOKEN}`,'Content-Type':'application/json'}, body:JSON.stringify(body) });
+  }
+
   // ── RENDER ──
   function renderGallery() {
     const gallery   = getGallery();
@@ -413,6 +508,7 @@
         <div class="gallery-item-info">
           <div class="gallery-item-title">${img.title}</div>
           <div class="gallery-item-filename">${img.filename || ''}</div>
+          <div class="gallery-item-tags">${(img.styles||[]).map(s=>`<span class="tag">${s}</span>`).join('')}</div>
           <div class="gallery-item-actions">
             <button class="btn btn-secondary" style="padding:.3rem .7rem;font-size:.75rem;" onclick="openEditModal(${img.id})">Editar</button>
             <button class="btn btn-danger" style="padding:.3rem .7rem;font-size:.75rem;" onclick="deleteImage(${img.id})">Deletar</button>
@@ -459,9 +555,11 @@
     const title     = document.getElementById('imageTitle').value.trim();
     const altText   = document.getElementById('imageAltText').value.trim();
     const desc      = document.getElementById('imageDescription').value;
+    const styles    = Array.from(document.querySelectorAll('#tagsContainer input:checked')).map(cb => cb.value);
     const btnAdd    = document.getElementById('btnAdd');
 
     if (!fileInput.files[0] || !title) { showAlert('error', '❌ Título e imagem são obrigatórios.'); return; }
+    if (!styles.length)                 { showAlert('error', '❌ Selecione pelo menos um estilo.'); return; }
 
     const file = fileInput.files[0];
     const ext  = file.name.split('.').pop().toLowerCase();
@@ -481,7 +579,7 @@
       gallery.unshift({
         id: newId, filename, imageUrl, title,
         altText: altText || `Tatuagem flash de ${title.toLowerCase()} — desenho disponível na Micael Tatuagem, Muriaé MG`,
-        description: desc, date: new Date().toISOString().split('T')[0]
+        description: desc, styles, date: new Date().toISOString().split('T')[0]
       });
       await saveGallery(gallery);
 
@@ -513,6 +611,7 @@
     document.getElementById('imageTitle').value = '';
     document.getElementById('imageAltText').value = '';
     document.getElementById('imageDescription').value = '';
+    document.querySelectorAll('#tagsContainer input').forEach(cb => cb.checked = false);
     const img = document.getElementById('previewImage');
     img.style.display = 'none'; img.src = '';
     document.getElementById('previewPlaceholder').style.display = '';
@@ -555,6 +654,12 @@
     document.getElementById('editTitle').value       = img.title;
     document.getElementById('editAltText').value     = img.altText || '';
     document.getElementById('editDescription').value = img.description || '';
+    const tags = getTags();
+    document.getElementById('editTagsContainer').innerHTML = tags.map(s => `
+      <div class="tag-option">
+        <input type="checkbox" id="etag-${s}" value="${s}" ${(img.styles||[]).includes(s)?'checked':''} />
+        <label for="etag-${s}">${s}</label>
+      </div>`).join('');
     document.getElementById('editModal').classList.add('open');
   }
 
@@ -567,8 +672,9 @@
     const title  = document.getElementById('editTitle').value.trim();
     const alt    = document.getElementById('editAltText').value.trim();
     const desc   = document.getElementById('editDescription').value;
+    const styles = Array.from(document.querySelectorAll('#editTagsContainer input:checked')).map(cb=>cb.value);
     if (!title) { alert('Título obrigatório.'); return; }
-    const gallery = getGallery().map(i => i.id===id ? {...i, title, altText:alt, description:desc} : i);
+    const gallery = getGallery().map(i => i.id===id ? {...i, title, altText:alt, description:desc, styles} : i);
     await saveGallery(gallery);
     renderGallery();
     closeEditModal();
@@ -608,7 +714,7 @@
     const fileData = await res.json();
     const currentHtml = decodeURIComponent(escape(atob(fileData.content)));
 
-    const gridHtml = gallery.map(img => `      <figure class="flash-item" data-id="${img.id}">
+    const gridHtml = gallery.map(img => `      <figure class="flash-item" data-id="${img.id}" data-styles="${(img.styles||[]).join(',')}">
         <img src="${img.imageUrl}" alt="${escapeHtml(img.altText || img.title)}" loading="lazy" />
         <figcaption>${escapeHtml(img.title)}</figcaption>
       </figure>`).join('\n');
