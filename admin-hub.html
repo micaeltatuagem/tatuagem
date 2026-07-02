@@ -313,6 +313,12 @@
       <div class="hub-card-desc">Upload de imagens, tags e publicação no GitHub Pages.</div>
     </a>
 
+    <a class="hub-card" id="card-flash" href="adminflash.html">
+      <span class="hub-card-icon">⚡</span>
+      <div class="hub-card-title">Flash</div>
+      <div class="hub-card-desc">Catálogo de desenhos prontos, alt text e decoração do site.</div>
+    </a>
+
     <a class="hub-card" href="admin_promo.html">
       <span class="hub-card-icon">🎟</span>
       <div class="hub-card-title">Promoções</div>
@@ -409,6 +415,7 @@
     document.getElementById('hubScreen').style.display = 'block';
 
     const card = document.getElementById('card-galeria');
+    const cardFlash = document.getElementById('card-flash');
 
     if (!token) {
       document.getElementById('tokenNotice').style.display = 'block';
@@ -419,8 +426,16 @@
         e.preventDefault();
         alert('Para acessar a Galeria é preciso informar o Token GitHub no login.\n\nClique em "Sair" e faça login novamente, preenchendo o campo Token.');
       });
+      cardFlash.style.opacity = '0.55';
+      cardFlash.removeAttribute('href');
+      cardFlash.style.cursor = 'pointer';
+      cardFlash.addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('Para acessar o Flash é preciso informar o Token GitHub no login.\n\nClique em "Sair" e faça login novamente, preenchendo o campo Token.');
+      });
     } else {
       card.href = 'admingaleria.html';
+      cardFlash.href = 'adminflash.html';
     }
   }
 
