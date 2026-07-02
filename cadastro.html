@@ -928,9 +928,7 @@
     this.disabled = true;
 
     const { data, error } = await sb
-      .from('clientes_promo')
-      .select('id, nome')
-      .eq('codigo_indicacao', cod)
+      .rpc('verificar_codigo_indicacao', { cod })
       .maybeSingle();
 
     this.textContent = 'Verificar';
@@ -980,10 +978,7 @@
       tentativas++;
       const candidato = gerarCodigo();
       const { data: existe } = await sb
-        .from('clientes_promo')
-        .select('id')
-        .eq('codigo_indicacao', candidato)
-        .maybeSingle();
+        .rpc('codigo_existe', { cod: candidato });
       if (!existe) codigo = candidato;
     }
 
@@ -1010,9 +1005,7 @@
       if (error.code === '23505') {
         // WhatsApp já cadastrado — busca os dados e abre o painel
         const { data: existente } = await sb
-          .from('clientes_promo')
-          .select('nome, codigo_indicacao')
-          .eq('whatsapp', whatsapp)
+          .rpc('buscar_cliente_por_whatsapp', { wpp: whatsapp })
           .maybeSingle();
         if (existente) {
           document.getElementById('tela-form').style.display = 'none';
@@ -1106,9 +1099,7 @@
     setTimeout(async () => {
       const statusEl = document.getElementById('codigo-status');
       const { data, error } = await sb
-        .from('clientes_promo')
-        .select('id, nome')
-        .eq('codigo_indicacao', cod)
+        .rpc('verificar_codigo_indicacao', { cod })
         .maybeSingle();
       if (!error && data) {
         statusEl.textContent = `✓ Você foi convidado por ${data.nome}.`;
