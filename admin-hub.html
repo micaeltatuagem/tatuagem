@@ -8,6 +8,7 @@
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -276,8 +277,13 @@
 
     <form id="loginForm" onsubmit="handleLogin(event)">
       <div class="login-field">
+        <label for="inputEmail">E-mail</label>
+        <input type="email" id="inputEmail" autocomplete="username" required autofocus />
+      </div>
+
+      <div class="login-field">
         <label for="inputSenha">Senha</label>
-        <input type="password" id="inputSenha" placeholder="••••••••••" required autofocus />
+        <input type="password" id="inputSenha" placeholder="••••••••••" autocomplete="current-password" required />
       </div>
 
       <div class="login-field">
@@ -335,26 +341,38 @@
 </div>
 
 <script>
-  const SENHA    = 'Salmo31@$2';
-  const AUTH_KEY = 'micaelAdminAuth';
+  const SUPABASE_URL  = 'https://rpgcsejfewltricfsdrd.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwZ2NzZWpmZXdsdHJpY2ZzZHJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4OTU0MzAsImV4cCI6MjA5NzQ3MTQzMH0.BHg2X0MVIokfnBjTK0DPt1NDB1H9sjXeUVZ1lJ3jKo0';
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
   const TOKEN_KEY = 'ghToken';
 
   // ── INIT ──
-  window.addEventListener('DOMContentLoaded', () => {
-    const auth  = sessionStorage.getItem(AUTH_KEY);
-    const token = sessionStorage.getItem(TOKEN_KEY);
-    if (auth) showHub(token);
+  sb.auth.onAuthStateChange((event, session) => {
+    if (session) {
+      showHub(sessionStorage.getItem(TOKEN_KEY) || '');
+    } else {
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('hubScreen').style.display = 'none';
+    }
   });
 
   // ── LOGIN ──
   async function handleLogin(e) {
     e.preventDefault();
+    const email = document.getElementById('inputEmail').value.trim();
     const senha = document.getElementById('inputSenha').value;
     const token = document.getElementById('inputToken').value.trim();
     const errEl = document.getElementById('loginErr');
 
-    if (senha !== SENHA) {
-      errEl.textContent = '❌ Senha incorreta.';
+    errEl.style.display = 'none';
+
+    const { error: authError } = await sb.auth.signInWithPassword({ email, password: senha });
+
+    if (authError) {
+      errEl.textContent = '❌ Credenciais inválidas.';
+      errEl.style.color = '#e07070';
       errEl.style.display = 'block';
       document.getElementById('inputSenha').value = '';
       setTimeout(() => errEl.style.display = 'none', 3000);
@@ -381,10 +399,9 @@
       }
     }
 
-    sessionStorage.setItem(AUTH_KEY, 'true');
+    document.getElementById('inputEmail').value = '';
     document.getElementById('inputSenha').value = '';
     document.getElementById('inputToken').value = '';
-    showHub(token);
   }
 
   // ── SHOW HUB ──
@@ -409,8 +426,9 @@
   }
 
   // ── LOGOUT ──
-  function logout() {
+  async function logout() {
     sessionStorage.clear();
+    await sb.auth.signOut();
     location.reload();
   }
 </script>
