@@ -8,6 +8,7 @@
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -137,8 +138,12 @@
     <div class="login-sub">Admin Galeria</div>
     <form id="loginForm">
       <div class="login-group">
+        <label for="inputEmail">E-mail</label>
+        <input type="email" id="inputEmail" autocomplete="username" required autofocus />
+      </div>
+      <div class="login-group">
         <label for="inputSenha">Senha</label>
-        <input type="password" id="inputSenha" required autofocus />
+        <input type="password" id="inputSenha" autocomplete="current-password" required />
       </div>
       <div class="login-group">
         <label for="inputToken">Token GitHub</label>
@@ -275,6 +280,11 @@
   const SITE_URL    = 'https://micaeltatuagem.github.io/tatuagem';
   const DEFAULT_TAGS = ['Dark Art', 'Blackwork', 'Colorido', 'Ornamental'];
 
+  const SUPABASE_URL  = 'https://rpgcsejfewltricfsdrd.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwZ2NzZWpmZXdsdHJpY2ZzZHJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4OTU0MzAsImV4cCI6MjA5NzQ3MTQzMH0.BHg2X0MVIokfnBjTK0DPt1NDB1H9sjXeUVZ1lJ3jKo0';
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
   let GH_TOKEN = '';
 
   // ── AUTH ──
@@ -301,26 +311,33 @@
     // Login form
     document.getElementById('loginForm').addEventListener('submit', handleLogin);
 
-    // Verifica sessão existente
-    const auth  = sessionStorage.getItem(AUTH_KEY);
-    const token = sessionStorage.getItem(TOKEN_KEY);
-    if (auth && token) {
-      GH_TOKEN = token;
-      showPanel();
-    }
+    // Verifica sessão existente do Supabase Auth (ex: reload da página)
+    (async () => {
+      const { data: { session } } = await sb.auth.getSession();
+      const token = sessionStorage.getItem(TOKEN_KEY);
+      if (session && token) {
+        GH_TOKEN = token;
+        showPanel();
+      }
+    })();
   });
 
   async function handleLogin(e) {
     e.preventDefault();
+    const email  = document.getElementById('inputEmail').value.trim();
     const senha  = document.getElementById('inputSenha').value;
     const token  = document.getElementById('inputToken').value.trim();
     const errEl  = document.getElementById('loginErr');
 
-    if (senha !== 'Salmo31@$2') {
-      errEl.textContent = '❌ Senha incorreta.';
+    errEl.textContent = '⏳ Entrando...';
+
+    const { error: authError } = await sb.auth.signInWithPassword({ email, password: senha });
+    if (authError) {
+      errEl.textContent = '❌ Credenciais inválidas.';
       document.getElementById('inputSenha').value = '';
       return;
     }
+
     if (!token.startsWith('ghp_') && !token.startsWith('github_pat_')) {
       errEl.textContent = '❌ Token inválido.';
       return;
@@ -333,7 +350,6 @@
       });
       if (!res.ok) throw new Error('Token sem acesso ao repositório.');
       GH_TOKEN = token;
-      sessionStorage.setItem(AUTH_KEY, 'true');
       sessionStorage.setItem(TOKEN_KEY, token);
       errEl.textContent = '';
       showPanel();
@@ -342,8 +358,12 @@
     }
   }
 
-  function logout() {
-    if (confirm('Sair?')) { sessionStorage.clear(); location.reload(); }
+  async function logout() {
+    if (confirm('Sair?')) {
+      sessionStorage.clear();
+      await sb.auth.signOut();
+      location.reload();
+    }
   }
 
   async function showPanel() {
