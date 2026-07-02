@@ -54,6 +54,42 @@
       </image:image>
   </url>
   <url>
+    <loc>https://micaeltatuagem.github.io/tatuagem/flash.html</loc>
+    <lastmod>2026-07-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+      <image:image>
+        <image:loc>https://micaeltatuagem.github.io/tatuagem/flash/dragao1.webp</image:loc>
+        <image:title>Tatuagem Flash Dragão</image:title>
+        <image:caption>Tatuagem flash de dragão — desenho disponível na Micael Tatuagem, Muriaé MG</image:caption>
+      </image:image>
+      <image:image>
+        <image:loc>https://micaeltatuagem.github.io/tatuagem/flash/aguia1.webp</image:loc>
+        <image:title>Tatuagem Flash Águia</image:title>
+        <image:caption>Tatuagem flash de águia — desenho disponível na Micael Tatuagem, Muriaé MG</image:caption>
+      </image:image>
+      <image:image>
+        <image:loc>https://micaeltatuagem.github.io/tatuagem/flash/caveiraChamas.webp</image:loc>
+        <image:title>Tatuagem Flash Caveira em Chamas</image:title>
+        <image:caption>Tatuagem flash de caveira em chamas — desenho disponível na Micael Tatuagem, Muriaé MG</image:caption>
+      </image:image>
+      <image:image>
+        <image:loc>https://micaeltatuagem.github.io/tatuagem/flash/rosa1.webp</image:loc>
+        <image:title>Tatuagem Flash Rosa</image:title>
+        <image:caption>Tatuagem flash de rosa — desenho disponível na Micael Tatuagem, Muriaé MG</image:caption>
+      </image:image>
+      <image:image>
+        <image:loc>https://micaeltatuagem.github.io/tatuagem/flash/tigre.webp</image:loc>
+        <image:title>Tatuagem Flash Tigre</image:title>
+        <image:caption>Tatuagem flash de tigre — desenho disponível na Micael Tatuagem, Muriaé MG</image:caption>
+      </image:image>
+      <image:image>
+        <image:loc>https://micaeltatuagem.github.io/tatuagem/flash/pinup.webp</image:loc>
+        <image:title>Tatuagem Flash Pin-up</image:title>
+        <image:caption>Tatuagem flash de pin-up — desenho disponível na Micael Tatuagem, Muriaé MG</image:caption>
+      </image:image>
+  </url>
+  <url>
     <loc>https://micaeltatuagem.github.io/tatuagem/reserva.html</loc>
     <lastmod>2026-06-18</lastmod>
     <changefreq>monthly</changefreq>
