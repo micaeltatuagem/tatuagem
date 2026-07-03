@@ -272,6 +272,20 @@
     .lightbox.open { display: flex; }
     .lightbox img { max-width: min(90vw, 500px); max-height: 65vh; object-fit: contain; background: #f2ede2; border: 1px solid var(--border); padding: 1rem; border-radius: 4px; }
     .lightbox-caption { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; margin-top: 1rem; text-align: center; }
+    .lightbox-wpp-btn {
+      display: inline-block;
+      margin-top: 1.3rem;
+      background: #25D366;
+      color: #0a0a0a;
+      text-decoration: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 999px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: opacity 0.2s ease;
+    }
+    .lightbox-wpp-btn:hover { opacity: 0.85; }
     .lightbox-close {
       position: absolute; top: 1.2rem; right: 1.5rem;
       font-size: 1.8rem; color: var(--bone); background: none; border: none; cursor: pointer;
@@ -937,6 +951,7 @@
   <button class="lightbox-close" id="lightboxClose" aria-label="Fechar">&times;</button>
   <img id="lightboxImg" src="" alt="" />
   <p class="lightbox-caption" id="lightboxCaption"></p>
+  <a id="lightboxWpp" class="lightbox-wpp-btn" href="#" target="_blank" rel="noopener">💬 Chamar no WhatsApp sobre esse flash</a>
 </div>
 
   <div class="flash-faq">
@@ -1022,15 +1037,19 @@
   const lightboxImg = document.getElementById('lightboxImg');
   const lightboxCaption = document.getElementById('lightboxCaption');
   const lightboxClose = document.getElementById('lightboxClose');
+  const lightboxWpp = document.getElementById('lightboxWpp');
 
   items.forEach(item => {
     item.addEventListener('click', () => {
       const img = item.querySelector('img');
+      const nome = item.querySelector('figcaption').textContent;
       lightboxImg.src = img.src;
       lightboxImg.alt = img.alt;
-      lightboxCaption.textContent = item.querySelector('figcaption').textContent;
+      lightboxCaption.textContent = nome;
+      const msg = `Oi Micael! Gostei do flash "${nome}", quero agendar.`;
+      lightboxWpp.href = `https://wa.me/5532999666946?text=${encodeURIComponent(msg)}`;
       lightbox.classList.add('open');
-      gtag('event', 'view_flash', { event_category: 'flash', event_label: lightboxCaption.textContent });
+      gtag('event', 'view_flash', { event_category: 'flash', event_label: nome });
     });
   });
 
