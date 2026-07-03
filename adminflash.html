@@ -179,6 +179,24 @@
     </div>
   </div>
 
+  <!-- Upload em lote -->
+  <div class="form-section">
+    <h2>Upload em Lote</h2>
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:.8rem;">
+      Selecione várias imagens de uma vez. Título e alt text são gerados automaticamente a partir do nome do arquivo — revise e ajuste depois na lista abaixo.
+    </p>
+    <div class="form-group">
+      <label>Arquivos (múltiplos)</label>
+      <input type="file" id="bulkFiles" accept="image/*" multiple />
+    </div>
+    <div class="upload-progress" id="bulkProgress">
+      <div class="progress-bar"><div class="progress-fill" id="bulkProgressFill"></div></div>
+      <div class="progress-text" id="bulkProgressText">Enviando...</div>
+    </div>
+    <button class="btn btn-primary" id="btnBulk" style="margin-top:.8rem;" onclick="bulkUpload()">Enviar Todos</button>
+    <div class="alert" id="bulkAlert"></div>
+  </div>
+
   <!-- Adicionar flash -->
   <div class="form-section">
     <h2>Adicionar Novo Flash</h2>
@@ -286,12 +304,98 @@
 
   let GH_TOKEN = '';
 
+  // ── TITULO A PARTIR DO NOME DO ARQUIVO (usado no upload em lote) ──
+  function titleFromFilename(filename) {
+    const stem = filename.replace(/\.[^/.]+$/, '');
+    const spaced = stem
+      .replace(/([a-z])([A-Z])/g, '$1 $2')
+      .replace(/[_-]+/g, ' ')
+      .replace(/(\D)(\d)/g, '$1 $2');
+    return spaced
+      .split(' ')
+      .filter(Boolean)
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join(' ');
+  }
+
+  // ── UPLOAD EM LOTE ──
+  async function bulkUpload() {
+    const input = document.getElementById('bulkFiles');
+    const files = Array.from(input.files || []);
+    const btn   = document.getElementById('btnBulk');
+    const progEl = document.getElementById('bulkProgress');
+    const fillEl = document.getElementById('bulkProgressFill');
+    const txtEl  = document.getElementById('bulkProgressText');
+
+    if (!files.length) { showAlert2('bulkAlert', 'error', '❌ Selecione ao menos uma imagem.'); return; }
+
+    btn.disabled = true;
+    progEl.className = 'upload-progress visible';
+
+    const gallery = getGallery();
+    let nextId = gallery.length ? Math.max(...gallery.map(i => i.id)) + 1 : 1;
+    const newItems = [];
+    let ok = 0, fail = 0;
+
+    for (let i = 0; i < files.length; i++) {
+      const file  = files[i];
+      const pct   = Math.round(((i) / files.length) * 100);
+      fillEl.style.width = pct + '%';
+      txtEl.textContent = `Enviando ${i + 1} de ${files.length}: ${file.name}`;
+
+      try {
+        const ext   = file.name.split('.').pop().toLowerCase();
+        const title = titleFromFilename(file.name) || `Flash ${nextId}`;
+        const slug  = title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+        const filename = `${slug}-${Date.now()}-${i}.${ext}`;
+
+        const imageUrl = await uploadToGitHub(file, filename);
+
+        newItems.push({
+          id: nextId++, filename, imageUrl, title,
+          altText: `Tatuagem flash de ${title.toLowerCase()}. Disponível na Micael Tatuagem, Muriaé MG.`,
+          description: '', styles: [], showInDecor: true,
+          date: new Date().toISOString().split('T')[0]
+        });
+        ok++;
+      } catch (err) {
+        fail++;
+        console.warn('Falha ao enviar', file.name, err);
+      }
+
+      // pequena pausa pra nao esbarrar no limite de requisicoes seguidas do GitHub
+      await new Promise(r => setTimeout(r, 400));
+    }
+
+    fillEl.style.width = '100%';
+    txtEl.textContent = 'Salvando dados...';
+
+    const merged = [...newItems, ...gallery];
+    await saveGallery(merged);
+
+    progEl.className = 'upload-progress';
+    btn.disabled = false;
+    input.value = '';
+    renderGallery();
+    updateStats();
+
+    showAlert2('bulkAlert', fail ? 'error' : 'success',
+      fail ? `⚠ ${ok} enviados, ${fail} falharam.` : `✅ ${ok} flashs enviados! Selecione um estilo em cada um na lista abaixo.`);
+  }
+
+  function showAlert2(elId, type, msg) {
+    const el = document.getElementById(elId);
+    el.textContent = msg;
+    el.className = `alert ${type} visible`;
+    setTimeout(() => el.className = 'alert', 5000);
+  }
+
   // ── AUTO ALT ──
   function autoFillAlt() {
     const title = document.getElementById('imageTitle').value.trim();
     const altEl = document.getElementById('imageAltText');
     if (!title) return;
-    altEl.value = `Tatuagem flash de ${title.toLowerCase()} — desenho disponível na Micael Tatuagem, Muriaé MG`;
+    altEl.value = `Tatuagem flash de ${title.toLowerCase()}. Disponível na Micael Tatuagem, Muriaé MG.`;
   }
 
   // ── INIT ──
@@ -509,6 +613,10 @@
           <div class="gallery-item-title">${img.title}</div>
           <div class="gallery-item-filename">${img.filename || ''}</div>
           <div class="gallery-item-tags">${(img.styles||[]).map(s=>`<span class="tag">${s}</span>`).join('')}</div>
+          <label style="display:flex;align-items:center;gap:.5rem;margin:.5rem 0;font-size:.78rem;color:var(--muted);cursor:pointer;">
+            <input type="checkbox" ${img.showInDecor!==false?'checked':''} onchange="toggleDecor(${img.id}, this.checked)" />
+            Aparece na decoração do site
+          </label>
           <div class="gallery-item-actions">
             <button class="btn btn-secondary" style="padding:.3rem .7rem;font-size:.75rem;" onclick="openEditModal(${img.id})">Editar</button>
             <button class="btn btn-danger" style="padding:.3rem .7rem;font-size:.75rem;" onclick="deleteImage(${img.id})">Deletar</button>
@@ -578,8 +686,8 @@
       const newId   = gallery.length ? Math.max(...gallery.map(i=>i.id)) + 1 : 1;
       gallery.unshift({
         id: newId, filename, imageUrl, title,
-        altText: altText || `Tatuagem flash de ${title.toLowerCase()} — desenho disponível na Micael Tatuagem, Muriaé MG`,
-        description: desc, styles, date: new Date().toISOString().split('T')[0]
+        altText: altText || `Tatuagem flash de ${title.toLowerCase()}. Disponível na Micael Tatuagem, Muriaé MG.`,
+        description: desc, styles, showInDecor: true, date: new Date().toISOString().split('T')[0]
       });
       await saveGallery(gallery);
 
@@ -615,6 +723,12 @@
     const img = document.getElementById('previewImage');
     img.style.display = 'none'; img.src = '';
     document.getElementById('previewPlaceholder').style.display = '';
+  }
+
+  async function toggleDecor(id, value) {
+    const gallery = getGallery().map(i => i.id === id ? { ...i, showInDecor: value } : i);
+    await saveGallery(gallery);
+    showAlert('success', value ? '✅ Agora aparece na decoração.' : '✅ Removido da decoração (continua no catálogo).');
   }
 
   // ── DELETE IMAGE ──
@@ -696,7 +810,7 @@
 
   // ── COMMIT: manifest.json (usado pela decoração aleatória do site) ──
   async function commitManifest(gallery) {
-    const filenames = gallery.map(i => i.filename).filter(Boolean);
+    const filenames = gallery.filter(i => i.showInDecor !== false).map(i => i.filename).filter(Boolean);
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(filenames, null, 2))));
     const url     = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${MANIFEST_PATH}`;
     let sha = null;
