@@ -235,6 +235,28 @@
     }
     .flash-cta a:hover { background: var(--rust); }
 
+    .flash-faq {
+      max-width: 720px;
+      margin: 3.5rem auto 0;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .faq-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      text-align: center;
+      margin-bottom: 1.6rem;
+      color: var(--bone);
+    }
+    .faq-item { margin-bottom: 1.3rem; }
+    .faq-q {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      color: var(--bone);
+      margin-bottom: 0.3rem;
+    }
+    .faq-a { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+
     /* Lightbox */
     .lightbox {
       display: none;
@@ -259,6 +281,54 @@
       .flash-grid { grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 10px; }
     }
   </style>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "O que é uma tatuagem flash?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Flash é um desenho de tatuagem pronto, já finalizado, que pode ser feito diretamente na pele sem passar por um processo de criação personalizada. É a opção mais rápida entre marcar um horário e sair tatuado."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Preciso agendar para fazer um flash?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sim, o atendimento é privativo e por horário marcado. Escolha o desenho no catálogo e chame no WhatsApp com o nome dele para combinar data e horário."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Dá para mudar o tamanho ou alguma parte do desenho de flash?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pequenos ajustes de tamanho são possíveis. Mudanças maiores de composição fogem do conceito de flash; nesse caso, o desenho pode servir de ponto de partida para um trabalho original."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quanto custa uma tatuagem flash?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "O valor varia conforme o tamanho do desenho e a região do corpo. Envie o nome do flash escolhido pelo WhatsApp para receber o orçamento."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Posso usar um desenho do catálogo como inspiração para uma tatuagem diferente?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sim. Muitos clientes usam um flash como ponto de partida e pedem alterações de estilo, cor ou composição para chegar a um resultado original."
+      }
+    }
+  ]
+}
+  </script>
 </head>
 <body>
 
@@ -868,6 +938,30 @@
   <img id="lightboxImg" src="" alt="" />
   <p class="lightbox-caption" id="lightboxCaption"></p>
 </div>
+
+  <div class="flash-faq">
+    <h2 class="faq-title">Dúvidas sobre o catálogo</h2>
+    <div class="faq-item">
+      <p class="faq-q">O que é uma tatuagem flash?</p>
+      <p class="faq-a">Flash é um desenho de tatuagem pronto, já finalizado, que pode ser feito diretamente na pele sem passar por um processo de criação personalizada. É a opção mais rápida entre marcar um horário e sair tatuado.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Preciso agendar para fazer um flash?</p>
+      <p class="faq-a">Sim, o atendimento é privativo e por horário marcado. Escolha o desenho no catálogo e chame no WhatsApp com o nome dele para combinar data e horário.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Dá para mudar o tamanho ou alguma parte do desenho de flash?</p>
+      <p class="faq-a">Pequenos ajustes de tamanho são possíveis. Mudanças maiores de composição fogem do conceito de flash; nesse caso, o desenho pode servir de ponto de partida para um trabalho original.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Quanto custa uma tatuagem flash?</p>
+      <p class="faq-a">O valor varia conforme o tamanho do desenho e a região do corpo. Envie o nome do flash escolhido pelo WhatsApp para receber o orçamento.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Posso usar um desenho do catálogo como inspiração para uma tatuagem diferente?</p>
+      <p class="faq-a">Sim. Muitos clientes usam um flash como ponto de partida e pedem alterações de estilo, cor ou composição para chegar a um resultado original.</p>
+    </div>
+  </div>
 
 <footer style="padding: 2rem; text-align: center; border-top: 1px solid var(--border); font-size: 0.85rem; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase;">
   <p>
