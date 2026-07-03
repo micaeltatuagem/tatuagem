@@ -111,7 +111,9 @@
     .nav-links a.destaque:hover { opacity: .8; }
 
     @media (max-width: 560px) {
-      .nav-links { gap: 1rem; }
+      .nav-logo { display: none; }
+      nav { justify-content: center; }
+      .nav-links { gap: 1rem; flex-wrap: wrap; justify-content: center; }
       .nav-links .hide-sm { display: none; }
     }
 
