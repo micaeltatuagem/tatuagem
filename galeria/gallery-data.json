@@ -1,5 +1,17 @@
 [
   {
+    "id": 46,
+    "filename": "1783100126046-tribal-organico.png",
+    "imageUrl": "galeria/1783100126046-tribal-organico.png",
+    "title": "Tribal orgânico",
+    "altText": "tribal organico",
+    "description": "",
+    "styles": [
+      "Organica"
+    ],
+    "date": "2026-07-03"
+  },
+  {
     "id": 1,
     "filename": "JimPhillipsSkaterGirl.webp",
     "imageUrl": "galeria/JimPhillipsSkaterGirl.webp",
