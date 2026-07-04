@@ -32,7 +32,9 @@
     "title": "Deuse Fiel",
     "altText": "Tatuagem flash de deuse fiel. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Escrita"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
