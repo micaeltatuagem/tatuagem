@@ -66,7 +66,10 @@
     "title": "Tubarao 8",
     "altText": "Tatuagem flash de tubarao 8. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Náutico",
+      "Animais"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
