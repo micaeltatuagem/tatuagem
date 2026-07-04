@@ -39,7 +39,9 @@
     "title": "Polvo Violoncelista",
     "altText": "Tatuagem flash de polvo violoncelista. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Dark Art"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
