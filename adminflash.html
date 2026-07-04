@@ -113,7 +113,7 @@
 
     /* GALLERY LIST */
     .gallery-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
-    .gallery-item { background: var(--deep); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .gallery-item { background: var(--deep); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; position: relative; }
     .gallery-item-image { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
     .gallery-item-info { padding: .8rem; }
     .gallery-item-title { font-size: .85rem; margin-bottom: .3rem; }
@@ -249,6 +249,21 @@
       <button class="btn btn-secondary" onclick="exportData()">⬇ Backup JSON</button>
       <label class="btn btn-secondary" style="cursor:pointer;">⬆ Restaurar JSON<input type="file" id="importFile" accept=".json" style="display:none;" onchange="importData(event)" /></label>
     </div>
+
+    <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;margin-bottom:.8rem;">
+      <label style="display:flex;align-items:center;gap:.4rem;font-size:.82rem;color:var(--muted);cursor:pointer;">
+        <input type="checkbox" id="selectAllCheck" onchange="toggleSelectAll(this.checked)" />
+        Selecionar todos
+      </label>
+      <span id="selectedCount" style="font-size:.78rem;color:var(--muted);"></span>
+    </div>
+
+    <div id="bulkTagBar" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem;margin-bottom:1rem;gap:.6rem;flex-wrap:wrap;align-items:center;">
+      <select id="bulkTagSelect" style="background:var(--surface);border:1px solid var(--border);border-radius:6px;color:var(--bone);padding:6px 10px;font-size:.85rem;"></select>
+      <button class="btn btn-primary" style="padding:.4rem .9rem;font-size:.8rem;" onclick="applyBulkTag('add')">+ Adicionar aos selecionados</button>
+      <button class="btn btn-secondary" style="padding:.4rem .9rem;font-size:.8rem;" onclick="applyBulkTag('remove')">− Remover dos selecionados</button>
+    </div>
+
     <div class="gallery-list" id="galleryList"></div>
   </div>
 </div>
@@ -281,6 +296,8 @@
   </div>
 </div>
 
+<div id="toastContainer" style="position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:.5rem;align-items:center;pointer-events:none;"></div>
+
 <script>
   // ── CONFIG ──
   const STORAGE_KEY = 'micaelFlash_v1';
@@ -303,6 +320,7 @@
   const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
   let GH_TOKEN = '';
+  const selectedIds = new Set();
 
   // ── TITULO A PARTIR DO NOME DO ARQUIVO (usado no upload em lote) ──
   function titleFromFilename(filename) {
@@ -398,6 +416,7 @@
     el.textContent = msg;
     el.className = `alert ${type} visible`;
     setTimeout(() => el.className = 'alert', 5000);
+    if (typeof showAlert === 'function') showAlert(type, msg);
   }
 
   // ── AUTO ALT ──
@@ -619,6 +638,7 @@
       await saveTags(tags);
       renderTagManager();
       renderTags();
+      showAlert('success', `✅ Tag "${tag}" removida.`);
     } catch (err) {
       showAlert('error', '⚠ Falhou ao remover a tag (' + err.message + '). Tente de novo.');
     }
@@ -644,6 +664,9 @@
     }
     container.innerHTML = gallery.map(img => `
       <div class="gallery-item">
+        <label style="position:absolute;margin:.4rem;background:rgba(0,0,0,.6);border-radius:4px;padding:2px 4px;z-index:2;">
+          <input type="checkbox" class="select-item-check" data-id="${img.id}" ${selectedIds.has(img.id)?'checked':''} onchange="toggleSelectItem(${img.id}, this.checked)" />
+        </label>
         <img src="${img.imageUrl || ''}" class="gallery-item-image" alt="${img.title}" loading="lazy" />
         <div class="gallery-item-info">
           <div class="gallery-item-title">${img.title}</div>
@@ -659,6 +682,60 @@
           </div>
         </div>
       </div>`).join('');
+    renderBulkTagSelect();
+    updateBulkBar();
+  }
+
+  // ── SELECAO EM MASSA ──
+  function toggleSelectItem(id, checked) {
+    if (checked) selectedIds.add(id); else selectedIds.delete(id);
+    updateBulkBar();
+  }
+
+  function toggleSelectAll(checked) {
+    const gallery = getGallery();
+    selectedIds.clear();
+    if (checked) gallery.forEach(img => selectedIds.add(img.id));
+    document.querySelectorAll('.select-item-check').forEach(cb => cb.checked = checked);
+    updateBulkBar();
+  }
+
+  function updateBulkBar() {
+    const bar = document.getElementById('bulkTagBar');
+    const countEl = document.getElementById('selectedCount');
+    const n = selectedIds.size;
+    countEl.textContent = n > 0 ? `${n} selecionado(s)` : '';
+    bar.style.display = n > 0 ? 'flex' : 'none';
+    const selectAllCheck = document.getElementById('selectAllCheck');
+    if (selectAllCheck) selectAllCheck.checked = n > 0 && n === getGallery().length;
+  }
+
+  function renderBulkTagSelect() {
+    const sel = document.getElementById('bulkTagSelect');
+    if (!sel) return;
+    const tags = getTags();
+    sel.innerHTML = tags.map(t => `<option value="${t}">${t}</option>`).join('');
+  }
+
+  async function applyBulkTag(mode) {
+    const tag = document.getElementById('bulkTagSelect').value;
+    if (!tag || !selectedIds.size) return;
+    const gallery = getGallery().map(img => {
+      if (!selectedIds.has(img.id)) return img;
+      let styles = img.styles || [];
+      if (mode === 'add' && !styles.includes(tag)) styles = [...styles, tag];
+      if (mode === 'remove') styles = styles.filter(s => s !== tag);
+      return { ...img, styles };
+    });
+    try {
+      await saveGallery(gallery);
+      renderGallery();
+      showAlert('success', mode === 'add'
+        ? `✅ Tag "${tag}" adicionada em ${selectedIds.size} flash(s).`
+        : `✅ Tag "${tag}" removida de ${selectedIds.size} flash(s).`);
+    } catch (err) {
+      showAlert('error', '⚠ Falhou ao aplicar em massa (' + err.message + '). Tente de novo.');
+    }
   }
 
   function updateStats() {
@@ -969,10 +1046,17 @@
 
   // ── ALERT ──
   function showAlert(type, msg) {
-    const el = document.getElementById('mainAlert');
-    el.textContent = msg;
-    el.className = `alert ${type} visible`;
-    setTimeout(() => el.className = 'alert', 4000);
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    const bg = type === 'success' ? '#1f6b3a' : (type === 'error' ? '#7a2020' : '#333');
+    toast.textContent = msg;
+    toast.style.cssText = `background:${bg};color:#f0e9dc;padding:.8rem 1.2rem;border-radius:8px;font-size:.88rem;max-width:90vw;box-shadow:0 4px 16px rgba(0,0,0,.4);pointer-events:auto;opacity:0;transition:opacity .25s ease;`;
+    container.appendChild(toast);
+    requestAnimationFrame(() => toast.style.opacity = '1');
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 300);
+    }, 4000);
   }
 </script>
 </body>
