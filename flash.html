@@ -135,25 +135,23 @@
     .flash-intro { text-align: center; max-width: 640px; margin: 0 auto 2.2rem; color: var(--muted); font-size: 0.98rem; }
     .flash-intro a { color: var(--bone); }
 
-    .flash-categories {
-      max-width: 720px;
-      margin: 0 auto 2.2rem;
-      font-size: 0.82rem;
-      color: var(--muted);
-      line-height: 1.6;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 1rem 0.5rem;
-    }
-    .flash-categories p { margin: 0.3rem 0; }
-    .flash-categories strong { color: var(--bone); font-family: 'Cormorant Garamond', serif; font-size: 0.95rem; }
-
     .flash-filters {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 0.6rem;
+      gap: 1.1rem;
       margin-bottom: 1.6rem;
+    }
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .filter-count {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.02em;
     }
     .filter-btn {
       background: transparent;
@@ -358,35 +356,37 @@
     Escolheu um? Chama no <a href="https://wa.me/5532999666946?text=Ol%C3%A1.+Vi+um+flash+no+site+e+quero+agendar" target="_blank" rel="noopener" onclick="gtag('event','click_whatsapp',{event_category:'cta',event_label:'flash'})">WhatsApp</a> com o nome do desenho.
   </p>
 
-  <div class="flash-categories">
-    <p><strong>Old School</strong> (80 desenhos). Inclui Adaga, Ampulheta, Andorinha 1, Andorinha 2, Andorinha 3, Bola 8, Bola de Cristal, Borboleta e outros.</p>
-    <p><strong>Dark Art</strong> (40 desenhos). Inclui Adaga, Ampulheta, Aranha, Bola de Cristal, Caveira, Caveira com Ossos, Caveira com Serpente, Caveira de Frente e outros.</p>
-    <p><strong>Religioso</strong> (14 desenhos). Inclui Anjinho, Bíblia, Cruz, Cruz INRI, Cálice, Espírito Santo, Jesus Cristo, Mão com Terço e outros.</p>
-    <p><strong>Náutico</strong> (28 desenhos). Inclui Andorinha 1, Andorinha 2, Andorinha 3, Caravela, Caravela 2, Farol, Farol 2, Lula 1 e outros.</p>
-    <p><strong>Animais</strong> (47 desenhos). Inclui Aranha, Borboleta, Dragão 1, Dragão 10, Dragão 11, Dragão 12, Dragão 2, Dragão 3 e outros.</p>
-  </div>
-
   <div class="flash-filters" id="flashFilters">
+    <div class="filter-group">
       <button class="filter-btn active" data-filter="all">Todos</button>
+      <span class="filter-count">139 desenhos</span>
+    </div>
+    <div class="filter-group">
       <button class="filter-btn" data-filter="Old School">Old School</button>
+      <span class="filter-count">80 desenhos</span>
+    </div>
+    <div class="filter-group">
       <button class="filter-btn" data-filter="Dark Art">Dark Art</button>
+      <span class="filter-count">40 desenhos</span>
+    </div>
+    <div class="filter-group">
       <button class="filter-btn" data-filter="Religioso">Religioso</button>
+      <span class="filter-count">14 desenhos</span>
+    </div>
+    <div class="filter-group">
       <button class="filter-btn" data-filter="Náutico">Náutico</button>
+      <span class="filter-count">28 desenhos</span>
+    </div>
+    <div class="filter-group">
       <button class="filter-btn" data-filter="Animais">Animais</button>
+      <span class="filter-count">47 desenhos</span>
+    </div>
   </div>
 
   <input type="text" id="flashSearch" class="flash-search" placeholder="Buscar (ex: águia, caveira, dragão...)" />
 
   <div class="flash-grid" id="flashGrid">
 <!-- FLASH_GRID_START -->
-      <figure class="flash-item" data-id="141" data-styles="Old School,Religioso">
-        <img src="flash/sagrado-coracao-jesus-1783127123603-0.webp" alt="Tatuagem flash de sagrado coracao jesus. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Sagrado Coração de Jesus</figcaption>
-      </figure>
-      <figure class="flash-item" data-id="140" data-styles="Old School,Náutico,Animais">
-        <img src="flash/concha-com-perola-1783099897721.webp" alt="Tatuagem flash de concha com pérola. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Concha com pérola</figcaption>
-      </figure>
       <figure class="flash-item" data-id="1" data-styles="Dark Art">
         <img src="flash/HangBones.webp" alt="Tatuagem flash de hang bones. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Hang Bones</figcaption>
@@ -1067,5 +1067,6 @@
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
 </script>
 
+<script src="flash-decor.js" defer></script>
 </body>
 </html>
