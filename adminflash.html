@@ -274,6 +274,12 @@
     <h3>Editar Flash</h3>
     <input type="hidden" id="editId" />
     <div class="form-group">
+      <label>Imagem atual</label>
+      <img id="editCurrentImg" src="" alt="" style="max-width:100%;max-height:160px;object-fit:contain;background:#f2ede2;border-radius:6px;padding:.5rem;display:block;margin-bottom:.5rem;" />
+      <input type="file" id="editImageFile" accept="image/*" />
+      <p style="font-size:.72rem;color:var(--muted);margin-top:.3rem;">Deixe em branco para manter a imagem atual.</p>
+    </div>
+    <div class="form-group">
       <label>Título</label>
       <input type="text" id="editTitle" />
     </div>
@@ -886,6 +892,9 @@
     const img = getGallery().find(i => i.id === id);
     if (!img) return;
     document.getElementById('editId').value          = id;
+    document.getElementById('editCurrentImg').src    = img.imageUrl || '';
+    document.getElementById('editCurrentImg').alt    = img.altText || '';
+    document.getElementById('editImageFile').value   = '';
     document.getElementById('editTitle').value       = img.title;
     document.getElementById('editAltText').value     = img.altText || '';
     document.getElementById('editDescription').value = img.description || '';
@@ -908,15 +917,36 @@
     const alt    = document.getElementById('editAltText').value.trim();
     const desc   = document.getElementById('editDescription').value;
     const styles = Array.from(document.querySelectorAll('#editTagsContainer input:checked')).map(cb=>cb.value);
+    const newFile = document.getElementById('editImageFile').files[0];
     if (!title) { alert('Título obrigatório.'); return; }
-    const gallery = getGallery().map(i => i.id===id ? {...i, title, altText:alt, description:desc, styles} : i);
+
+    const current = getGallery().find(i => i.id === id);
+    if (!current) return;
+
+    const btnSalvar = document.querySelector('#editModal .btn-primary');
+    btnSalvar.disabled = true;
+
     try {
+      let filename = current.filename;
+      let imageUrl = current.imageUrl;
+
+      if (newFile) {
+        btnSalvar.textContent = 'Enviando imagem...';
+        // Reaproveita o mesmo nome de arquivo -> substitui a imagem sem criar duplicata
+        imageUrl = await withRetry(() => uploadToGitHub(newFile, filename), 3, filename);
+      }
+
+      btnSalvar.textContent = 'Salvando...';
+      const gallery = getGallery().map(i => i.id===id ? {...i, title, altText:alt, description:desc, styles, filename, imageUrl} : i);
       await saveGallery(gallery);
       renderGallery();
       closeEditModal();
-      showAlert('success', '✅ Alterações salvas.');
+      showAlert('success', newFile ? '✅ Imagem substituída e alterações salvas.' : '✅ Alterações salvas.');
     } catch (err) {
-      showAlert('error', '⚠ Salvo localmente, mas falhou ao publicar no site (' + err.message + '). Tente salvar de novo.');
+      showAlert('error', '⚠ Falhou ao salvar (' + err.message + '). Tente de novo.');
+    } finally {
+      btnSalvar.disabled = false;
+      btnSalvar.textContent = 'Salvar';
     }
   }
 
