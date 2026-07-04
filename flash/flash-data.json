@@ -87,7 +87,9 @@
     "title": "Menos Medo Mais Coragem",
     "altText": "Tatuagem flash de menos medo mais coragem. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Escrita"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
