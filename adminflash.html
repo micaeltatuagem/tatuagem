@@ -515,6 +515,7 @@
     await commitFlashData(gallery);
     await commitManifest(gallery);
     await commitCatalogGrid(gallery);
+    await commitCatalogFilters(gallery, getTags());
   }
 
   async function seedFromRepo() {
@@ -535,6 +536,7 @@
   async function saveTags(tags) {
     localStorage.setItem(TAGS_KEY, JSON.stringify(tags));
     await commitTags(tags);
+    await commitCatalogFilters(getGallery(), tags);
   }
 
   async function seedTagsFromRepo() {
@@ -847,6 +849,41 @@
     const body = { message: 'Regenera grid do flash.html', content: newContent, sha: fileData.sha, branch: BRANCH };
     const putRes = await fetch(url, { method:'PUT', headers:{Authorization:`token ${GH_TOKEN}`,'Content-Type':'application/json'}, body:JSON.stringify(body) });
     if (!putRes.ok) { const e = await putRes.json(); throw new Error(e.message || 'Erro ao atualizar flash.html'); }
+  }
+
+  // ── COMMIT: regenera os botoes de filtro (com contagem) do flash.html ──
+  async function commitCatalogFilters(gallery, tags) {
+    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${CATALOG_PAGE}`;
+    const res = await fetch(url, { headers: { Authorization: `token ${GH_TOKEN}` } });
+    if (!res.ok) throw new Error('Não foi possível ler flash.html para atualizar os filtros.');
+    const fileData = await res.json();
+    const currentHtml = decodeURIComponent(escape(atob(fileData.content)));
+
+    const contar = (tag) => gallery.filter(i => (i.styles || []).includes(tag)).length;
+
+    let filtersHtml = `    <div class="filter-group">
+      <button class="filter-btn active" data-filter="all">Todos</button>
+      <span class="filter-count">${gallery.length} desenhos</span>
+    </div>\n`;
+    filtersHtml += tags.map(t => `    <div class="filter-group">
+      <button class="filter-btn" data-filter="${escapeHtml(t)}">${escapeHtml(t)}</button>
+      <span class="filter-count">${contar(t)} desenhos</span>
+    </div>`).join('\n');
+
+    const startMarker = '<!-- FLASH_FILTERS_START -->';
+    const endMarker    = '<!-- FLASH_FILTERS_END -->';
+    const startIdx = currentHtml.indexOf(startMarker);
+    const endIdx   = currentHtml.indexOf(endMarker);
+    if (startIdx === -1 || endIdx === -1) throw new Error('Marcadores dos filtros não encontrados em flash.html.');
+
+    const newHtml = currentHtml.slice(0, startIdx + startMarker.length)
+      + '\n' + filtersHtml + '\n'
+      + currentHtml.slice(endIdx);
+
+    const newContent = btoa(unescape(encodeURIComponent(newHtml)));
+    const body = { message: 'Regenera filtros do flash.html', content: newContent, sha: fileData.sha, branch: BRANCH };
+    const putRes2 = await fetch(url, { method:'PUT', headers:{Authorization:`token ${GH_TOKEN}`,'Content-Type':'application/json'}, body:JSON.stringify(body) });
+    if (!putRes2.ok) { const e = await putRes2.json(); throw new Error(e.message || 'Erro ao atualizar filtros do flash.html'); }
   }
 
   function escapeHtml(str) {
