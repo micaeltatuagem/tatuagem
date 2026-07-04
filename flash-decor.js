@@ -185,6 +185,7 @@
     if (path.includes('cadastro')) return ['header','section','main','footer'];
     if (path.includes('reserva'))  return ['header','section','main','footer'];
     if (path.includes('anamnese')) return ['header','section','main','footer'];
+    if (path.includes('flash'))    return ['header','section','main','footer'];
     // index / default
     return ['#hero','#sobre','#galeria','#processo','#faq','#promocoes','#contato'];
   }
