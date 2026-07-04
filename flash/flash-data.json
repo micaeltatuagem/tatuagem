@@ -43,7 +43,11 @@
     "title": "Iemanja",
     "altText": "Tatuagem flash de iemanja. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Escrita",
+      "Umbanda"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
