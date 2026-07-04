@@ -6,7 +6,9 @@
     "title": "Feita De Corageme Caos",
     "altText": "Tatuagem flash de feita de corageme caos. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Escrita"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
