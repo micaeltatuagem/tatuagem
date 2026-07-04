@@ -601,18 +601,27 @@
     const tags = getTags();
     if (tags.includes(val)) { input.value = ''; return; }
     tags.push(val);
-    await saveTags(tags);
-    renderTagManager();
-    renderTags();
-    input.value = '';
+    try {
+      await saveTags(tags);
+      renderTagManager();
+      renderTags();
+      input.value = '';
+      showAlert('success', `✅ Tag "${val}" adicionada.`);
+    } catch (err) {
+      showAlert('error', '⚠ Falhou ao salvar a tag (' + err.message + '). Tente de novo.');
+    }
   }
 
   async function deleteTag(tag) {
     if (!confirm(`Deletar tag "${tag}"?`)) return;
     const tags = getTags().filter(t => t !== tag);
-    await saveTags(tags);
-    renderTagManager();
-    renderTags();
+    try {
+      await saveTags(tags);
+      renderTagManager();
+      renderTags();
+    } catch (err) {
+      showAlert('error', '⚠ Falhou ao remover a tag (' + err.message + '). Tente de novo.');
+    }
   }
 
   async function commitTags(tags) {
@@ -754,8 +763,12 @@
 
   async function toggleDecor(id, value) {
     const gallery = getGallery().map(i => i.id === id ? { ...i, showInDecor: value } : i);
-    await saveGallery(gallery);
-    showAlert('success', value ? '✅ Agora aparece na decoração.' : '✅ Removido da decoração (continua no catálogo).');
+    try {
+      await saveGallery(gallery);
+      showAlert('success', value ? '✅ Agora aparece na decoração.' : '✅ Removido da decoração (continua no catálogo).');
+    } catch (err) {
+      showAlert('error', '⚠ Falhou ao salvar (' + err.message + '). Tente de novo.');
+    }
   }
 
   // ── DELETE IMAGE ──
@@ -781,10 +794,14 @@
     }
 
     const filtered = gallery.filter(i => i.id !== id);
-    await saveGallery(filtered);
-    renderGallery();
-    updateStats();
-    showAlert('success', '✅ Flash removido.');
+    try {
+      await saveGallery(filtered);
+      renderGallery();
+      updateStats();
+      showAlert('success', '✅ Flash removido.');
+    } catch (err) {
+      showAlert('error', '⚠ Imagem apagada, mas falhou ao atualizar o site (' + err.message + '). Recarregue e confira.');
+    }
   }
 
   // ── EDIT MODAL ──
@@ -816,10 +833,14 @@
     const styles = Array.from(document.querySelectorAll('#editTagsContainer input:checked')).map(cb=>cb.value);
     if (!title) { alert('Título obrigatório.'); return; }
     const gallery = getGallery().map(i => i.id===id ? {...i, title, altText:alt, description:desc, styles} : i);
-    await saveGallery(gallery);
-    renderGallery();
-    closeEditModal();
-    showAlert('success', '✅ Alterações salvas.');
+    try {
+      await saveGallery(gallery);
+      renderGallery();
+      closeEditModal();
+      showAlert('success', '✅ Alterações salvas.');
+    } catch (err) {
+      showAlert('error', '⚠ Salvo localmente, mas falhou ao publicar no site (' + err.message + '). Tente salvar de novo.');
+    }
   }
 
   // ── COMMIT: flash-data.json ──
