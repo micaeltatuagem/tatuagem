@@ -1,5 +1,71 @@
 [
   {
+    "id": 280,
+    "filename": "morte-4-1783190921600-0.webp",
+    "imageUrl": "flash/morte-4-1783190921600-0.webp",
+    "title": "Morte 4",
+    "altText": "Tatuagem flash de morte 4. Disponível na Micael Tatuagem, Muriaé MG.",
+    "description": "",
+    "styles": [],
+    "showInDecor": true,
+    "date": "2026-07-04"
+  },
+  {
+    "id": 281,
+    "filename": "ancora-1783190923265-1.webp",
+    "imageUrl": "flash/ancora-1783190923265-1.webp",
+    "title": "Ancora",
+    "altText": "Tatuagem flash de ancora. Disponível na Micael Tatuagem, Muriaé MG.",
+    "description": "",
+    "styles": [],
+    "showInDecor": true,
+    "date": "2026-07-04"
+  },
+  {
+    "id": 282,
+    "filename": "ancora-adaga-1783190924854-2.webp",
+    "imageUrl": "flash/ancora-adaga-1783190924854-2.webp",
+    "title": "Ancora Adaga",
+    "altText": "Tatuagem flash de ancora adaga. Disponível na Micael Tatuagem, Muriaé MG.",
+    "description": "",
+    "styles": [],
+    "showInDecor": true,
+    "date": "2026-07-04"
+  },
+  {
+    "id": 283,
+    "filename": "chapeu-bruxa-1783190926442-3.webp",
+    "imageUrl": "flash/chapeu-bruxa-1783190926442-3.webp",
+    "title": "Chapeu Bruxa",
+    "altText": "Tatuagem flash de chapeu bruxa. Disponível na Micael Tatuagem, Muriaé MG.",
+    "description": "",
+    "styles": [],
+    "showInDecor": true,
+    "date": "2026-07-04"
+  },
+  {
+    "id": 284,
+    "filename": "polvo-4-1783190927835-4.webp",
+    "imageUrl": "flash/polvo-4-1783190927835-4.webp",
+    "title": "Polvo 4",
+    "altText": "Tatuagem flash de polvo 4. Disponível na Micael Tatuagem, Muriaé MG.",
+    "description": "",
+    "styles": [],
+    "showInDecor": true,
+    "date": "2026-07-04"
+  },
+  {
+    "id": 285,
+    "filename": "tubarao-8-1783190929406-5.webp",
+    "imageUrl": "flash/tubarao-8-1783190929406-5.webp",
+    "title": "Tubarao 8",
+    "altText": "Tatuagem flash de tubarao 8. Disponível na Micael Tatuagem, Muriaé MG.",
+    "description": "",
+    "styles": [],
+    "showInDecor": true,
+    "date": "2026-07-04"
+  },
+  {
     "id": 244,
     "filename": "gratidao-1783190063739-0.webp",
     "imageUrl": "flash/gratidao-1783190063739-0.webp",
@@ -930,6 +996,17 @@
     "imageUrl": "flash/morte-5-1783170170950-41.webp",
     "title": "Morte 5",
     "altText": "Tatuagem flash de morte 5. Disponível na Micael Tatuagem, Muriaé MG.",
+    "description": "",
+    "styles": [],
+    "showInDecor": true,
+    "date": "2026-07-04"
+  },
+  {
+    "id": 185,
+    "filename": "morte-4-1783170172514-42.webp",
+    "imageUrl": "flash/morte-4-1783170172514-42.webp",
+    "title": "Morte 4",
+    "altText": "Tatuagem flash de morte 4. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
     "styles": [],
     "showInDecor": true,
