@@ -564,8 +564,7 @@
     localStorage.setItem(STORAGE_KEY, JSON.stringify(gallery));
     await withRetry(() => commitFlashData(gallery), 3, 'flash-data.json');
     await withRetry(() => commitManifest(gallery), 3, 'manifest.json');
-    await withRetry(() => commitCatalogGrid(gallery), 3, 'grid do flash.html');
-    await withRetry(() => commitCatalogFilters(gallery, getTags()), 3, 'filtros do flash.html');
+    await withRetry(() => commitCatalogPage(gallery, getTags()), 4, 'flash.html');
   }
 
   async function seedFromRepo() {
@@ -586,7 +585,7 @@
   async function saveTags(tags) {
     localStorage.setItem(TAGS_KEY, JSON.stringify(tags));
     await withRetry(() => commitTags(tags), 3, 'tags.json');
-    await withRetry(() => commitCatalogFilters(getGallery(), tags), 3, 'filtros do flash.html');
+    await withRetry(() => commitCatalogPage(getGallery(), tags), 4, 'flash.html');
   }
 
   async function seedTagsFromRepo() {
@@ -976,44 +975,29 @@
   }
 
   // ── COMMIT: regenera o grid estatico do flash.html (crawlable, sem depender de JS) ──
-  async function commitCatalogGrid(gallery) {
+  // ── COMMIT: regenera grid + filtros do flash.html numa unica leitura/escrita ──
+  async function commitCatalogPage(gallery, tags) {
     const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${CATALOG_PAGE}`;
     const res = await fetch(url, { headers: { Authorization: `token ${GH_TOKEN}` } });
     if (!res.ok) throw new Error('Não foi possível ler flash.html para atualizar.');
     const fileData = await res.json();
-    const currentHtml = decodeURIComponent(escape(atob(fileData.content)));
+    let html = decodeURIComponent(escape(atob(fileData.content)));
 
+    // Grid
     const gridHtml = gallery.map(img => `      <figure class="flash-item" data-id="${img.id}" data-styles="${(img.styles||[]).join(',')}">
         <img src="${img.imageUrl}" alt="${escapeHtml(img.altText || img.title)}" loading="lazy" />
         <figcaption>${escapeHtml(img.title)}</figcaption>
       </figure>`).join('\n');
 
-    const startMarker = '<!-- FLASH_GRID_START -->';
-    const endMarker    = '<!-- FLASH_GRID_END -->';
-    const startIdx = currentHtml.indexOf(startMarker);
-    const endIdx   = currentHtml.indexOf(endMarker);
-    if (startIdx === -1 || endIdx === -1) throw new Error('Marcadores do grid não encontrados em flash.html.');
+    const gStart = '<!-- FLASH_GRID_START -->';
+    const gEnd    = '<!-- FLASH_GRID_END -->';
+    const gStartIdx = html.indexOf(gStart);
+    const gEndIdx   = html.indexOf(gEnd);
+    if (gStartIdx === -1 || gEndIdx === -1) throw new Error('Marcadores do grid não encontrados em flash.html.');
+    html = html.slice(0, gStartIdx + gStart.length) + '\n' + gridHtml + '\n' + html.slice(gEndIdx);
 
-    const newHtml = currentHtml.slice(0, startIdx + startMarker.length)
-      + '\n' + gridHtml + '\n'
-      + currentHtml.slice(endIdx);
-
-    const newContent = btoa(unescape(encodeURIComponent(newHtml)));
-    const body = { message: 'Regenera grid do flash.html', content: newContent, sha: fileData.sha, branch: BRANCH };
-    const putRes = await fetch(url, { method:'PUT', headers:{Authorization:`token ${GH_TOKEN}`,'Content-Type':'application/json'}, body:JSON.stringify(body) });
-    if (!putRes.ok) { const e = await putRes.json(); throw new Error(e.message || 'Erro ao atualizar flash.html'); }
-  }
-
-  // ── COMMIT: regenera os botoes de filtro (com contagem) do flash.html ──
-  async function commitCatalogFilters(gallery, tags) {
-    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${CATALOG_PAGE}`;
-    const res = await fetch(url, { headers: { Authorization: `token ${GH_TOKEN}` } });
-    if (!res.ok) throw new Error('Não foi possível ler flash.html para atualizar os filtros.');
-    const fileData = await res.json();
-    const currentHtml = decodeURIComponent(escape(atob(fileData.content)));
-
+    // Filtros
     const contar = (tag) => gallery.filter(i => (i.styles || []).includes(tag)).length;
-
     let filtersHtml = `    <div class="filter-group">
       <button class="filter-btn active" data-filter="all">Todos</button>
       <span class="filter-count">${gallery.length} desenhos</span>
@@ -1023,20 +1007,17 @@
       <span class="filter-count">${contar(t)} desenhos</span>
     </div>`).join('\n');
 
-    const startMarker = '<!-- FLASH_FILTERS_START -->';
-    const endMarker    = '<!-- FLASH_FILTERS_END -->';
-    const startIdx = currentHtml.indexOf(startMarker);
-    const endIdx   = currentHtml.indexOf(endMarker);
-    if (startIdx === -1 || endIdx === -1) throw new Error('Marcadores dos filtros não encontrados em flash.html.');
+    const fStart = '<!-- FLASH_FILTERS_START -->';
+    const fEnd    = '<!-- FLASH_FILTERS_END -->';
+    const fStartIdx = html.indexOf(fStart);
+    const fEndIdx   = html.indexOf(fEnd);
+    if (fStartIdx === -1 || fEndIdx === -1) throw new Error('Marcadores dos filtros não encontrados em flash.html.');
+    html = html.slice(0, fStartIdx + fStart.length) + '\n' + filtersHtml + '\n' + html.slice(fEndIdx);
 
-    const newHtml = currentHtml.slice(0, startIdx + startMarker.length)
-      + '\n' + filtersHtml + '\n'
-      + currentHtml.slice(endIdx);
-
-    const newContent = btoa(unescape(encodeURIComponent(newHtml)));
-    const body = { message: 'Regenera filtros do flash.html', content: newContent, sha: fileData.sha, branch: BRANCH };
-    const putRes2 = await fetch(url, { method:'PUT', headers:{Authorization:`token ${GH_TOKEN}`,'Content-Type':'application/json'}, body:JSON.stringify(body) });
-    if (!putRes2.ok) { const e = await putRes2.json(); throw new Error(e.message || 'Erro ao atualizar filtros do flash.html'); }
+    const newContent = btoa(unescape(encodeURIComponent(html)));
+    const body = { message: 'Regenera catalogo flash.html (grid + filtros)', content: newContent, sha: fileData.sha, branch: BRANCH };
+    const putRes = await fetch(url, { method:'PUT', headers:{Authorization:`token ${GH_TOKEN}`,'Content-Type':'application/json'}, body:JSON.stringify(body) });
+    if (!putRes.ok) { const e = await putRes.json(); throw new Error(e.message || 'Erro ao atualizar flash.html'); }
   }
 
   function escapeHtml(str) {
