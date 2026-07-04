@@ -371,7 +371,17 @@
     txtEl.textContent = 'Salvando dados...';
 
     const merged = [...newItems, ...gallery];
-    await saveGallery(merged);
+    try {
+      await saveGallery(merged);
+    } catch (err) {
+      progEl.className = 'upload-progress';
+      btn.disabled = false;
+      showAlert2('bulkAlert', 'error',
+        `⚠ As ${ok} imagens foram enviadas, mas o salvamento final falhou (${err.message}). Tente clicar em "Enviar Todos" de novo sem selecionar arquivos — ou recarregue a página e confira a lista antes de repetir o upload, pra não duplicar.`);
+      renderGallery();
+      updateStats();
+      return;
+    }
 
     progEl.className = 'upload-progress';
     btn.disabled = false;
