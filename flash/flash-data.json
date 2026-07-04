@@ -30,7 +30,9 @@
     "title": "Foco Disciplina Constancia",
     "altText": "Tatuagem flash de foco disciplina constancia. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Escrita"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
