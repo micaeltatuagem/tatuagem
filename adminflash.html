@@ -349,7 +349,7 @@
         const slug  = title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
         const filename = `${slug}-${Date.now()}-${i}.${ext}`;
 
-        const imageUrl = await uploadToGitHub(file, filename);
+        const imageUrl = await withRetry(() => uploadToGitHub(file, filename), 3, file.name);
 
         newItems.push({
           id: nextId++, filename, imageUrl, title,
@@ -520,12 +520,27 @@
     catch { return []; }
   }
 
+  // Tenta de novo automaticamente em caso de falha transitoria (comum durante instabilidade do GitHub)
+  async function withRetry(fn, tentativas = 3, label = '') {
+    let lastErr;
+    for (let i = 1; i <= tentativas; i++) {
+      try {
+        return await fn();
+      } catch (err) {
+        lastErr = err;
+        console.warn(`Tentativa ${i}/${tentativas} falhou${label ? ' (' + label + ')' : ''}:`, err.message);
+        if (i < tentativas) await new Promise(r => setTimeout(r, 1000 * i));
+      }
+    }
+    throw lastErr;
+  }
+
   async function saveGallery(gallery) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(gallery));
-    await commitFlashData(gallery);
-    await commitManifest(gallery);
-    await commitCatalogGrid(gallery);
-    await commitCatalogFilters(gallery, getTags());
+    await withRetry(() => commitFlashData(gallery), 3, 'flash-data.json');
+    await withRetry(() => commitManifest(gallery), 3, 'manifest.json');
+    await withRetry(() => commitCatalogGrid(gallery), 3, 'grid do flash.html');
+    await withRetry(() => commitCatalogFilters(gallery, getTags()), 3, 'filtros do flash.html');
   }
 
   async function seedFromRepo() {
@@ -545,8 +560,8 @@
 
   async function saveTags(tags) {
     localStorage.setItem(TAGS_KEY, JSON.stringify(tags));
-    await commitTags(tags);
-    await commitCatalogFilters(getGallery(), tags);
+    await withRetry(() => commitTags(tags), 3, 'tags.json');
+    await withRetry(() => commitCatalogFilters(getGallery(), tags), 3, 'filtros do flash.html');
   }
 
   async function seedTagsFromRepo() {
