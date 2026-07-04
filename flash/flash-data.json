@@ -19,7 +19,9 @@
     "title": "Entregue Confie Aceite Agradeca",
     "altText": "Tatuagem flash de entregue confie aceite agradeca. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Escrita"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
