@@ -317,6 +317,7 @@
   const MANIFEST_PATH = `${IMAGE_FOLDER}/manifest.json`;
   const TAGS_PATH     = `${IMAGE_FOLDER}/tags.json`;
   const CATALOG_PAGE  = 'flash.html';
+  const SITEMAP_PATH  = 'sitemap.xml';
   const SITE_URL    = 'https://micaeltatuagem.github.io/tatuagem';
   const DEFAULT_TAGS = ['Old School', 'Dark Art', 'Religioso', 'Náutico', 'Animais'];
 
@@ -565,6 +566,12 @@
     await withRetry(() => commitFlashData(gallery), 3, 'flash-data.json');
     await withRetry(() => commitManifest(gallery), 3, 'manifest.json');
     await withRetry(() => commitCatalogPage(gallery, getTags()), 4, 'flash.html');
+    // sitemap.xml é so SEO auxiliar: tenta, mas nao trava o save principal se falhar
+    try {
+      await withRetry(() => commitSitemap(gallery), 3, 'sitemap.xml');
+    } catch (err) {
+      console.warn('Sitemap nao atualizado (nao critico):', err.message);
+    }
   }
 
   async function seedFromRepo() {
@@ -1025,6 +1032,39 @@
 
   function escapeHtml(str) {
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── COMMIT: sincroniza as entradas de imagem do flash.html no sitemap.xml (SEO/Google Imagens) ──
+  async function commitSitemap(gallery) {
+    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${SITEMAP_PATH}`;
+    const res = await fetch(url, { headers: { Authorization: `token ${GH_TOKEN}` } });
+    if (!res.ok) throw new Error('Não foi possível ler sitemap.xml.');
+    const fileData = await res.json();
+    let xml = decodeURIComponent(escape(atob(fileData.content)));
+
+    const startMarker = '<loc>https://micaeltatuagem.github.io/tatuagem/flash.html</loc>';
+    const startIdx = xml.indexOf(startMarker);
+    if (startIdx === -1) throw new Error('Entrada do flash.html não encontrada no sitemap.');
+    const blockEndIdx = xml.indexOf('</url>', startIdx);
+    if (blockEndIdx === -1) throw new Error('Fechamento </url> não encontrado no sitemap.');
+
+    const block = xml.slice(startIdx, blockEndIdx);
+    const firstImageIdx = block.indexOf('<image:image>');
+    const header = firstImageIdx !== -1 ? block.slice(0, firstImageIdx) : block;
+
+    const imagesXml = gallery.map(it => `      <image:image>
+        <image:loc>https://micaeltatuagem.github.io/tatuagem/${it.imageUrl}</image:loc>
+        <image:title>Tatuagem Flash ${escapeHtml(it.title)}</image:title>
+        <image:caption>${escapeHtml(it.altText || it.title)}</image:caption>
+      </image:image>`).join('\n');
+
+    const newBlock = header + imagesXml + '\n  ';
+    xml = xml.slice(0, startIdx) + newBlock + xml.slice(blockEndIdx);
+
+    const newContent = btoa(unescape(encodeURIComponent(xml)));
+    const body = { message: 'Sincroniza sitemap.xml com o catalogo de flash', content: newContent, sha: fileData.sha, branch: BRANCH };
+    const putRes = await fetch(url, { method:'PUT', headers:{Authorization:`token ${GH_TOKEN}`,'Content-Type':'application/json'}, body:JSON.stringify(body) });
+    if (!putRes.ok) { const e = await putRes.json(); throw new Error(e.message || 'Erro ao atualizar sitemap.xml'); }
   }
 
   // ── EXPORT / IMPORT ──
