@@ -945,10 +945,13 @@
     "id": 149,
     "filename": "sagrado-coracao-jesus-1783170112896-6.webp",
     "imageUrl": "flash/sagrado-coracao-jesus-1783170112896-6.webp",
-    "title": "Sagrado Coracao Jesus",
-    "altText": "Tatuagem flash de sagrado coracao jesus. Disponível na Micael Tatuagem, Muriaé MG.",
+    "title": "Sagrado Coração de Jesus",
+    "altText": "Tatuagem flash de Sagrado Coração de Jesus. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Cristão"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
