@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preview de Tatuagem — Micael Tatuagem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0d0d0d;
+    --ink-soft:#161514;
+    --paper:#ece4d3;
+    --paper-dim:#d9cfb8;
+    --crimson:#a11d2b;
+    --crimson-bright:#c93042;
+    --gold:#b9922f;
+    --line:#3a352c;
+    --text-dim:#948d7d;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse at top, #1a1815 0%, var(--ink) 55%),
+      var(--ink);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    padding:32px 16px 64px;
+  }
+  .wrap{max-width:1180px;margin:0 auto;}
+
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='50'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+    opacity:0.035;
+    pointer-events:none;
+    z-index:9999;
+  }
+
+  header{
+    text-align:center;
+    margin-bottom:36px;
+    padding-bottom:24px;
+    border-bottom:1px solid var(--line);
+  }
+  header .eyebrow{
+    font-family:'Oswald',sans-serif;
+    font-size:12px;
+    letter-spacing:.35em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:10px;
+  }
+  header h1{
+    font-family:'Oswald',sans-serif;
+    font-weight:600;
+    font-size:clamp(28px,5vw,46px);
+    letter-spacing:.02em;
+    margin:0 0 8px;
+    text-transform:uppercase;
+  }
+  header p{
+    color:var(--text-dim);
+    font-size:14.5px;
+    max-width:520px;
+    margin:0 auto;
+    line-height:1.5;
+  }
+
+  .stage{
+    display:grid;
+    grid-template-columns:320px 1fr;
+    gap:24px;
+  }
+  @media (max-width:860px){
+    .stage{grid-template-columns:1fr;}
+  }
+
+  /* ---- Flash sheet panel ---- */
+  .flash-panel{
+    background:var(--paper);
+    color:#1b1710;
+    border-radius:4px;
+    padding:18px;
+    position:relative;
+    box-shadow:0 20px 40px -20px rgba(0,0,0,.6);
+    background-image:
+      linear-gradient(var(--paper-dim) 1px, transparent 1px),
+      linear-gradient(90deg, var(--paper-dim) 1px, transparent 1px);
+    background-size:22px 22px;
+  }
+  .flash-panel::before{
+    content:'';
+    position:absolute; inset:8px;
+    border:1px solid rgba(27,23,16,.35);
+    pointer-events:none;
+  }
+  .flash-panel h2{
+    font-family:'Oswald',sans-serif;
+    font-size:13px;
+    letter-spacing:.25em;
+    text-transform:uppercase;
+    margin:0 0 4px;
+  }
+  .flash-panel .sub{
+    font-size:11.5px;
+    color:#6b6250;
+    margin-bottom:14px;
+  }
+  .flash-source-row{
+    display:flex; gap:6px; margin-bottom:14px;
+  }
+  .flash-source-row input{
+    flex:1;
+    font-family:'Inter',sans-serif;
+    font-size:11.5px;
+    padding:7px 8px;
+    border:1px solid #b9ac8c;
+    border-radius:2px;
+    background:#fbf8f1;
+    color:#3a3327;
+  }
+  .flash-source-row button{
+    font-family:'Oswald',sans-serif;
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    padding:7px 10px;
+    border:1px solid #1b1710;
+    background:#1b1710;
+    color:var(--paper);
+    border-radius:2px;
+    cursor:pointer;
+  }
+  .flash-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    max-height:520px;
+    overflow-y:auto;
+    padding-right:2px;
+  }
+  .flash-grid::-webkit-scrollbar{width:6px;}
+  .flash-grid::-webkit-scrollbar-thumb{background:#b9ac8c;border-radius:3px;}
+
+  .flash-item{
+    aspect-ratio:1;
+    background:#fbf8f1;
+    border:1px solid #c8bb9a;
+    border-radius:2px;
+    padding:5px;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+    transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+  }
+  .flash-item:hover{transform:translateY(-2px); border-color:var(--crimson);}
+  .flash-item.selected{
+    border-color:var(--crimson);
+    box-shadow:0 0 0 2px var(--crimson);
+  }
+  .flash-item img{max-width:100%; max-height:100%; object-fit:contain; filter:contrast(1.05);}
+  .flash-item .num{
+    position:absolute; top:2px; left:4px;
+    font-family:'Oswald',sans-serif;
+    font-size:9px; color:#8a7f66;
+  }
+  .upload-flash{
+    aspect-ratio:1;
+    border:1.5px dashed #b9ac8c;
+    border-radius:2px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    cursor:pointer; text-align:center; gap:4px;
+    font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:.05em;
+    color:#6b6250;
+  }
+  .upload-flash:hover{border-color:var(--crimson); color:var(--crimson);}
+
+  /* ---- Canvas / preview panel ---- */
+  .preview-panel{
+    background:var(--ink-soft);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .canvas-shell{
+    position:relative;
+    width:100%;
+    aspect-ratio:4/5;
+    background:#0a0a09
+      repeating-conic-gradient(#141311 0% 25%, #0d0c0a 0% 50%) 50% / 20px 20px;
+    border:1px solid var(--line);
+    border-radius:3px;
+    overflow:hidden;
+    touch-action:none;
+  }
+  .canvas-shell .empty-state{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:10px; color:var(--text-dim); text-align:center; padding:20px;
+  }
+  .canvas-shell .empty-state svg{opacity:.5;}
+  .canvas-shell .empty-state b{
+    font-family:'Oswald',sans-serif; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--paper); font-size:13px; font-weight:500;
+  }
+  .canvas-shell .empty-state span{font-size:12.5px; max-width:260px;}
+
+  #baseImg{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
+    display:none;
+  }
+  #layersContainer{ position:absolute; inset:0; }
+  .overlay-layer{
+    position:absolute; top:50%; left:50%;
+    width:160px; height:160px;
+    cursor:grab;
+    touch-action:none;
+  }
+  .overlay-layer.dragging{cursor:grabbing;}
+  .overlay-layer.selected-layer::after{
+    content:''; position:absolute; inset:-4px;
+    border:1.5px dashed var(--gold); border-radius:6px; pointer-events:none;
+  }
+  .overlay-img{
+    width:100%; height:100%; object-fit:contain;
+    pointer-events:none;
+  }
+  .overlay-layer .handle{
+    position:absolute; width:16px; height:16px;
+    background:var(--crimson-bright); border:2px solid #fff;
+    border-radius:50%; bottom:-8px; right:-8px; cursor:nwse-resize;
+  }
+  .overlay-layer .rot{
+    position:absolute; width:14px; height:14px;
+    background:var(--gold); border:2px solid #fff;
+    border-radius:50%; top:-8px; left:50%; margin-left:-7px; cursor:grab;
+  }
+  .overlay-layer .del{
+    position:absolute; width:16px; height:16px;
+    background:#1a1a1a; border:2px solid #fff;
+    border-radius:50%; top:-8px; right:-8px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-size:10px; line-height:1; color:#fff;
+  }
+
+  .layers-panel{
+    border-top:1px solid var(--line);
+    padding-top:14px;
+  }
+  .layers-panel-label{
+    font-family:'Oswald',sans-serif; font-size:10.5px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--text-dim); margin-bottom:10px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .layer-thumbs{
+    display:flex; gap:10px; overflow-x:auto; padding-bottom:4px;
+  }
+  .layer-thumbs::-webkit-scrollbar{height:5px;}
+  .layer-thumbs::-webkit-scrollbar-thumb{background:var(--line); border-radius:3px;}
+  .layer-thumb{
+    flex:0 0 auto; width:56px; height:56px; position:relative;
+    border-radius:3px; border:1px solid var(--line); background:#1a1917;
+    overflow:visible; cursor:pointer;
+  }
+  .layer-thumb img{ width:100%; height:100%; object-fit:contain; padding:4px; box-sizing:border-box; }
+  .layer-thumb.active{ border-color:var(--gold); box-shadow:0 0 0 2px var(--gold); }
+  .layer-thumb .layer-remove{
+    position:absolute; top:-6px; right:-6px; width:16px; height:16px;
+    background:var(--crimson); border:2px solid var(--ink-soft); border-radius:50%;
+    color:#fff; font-size:10px; line-height:1; display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+  }
+  .layer-thumbs-empty{
+    font-family:'Inter',sans-serif; font-size:12px; color:var(--text-dim);
+  }
+
+  .upload-row{
+    display:flex; gap:10px; flex-wrap:wrap;
+  }
+
+  .base-picker{
+    border-top:1px solid var(--line);
+    padding-top:14px;
+  }
+  .base-picker-label{
+    font-family:'Oswald',sans-serif; font-size:10.5px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--text-dim); margin-bottom:10px;
+  }
+  .gender-toggle{
+    display:inline-flex; border:1px solid var(--line); border-radius:999px;
+    padding:3px; margin-bottom:12px; gap:2px;
+  }
+  .gender-btn{
+    font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:.06em;
+    text-transform:uppercase; padding:6px 16px; border-radius:999px;
+    border:none; background:transparent; color:var(--text-dim); cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+  }
+  .gender-btn.active{ background:var(--crimson); color:#fff; }
+  .base-thumbs{
+    display:flex; gap:10px; overflow-x:auto; padding-bottom:4px;
+  }
+  .base-thumbs::-webkit-scrollbar{height:5px;}
+  .base-thumbs::-webkit-scrollbar-thumb{background:var(--line); border-radius:3px;}
+  .base-thumb{
+    flex:0 0 auto; width:64px; height:90px;
+    border-radius:3px; border:1px solid var(--line);
+    overflow:hidden; cursor:pointer; position:relative;
+    transition:border-color .15s ease, transform .12s ease;
+  }
+  .base-thumb:hover{ transform:translateY(-2px); border-color:var(--gold); }
+  .base-thumb.selected{ border-color:var(--crimson-bright); box-shadow:0 0 0 2px var(--crimson-bright); }
+  .base-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .base-thumb-empty{
+    flex:0 0 auto; width:64px; height:90px;
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    border:1px dashed var(--line); border-radius:3px;
+    font-family:'Inter',sans-serif; font-size:9.5px; color:var(--text-dim); padding:4px;
+  }
+  .btn{
+    font-family:'Oswald',sans-serif;
+    font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+    padding:11px 16px;
+    border-radius:2px;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--paper);
+    cursor:pointer;
+    display:inline-flex; align-items:center; gap:8px;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .btn:hover{border-color:var(--gold); color:var(--gold);}
+  .btn.primary{
+    background:var(--crimson); border-color:var(--crimson); color:#fff;
+  }
+  .btn.primary:hover{background:var(--crimson-bright); border-color:var(--crimson-bright); color:#fff;}
+  .btn:disabled{opacity:.35; cursor:not-allowed;}
+  input[type=file]{display:none;}
+
+  .controls{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:16px;
+    padding-top:6px;
+    border-top:1px solid var(--line);
+  }
+  .control label{
+    display:flex; justify-content:space-between;
+    font-family:'Oswald',sans-serif; font-size:10.5px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--text-dim); margin-bottom:6px;
+  }
+  .control label span{color:var(--gold);}
+  input[type=range]{
+    width:100%; accent-color:var(--crimson-bright);
+  }
+  select{
+    width:100%; background:var(--ink); color:var(--paper);
+    border:1px solid var(--line); border-radius:2px; padding:6px 8px;
+    font-family:'Inter',sans-serif; font-size:12.5px;
+  }
+
+  footer{
+    text-align:center; margin-top:28px; font-size:11px; color:var(--text-dim);
+    letter-spacing:.03em;
+  }
+  footer b{color:var(--gold); font-family:'Oswald',sans-serif; letter-spacing:.1em;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Simulador de Tatuagem</div>
+    <h1>Veja antes de fechar</h1>
+    <p>Envie uma foto da região do corpo, escolha uma ou várias flashes e ajuste posição, tamanho e rotação de cada uma para visualizar como a composição pode ficar sobre a sua pele — ótimo pra montar ideia de manga.</p>
+  </header>
+
+  <section class="stage">
+
+    <!-- FLASH SHEET PICKER -->
+    <div class="flash-panel">
+      <h2>Flashes disponíveis</h2>
+      <div class="sub">Toque em um desenho para adicionar como nova camada — dá pra combinar várias</div>
+
+      <div class="flash-source-row">
+        <input id="searchFlash" type="text" placeholder="Buscar flash (ex: águia, caveira, rosa)">
+      </div>
+
+      <details style="margin-bottom:12px;">
+        <summary style="font-family:'Oswald',sans-serif; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#8a7f66; cursor:pointer;">Carregar de outra fonte (avançado)</summary>
+        <div class="flash-source-row" style="margin-top:8px;">
+          <input id="jsonUrl" type="text" placeholder="URL de um JSON [{ &quot;src&quot;: ... }]">
+          <button id="loadJsonBtn">Carregar</button>
+        </div>
+      </details>
+
+      <div class="flash-grid" id="flashGrid">
+        <!-- itens inseridos via JS -->
+        <label class="upload-flash">
+          + Enviar flash
+          <input type="file" id="customFlashInput" accept="image/*">
+        </label>
+      </div>
+    </div>
+
+    <!-- CANVAS -->
+    <div class="preview-panel">
+
+      <div class="canvas-shell" id="canvasShell">
+        <div class="empty-state" id="emptyState">
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#948d7d" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="1.5"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 16l-5-5-4 4-3-3-4 4"/></svg>
+          <b>Nenhuma foto enviada</b>
+          <span>Envie a foto da região do corpo para começar o preview</span>
+        </div>
+        <figure style="margin:0;">
+          <img id="baseImg" alt="Foto do corpo">
+        </figure>
+        <div id="layersContainer"></div>
+      </div>
+
+      <div class="layers-panel">
+        <div class="layers-panel-label">
+          <span>Camadas aplicadas (toque pra editar cada uma)</span>
+        </div>
+        <div class="layer-thumbs" id="layerThumbs">
+          <span class="layer-thumbs-empty">Escolha flashes ao lado — cada uma vira uma camada, dá pra combinar várias pra montar uma manga</span>
+        </div>
+      </div>
+
+      <div class="upload-row">
+        <button class="btn primary" id="uploadBtn">Enviar foto do corpo</button>
+        <input type="file" id="bodyPhotoInput" accept="image/*" capture="environment">
+        <button class="btn" id="resetBtn">Reiniciar</button>
+        <button class="btn" id="downloadBtn" disabled>Baixar preview</button>
+      </div>
+
+      <div class="base-picker">
+        <div class="base-picker-label">ou escolha uma base de corpo pronta</div>
+        <div class="gender-toggle" id="genderToggle">
+          <button class="gender-btn active" data-gender="masculino">Masculino</button>
+          <button class="gender-btn" data-gender="feminino">Feminino</button>
+        </div>
+        <div class="base-thumbs" id="baseThumbs"></div>
+      </div>
+
+      <div class="controls-label" id="activeLayerLabel" style="font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--gold); margin-top:4px;">Nenhuma camada selecionada</div>
+      <div class="controls">
+        <div class="control">
+          <label>Opacidade <span id="opacityVal">85%</span></label>
+          <input type="range" id="opacityRange" min="20" max="100" value="85">
+        </div>
+        <div class="control">
+          <label>Mesclagem</label>
+          <select id="blendMode">
+            <option value="multiply" selected>Realista (pele)</option>
+            <option value="normal">Normal</option>
+            <option value="darken">Escurecer</option>
+            <option value="soft-light">Suave</option>
+          </select>
+        </div>
+        <div class="control">
+          <label>Escala <span id="scaleVal">100%</span></label>
+          <input type="range" id="scaleRange" min="20" max="300" value="100">
+        </div>
+        <div class="control">
+          <label>Rotação <span id="rotVal">0°</span></label>
+          <input type="range" id="rotRange" min="-180" max="180" value="0">
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>Preview simulado — o resultado final pode variar conforme técnica, curvatura do corpo e cicatrização · <b>Micael Tatuagem</b></footer>
+</div>
+
+<script>
+(function(){
+  const flashGrid = document.getElementById('flashGrid');
+  const uploadFlashInput = document.getElementById('customFlashInput');
+  const jsonUrlInput = document.getElementById('jsonUrl');
+  const loadJsonBtn = document.getElementById('loadJsonBtn');
+
+  const bodyPhotoInput = document.getElementById('bodyPhotoInput');
+  const uploadBtn = document.getElementById('uploadBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+
+  const canvasShell = document.getElementById('canvasShell');
+  const emptyState = document.getElementById('emptyState');
+  const baseImg = document.getElementById('baseImg');
+  const layersContainer = document.getElementById('layersContainer');
+  const layerThumbs = document.getElementById('layerThumbs');
+  const activeLayerLabel = document.getElementById('activeLayerLabel');
+
+  const opacityRange = document.getElementById('opacityRange');
+  const opacityVal = document.getElementById('opacityVal');
+  const blendMode = document.getElementById('blendMode');
+  const scaleRange = document.getElementById('scaleRange');
+  const scaleVal = document.getElementById('scaleVal');
+  const rotRange = document.getElementById('rotRange');
+  const rotVal = document.getElementById('rotVal');
+
+  // ---------- Flashes carregadas diretamente da pasta /flash do repositório ----------
+  // Caminhos relativos: este arquivo deve ficar na RAIZ do repositório (mesmo nível de flash.html),
+  // assim como todas as páginas do site, para que "flash/nome.webp" resolva corretamente.
+  // Gerado a partir do conteúdo atual da pasta /flash (310 imagens).
+  const allFlashes = [
+    {src:'flash/HangBones.webp', nome:'Hangbones'},
+    {src:'flash/a-fe-moveo-axe-transformaa-umbanda-cura-1783201262090-19.webp', nome:'A fe moveo axe transformaa umbanda cura'},
+    {src:'flash/adaga.webp', nome:'Adaga'},
+    {src:'flash/agradecer-transforma-1783190105104-28.webp', nome:'Agradecer transforma'},
+    {src:'flash/aguia-4-1783170185485-50.webp', nome:'Aguia 4'},
+    {src:'flash/aguia1.webp', nome:'Aguia 1'},
+    {src:'flash/aguia2.webp', nome:'Aguia 2'},
+    {src:'flash/aguia3.webp', nome:'Aguia 3'},
+    {src:'flash/alfinete-seguranca-1783170227750-77.webp', nome:'Alfinete seguranca'},
+    {src:'flash/ampulheta-2-1783170126132-13.webp', nome:'Ampulheta 2'},
+    {src:'flash/ampulheta-caveira-1783170127826-14.webp', nome:'Ampulheta caveira'},
+    {src:'flash/ampulheta.webp', nome:'Ampulheta'},
+    {src:'flash/ancora-1783190923265-1.webp', nome:'Ancora'},
+    {src:'flash/ancora-4-1783170188707-52.webp', nome:'Ancora 4'},
+    {src:'flash/ancora-adaga-1783190924854-2.webp', nome:'Ancora adaga'},
+    {src:'flash/ancora-hope-1783170129466-15.webp', nome:'Ancora hope'},
+    {src:'flash/ancora1.webp', nome:'Ancora 1'},
+    {src:'flash/ancora2.webp', nome:'Ancora 2'},
+    {src:'flash/ancora3.webp', nome:'Ancora 3'},
+    {src:'flash/andorinha-4-1783170183855-49.webp', nome:'Andorinha 4'},
+    {src:'flash/andorinha1.webp', nome:'Andorinha 1'},
+    {src:'flash/andorinha2.webp', nome:'Andorinha 2'},
+    {src:'flash/andorinha3.webp', nome:'Andorinha 3'},
+    {src:'flash/anjinho.webp', nome:'Anjinho'},
+    {src:'flash/aquietaivose-sabei-que-eu-sou-deus-1783190089627-18.webp', nome:'Aquietaivose sabei que eu sou deus'},
+    {src:'flash/aranha-cruz-1783170204845-62.webp', nome:'Aranha cruz'},
+    {src:'flash/aranha-teia-1783170229224-78.webp', nome:'Aranha teia'},
+    {src:'flash/aranha.webp', nome:'Aranha'},
+    {src:'flash/axe-que-vem-de-fe-nao-se-acaba-jamais-1783201260618-18.webp', nome:'Axe que vem de fe nao se acaba jamais'},
+    {src:'flash/axee-forcae-luze-protecaoe-umbanda-1783201246452-9.webp', nome:'Axee forcae luze protecaoe umbanda'},
+    {src:'flash/biblia.webp', nome:'Biblia'},
+    {src:'flash/bola-oito-1783170218735-71.webp', nome:'Bola oito'},
+    {src:'flash/bola-oito-2-1783170177651-45.webp', nome:'Bola oito 2'},
+    {src:'flash/bola8.webp', nome:'Bola 8'},
+    {src:'flash/bolaCristal.webp', nome:'Bolacristal'},
+    {src:'flash/borboleta.webp', nome:'Borboleta'},
+    {src:'flash/bota.webp', nome:'Bota'},
+    {src:'flash/breathe-1783201256233-15.webp', nome:'Breathe'},
+    {src:'flash/buldogue-1783170190358-53.webp', nome:'Buldogue'},
+    {src:'flash/bussola-1783170144160-24.webp', nome:'Bussola'},
+    {src:'flash/caixao-1783170132686-17.webp', nome:'Caixao'},
+    {src:'flash/caldeirao-1783170237217-83.webp', nome:'Caldeirao'},
+    {src:'flash/calice-2-1783170247948-90.webp', nome:'Calice 2'},
+    {src:'flash/calice.webp', nome:'Calice'},
+    {src:'flash/caravela-3-1783170137450-20.webp', nome:'Caravela 3'},
+    {src:'flash/caravela-4-1783170131054-16.webp', nome:'Caravela 4'},
+    {src:'flash/caravela.webp', nome:'Caravela'},
+    {src:'flash/caravela2.webp', nome:'Caravela 2'},
+    {src:'flash/cartas.webp', nome:'Cartas'},
+    {src:'flash/cavalo-marinho-1783170135842-19.webp', nome:'Cavalo marinho'},
+    {src:'flash/caveira-adaga-1783170195311-56.webp', nome:'Caveira adaga'},
+    {src:'flash/caveira-asas-1783170150613-28.webp', nome:'Caveira asas'},
+    {src:'flash/caveira-capacete-1783170209409-65.webp', nome:'Caveira capacete'},
+    {src:'flash/caveira-flamejante-1783170152198-29.webp', nome:'Caveira flamejante'},
+    {src:'flash/caveira-punk-1783170232431-80.webp', nome:'Caveira punk'},
+    {src:'flash/caveira-violinista-1783170114747-7.webp', nome:'Caveira violinista'},
+    {src:'flash/caveira-violinista-2-1783170109420-4.webp', nome:'Caveira violinista 2'},
+    {src:'flash/caveira.webp', nome:'Caveira'},
+    {src:'flash/caveira3quartos.webp', nome:'Caveira3quartos'},
+    {src:'flash/caveiraChamas.webp', nome:'Caveirachamas'},
+    {src:'flash/caveiraDireita.webp', nome:'Caveiradireita'},
+    {src:'flash/caveiraEsquerda.webp', nome:'Caveiraesquerda'},
+    {src:'flash/caveiraFrontal.webp', nome:'Caveirafrontal'},
+    {src:'flash/caveiraOssos.webp', nome:'Caveiraossos'},
+    {src:'flash/caveiraSerpente.webp', nome:'Caveiraserpente'},
+    {src:'flash/chapeu-bruxa-1783190926442-3.webp', nome:'Chapeu bruxa'},
+    {src:'flash/chapeu.webp', nome:'Chapeu'},
+    {src:'flash/cigana1.webp', nome:'Cigana 1'},
+    {src:'flash/cigana2.webp', nome:'Cigana 2'},
+    {src:'flash/cigana3.webp', nome:'Cigana 3'},
+    {src:'flash/clown.webp', nome:'Clown'},
+    {src:'flash/cogumelos-1783170253063-93.webp', nome:'Cogumelos'},
+    {src:'flash/com-fe-axee-protecao-1783201235421-2.webp', nome:'Com fe axee protecao'},
+    {src:'flash/com-umbanda-nao-se-brinca-se-trabalha-com-fee-respeito-1783201257651-16.webp', nome:'Com umbanda nao se brinca se trabalha com fee respeito'},
+    {src:'flash/concha-com-perola-1783099897721.webp', nome:'Concha com perola 1783099897721'},
+    {src:'flash/concha-perola-1783170122890-11.webp', nome:'Concha perola'},
+    {src:'flash/coracao-adaga-hardcore-1783170179154-46.webp', nome:'Coracao adaga hardcore'},
+    {src:'flash/coracao-caveira-1783170104137-1.webp', nome:'Coracao caveira'},
+    {src:'flash/coracao-punk-1783170224901-75.webp', nome:'Coracao punk'},
+    {src:'flash/coracao.webp', nome:'Coracao'},
+    {src:'flash/coracaoAdaga.webp', nome:'Coracaoadaga'},
+    {src:'flash/coracaoPartido.webp', nome:'Coracaopartido'},
+    {src:'flash/coragem-1783190082380-13.webp', nome:'Coragem'},
+    {src:'flash/cruz.webp', nome:'Cruz'},
+    {src:'flash/cruzInri.webp', nome:'Cruzinri'},
+    {src:'flash/dados.webp', nome:'Dados'},
+    {src:'flash/dados2.webp', nome:'Dados 2'},
+    {src:'flash/demonio-violinista-1783170119022-9.webp', nome:'Demonio violinista'},
+    {src:'flash/deus-cuida-de-mim-1783190115371-35.webp', nome:'Deus cuida de mim'},
+    {src:'flash/deus-no-comando-1783174743603-0.webp', nome:'Deus no comando'},
+    {src:'flash/deuse-fiel-1783174746946-2.webp', nome:'Deuse fiel'},
+    {src:'flash/disciplina-gera-liberdade-1783201269911-24.webp', nome:'Disciplina gera liberdade'},
+    {src:'flash/dracula-1783170198559-58.webp', nome:'Dracula'},
+    {src:'flash/dragao1.webp', nome:'Dragao 1'},
+    {src:'flash/dragao10.webp', nome:'Dragao 10'},
+    {src:'flash/dragao11.webp', nome:'Dragao 11'},
+    {src:'flash/dragao12.webp', nome:'Dragao 12'},
+    {src:'flash/dragao2.webp', nome:'Dragao 2'},
+    {src:'flash/dragao3.webp', nome:'Dragao 3'},
+    {src:'flash/dragao4.webp', nome:'Dragao 4'},
+    {src:'flash/dragao5.webp', nome:'Dragao 5'},
+    {src:'flash/dragao6.webp', nome:'Dragao 6'},
+    {src:'flash/dragao7.webp', nome:'Dragao 7'},
+    {src:'flash/dragao8.webp', nome:'Dragao 8'},
+    {src:'flash/dragao9.webp', nome:'Dragao 9'},
+    {src:'flash/ela-acreditou-que-podia-entao-foi-lae-fez-1783190101778-26.webp', nome:'Ela acreditou que podia entao foi lae fez'},
+    {src:'flash/ele-transforma-choro-em-sorrisoe-dor-em-forca-1783190088101-17.webp', nome:'Ele transforma choro em sorrisoe dor em forca'},
+    {src:'flash/entregue-confie-aceite-agradeca-1783174745432-1.webp', nome:'Entregue confie aceite agradeca'},
+    {src:'flash/escorpiao-do-borneo-1783170038337.webp', nome:'Escorpiao do borneo 1783170038337'},
+    {src:'flash/escorpiao.webp', nome:'Escorpiao'},
+    {src:'flash/escorpiao2.webp', nome:'Escorpiao 2'},
+    {src:'flash/espadaCoracao.webp', nome:'Espadacoracao'},
+    {src:'flash/espiritoSanto.webp', nome:'Espiritosanto'},
+    {src:'flash/esqueleto-skater-1783170206345-63.webp', nome:'Esqueleto skater'},
+    {src:'flash/essencia-1783201274476-27.webp', nome:'Essencia'},
+    {src:'flash/estrela-naval-1783170191997-54.webp', nome:'Estrela naval'},
+    {src:'flash/estrela.webp', nome:'Estrela'},
+    {src:'flash/eu-caminho-com-fe-guiadoe-protegido-por-meus-guias-1783201263834-20.webp', nome:'Eu caminho com fe guiadoe protegido por meus guias'},
+    {src:'flash/exu-abre-caminhose-removeo-que-me-impede-1783201254646-14.webp', nome:'Exu abre caminhose removeo que me impede'},
+    {src:'flash/faca.webp', nome:'Faca'},
+    {src:'flash/familia-acima-de-tudo-1783190065218-1.webp', nome:'Familia acima de tudo'},
+    {src:'flash/fantasminha.webp', nome:'Fantasminha'},
+    {src:'flash/farol-3-1783170149009-27.webp', nome:'Farol 3'},
+    {src:'flash/farol.webp', nome:'Farol'},
+    {src:'flash/farol2.webp', nome:'Farol 2'},
+    {src:'flash/fe-acima-de-tudo-1783174749895-4.webp', nome:'Fe acima de tudo'},
+    {src:'flash/fe-em-mim-mesma-1783190076660-9.webp', nome:'Fe em mim mesma'},
+    {src:'flash/feita-de-corageme-caos-1783201231924-0.webp', nome:'Feita de corageme caos'},
+    {src:'flash/ferradura1.webp', nome:'Ferradura 1'},
+    {src:'flash/ferradura2.webp', nome:'Ferradura 2'},
+    {src:'flash/ferradura3.webp', nome:'Ferradura 3'},
+    {src:'flash/flames.webp', nome:'Flames'},
+    {src:'flash/flash-data.json', nome:'Flash data.json'},
+    {src:'flash/flor.webp', nome:'Flor'},
+    {src:'flash/florzinha-1783170223461-74.webp', nome:'Florzinha'},
+    {src:'flash/foco-disciplina-constancia-1783190066671-2.webp', nome:'Foco disciplina constancia'},
+    {src:'flash/forcae-foco-1783190083833-14.webp', nome:'Forcae foco'},
+    {src:'flash/forever.webp', nome:'Forever'},
+    {src:'flash/gato-preto-1783170240278-85.webp', nome:'Gato preto'},
+    {src:'flash/gato-preto-2-1783170200083-59.webp', nome:'Gato preto 2'},
+    {src:'flash/ghostface-1783170207844-64.webp', nome:'Ghostface'},
+    {src:'flash/gratidao-1783190063739-0.webp', nome:'Gratidao'},
+    {src:'flash/gravura-flammarion-1888-1783170116880-8.webp', nome:'Gravura flammarion 1888'},
+    {src:'flash/guadalupe.webp', nome:'Guadalupe'},
+    {src:'flash/guardame-deus-porque-em-ti-confio-1783190086581-16.webp', nome:'Guardame deus porque em ti confio'},
+    {src:'flash/guiae-protetores-sempre-ao-meu-lado-1783201251200-12.webp', nome:'Guiae protetores sempre ao meu lado'},
+    {src:'flash/hula.webp', nome:'Hula'},
+    {src:'flash/iemanja-1783201237102-3.webp', nome:'Iemanja'},
+    {src:'flash/iemanja-me-acolhe-me-curae-me-guia-sempre-1783201271321-25.webp', nome:'Iemanja me acolhe me curae me guia sempre'},
+    {src:'flash/incenso-1783170250986-92.webp', nome:'Incenso'},
+    {src:'flash/intuicaeguia-1783201272883-26.webp', nome:'Intuicaeguia'},
+    {src:'flash/jesus.webp', nome:'Jesus'},
+    {src:'flash/kali-1783170111103-5.webp', nome:'Kali'},
+    {src:'flash/lapide-1783170134272-18.webp', nome:'Lapide'},
+    {src:'flash/laroye-exu-1783201275980-28.webp', nome:'Laroye exu'},
+    {src:'flash/laroye-seu-ze-1783201233906-1.webp', nome:'Laroye seu ze'},
+    {src:'flash/leveza-1783190097353-23.webp', nome:'Leveza'},
+    {src:'flash/liberdade-1783190075243-8.webp', nome:'Liberdade'},
+    {src:'flash/lobo.webp', nome:'Lobo'},
+    {src:'flash/love.webp', nome:'Love'},
+    {src:'flash/lua-rosto-1783170254649-94.webp', nome:'Lua rosto'},
+    {src:'flash/lua.webp', nome:'Lua'},
+    {src:'flash/lua2.webp', nome:'Lua 2'},
+    {src:'flash/lula1.webp', nome:'Lula 1'},
+    {src:'flash/lula2.webp', nome:'Lula 2'},
+    {src:'flash/lula3.webp', nome:'Lula 3'},
+    {src:'flash/manifest.json', nome:'Manifest.json'},
+    {src:'flash/mao-ossos-1783170124512-12.webp', nome:'Mao ossos'},
+    {src:'flash/mao.webp', nome:'Mao'},
+    {src:'flash/maoTerco.webp', nome:'Maoterco'},
+    {src:'flash/maobruxa-1783170244877-88.webp', nome:'Maobruxa'},
+    {src:'flash/maosOracao.webp', nome:'Maosoracao'},
+    {src:'flash/maria.webp', nome:'Maria'},
+    {src:'flash/marinheira.webp', nome:'Marinheira'},
+    {src:'flash/mariposa.webp', nome:'Mariposa'},
+    {src:'flash/mariposa2.webp', nome:'Mariposa 2'},
+    {src:'flash/mascara-oni-1783170203203-61.webp', nome:'Mascara oni'},
+    {src:'flash/menos-medo-mais-coragem-1783190073831-7.webp', nome:'Menos medo mais coragem'},
+    {src:'flash/mensagem-garrafa-1783170147393-26.webp', nome:'Mensagem garrafa'},
+    {src:'flash/mente-forte-coracao-leve-1783201268289-23.webp', nome:'Mente forte coracao leve'},
+    {src:'flash/mesmo-sem-entender-confio-1783190098851-24.webp', nome:'Mesmo sem entender confio'},
+    {src:'flash/miguel.webp', nome:'Miguel'},
+    {src:'flash/minha-fe-me-guia-meu-axe-me-protege-1783201247884-10.webp', nome:'Minha fe me guia meu axe me protege'},
+    {src:'flash/molotov-1783170211015-66.webp', nome:'Molotov'},
+    {src:'flash/mom.webp', nome:'Mom'},
+    {src:'flash/mom2.webp', nome:'Mom 2'},
+    {src:'flash/morte-10-1783170163068-36.webp', nome:'Morte 10'},
+    {src:'flash/morte-11-1783170161606-35.webp', nome:'Morte 11'},
+    {src:'flash/morte-12-1783170160187-34.webp', nome:'Morte 12'},
+    {src:'flash/morte-13-1783170158589-33.webp', nome:'Morte 13'},
+    {src:'flash/morte-14-1783170157060-32.webp', nome:'Morte 14'},
+    {src:'flash/morte-15-1783170155443-31.webp', nome:'Morte 15'},
+    {src:'flash/morte-16-1783170138913-21.webp', nome:'Morte 16'},
+    {src:'flash/morte-17-1783170212516-67.webp', nome:'Morte 17'},
+    {src:'flash/morte-18-1783170187100-51.webp', nome:'Morte 18'},
+    {src:'flash/morte-3-1783170174527-43.webp', nome:'Morte 3'},
+    {src:'flash/morte-4-1783190921600-0.webp', nome:'Morte 4'},
+    {src:'flash/morte-5-1783170170950-41.webp', nome:'Morte 5'},
+    {src:'flash/morte-6-1783170169388-40.webp', nome:'Morte 6'},
+    {src:'flash/morte-7-1783170167819-39.webp', nome:'Morte 7'},
+    {src:'flash/morte-8-1783170166177-38.webp', nome:'Morte 8'},
+    {src:'flash/morte-9-1783170164638-37.webp', nome:'Morte 9'},
+    {src:'flash/morte.webp', nome:'Morte'},
+    {src:'flash/morte2.webp', nome:'Morte 2'},
+    {src:'flash/mulher-beijando-caveira-1783170120982-10.webp', nome:'Mulher beijando caveira'},
+    {src:'flash/na-forca-do-axe-sou-instrumento-de-luze-amor-1783190113930-34.webp', nome:'Na forca do axe sou instrumento de luze amor'},
+    {src:'flash/na-gira-da-vida-confio-entregoe-agradeco-1783201252733-13.webp', nome:'Na gira da vida confio entregoe agradeco'},
+    {src:'flash/na-luz-da-fe-na-forca-do-axe-1783201238709-4.webp', nome:'Na luz da fe na forca do axe'},
+    {src:'flash/naoe-sortee-deus-1783190103688-27.webp', nome:'Naoe sortee deus'},
+    {src:'flash/nautilo1.webp', nome:'Nautilo 1'},
+    {src:'flash/nautilo2.webp', nome:'Nautilo 2'},
+    {src:'flash/navalha-1783170226332-76.webp', nome:'Navalha'},
+    {src:'flash/nunca-foi-sorte-sempre-foi-deus-1783190107978-30.webp', nome:'Nunca foi sorte sempre foi deus'},
+    {src:'flash/o-senhore-meu-pastor-nada-me-faltara-1783190092597-20.webp', nome:'O senhore meu pastor nada me faltara'},
+    {src:'flash/ogum-me-da-forcae-coragem-para-lutar-1783201265341-21.webp', nome:'Ogum me da forcae coragem para lutar'},
+    {src:'flash/olho-flamejante-1783170201661-60.webp', nome:'Olho flamejante'},
+    {src:'flash/olho.webp', nome:'Olho'},
+    {src:'flash/olho2.webp', nome:'Olho 2'},
+    {src:'flash/oxala-abencoee-proteja-1783201241698-6.webp', nome:'Oxala abencoee proteja'},
+    {src:'flash/palhaco-1783170215477-69.webp', nome:'Palhaco'},
+    {src:'flash/palmeira.webp', nome:'Palmeira'},
+    {src:'flash/pantera.webp', nome:'Pantera'},
+    {src:'flash/pantera2.webp', nome:'Pantera 2'},
+    {src:'flash/paz-1783190080954-12.webp', nome:'Paz'},
+    {src:'flash/pentagrama-folhas-1783170246358-89.webp', nome:'Pentagrama folhas'},
+    {src:'flash/permita-se-florescer-1783190100355-25.webp', nome:'Permita se florescer'},
+    {src:'flash/persistir-ate-conquistar-1783190106509-29.webp', nome:'Persistir ate conquistar'},
+    {src:'flash/pin-up-basquete-1783170102193-0.webp', nome:'Pin up basquete'},
+    {src:'flash/pin-up-techno-dont-stop-1783170105549-2.webp', nome:'Pin up techno dont stop'},
+    {src:'flash/pinup.webp', nome:'Pinup'},
+    {src:'flash/pinup2.webp', nome:'Pinup 2'},
+    {src:'flash/pinup3.webp', nome:'Pinup 3'},
+    {src:'flash/pinup4.webp', nome:'Pinup 4'},
+    {src:'flash/pocao-1783170243288-87.webp', nome:'Pocao'},
+    {src:'flash/polvo-4-1783190927835-4.webp', nome:'Polvo 4'},
+    {src:'flash/polvo-violoncelista-1783170107414-3.webp', nome:'Polvo violoncelista'},
+    {src:'flash/polvo1.webp', nome:'Polvo 1'},
+    {src:'flash/polvo2.webp', nome:'Polvo 2'},
+    {src:'flash/polvo3.webp', nome:'Polvo 3'},
+    {src:'flash/pomba-gira-traz-amor-podere-protecao-1783201259033-17.webp', nome:'Pomba gira traz amor podere protecao'},
+    {src:'flash/poseidon-1783170145587-25.webp', nome:'Poseidon'},
+    {src:'flash/proposito-fe-disciplina-persistencia-deus-1783190094166-21.webp', nome:'Proposito fe disciplina persistencia deus'},
+    {src:'flash/que-minha-fe-seja-maior-que-meus-medos-1783201243229-7.webp', nome:'Que minha fe seja maior que meus medos'},
+    {src:'flash/quea-luz-dos-guias-ilumine-meus-caminhos-1783201249747-11.webp', nome:'Quea luz dos guias ilumine meus caminhos'},
+    {src:'flash/ramo-1783170241863-86.webp', nome:'Ramo'},
+    {src:'flash/ratazana-1783170213909-68.webp', nome:'Ratazana'},
+    {src:'flash/resiliencia-1783190072404-6.webp', nome:'Resiliencia'},
+    {src:'flash/rip.webp', nome:'Rip'},
+    {src:'flash/rosa-4-1783170176125-44.webp', nome:'Rosa 4'},
+    {src:'flash/rosa1.webp', nome:'Rosa 1'},
+    {src:'flash/rosa2.webp', nome:'Rosa 2'},
+    {src:'flash/rosa3.webp', nome:'Rosa 3'},
+    {src:'flash/rosaAdaga.webp', nome:'Rosaadaga'},
+    {src:'flash/rosaAdaga2.webp', nome:'Rosaadaga 2'},
+    {src:'flash/rosaAdaga3.webp', nome:'Rosaadaga 3'},
+    {src:'flash/rosinha.webp', nome:'Rosinha'},
+    {src:'flash/rosto-bruxa-1783170235650-82.webp', nome:'Rosto bruxa'},
+    {src:'flash/rosto-mulher-1783170180701-47.webp', nome:'Rosto mulher'},
+    {src:'flash/rosto-punk-1783170217071-70.webp', nome:'Rosto punk'},
+    {src:'flash/sacerdotisa-1783170256208-95.webp', nome:'Sacerdotisa'},
+    {src:'flash/sagrado-coracao-jesus-1783127123603-0.webp', nome:'Sagrado coracao jesus'},
+    {src:'flash/sagradoCoracao.webp', nome:'Sagradocoracao'},
+    {src:'flash/salve-as-almas-1783201244795-8.webp', nome:'Salve as almas'},
+    {src:'flash/saoJose.webp', nome:'Saojose'},
+    {src:'flash/seja-luz-por-onde-voce-for-1783190109366-31.webp', nome:'Seja luz por onde voce for'},
+    {src:'flash/seja-sua-melhor-versao-1783190078140-10.webp', nome:'Seja sua melhor versao'},
+    {src:'flash/sereia-1783170153745-30.webp', nome:'Sereia'},
+    {src:'flash/serpente1.webp', nome:'Serpente 1'},
+    {src:'flash/serpente2.webp', nome:'Serpente 2'},
+    {src:'flash/serpente3.webp', nome:'Serpente 3'},
+    {src:'flash/serpente4.webp', nome:'Serpente 4'},
+    {src:'flash/serpente5.webp', nome:'Serpente 5'},
+    {src:'flash/serpente6.webp', nome:'Serpente 6'},
+    {src:'flash/serpente7.webp', nome:'Serpente 7'},
+    {src:'flash/siga-em-frentee-nao-desista-1783201266845-22.webp', nome:'Siga em frentee nao desista'},
+    {src:'flash/simplify-1783190069533-4.webp', nome:'Simplify'},
+    {src:'flash/sinto-muito-me-perdoe-eu-te-amo-sou-grato-1783201240268-5.webp', nome:'Sinto muito me perdoe eu te amo sou grato'},
+    {src:'flash/skate-caveira-1783170233965-81.webp', nome:'Skate caveira'},
+    {src:'flash/sol.webp', nome:'Sol'},
+    {src:'flash/sonhos-planos-acao-vitoria-1783190110956-32.webp', nome:'Sonhos planos acao vitoria'},
+    {src:'flash/sonhos-planos-deus-acao-vitoria-1783190112485-33.webp', nome:'Sonhos planos deus acao vitoria'},
+    {src:'flash/soqueira-1783170182313-48.webp', nome:'Soqueira'},
+    {src:'flash/soqueira-pontuda-1783170220209-72.webp', nome:'Soqueira pontuda'},
+    {src:'flash/tags.json', nome:'Tags.json'},
+    {src:'flash/teia.webp', nome:'Teia'},
+    {src:'flash/tempos-dificeis-nao-duram-pessoas-fortes-sim-1783190085186-15.webp', nome:'Tempos dificeis nao duram pessoas fortes sim'},
+    {src:'flash/tigre-3-1783170193664-55.webp', nome:'Tigre 3'},
+    {src:'flash/tigre.webp', nome:'Tigre'},
+    {src:'flash/tigre2.webp', nome:'Tigre 2'},
+    {src:'flash/trueLove.webp', nome:'Truelove'},
+    {src:'flash/tubarao-8-1783190929406-5.webp', nome:'Tubarao 8'},
+    {src:'flash/tubarao.webp', nome:'Tubarao'},
+    {src:'flash/tubarao2.webp', nome:'Tubarao 2'},
+    {src:'flash/tubarao3.webp', nome:'Tubarao 3'},
+    {src:'flash/tubarao4.webp', nome:'Tubarao 4'},
+    {src:'flash/tubarao5.webp', nome:'Tubarao 5'},
+    {src:'flash/tubarao6.webp', nome:'Tubarao 6'},
+    {src:'flash/tubarao7.webp', nome:'Tubarao 7'},
+    {src:'flash/tubarao8.webp', nome:'Tubarao 8'},
+    {src:'flash/tudo-passa-1783190095932-22.webp', nome:'Tudo passa'},
+    {src:'flash/tudo-posso-naquele-que-me-fortalece-1783174748360-3.webp', nome:'Tudo posso naquele que me fortalece'},
+    {src:'flash/tudo-tem-seu-tempo-1783190068081-3.webp', nome:'Tudo tem seu tempo'},
+    {src:'flash/tudo-tem-seu-tempo-determinado-por-deus-1783190091076-19.webp', nome:'Tudo tem seu tempo determinado por deus'},
+    {src:'flash/vela-2-1783170197006-57.webp', nome:'Vela 2'},
+    {src:'flash/vela.webp', nome:'Vela'},
+    {src:'flash/velas-1783170238829-84.webp', nome:'Velas'},
+    {src:'flash/veneno.webp', nome:'Veneno'},
+    {src:'flash/viva-sorria-ame-seja-leve-1783190079545-11.webp', nome:'Viva sorria ame seja leve'},
+    {src:'flash/vivao-hoje-1783190070970-5.webp', nome:'Vivao hoje'},
+    {src:'flash/zippo.webp', nome:'Zippo'},
+  ];
+
+
+  // ---------- sistema de camadas (múltiplas flashes na mesma foto) ----------
+  let layers = [];
+  let activeLayerId = null;
+  let layerSeq = 0;
+
+  function buildFlashItem(src, index, nome){
+    const el = document.createElement('div');
+    el.className = 'flash-item';
+    el.innerHTML = `<span class="num">${String(index+1).padStart(2,'0')}</span><img src="${src}" loading="lazy">`;
+    el.addEventListener('click', () => addLayer(src));
+    return el;
+  }
+
+  function renderFlashes(list){
+    // limpa tudo menos o botão de upload
+    flashGrid.querySelectorAll('.flash-item').forEach(n => n.remove());
+    list.forEach((item, i) => {
+      const src = typeof item === 'string' ? item : item.src;
+      flashGrid.insertBefore(buildFlashItem(src, i), flashGrid.lastElementChild);
+    });
+  }
+
+  function addLayer(src){
+    layerSeq++;
+    const id = 'layer-' + layerSeq;
+    const count = layers.length;
+    // pequeno deslocamento em cascata pra não empilhar tudo exatamente no centro
+    const cascade = count % 5;
+    const layer = {
+      id, src,
+      leftPct: 50 + (cascade - 2) * 7,
+      topPct: 50 + (cascade - 2) * 5,
+      scale: 1, rotation: 0, opacity: 0.85, blend: 'multiply'
+    };
+    layers.push(layer);
+    renderLayerDOM(layer);
+    selectLayer(id);
+    updateLayerThumbs();
+    updateDownloadState();
+  }
+
+  function renderLayerDOM(layer){
+    const el = document.createElement('div');
+    el.className = 'overlay-layer';
+    el.dataset.id = layer.id;
+    el.innerHTML = `
+      <img class="overlay-img" src="${layer.src}" alt="Camada de tatuagem">
+      <div class="rot" data-role="rot" title="Girar"></div>
+      <div class="handle" data-role="resize" title="Redimensionar"></div>
+      <div class="del" data-role="del" title="Remover camada">×</div>
+    `;
+    layersContainer.appendChild(el);
+    layer.el = el;
+    layer.imgEl = el.querySelector('.overlay-img');
+    applyLayerStyle(layer);
+
+    el.addEventListener('pointerdown', (e) => {
+      const role = e.target.dataset ? e.target.dataset.role : null;
+      selectLayer(layer.id);
+      if(role === 'del'){
+        removeLayer(layer.id);
+        return;
+      }
+      const p = pointerXY(e);
+      const rect = canvasShell.getBoundingClientRect();
+      if(role === 'resize'){
+        interaction = {type:'resize', id: layer.id, startX:p.x, startY:p.y, startScale: layer.scale};
+      } else if(role === 'rot'){
+        interaction = {type:'rotate', id: layer.id};
+      } else {
+        interaction = {
+          type:'move', id: layer.id, startX:p.x, startY:p.y,
+          startLeftPct: layer.leftPct, startTopPct: layer.topPct
+        };
+        el.classList.add('dragging');
+      }
+      e.stopPropagation();
+    });
+  }
+
+  function applyLayerStyle(layer){
+    if(!layer.el) return;
+    layer.el.style.left = layer.leftPct + '%';
+    layer.el.style.top = layer.topPct + '%';
+    layer.el.style.transform = `translate(-50%,-50%) rotate(${layer.rotation}deg) scale(${layer.scale})`;
+    layer.imgEl.style.opacity = layer.opacity;
+    layer.imgEl.style.mixBlendMode = layer.blend;
+    layer.el.classList.toggle('selected-layer', layer.id === activeLayerId);
+  }
+
+  function selectLayer(id){
+    activeLayerId = id;
+    layers.forEach(applyLayerStyle);
+    const layer = layers.find(l => l.id === id);
+    const controlsDisabled = !layer;
+    [opacityRange, blendMode, scaleRange, rotRange].forEach(c => c.disabled = controlsDisabled);
+    if(!layer){
+      activeLayerLabel.textContent = 'Nenhuma camada selecionada';
+      return;
+    }
+    opacityRange.value = Math.round(layer.opacity * 100);
+    opacityVal.textContent = Math.round(layer.opacity * 100) + '%';
+    blendMode.value = layer.blend;
+    scaleRange.value = Math.round(layer.scale * 100);
+    scaleVal.textContent = Math.round(layer.scale * 100) + '%';
+    rotRange.value = layer.rotation;
+    rotVal.textContent = layer.rotation + '°';
+    activeLayerLabel.textContent = 'Editando camada ' + (layers.findIndex(l => l.id === id) + 1) + ' de ' + layers.length;
+    updateLayerThumbs();
+  }
+
+  function removeLayer(id){
+    const layer = layers.find(l => l.id === id);
+    if(!layer) return;
+    layer.el.remove();
+    layers = layers.filter(l => l.id !== id);
+    if(activeLayerId === id){
+      activeLayerId = layers.length ? layers[layers.length - 1].id : null;
+    }
+    if(activeLayerId){
+      selectLayer(activeLayerId);
+    } else {
+      updateLayerThumbs();
+      [opacityRange, blendMode, scaleRange, rotRange].forEach(c => c.disabled = true);
+      activeLayerLabel.textContent = 'Nenhuma camada selecionada';
+    }
+    updateDownloadState();
+  }
+
+  function updateLayerThumbs(){
+    layerThumbs.innerHTML = '';
+    if(!layers.length){
+      const empty = document.createElement('span');
+      empty.className = 'layer-thumbs-empty';
+      empty.textContent = 'Escolha flashes ao lado — cada uma vira uma camada, dá pra combinar várias pra montar uma manga';
+      layerThumbs.appendChild(empty);
+      return;
+    }
+    layers.forEach((layer, i) => {
+      const thumb = document.createElement('div');
+      thumb.className = 'layer-thumb' + (layer.id === activeLayerId ? ' active' : '');
+      thumb.title = 'Camada ' + (i + 1);
+      thumb.innerHTML = `<img src="${layer.src}" alt="Camada ${i+1}"><div class="layer-remove" data-role="remove">×</div>`;
+      thumb.addEventListener('click', (e) => {
+        if(e.target.dataset && e.target.dataset.role === 'remove'){
+          removeLayer(layer.id);
+        } else {
+          selectLayer(layer.id);
+        }
+      });
+      layerThumbs.appendChild(thumb);
+    });
+  }
+
+  // custom flash upload
+  uploadFlashInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const url = URL.createObjectURL(file);
+    const el = buildFlashItem(url, flashGrid.querySelectorAll('.flash-item').length);
+    flashGrid.insertBefore(el, flashGrid.lastElementChild);
+    addLayer(url);
+  });
+
+  // load from gallery-data.json style URL
+  loadJsonBtn.addEventListener('click', async () => {
+    const url = jsonUrlInput.value.trim();
+    if(!url) return;
+    loadJsonBtn.textContent = '...';
+    try{
+      const res = await fetch(url);
+      const data = await res.json();
+      const list = Array.isArray(data) ? data : (data.images || data.flashes || []);
+      if(!list.length) throw new Error('vazio');
+      renderFlashes(list);
+    }catch(err){
+      alert('Não foi possível carregar esse JSON. Verifique a URL (precisa permitir CORS) e o formato: [{ "src": "..." }, ...]');
+    }
+    loadJsonBtn.textContent = 'Carregar';
+  });
+
+  // body photo upload
+  function loadBodyPhoto(file){
+    const url = URL.createObjectURL(file);
+    loadBodyPhotoFromUrl(url);
+  }
+  function loadBodyPhotoFromUrl(url){
+    baseImg.src = url;
+    baseImg.style.display = 'block';
+    emptyState.style.display = 'none';
+    updateDownloadState();
+  }
+  uploadBtn.addEventListener('click', () => bodyPhotoInput.click());
+  bodyPhotoInput.addEventListener('change', (e) => {
+    if(e.target.files[0]) loadBodyPhoto(e.target.files[0]);
+  });
+  // drag and drop
+  canvasShell.addEventListener('dragover', e => e.preventDefault());
+  canvasShell.addEventListener('drop', e => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if(file && file.type.startsWith('image/')) loadBodyPhoto(file);
+  });
+
+  // ---------- bases de corpo prontas ----------
+  // Fica na pasta /corpos, separada por gênero. Para adicionar novas fotos,
+  // basta subir o arquivo em corpos/masculino/ ou corpos/feminino/ e incluir
+  // uma linha aqui com o caminho e um nome descritivo (ex: região do corpo).
+  const bodyBases = {
+    masculino: [
+      {src:'corpos/masculino/corpo-lateral-braco-ombro.webp', nome:'Braço e ombro, lateral'},
+    ],
+    feminino: [
+      {src:'corpos/feminino/corpo-lateral-braco-ombro.webp', nome:'Braço e ombro, lateral'},
+    ]
+  };
+
+  const genderToggle = document.getElementById('genderToggle');
+  const baseThumbs = document.getElementById('baseThumbs');
+  let currentGender = 'masculino';
+
+  function renderBaseThumbs(){
+    baseThumbs.innerHTML = '';
+    const list = bodyBases[currentGender] || [];
+    if(!list.length){
+      const empty = document.createElement('div');
+      empty.className = 'base-thumb-empty';
+      empty.textContent = 'Sem fotos cadastradas ainda';
+      baseThumbs.appendChild(empty);
+      return;
+    }
+    list.forEach(item => {
+      const thumb = document.createElement('div');
+      thumb.className = 'base-thumb';
+      thumb.title = item.nome;
+      thumb.innerHTML = `<img src="${item.src}" alt="${item.nome}" loading="lazy">`;
+      thumb.addEventListener('click', () => {
+        baseThumbs.querySelectorAll('.base-thumb').forEach(t => t.classList.remove('selected'));
+        thumb.classList.add('selected');
+        loadBodyPhotoFromUrl(item.src);
+      });
+      baseThumbs.appendChild(thumb);
+    });
+  }
+
+  genderToggle.querySelectorAll('.gender-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      genderToggle.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentGender = btn.dataset.gender;
+      renderBaseThumbs();
+    });
+  });
+
+  renderBaseThumbs();
+
+  resetBtn.addEventListener('click', () => {
+    baseImg.style.display = 'none';
+    baseImg.src = '';
+    layers.forEach(l => l.el && l.el.remove());
+    layers = [];
+    activeLayerId = null;
+    emptyState.style.display = 'flex';
+    baseThumbs.querySelectorAll('.base-thumb').forEach(n => n.classList.remove('selected'));
+    updateLayerThumbs();
+    [opacityRange, blendMode, scaleRange, rotRange].forEach(c => c.disabled = true);
+    activeLayerLabel.textContent = 'Nenhuma camada selecionada';
+    updateDownloadState();
+  });
+
+  // ---------- controles (aplicam na camada ativa) ----------
+  opacityRange.addEventListener('input', () => {
+    const layer = layers.find(l => l.id === activeLayerId);
+    opacityVal.textContent = opacityRange.value + '%';
+    if(!layer) return;
+    layer.opacity = opacityRange.value / 100;
+    applyLayerStyle(layer);
+  });
+  blendMode.addEventListener('change', () => {
+    const layer = layers.find(l => l.id === activeLayerId);
+    if(!layer) return;
+    layer.blend = blendMode.value;
+    applyLayerStyle(layer);
+  });
+  scaleRange.addEventListener('input', () => {
+    const layer = layers.find(l => l.id === activeLayerId);
+    scaleVal.textContent = scaleRange.value + '%';
+    if(!layer) return;
+    layer.scale = scaleRange.value / 100;
+    applyLayerStyle(layer);
+  });
+  rotRange.addEventListener('input', () => {
+    const layer = layers.find(l => l.id === activeLayerId);
+    rotVal.textContent = rotRange.value + '°';
+    if(!layer) return;
+    layer.rotation = parseInt(rotRange.value, 10);
+    applyLayerStyle(layer);
+  });
+
+  // ---------- arrastar / redimensionar / girar (compartilhado entre camadas) ----------
+  let interaction = null;
+
+  function pointerXY(e){
+    if (e.touches && e.touches[0]) return {x:e.touches[0].clientX, y:e.touches[0].clientY};
+    return {x:e.clientX, y:e.clientY};
+  }
+
+  window.addEventListener('pointermove', (e) => {
+    if(!interaction) return;
+    const layer = layers.find(l => l.id === interaction.id);
+    if(!layer){ interaction = null; return; }
+    const rect = canvasShell.getBoundingClientRect();
+    const p = pointerXY(e);
+
+    if(interaction.type === 'move'){
+      const dxPct = (p.x - interaction.startX) / rect.width * 100;
+      const dyPct = (p.y - interaction.startY) / rect.height * 100;
+      layer.leftPct = interaction.startLeftPct + dxPct;
+      layer.topPct = interaction.startTopPct + dyPct;
+    } else if(interaction.type === 'resize'){
+      const delta = (p.x - interaction.startX + p.y - interaction.startY) / 2;
+      let newScale = interaction.startScale + delta / 140;
+      newScale = Math.max(0.2, Math.min(3, newScale));
+      layer.scale = newScale;
+      if(layer.id === activeLayerId){
+        scaleRange.value = Math.round(newScale * 100);
+        scaleVal.textContent = Math.round(newScale * 100) + '%';
+      }
+    } else if(interaction.type === 'rotate'){
+      const wrapRect = layer.el.getBoundingClientRect();
+      const cx = wrapRect.left + wrapRect.width / 2;
+      const cy = wrapRect.top + wrapRect.height / 2;
+      const angle = Math.atan2(p.y - cy, p.x - cx) * 180/Math.PI + 90;
+      layer.rotation = Math.round(angle);
+      if(layer.id === activeLayerId){
+        rotRange.value = layer.rotation;
+        rotVal.textContent = layer.rotation + '°';
+      }
+    }
+    applyLayerStyle(layer);
+  });
+
+  window.addEventListener('pointerup', () => {
+    if(interaction){
+      const layer = layers.find(l => l.id === interaction.id);
+      if(layer && layer.el) layer.el.classList.remove('dragging');
+    }
+    interaction = null;
+  });
+
+  // ---------- download (compõe todas as camadas em canvas real) ----------
+  function updateDownloadState(){
+    downloadBtn.disabled = !(baseImg.style.display === 'block' && layers.length > 0);
+  }
+
+  function loadImageAsync(src){
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('Falha ao carregar: ' + src));
+      img.src = src;
+    });
+  }
+
+  downloadBtn.addEventListener('click', async () => {
+    try{
+      const shellRect = canvasShell.getBoundingClientRect();
+      const W = 1200;
+      const H = Math.round(W * (shellRect.height / shellRect.width));
+      const exportCanvas = document.createElement('canvas');
+      exportCanvas.width = W; exportCanvas.height = H;
+      const ctx = exportCanvas.getContext('2d');
+
+      const bImg = await loadImageAsync(baseImg.src);
+      const scaleFit = Math.min(W / bImg.width, H / bImg.height);
+      const bw = bImg.width * scaleFit, bh = bImg.height * scaleFit;
+      const bx = (W - bw)/2, by = (H - bh)/2;
+      ctx.fillStyle = '#0a0a09';
+      ctx.fillRect(0,0,W,H);
+      ctx.drawImage(bImg, bx, by, bw, bh);
+
+      for(const layer of layers){
+        const oImg = await loadImageAsync(layer.src);
+        const cx = layer.leftPct / 100 * W;
+        const cy = layer.topPct / 100 * H;
+        const baseSize = (layer.el.offsetWidth / shellRect.width) * W;
+
+        ctx.save();
+        ctx.globalAlpha = layer.opacity;
+        ctx.globalCompositeOperation = layer.blend === 'multiply' ? 'multiply'
+          : layer.blend === 'darken' ? 'darken'
+          : layer.blend === 'soft-light' ? 'soft-light'
+          : 'source-over';
+        ctx.translate(cx, cy);
+        ctx.rotate(layer.rotation * Math.PI/180);
+        ctx.scale(layer.scale, layer.scale);
+        const ow = baseSize, oh = baseSize * (oImg.height/oImg.width);
+        ctx.drawImage(oImg, -ow/2, -oh/2, ow, oh);
+        ctx.restore();
+      }
+
+      const link = document.createElement('a');
+      link.download = 'preview-tatuagem.png';
+      link.href = exportCanvas.toDataURL('image/png');
+      link.click();
+    }catch(err){
+      alert('Não foi possível gerar o download (uma das imagens pode estar bloqueando exportação). O preview na tela continua funcionando normalmente.');
+    }
+  });
+
+  const searchFlash = document.getElementById('searchFlash');
+  searchFlash.addEventListener('input', () => {
+    const q = searchFlash.value.trim().toLowerCase();
+    const filtered = q ? allFlashes.filter(it => it.nome.toLowerCase().includes(q)) : allFlashes;
+    renderFlashes(filtered);
+  });
+
+  // init
+  renderFlashes(allFlashes);
+  [opacityRange, blendMode, scaleRange, rotRange].forEach(c => c.disabled = true);
+})();
+</script>
+<script src="flash-decor.js" defer></script>
+</body>
+</html>
