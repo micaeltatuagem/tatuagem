@@ -1226,7 +1226,9 @@
     "title": "Morte 15",
     "altText": "Tatuagem flash de morte 15. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Dark Art"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
