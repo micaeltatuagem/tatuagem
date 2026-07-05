@@ -266,6 +266,8 @@
   </div>
 </div>
 
+<div id="toastContainer" style="position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:.5rem;align-items:center;pointer-events:none;"></div>
+
 <script>
   // ── CONFIG ──
   const STORAGE_KEY = 'micaelGallery_v2';
@@ -277,6 +279,7 @@
   const BRANCH      = 'main';
   const IMAGE_FOLDER = 'galeria';
   const DATA_PATH   = `${IMAGE_FOLDER}/gallery-data.json`;
+  const SITEMAP_PATH = 'sitemap.xml';
   const SITE_URL    = 'https://micaeltatuagem.github.io/tatuagem';
   const DEFAULT_TAGS = ['Dark Art', 'Blackwork', 'Colorido', 'Ornamental'];
 
@@ -402,9 +405,29 @@
     catch { return []; }
   }
 
+  // Tenta de novo automaticamente em caso de falha transitoria (comum durante instabilidade do GitHub)
+  async function withRetry(fn, tentativas = 3, label = '') {
+    let lastErr;
+    for (let i = 1; i <= tentativas; i++) {
+      try {
+        return await fn();
+      } catch (err) {
+        lastErr = err;
+        console.warn(`Tentativa ${i}/${tentativas} falhou${label ? ' (' + label + ')' : ''}:`, err.message);
+        if (i < tentativas) await new Promise(r => setTimeout(r, 1000 * i));
+      }
+    }
+    throw lastErr;
+  }
+
   async function saveGallery(gallery) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(gallery));
-    await commitGalleryData(gallery);
+    await withRetry(() => commitGalleryData(gallery), 3, 'gallery-data.json');
+    try {
+      await withRetry(() => commitSitemap(gallery), 3, 'sitemap.xml');
+    } catch (err) {
+      console.warn('Sitemap nao atualizado (nao critico):', err.message);
+    }
   }
 
   function getTags() {
@@ -414,13 +437,14 @@
 
   async function saveTags(tags) {
     localStorage.setItem(TAGS_KEY, JSON.stringify(tags));
-    await commitTags(tags);
+    await withRetry(() => commitTags(tags), 3, 'tags.json');
   }
 
-  // ── SEED FROM REPO ──
+  // ── SEED FROM REPO ── (le direto do git via raw, nao do site publicado, evita reverter edicoes durante deploys lentos)
   async function seedGalleryFromRepo() {
     try {
-      const res = await fetch(`${DATA_PATH}?t=${Date.now()}`, { cache: 'no-store' });
+      const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${DATA_PATH}?t=${Date.now()}`;
+      const res = await fetch(url, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data)) localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -430,7 +454,8 @@
 
   async function seedTagsFromRepo() {
     try {
-      const res = await fetch(`${IMAGE_FOLDER}/tags.json?t=${Date.now()}`, { cache: 'no-store' });
+      const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${IMAGE_FOLDER}/tags.json?t=${Date.now()}`;
+      const res = await fetch(url, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data)) localStorage.setItem(TAGS_KEY, JSON.stringify(data));
@@ -495,18 +520,28 @@
     const tags = getTags();
     if (tags.includes(val)) { input.value = ''; return; }
     tags.push(val);
-    await saveTags(tags);
-    renderTagManager();
-    renderTags();
-    input.value = '';
+    try {
+      await saveTags(tags);
+      renderTagManager();
+      renderTags();
+      input.value = '';
+      showAlert('success', `✅ Tag "${val}" adicionada.`);
+    } catch (err) {
+      showAlert('error', '⚠ Falhou ao salvar a tag (' + err.message + '). Tente de novo.');
+    }
   }
 
   async function deleteTag(tag) {
     if (!confirm(`Deletar tag "${tag}"?`)) return;
     const tags = getTags().filter(t => t !== tag);
-    await saveTags(tags);
-    renderTagManager();
-    renderTags();
+    try {
+      await saveTags(tags);
+      renderTagManager();
+      renderTags();
+      showAlert('success', `✅ Tag "${tag}" removida.`);
+    } catch (err) {
+      showAlert('error', '⚠ Falhou ao remover a tag (' + err.message + '). Tente de novo.');
+    }
   }
 
   // ── UPLOAD ──
@@ -558,7 +593,7 @@
 
     try {
       setProgress(true, 'Enviando para GitHub...', 40);
-      const imageUrl = await uploadToGitHub(file, filename);
+      const imageUrl = await withRetry(() => uploadToGitHub(file, filename), 3, filename);
 
       setProgress(true, 'Salvando metadados...', 80);
       const gallery = getGallery();
@@ -623,10 +658,14 @@
     }
 
     const filtered = gallery.filter(i => i.id !== id);
-    await saveGallery(filtered);
-    renderGallery();
-    updateStats();
-    showAlert('success', '✅ Imagem removida.');
+    try {
+      await saveGallery(filtered);
+      renderGallery();
+      updateStats();
+      showAlert('success', '✅ Imagem removida.');
+    } catch (err) {
+      showAlert('error', '⚠ Imagem apagada, mas falhou ao atualizar o site (' + err.message + '). Recarregue e confira.');
+    }
   }
 
   // ── EDIT MODAL ──
@@ -658,10 +697,14 @@
     const styles = Array.from(document.querySelectorAll('#editTagsContainer input:checked')).map(cb=>cb.value);
     if (!title) { alert('Título obrigatório.'); return; }
     const gallery = getGallery().map(i => i.id===id ? {...i, title, altText:alt, description:desc, styles} : i);
-    await saveGallery(gallery);
-    renderGallery();
-    closeEditModal();
-    showAlert('success', '✅ Alterações salvas.');
+    try {
+      await saveGallery(gallery);
+      renderGallery();
+      closeEditModal();
+      showAlert('success', '✅ Alterações salvas.');
+    } catch (err) {
+      showAlert('error', '⚠ Falhou ao publicar no site (' + err.message + '). Tente salvar de novo.');
+    }
   }
 
   // ── COMMIT ──
@@ -685,6 +728,46 @@
     const body = { message: 'Atualiza tags.json', content, branch: BRANCH };
     if (sha) body.sha = sha;
     await fetch(url, { method:'PUT', headers:{Authorization:`token ${GH_TOKEN}`,'Content-Type':'application/json'}, body:JSON.stringify(body) });
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── COMMIT: sincroniza as entradas de imagem do galeria.html no sitemap.xml (SEO/Google Imagens) ──
+  async function commitSitemap(gallery) {
+    const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${SITEMAP_PATH}`;
+    const res = await fetch(url, { headers: { Authorization: `token ${GH_TOKEN}` } });
+    if (!res.ok) throw new Error('Não foi possível ler sitemap.xml.');
+    const fileData = await res.json();
+    let xml = decodeURIComponent(escape(atob(fileData.content)));
+
+    const startMarker = '<loc>https://micaeltatuagem.github.io/tatuagem/galeria.html</loc>';
+    const startIdx = xml.indexOf(startMarker);
+    if (startIdx === -1) throw new Error('Entrada do galeria.html não encontrada no sitemap.');
+    const blockEndIdx = xml.indexOf('</url>', startIdx);
+    if (blockEndIdx === -1) throw new Error('Fechamento </url> não encontrado no sitemap.');
+
+    const block = xml.slice(startIdx, blockEndIdx);
+    const firstImageIdx = block.indexOf('<image:image>');
+    const header = firstImageIdx !== -1 ? block.slice(0, firstImageIdx) : block;
+
+    const imagesXml = gallery.map(it => {
+      const estilos = (it.styles || []).join(', ');
+      return `      <image:image>
+        <image:loc>https://micaeltatuagem.github.io/tatuagem/${it.imageUrl}</image:loc>
+        <image:title>Tatuagem ${escapeHtml(it.title)}</image:title>
+        <image:caption>${escapeHtml(estilos)} — Tatuagem ${escapeHtml(it.title)} — Micael Faccio, tatuador em Muriaé MG</image:caption>
+      </image:image>`;
+    }).join('\n');
+
+    const newBlock = header + imagesXml + '\n  ';
+    xml = xml.slice(0, startIdx) + newBlock + xml.slice(blockEndIdx);
+
+    const newContent = btoa(unescape(encodeURIComponent(xml)));
+    const body = { message: 'Sincroniza sitemap.xml com a galeria', content: newContent, sha: fileData.sha, branch: BRANCH };
+    const putRes = await fetch(url, { method:'PUT', headers:{Authorization:`token ${GH_TOKEN}`,'Content-Type':'application/json'}, body:JSON.stringify(body) });
+    if (!putRes.ok) { const e = await putRes.json(); throw new Error(e.message || 'Erro ao atualizar sitemap.xml'); }
   }
 
   // ── EXPORT / IMPORT ──
@@ -720,10 +803,17 @@
 
   // ── ALERT ──
   function showAlert(type, msg) {
-    const el = document.getElementById('mainAlert');
-    el.textContent = msg;
-    el.className = `alert ${type} visible`;
-    setTimeout(() => el.className = 'alert', 4000);
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    const bg = type === 'success' ? '#1f6b3a' : (type === 'error' ? '#7a2020' : '#333');
+    toast.textContent = msg;
+    toast.style.cssText = `background:${bg};color:#f0e9dc;padding:.8rem 1.2rem;border-radius:8px;font-size:.88rem;max-width:90vw;box-shadow:0 4px 16px rgba(0,0,0,.4);pointer-events:auto;opacity:0;transition:opacity .25s ease;`;
+    container.appendChild(toast);
+    requestAnimationFrame(() => toast.style.opacity = '1');
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 300);
+    }, 4000);
   }
 </script>
 </body>
