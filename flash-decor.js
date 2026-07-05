@@ -136,7 +136,6 @@
         img.decoding    = 'async';
 
         const rot  = rnd(-40, 40).toFixed(1);
-        const flip = Math.random() > 0.5 ? ' scaleX(-1)' : '';
         const op   = (opRange[0] + Math.random() * (opRange[1] - opRange[0])).toFixed(3);
 
         img.style.cssText = [
@@ -150,7 +149,7 @@
           `opacity:${op}`,
           `left:${((cx / W) * 100).toFixed(2)}%`,
           `top:${((cy / H) * 100).toFixed(2)}%`,
-          `transform:translate(-50%,-50%) rotate(${rot}deg)${flip}`,
+          `transform:translate(-50%,-50%) rotate(${rot}deg)`,
         ].join(';');
 
         el.appendChild(img);
