@@ -985,8 +985,9 @@
     const fileData = await res.json();
     let html = decodeURIComponent(escape(atob(fileData.content)));
 
-    // Grid
-    const gridHtml = gallery.map(img => `      <figure class="flash-item" data-id="${img.id}" data-styles="${(img.styles||[]).join(',')}">
+    // Grid (ordenado alfabeticamente pelo titulo, para navegacao previsivel)
+    const galeriaOrdenada = [...gallery].sort((a, b) => a.title.localeCompare(b.title, 'pt-BR'));
+    const gridHtml = galeriaOrdenada.map(img => `      <figure class="flash-item" data-id="${img.id}" data-styles="${(img.styles||[]).join(',')}">
         <img src="${img.imageUrl}" alt="${escapeHtml(img.altText || img.title)}" loading="lazy" />
         <figcaption>${escapeHtml(img.title)}</figcaption>
       </figure>`).join('\n');
