@@ -569,7 +569,8 @@
 
   async function seedFromRepo() {
     try {
-      const res = await fetch(`${DATA_PATH}?t=${Date.now()}`, { cache: 'no-store' });
+      const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${DATA_PATH}?t=${Date.now()}`;
+      const res = await fetch(url, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data)) localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -590,7 +591,8 @@
 
   async function seedTagsFromRepo() {
     try {
-      const res = await fetch(`${TAGS_PATH}?t=${Date.now()}`, { cache: 'no-store' });
+      const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${TAGS_PATH}?t=${Date.now()}`;
+      const res = await fetch(url, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data)) localStorage.setItem(TAGS_KEY, JSON.stringify(data));
