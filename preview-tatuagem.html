@@ -84,6 +84,14 @@
   }
   @media (max-width:860px){
     .stage{grid-template-columns:1fr;}
+    /* No mobile, os controles de ajuste ficam logo apos o canvas, nao no fim da pagina */
+    .preview-panel{ display:flex; flex-direction:column; }
+    .canvas-shell{ order:1; }
+    .controls-label{ order:2; }
+    .controls{ order:3; }
+    .layers-panel{ order:4; }
+    .upload-row{ order:5; }
+    .base-picker{ order:6; }
   }
 
   /* ---- Flash sheet panel ---- */
