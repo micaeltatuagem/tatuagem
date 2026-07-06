@@ -394,7 +394,7 @@
   <header>
     <div class="eyebrow">Simulador de Tatuagem</div>
     <h1>Veja antes de fechar</h1>
-    <p>Envie uma foto da região do corpo, escolha uma ou várias flashes e ajuste posição, tamanho e rotação de cada uma para visualizar como a composição pode ficar sobre a sua pele — ótimo pra montar ideia de manga.</p>
+    <p>Envie uma foto da região do corpo, escolha um ou vários flash e ajuste posição, tamanho e rotação de cada um para visualizar como a composição pode ficar sobre a sua pele. Ótimo pra montar ideia de manga.</p>
   </header>
 
   <section class="stage">
@@ -402,7 +402,7 @@
     <!-- FLASH SHEET PICKER -->
     <div class="flash-panel">
       <h2>Flashes disponíveis</h2>
-      <div class="sub">Toque em um desenho para adicionar como nova camada — dá pra combinar várias</div>
+      <div class="sub">Toque em um desenho para adicionar como nova camada. Dá pra combinar vários</div>
 
       <div class="flash-source-row">
         <input id="searchFlash" type="text" placeholder="Buscar flash (ex: águia, caveira, rosa)">
@@ -445,7 +445,7 @@
           <span>Camadas aplicadas (toque pra editar cada uma)</span>
         </div>
         <div class="layer-thumbs" id="layerThumbs">
-          <span class="layer-thumbs-empty">Escolha flashes ao lado — cada uma vira uma camada, dá pra combinar várias pra montar uma manga</span>
+          <span class="layer-thumbs-empty">Escolha flash ao lado. Cada um vira uma camada, dá pra combinar vários pra montar uma manga</span>
         </div>
       </div>
 
@@ -493,7 +493,7 @@
     </div>
   </section>
 
-  <footer>Preview simulado — o resultado final pode variar conforme técnica, curvatura do corpo e cicatrização · <b>Micael Tatuagem</b></footer>
+  <footer>Preview simulado. O resultado final pode variar conforme técnica, curvatura do corpo e cicatrização · <b>Micael Tatuagem</b></footer>
 </div>
 
 <script>
@@ -545,7 +545,7 @@
 
 
 
-  // ---------- sistema de camadas (múltiplas flashes na mesma foto) ----------
+  // ---------- sistema de camadas (múltiplos flash na mesma foto) ----------
   let layers = [];
   let activeLayerId = null;
   let layerSeq = 0;
@@ -679,7 +679,7 @@
     if(!layers.length){
       const empty = document.createElement('span');
       empty.className = 'layer-thumbs-empty';
-      empty.textContent = 'Escolha flashes ao lado — cada uma vira uma camada, dá pra combinar várias pra montar uma manga';
+      empty.textContent = 'Escolha flash ao lado. Cada um vira uma camada, dá pra combinar vários pra montar uma manga';
       layerThumbs.appendChild(empty);
       return;
     }
