@@ -302,9 +302,69 @@
       background: rgba(10,10,10,0.96) !important;
     }
 
+  /* ── Nav (site-wide) ─────────────────────────────────────── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(10,10,10,.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(212,201,176,0.12);
+    padding: .9rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+    font-size: .95rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #d4c9b0;
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    gap: 1.8rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .nav-links a {
+    font-family: system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+    font-size: .88rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: #6b6560;
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: #d4c9b0; }
+  .nav-links a.destaque { color: #c0392b; }
+  .nav-links a.destaque:hover { opacity: .8; }
+  @media (max-width: 560px) {
+    .nav-logo { display: none; }
+    nav { justify-content: center; }
+    .nav-links { gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .nav-links .hide-sm { display: none; }
+  }
+
   </style>
 </head>
 <body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Micael Tatuagem</a>
+  <ul class="nav-links">
+    <li class="hide-sm"><a href="index.html#sobre">Sobre</a></li>
+    <li><a href="galeria.html">Galeria</a></li>
+    <li><a href="flash.html">Flash</a></li>
+    <li><a href="preview-tatuagem.html">Provador</a></li>
+    <li class="hide-sm"><a href="index.html#processo">Processo</a></li>
+    <li><a href="index.html#promocoes" class="destaque">Promoções</a></li>
+    <li><a href="index.html#contato">Contato</a></li>
+  </ul>
+</nav>
 
 <header class="header">
 
