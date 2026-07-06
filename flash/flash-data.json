@@ -254,7 +254,9 @@
     "title": "Chucky",
     "altText": "Tatuagem flash de chucky. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Dark Art"
+    ],
     "showInDecor": true,
     "date": "2026-07-05"
   },
