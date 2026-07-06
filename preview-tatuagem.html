@@ -247,22 +247,41 @@
     width:100%; height:100%; object-fit:contain;
     pointer-events:none;
   }
+  /* Controles (redimensionar/girar/remover) ficam ocultos por padrão e só aparecem
+     na camada selecionada, pra não poluir a visualização quando há várias camadas. */
+  .overlay-layer .handle,
+  .overlay-layer .rot,
+  .overlay-layer .del{
+    opacity:0; pointer-events:none;
+    transition:opacity .12s ease;
+  }
+  .overlay-layer.selected-layer .handle,
+  .overlay-layer.selected-layer .rot,
+  .overlay-layer.selected-layer .del{
+    opacity:1; pointer-events:auto;
+  }
   .overlay-layer .handle{
-    position:absolute; width:16px; height:16px;
+    position:absolute; width:14px; height:14px;
     background:var(--crimson-bright); border:2px solid #fff;
-    border-radius:50%; bottom:-8px; right:-8px; cursor:nwse-resize;
+    border-radius:50%; bottom:-13px; right:-13px; cursor:nwse-resize;
+  }
+  /* área de toque invisível maior, sem aumentar o círculo visível */
+  .overlay-layer .handle::before,
+  .overlay-layer .rot::before,
+  .overlay-layer .del::before{
+    content:''; position:absolute; inset:-15px;
   }
   .overlay-layer .rot{
-    position:absolute; width:14px; height:14px;
+    position:absolute; width:12px; height:12px;
     background:var(--gold); border:2px solid #fff;
-    border-radius:50%; top:-8px; left:50%; margin-left:-7px; cursor:grab;
+    border-radius:50%; top:-13px; left:50%; margin-left:-6px; cursor:grab;
   }
   .overlay-layer .del{
-    position:absolute; width:16px; height:16px;
+    position:absolute; width:14px; height:14px;
     background:#1a1a1a; border:2px solid #fff;
-    border-radius:50%; top:-8px; right:-8px; cursor:pointer;
+    border-radius:50%; top:-13px; right:-13px; cursor:pointer;
     display:flex; align-items:center; justify-content:center;
-    font-size:10px; line-height:1; color:#fff;
+    font-size:9px; line-height:1; color:#fff;
   }
 
   .layers-panel{
@@ -357,6 +376,7 @@
   }
   .btn.primary:hover{background:var(--crimson-bright); border-color:var(--crimson-bright); color:#fff;}
   .btn:disabled{opacity:.35; cursor:not-allowed;}
+  .btn.active{background:var(--gold); border-color:var(--gold); color:#1b1710;}
   input[type=file]{display:none;}
 
   .controls{
@@ -488,6 +508,10 @@
           <label>Rotação <span id="rotVal">0°</span></label>
           <input type="range" id="rotRange" min="-180" max="180" value="0">
         </div>
+        <div class="control">
+          <label>Espelhar</label>
+          <button type="button" class="btn" id="flipBtn" style="width:100%;" disabled>⇋ Espelhar horizontalmente</button>
+        </div>
       </div>
 
     </div>
@@ -521,6 +545,7 @@
   const scaleRange = document.getElementById('scaleRange');
   const scaleVal = document.getElementById('scaleVal');
   const rotRange = document.getElementById('rotRange');
+  const flipBtn = document.getElementById('flipBtn');
   const rotVal = document.getElementById('rotVal');
 
   // ---------- Flashes carregadas diretamente da pasta /flash do repositório ----------
@@ -577,7 +602,7 @@
       id, src,
       leftPct: 50 + (cascade - 2) * 7,
       topPct: 50 + (cascade - 2) * 5,
-      scale: 1, rotation: 0, opacity: 0.85, blend: 'multiply'
+      scale: 1, rotation: 0, opacity: 0.85, blend: 'multiply', mirror: false
     };
     layers.push(layer);
     renderLayerDOM(layer);
@@ -629,7 +654,7 @@
     if(!layer.el) return;
     layer.el.style.left = layer.leftPct + '%';
     layer.el.style.top = layer.topPct + '%';
-    layer.el.style.transform = `translate(-50%,-50%) rotate(${layer.rotation}deg) scale(${layer.scale})`;
+    layer.el.style.transform = `translate(-50%,-50%) rotate(${layer.rotation}deg) scale(${layer.scale * (layer.mirror ? -1 : 1)}, ${layer.scale})`;
     layer.imgEl.style.opacity = layer.opacity;
     layer.imgEl.style.mixBlendMode = layer.blend;
     layer.el.classList.toggle('selected-layer', layer.id === activeLayerId);
@@ -640,7 +665,7 @@
     layers.forEach(applyLayerStyle);
     const layer = layers.find(l => l.id === id);
     const controlsDisabled = !layer;
-    [opacityRange, blendMode, scaleRange, rotRange].forEach(c => c.disabled = controlsDisabled);
+    [opacityRange, blendMode, scaleRange, rotRange, flipBtn].forEach(c => c.disabled = controlsDisabled);
     if(!layer){
       activeLayerLabel.textContent = 'Nenhuma camada selecionada';
       return;
@@ -652,6 +677,7 @@
     scaleVal.textContent = Math.round(layer.scale * 100) + '%';
     rotRange.value = layer.rotation;
     rotVal.textContent = layer.rotation + '°';
+    flipBtn.classList.toggle('active', !!layer.mirror);
     activeLayerLabel.textContent = 'Editando camada ' + (layers.findIndex(l => l.id === id) + 1) + ' de ' + layers.length;
     updateLayerThumbs();
   }
@@ -668,7 +694,7 @@
       selectLayer(activeLayerId);
     } else {
       updateLayerThumbs();
-      [opacityRange, blendMode, scaleRange, rotRange].forEach(c => c.disabled = true);
+      [opacityRange, blendMode, scaleRange, rotRange, flipBtn].forEach(c => c.disabled = true);
       activeLayerLabel.textContent = 'Nenhuma camada selecionada';
     }
     updateDownloadState();
@@ -810,7 +836,7 @@
     emptyState.style.display = 'flex';
     baseThumbs.querySelectorAll('.base-thumb').forEach(n => n.classList.remove('selected'));
     updateLayerThumbs();
-    [opacityRange, blendMode, scaleRange, rotRange].forEach(c => c.disabled = true);
+    [opacityRange, blendMode, scaleRange, rotRange, flipBtn].forEach(c => c.disabled = true);
     activeLayerLabel.textContent = 'Nenhuma camada selecionada';
     updateDownloadState();
   });
@@ -841,6 +867,13 @@
     rotVal.textContent = rotRange.value + '°';
     if(!layer) return;
     layer.rotation = parseInt(rotRange.value, 10);
+    applyLayerStyle(layer);
+  });
+  flipBtn.addEventListener('click', () => {
+    const layer = layers.find(l => l.id === activeLayerId);
+    if(!layer) return;
+    layer.mirror = !layer.mirror;
+    flipBtn.classList.toggle('active', layer.mirror);
     applyLayerStyle(layer);
   });
 
@@ -941,7 +974,7 @@
           : 'source-over';
         ctx.translate(cx, cy);
         ctx.rotate(layer.rotation * Math.PI/180);
-        ctx.scale(layer.scale, layer.scale);
+        ctx.scale(layer.scale * (layer.mirror ? -1 : 1), layer.scale);
         const ow = baseSize, oh = baseSize * (oImg.height/oImg.width);
         ctx.drawImage(oImg, -ow/2, -oh/2, ow, oh);
         ctx.restore();
@@ -965,7 +998,7 @@
 
   // init
   loadFlashesFromRepo();
-  [opacityRange, blendMode, scaleRange, rotRange].forEach(c => c.disabled = true);
+  [opacityRange, blendMode, scaleRange, rotRange, flipBtn].forEach(c => c.disabled = true);
 })();
 </script>
 <script src="flash-decor.js" defer></script>
