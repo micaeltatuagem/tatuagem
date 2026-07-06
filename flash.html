@@ -208,6 +208,30 @@
     }
     .flash-item[hidden] { display: none; }
 
+    .sort-toggle-btn {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 500;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.5rem 0.9rem;
+      border-radius: 999px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(4px);
+    }
+    .sort-toggle-btn:hover { color: var(--bone); border-color: rgba(212,201,176,0.35); }
+    .sort-toggle-btn.active { background: var(--blood); color: var(--bone); border-color: var(--blood); }
+
+    @media (max-width: 480px) {
+      .sort-toggle-btn { top: 0.6rem; right: 0.6rem; padding: 0.4rem 0.7rem; font-size: 0.72rem; }
+    }
+
     .flash-empty { text-align: center; color: var(--muted); padding: 3rem 1rem; display: none; }
 
     .flash-cta {
@@ -344,6 +368,8 @@
 </head>
 <body>
 
+<button id="sortToggleBtn" class="sort-toggle-btn" onclick="toggleSortOrder()">A-Z</button>
+
 <!-- HEADER -->
 <header class="header">
   <p class="header-label">Catálogo</p>
@@ -361,15 +387,15 @@
 <!-- FLASH_FILTERS_START -->
     <div class="filter-group">
       <button class="filter-btn active" data-filter="all">Todos</button>
-      <span class="filter-count">341 desenhos</span>
+      <span class="filter-count">340 desenhos</span>
     </div>
     <div class="filter-group">
       <button class="filter-btn" data-filter="Old School">Old School</button>
-      <span class="filter-count">85 desenhos</span>
+      <span class="filter-count">83 desenhos</span>
     </div>
     <div class="filter-group">
       <button class="filter-btn" data-filter="Dark Art">Dark Art</button>
-      <span class="filter-count">49 desenhos</span>
+      <span class="filter-count">44 desenhos</span>
     </div>
     <div class="filter-group">
       <button class="filter-btn" data-filter="Religioso">Religioso</button>
@@ -666,9 +692,9 @@
         <img src="flash/caveira-flamejante-1783170152198-29.webp" alt="Tatuagem flash de caveira flamejante. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Caveira Flamejante</figcaption>
       </figure>
-      <figure class="flash-item" data-id="320" data-styles="Old School,Dark Art">
+      <figure class="flash-item" data-id="320" data-styles="">
         <img src="flash/caveira-ossos-1783274697270-5.webp" alt="Tatuagem flash de caveira ossos. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Caveira Ossos 2</figcaption>
+        <figcaption>Caveira Ossos</figcaption>
       </figure>
       <figure class="flash-item" data-id="223" data-styles="">
         <img src="flash/caveira-punk-1783170232431-80.webp" alt="Tatuagem flash de caveira punk. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
@@ -694,7 +720,7 @@
         <img src="flash/chapeu-bruxa-1783190926442-3.webp" alt="Tatuagem flash de chapeu bruxa. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Chapeu Bruxa</figcaption>
       </figure>
-      <figure class="flash-item" data-id="335" data-styles="Dark Art">
+      <figure class="flash-item" data-id="335" data-styles="">
         <img src="flash/chucky-1783274721155-20.webp" alt="Tatuagem flash de chucky. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Chucky</figcaption>
       </figure>
@@ -1042,7 +1068,7 @@
         <img src="flash/ghostface-1783170207844-64.webp" alt="Tatuagem flash de ghostface. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Ghostface</figcaption>
       </figure>
-      <figure class="flash-item" data-id="339" data-styles="Dark Art">
+      <figure class="flash-item" data-id="339" data-styles="">
         <img src="flash/ghostface-2-1783274728099-24.webp" alt="Tatuagem flash de ghostface 2. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Ghostface 2</figcaption>
       </figure>
@@ -1110,7 +1136,7 @@
         <img src="flash/laroye-seu-ze-1783201233906-1.webp" alt="Tatuagem flash de laroye seu ze. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Laroye Seu Ze</figcaption>
       </figure>
-      <figure class="flash-item" data-id="338" data-styles="Dark Art">
+      <figure class="flash-item" data-id="338" data-styles="">
         <img src="flash/leatherface-1783274726377-23.webp" alt="Tatuagem flash de leatherface. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Leatherface</figcaption>
       </figure>
@@ -1390,7 +1416,7 @@
         <img src="flash/paz-1783190080954-12.webp" alt="Tatuagem flash de paz. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Paz</figcaption>
       </figure>
-      <figure class="flash-item" data-id="342" data-styles="Dark Art">
+      <figure class="flash-item" data-id="342" data-styles="">
         <img src="flash/pennywise-1783274733251-27.webp" alt="Tatuagem flash de pennywise. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Pennywise</figcaption>
       </figure>
@@ -1409,10 +1435,6 @@
       <figure class="flash-item" data-id="347" data-styles="Old School">
         <img src="flash/pin-up-8-1783279635815.webp" alt="Tatuagem flash de pin up 8. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Pin Up 8</figcaption>
-      </figure>
-      <figure class="flash-item" data-id="348" data-styles="Old School">
-        <img src="flash/pin-up-9-1783297599013.webp" alt="Tatuagem flash de pin up 9. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Pin Up 9</figcaption>
       </figure>
       <figure class="flash-item" data-id="143" data-styles="">
         <img src="flash/pin-up-basquete-1783170102193-0.webp" alt="Tatuagem flash de pin up basquete. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
@@ -1847,10 +1869,40 @@
 <script>
   // Busca + filtro de tags (client-side, so filtra o que ja esta na pagina, nao afeta indexacao)
   const searchInput = document.getElementById('flashSearch');
-  const items = Array.from(document.querySelectorAll('.flash-item'));
+  const flashGridEl = document.getElementById('flashGrid');
+  const uploadOrderItems = Array.from(document.querySelectorAll('.flash-item')); // ordem original (upload)
+  const items = uploadOrderItems;
   const emptyMsg = document.getElementById('flashEmpty');
   const filterBtns = Array.from(document.querySelectorAll('.filter-btn'));
   let activeFilter = 'all';
+
+  // ── Ordenacao: upload (padrao) vs alfabetica (toggle) ──
+  const sortBtn = document.getElementById('sortToggleBtn');
+  let currentSort = localStorage.getItem('flashSortOrder') || 'upload';
+
+  function applySortOrder() {
+    let ordered;
+    if (currentSort === 'alpha') {
+      ordered = [...uploadOrderItems].sort((a, b) =>
+        a.querySelector('figcaption').textContent.localeCompare(b.querySelector('figcaption').textContent, 'pt-BR'));
+      sortBtn.classList.add('active');
+      sortBtn.textContent = 'Upload';
+    } else {
+      ordered = uploadOrderItems;
+      sortBtn.classList.remove('active');
+      sortBtn.textContent = 'A-Z';
+    }
+    ordered.forEach(el => flashGridEl.appendChild(el));
+  }
+
+  function toggleSortOrder() {
+    currentSort = currentSort === 'alpha' ? 'upload' : 'alpha';
+    localStorage.setItem('flashSortOrder', currentSort);
+    applySortOrder();
+    gtag('event', 'toggle_sort', { event_category: 'flash', event_label: currentSort });
+  }
+
+  applySortOrder();
 
   function applyFilters() {
     const term = searchInput.value.trim().toLowerCase();
