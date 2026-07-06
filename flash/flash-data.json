@@ -99,10 +99,13 @@
     "id": 320,
     "filename": "caveira-ossos-1783274697270-5.webp",
     "imageUrl": "flash/caveira-ossos-1783274697270-5.webp",
-    "title": "Caveira Ossos",
+    "title": "Caveira Ossos 2",
     "altText": "Tatuagem flash de caveira ossos. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Old School",
+      "Dark Art"
+    ],
     "showInDecor": true,
     "date": "2026-07-05"
   },
