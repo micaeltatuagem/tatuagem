@@ -302,7 +302,9 @@
     "title": "Ghostface 2",
     "altText": "Tatuagem flash de ghostface 2. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Dark Art"
+    ],
     "showInDecor": true,
     "date": "2026-07-05"
   },
