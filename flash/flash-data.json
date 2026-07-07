@@ -32,9 +32,12 @@
     "filename": "smoke-in-the-dark-1783443561239-2.webp",
     "imageUrl": "flash/smoke-in-the-dark-1783443561239-2.webp",
     "title": "Smoke In The Dark",
-    "altText": "Tatuagem flash de smoke in the dark. Disponível na Micael Tatuagem, Muriaé MG.",
+    "altText": "Tatuagem flash de smoke in the dark. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "NeoTrad",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-07"
   },
