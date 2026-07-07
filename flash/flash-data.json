@@ -111,7 +111,11 @@
     "title": "Solteo Que Nao Te Deixa Florescer",
     "altText": "Tatuagem flash de solteo que nao te deixa florescer. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Escrita",
+      "Budista"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
