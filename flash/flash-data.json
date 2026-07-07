@@ -318,10 +318,14 @@
     "id": 390,
     "filename": "confie-no-dharma-aceiteo-queee-facao-seu-melhor-1783310156041-23.webp",
     "imageUrl": "flash/confie-no-dharma-aceiteo-queee-facao-seu-melhor-1783310156041-23.webp",
-    "title": "Confie No Dharma Aceiteo Queee Facao Seu Melhor",
+    "title": "Confie No Dharma Aceite o Que é, e Faça o Seu Melhor",
     "altText": "Tatuagem flash de confie no dharma aceiteo queee facao seu melhor. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Escrita",
+      "Veda"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
