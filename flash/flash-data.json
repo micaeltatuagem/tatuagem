@@ -243,10 +243,14 @@
     "id": 385,
     "filename": "paz-interioreo-maior-tesouro-que-existe-1783310148491-18.webp",
     "imageUrl": "flash/paz-interioreo-maior-tesouro-que-existe-1783310148491-18.webp",
-    "title": "Paz Interioreo Maior Tesouro Que Existe",
-    "altText": "Tatuagem flash de paz interioreo maior tesouro que existe. Disponível na Micael Tatuagem, Muriaé MG.",
+    "title": "Paz Interior é o Maior Tesouro Que Existe",
+    "altText": "Tatuagem flash de paz interior é o maior tesouro que existe. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Escrita",
+      "Budista"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
