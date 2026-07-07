@@ -213,10 +213,14 @@
     "id": 383,
     "filename": "viva-com-atencao-plenaeo-milagre-acontece-1783310145177-16.webp",
     "imageUrl": "flash/viva-com-atencao-plenaeo-milagre-acontece-1783310145177-16.webp",
-    "title": "Viva Com Atencao Plenaeo Milagre Acontece",
-    "altText": "Tatuagem flash de viva com atencao plenaeo milagre acontece. Disponível na Micael Tatuagem, Muriaé MG.",
+    "title": "Viva Com Atenção Plena e o Milagre Acontece",
+    "altText": "Tatuagem flash de viva com atenção plena e o milagre acontece. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Escrita",
+      "Budista"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
