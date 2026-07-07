@@ -228,10 +228,14 @@
     "id": 384,
     "filename": "a-verdadeira-vitoriae-vencera-si-mesmo-1783310146808-17.webp",
     "imageUrl": "flash/a-verdadeira-vitoriae-vencera-si-mesmo-1783310146808-17.webp",
-    "title": "A Verdadeira Vitoriae Vencera Si Mesmo",
-    "altText": "Tatuagem flash de a verdadeira vitoriae vencera si mesmo. Disponível na Micael Tatuagem, Muriaé MG.",
+    "title": "A Verdadeira Vitória é Vencer a Si Mesmo",
+    "altText": "Tatuagem flash de a verdadeira vitória é vencer a si mesmo. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Escrita",
+      "Budista"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
