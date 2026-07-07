@@ -838,9 +838,12 @@
     "filename": "pantera-3-1783304870092-13.webp",
     "imageUrl": "flash/pantera-3-1783304870092-13.webp",
     "title": "Pantera 3",
-    "altText": "Tatuagem flash de pantera 3. Disponível na Micael Tatuagem, Muriaé MG.",
+    "altText": "Tatuagem flash de pantera 3. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Old School",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
