@@ -198,10 +198,14 @@
     "id": 382,
     "filename": "tudo-que-somose-resultado-do-qu-pensamos-1783310143646-15.webp",
     "imageUrl": "flash/tudo-que-somose-resultado-do-qu-pensamos-1783310143646-15.webp",
-    "title": "Tudo Que Somose Resultado Do Qu Pensamos",
-    "altText": "Tatuagem flash de tudo que somose resultado do qu pensamos. Disponível na Micael Tatuagem, Muriaé MG.",
+    "title": "Tudo Que Somos é Resultado Do Que Pensamos",
+    "altText": "Tatuagem flash de tudo que somos é resultado do que pensamos. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Escrita",
+      "Budista"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
