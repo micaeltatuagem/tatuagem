@@ -183,10 +183,14 @@
     "id": 381,
     "filename": "seja-gentil-consigo-mesmoe-com-os-outros-1783310142230-14.webp",
     "imageUrl": "flash/seja-gentil-consigo-mesmoe-com-os-outros-1783310142230-14.webp",
-    "title": "Seja Gentil Consigo Mesmoe Com Os Outros",
-    "altText": "Tatuagem flash de seja gentil consigo mesmoe com os outros. Disponível na Micael Tatuagem, Muriaé MG.",
+    "title": "Seja Gentil Consigo Mesmo e Com Os Outros",
+    "altText": "Tatuagem flash de seja gentil consigo mesmo e com os outros. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Escrita",
+      "Budista"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
