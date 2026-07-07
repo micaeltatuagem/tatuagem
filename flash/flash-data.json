@@ -46,9 +46,12 @@
     "filename": "twilight-echo-1783443563049-3.webp",
     "imageUrl": "flash/twilight-echo-1783443563049-3.webp",
     "title": "Twilight Echo",
-    "altText": "Tatuagem flash de twilight echo. Disponível na Micael Tatuagem, Muriaé MG.",
+    "altText": "Tatuagem flash de twilight echo. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "NeoTrad",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-07"
   },
