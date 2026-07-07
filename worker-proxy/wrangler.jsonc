@@ -1,0 +1,8 @@
+{
+  "name": "tatuagem-gh-proxy",
+  "main": "worker.js",
+  "compatibility_date": "2026-07-01"
+  // GITHUB_TOKEN e ADMIN_PASSWORD NÃO ficam aqui — são configurados como
+  // secrets via linha de comando (veja README.md), pra nunca aparecer
+  // em texto puro em nenhum arquivo commitado.
+}
