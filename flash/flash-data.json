@@ -333,10 +333,14 @@
     "id": 391,
     "filename": "a-luz-que-buscas-esta-dentro-de-voce-1783310157503-24.webp",
     "imageUrl": "flash/a-luz-que-buscas-esta-dentro-de-voce-1783310157503-24.webp",
-    "title": "A Luz Que Buscas Esta Dentro De Voce",
-    "altText": "Tatuagem flash de a luz que buscas esta dentro de voce. Disponível na Micael Tatuagem, Muriaé MG.",
+    "title": "A Luz Que Buscas Está Dentro De Você",
+    "altText": "Tatuagem flash de a luz que buscas esta dentro de voce. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Escrita",
+      "Budista"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
