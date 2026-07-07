@@ -259,9 +259,13 @@
     "filename": "aham-bramasmi-1783310149946-19.webp",
     "imageUrl": "flash/aham-bramasmi-1783310149946-19.webp",
     "title": "Aham Bramasmi",
-    "altText": "Tatuagem flash de aham bramasmi. Disponível na Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "altText": "Tatuagem flash de aham bramasmi. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Escrita Védica \"Eu sou o Todo\"",
+    "styles": [
+      "Religioso",
+      "Escrita",
+      "Veda"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
