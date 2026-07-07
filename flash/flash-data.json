@@ -123,10 +123,14 @@
     "id": 377,
     "filename": "nao-faca-ao-outroo-que-te-causaria-dor-1783310136258-10.webp",
     "imageUrl": "flash/nao-faca-ao-outroo-que-te-causaria-dor-1783310136258-10.webp",
-    "title": "Nao Faca Ao Outroo Que Te Causaria Dor",
+    "title": "Nao Faça Ao Outro o Que Te Causaria Dor",
     "altText": "Tatuagem flash de nao faca ao outroo que te causaria dor. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Escrita",
+      "Budista"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
