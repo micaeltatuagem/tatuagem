@@ -287,8 +287,8 @@
       </div>
 
       <div class="login-field">
-        <label for="inputToken">Token GitHub</label>
-        <input type="password" id="inputToken" placeholder="ghp_..." />
+        <label for="inputToken">Senha do admin</label>
+        <input type="password" id="inputToken" placeholder="Senha do painel" />
         <p class="hint">Necessário apenas para o painel da Galeria.</p>
       </div>
 
@@ -334,7 +334,7 @@
   </div>
 
   <div class="token-notice" id="tokenNotice" style="display:none;">
-    ⚠️ Token GitHub não informado. O painel da <strong>Galeria</strong> não conseguirá fazer uploads. <a href="#" onclick="logout()" style="color:var(--gold-dim);text-decoration:underline;">Fazer login novamente</a> para informar o token.
+    ⚠️ Senha do admin não informada. O painel da <strong>Galeria</strong> não conseguirá fazer uploads. <a href="#" onclick="logout()" style="color:var(--gold-dim);text-decoration:underline;">Fazer login novamente</a> para informar a senha.
   </div>
 
   <div class="hub-footer">
@@ -383,17 +383,17 @@
       return;
     }
 
-    // Validate token if provided
+    // Validate password if provided
     if (token) {
-      errEl.textContent = '⏳ Validando token...';
+      errEl.textContent = '⏳ Validando senha...';
       errEl.style.color = '#aaa';
       errEl.style.display = 'block';
 
       try {
-        const res = await fetch('https://api.github.com/repos/micaeltatuagem/tatuagem', {
-          headers: { Authorization: `token ${token}` }
+        const res = await fetch('https://tatuagem-gh-proxy.micaeltattoo.workers.dev/gh/repos/micaeltatuagem/tatuagem', {
+          headers: { Authorization: `Bearer ${token}` }
         });
-        if (!res.ok) throw new Error('Token sem acesso ao repositório.');
+        if (!res.ok) throw new Error('Senha incorreta ou sem acesso.');
         sessionStorage.setItem(TOKEN_KEY, token);
       } catch (err) {
         errEl.textContent = '❌ ' + err.message;
@@ -424,14 +424,14 @@
       card.style.cursor = 'pointer';
       card.addEventListener('click', function(e) {
         e.preventDefault();
-        alert('Para acessar a Galeria é preciso informar o Token GitHub no login.\n\nClique em "Sair" e faça login novamente, preenchendo o campo Token.');
+        alert('Para acessar a Galeria é preciso informar a senha do admin no login.\n\nClique em "Sair" e faça login novamente, preenchendo o campo Senha.');
       });
       cardFlash.style.opacity = '0.55';
       cardFlash.removeAttribute('href');
       cardFlash.style.cursor = 'pointer';
       cardFlash.addEventListener('click', function(e) {
         e.preventDefault();
-        alert('Para acessar o Flash é preciso informar o Token GitHub no login.\n\nClique em "Sair" e faça login novamente, preenchendo o campo Token.');
+        alert('Para acessar o Flash é preciso informar a senha do admin no login.\n\nClique em "Sair" e faça login novamente, preenchendo o campo Senha.');
       });
     } else {
       card.href = 'admingaleria.html';
