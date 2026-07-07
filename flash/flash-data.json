@@ -60,9 +60,12 @@
     "filename": "velvet-crime-1783443565232-4.webp",
     "imageUrl": "flash/velvet-crime-1783443565232-4.webp",
     "title": "Velvet Crime",
-    "altText": "Tatuagem flash de velvet crime. Disponível na Micael Tatuagem, Muriaé MG.",
+    "altText": "Tatuagem flash de velvet crime. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "NeoTrad",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-07"
   },
