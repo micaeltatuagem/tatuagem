@@ -93,10 +93,12 @@
     "id": 375,
     "filename": "compaixaoea-religiao-mais-elevada-1783310133307-8.webp",
     "imageUrl": "flash/compaixaoea-religiao-mais-elevada-1783310133307-8.webp",
-    "title": "Compaixaoea Religiao Mais Elevada",
-    "altText": "Tatuagem flash de compaixaoea religiao mais elevada. Disponível na Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Compaixão é a Religião Mais Elevada",
+    "altText": "Tatuagem flash de compaixaoea religiao mais elevada. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Escrita budista",
+    "styles": [
+      "Escrita"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
