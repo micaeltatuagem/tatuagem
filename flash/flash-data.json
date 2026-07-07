@@ -274,9 +274,13 @@
     "filename": "tat-tvam-asi-1783310151433-20.webp",
     "imageUrl": "flash/tat-tvam-asi-1783310151433-20.webp",
     "title": "Tat Tvam Asi",
-    "altText": "Tatuagem flash de tat tvam asi. Disponível na Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "altText": "Tatuagem flash de tat tvam asi. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Escrita Védica \"Tu és aquilo\"",
+    "styles": [
+      "Religioso",
+      "Escrita",
+      "Veda"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
