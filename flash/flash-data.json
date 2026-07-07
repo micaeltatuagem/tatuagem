@@ -4,9 +4,12 @@
     "filename": "eletric-slowdance-1783443556874-0.webp",
     "imageUrl": "flash/eletric-slowdance-1783443556874-0.webp",
     "title": "Eletric Slowdance",
-    "altText": "Tatuagem flash de eletric slowdance. Disponível na Micael Tatuagem, Muriaé MG.",
+    "altText": "Tatuagem flash de eletric slowdance. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "NeoTrad",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-07"
   },
