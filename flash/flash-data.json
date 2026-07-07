@@ -97,7 +97,9 @@
     "altText": "Tatuagem flash de compaixaoea religiao mais elevada. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "Escrita budista",
     "styles": [
-      "Escrita"
+      "Religioso",
+      "Escrita",
+      "Budista"
     ],
     "showInDecor": true,
     "date": "2026-07-06"
