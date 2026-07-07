@@ -169,9 +169,13 @@
     "filename": "a-sabedoria-comeca-na-aceitacao-1783310140824-13.webp",
     "imageUrl": "flash/a-sabedoria-comeca-na-aceitacao-1783310140824-13.webp",
     "title": "A Sabedoria Começa Na Aceitação",
-    "altText": "Tatuagem flash de a sabedoria começa na aceitação. Disponível na Micael Tatuagem, Muriaé MG.",
+    "altText": "Tatuagem flash de a sabedoria começa na aceitação. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Escrita",
+      "Budista"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
