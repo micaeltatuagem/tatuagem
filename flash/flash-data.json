@@ -304,9 +304,13 @@
     "filename": "prajnanam-brahma-1783310154600-22.webp",
     "imageUrl": "flash/prajnanam-brahma-1783310154600-22.webp",
     "title": "Prajnanam Brahma",
-    "altText": "Tatuagem flash de prajnanam brahma. Disponível na Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "altText": "Tatuagem flash de prajnanam brahma. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Escrita Védica \"A Consciência é o Absoluto\"",
+    "styles": [
+      "Religioso",
+      "Escrita",
+      "Veda"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
