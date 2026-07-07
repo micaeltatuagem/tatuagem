@@ -18,9 +18,12 @@
     "filename": "lethal-woman-1783443559103-1.webp",
     "imageUrl": "flash/lethal-woman-1783443559103-1.webp",
     "title": "Lethal Woman",
-    "altText": "Tatuagem flash de lethal woman. Disponível na Micael Tatuagem, Muriaé MG.",
+    "altText": "Tatuagem flash de lethal woman. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "NeoTrad",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-07"
   },
