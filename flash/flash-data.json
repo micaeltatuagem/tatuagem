@@ -289,9 +289,13 @@
     "filename": "sarvam-kahlvidam-brahma-1783310153067-21.webp",
     "imageUrl": "flash/sarvam-kahlvidam-brahma-1783310153067-21.webp",
     "title": "Sarvam Kahlvidam Brahma",
-    "altText": "Tatuagem flash de sarvam kahlvidam brahma. Disponível na Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "altText": "Tatuagem flash de sarvam kahlvidam brahma. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Tatuagem Védica \"Tudo isso é Brahman\"",
+    "styles": [
+      "Religioso",
+      "Escrita",
+      "Veda"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
