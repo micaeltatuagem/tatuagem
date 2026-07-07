@@ -138,10 +138,14 @@
     "id": 378,
     "filename": "cada-respiroe-uma-nova-chance-1783310137786-11.webp",
     "imageUrl": "flash/cada-respiroe-uma-nova-chance-1783310137786-11.webp",
-    "title": "Cada Respiroe Uma Nova Chance",
-    "altText": "Tatuagem flash de cada respiroe uma nova chance. Disponível na Micael Tatuagem, Muriaé MG.",
+    "title": "Cada Respiro é Uma Nova Chance",
+    "altText": "Tatuagem flash de cada respiro é uma nova chance. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Escrita",
+      "Budista"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
