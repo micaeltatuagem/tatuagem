@@ -6,7 +6,9 @@
     "title": "Dancarina 5",
     "altText": "Tatuagem flash de dancarina 5. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Dark Art"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
