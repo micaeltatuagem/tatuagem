@@ -162,7 +162,7 @@
   .flash-grid::-webkit-scrollbar-thumb{background:#b9ac8c;border-radius:3px;}
 
   .lettering-panel{ margin-top:18px; }
-  .lettering-row{ display:flex; gap:6px; margin-bottom:10px; }
+  .lettering-row{ display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap; }
   .lettering-row input[type=text]{
     flex:1; font-family:'Inter',sans-serif; font-size:13px; padding:9px 10px;
     border:1px solid #b9ac8c; border-radius:2px; background:#fbf8f1; color:#3a3327;
@@ -171,6 +171,33 @@
     font-family:'Inter',sans-serif; font-size:12px; padding:8px 8px;
     border:1px solid #b9ac8c; border-radius:2px; background:#fbf8f1; color:#3a3327;
     max-width:150px;
+  }
+  .font-picker{ position:relative; flex-shrink:0; }
+  .font-picker-trigger{
+    font-family:'Inter',sans-serif; font-size:13px; padding:9px 10px;
+    border:1px solid #b9ac8c; border-radius:2px; background:#fbf8f1; color:#3a3327;
+    cursor:pointer; text-align:left; min-width:150px; max-width:180px;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    display:flex; align-items:center; justify-content:space-between; gap:6px;
+  }
+  .font-picker-trigger::after{ content:'▾'; font-size:9px; opacity:.6; flex-shrink:0; }
+  .font-picker-panel{
+    position:absolute; top:calc(100% + 4px); right:0; z-index:30;
+    background:#fbf8f1; border:1px solid #b9ac8c; border-radius:4px;
+    box-shadow:0 10px 28px rgba(0,0,0,.28); min-width:220px; max-height:280px; overflow-y:auto;
+    display:none;
+  }
+  .font-picker-panel.open{ display:block; }
+  .font-picker-option{
+    padding:11px 14px; font-size:17px; color:#1b1710; cursor:pointer;
+    border-bottom:1px solid rgba(185,172,140,.3); line-height:1.2;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .font-picker-option:last-child{ border-bottom:none; }
+  .font-picker-option:hover, .font-picker-option.active{ background:#efe6d2; }
+  .font-picker-option .fp-label{
+    display:block; font-family:'Inter',sans-serif; font-size:9px; letter-spacing:.05em;
+    text-transform:uppercase; color:#9a8f76; margin-top:2px;
   }
   .lettering-add-btn{
     font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
@@ -558,7 +585,10 @@
 
         <div class="lettering-row">
           <input id="letteringText" type="text" placeholder="Escreva o texto (ex: um nome)" maxlength="26">
-          <select id="letteringFont"></select>
+          <div class="font-picker" id="fontPicker">
+            <button type="button" class="font-picker-trigger" id="fontPickerTrigger">Fonte</button>
+            <div class="font-picker-panel" id="fontPickerPanel"></div>
+          </div>
         </div>
         <div class="font-upload-row">
           <label for="fontUploadInput">+ carregar fonte própria (.ttf/.otf/.woff)</label>
@@ -722,7 +752,9 @@
   const shadowColor = document.getElementById('shadowColor');
 
   const letteringText = document.getElementById('letteringText');
-  const letteringFont = document.getElementById('letteringFont');
+  const fontPicker = document.getElementById('fontPicker');
+  const fontPickerTrigger = document.getElementById('fontPickerTrigger');
+  const fontPickerPanel = document.getElementById('fontPickerPanel');
   const fontUploadInput = document.getElementById('fontUploadInput');
   const addTextLayerBtn = document.getElementById('addTextLayerBtn');
   const fusionWordA = document.getElementById('fusionWordA');
@@ -739,18 +771,36 @@
     {name:'Chicano / blackletter bold', family:"'UnifrakturCook', serif"},
     {name:'Fineline / monoline', family:"'Mrs Saint Delafield', cursive"},
   ];
+  let currentFontFamily = fontList[0].family;
 
-  function refreshFontSelect(){
-    const prev = letteringFont.value;
-    letteringFont.innerHTML = '';
+  function renderFontPicker(){
+    fontPickerPanel.innerHTML = '';
     fontList.forEach(f => {
-      const opt = document.createElement('option');
-      opt.value = f.family; opt.textContent = f.name;
-      letteringFont.appendChild(opt);
+      const opt = document.createElement('div');
+      opt.className = 'font-picker-option' + (f.family === currentFontFamily ? ' active' : '');
+      opt.style.fontFamily = f.family;
+      opt.textContent = f.name;
+      opt.addEventListener('click', () => {
+        currentFontFamily = f.family;
+        fontPickerTrigger.textContent = f.name;
+        fontPickerTrigger.style.fontFamily = f.family;
+        fontPickerPanel.classList.remove('open');
+        renderFontPicker();
+      });
+      fontPickerPanel.appendChild(opt);
     });
-    if(fontList.some(f => f.family === prev)) letteringFont.value = prev;
   }
-  refreshFontSelect();
+  renderFontPicker();
+  fontPickerTrigger.textContent = fontList[0].name;
+  fontPickerTrigger.style.fontFamily = fontList[0].family;
+
+  fontPickerTrigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    fontPickerPanel.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if(!fontPicker.contains(e.target)) fontPickerPanel.classList.remove('open');
+  });
 
   fontUploadInput.addEventListener('change', (e) => {
     Array.from(e.target.files).forEach(file => {
@@ -760,9 +810,12 @@
         const fontFace = new FontFace(family, `url(${ev.target.result})`);
         fontFace.load().then(loaded => {
           document.fonts.add(loaded);
-          fontList.push({name:'✎ ' + file.name.replace(/\.[^/.]+$/, ''), family:`'${family}'`});
-          refreshFontSelect();
-          letteringFont.value = `'${family}'`;
+          const newFont = {name:'✎ ' + file.name.replace(/\.[^/.]+$/, ''), family:`'${family}'`};
+          fontList.push(newFont);
+          currentFontFamily = newFont.family;
+          fontPickerTrigger.textContent = newFont.name;
+          fontPickerTrigger.style.fontFamily = newFont.family;
+          renderFontPicker();
         }).catch(() => {
           alert('Não consegui carregar essa fonte (' + file.name + '). Tente outro arquivo.');
         });
@@ -1256,7 +1309,7 @@
   addTextLayerBtn.addEventListener('click', () => {
     const text = letteringText.value.trim();
     if(!text){ letteringText.focus(); return; }
-    addTextLayer(text, letteringFont.value);
+    addTextLayer(text, currentFontFamily);
     if(typeof gtag === 'function') gtag('event', 'add_text_layer', { event_category: 'provador' });
   });
 
@@ -1265,8 +1318,8 @@
     const b = fusionWordB.value.trim();
     if(!a || !b){ fusionWordA.focus(); return; }
     const center = { leftPct: 50, topPct: 50 };
-    const layerA = addTextLayer(a, letteringFont.value, center);
-    const layerB = addTextLayer(b, letteringFont.value, center);
+    const layerA = addTextLayer(a, currentFontFamily, center);
+    const layerB = addTextLayer(b, currentFontFamily, center);
     if(fusionMode === 'rot') layerB.rotation = 180;
     else if(fusionMode === 'mirh') layerB.mirror = true;
     layerB.opacity = 0.55;
