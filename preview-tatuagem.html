@@ -11,7 +11,7 @@
 <meta name="robots" content="index, follow" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Pirata+One&family=Great+Vibes&family=UnifrakturCook:wght@700&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink:#0d0d0d;
@@ -161,6 +161,48 @@
   .flash-grid::-webkit-scrollbar{width:6px;}
   .flash-grid::-webkit-scrollbar-thumb{background:#b9ac8c;border-radius:3px;}
 
+  .lettering-panel{ margin-top:18px; }
+  .lettering-row{ display:flex; gap:6px; margin-bottom:10px; }
+  .lettering-row input[type=text]{
+    flex:1; font-family:'Inter',sans-serif; font-size:13px; padding:9px 10px;
+    border:1px solid #b9ac8c; border-radius:2px; background:#fbf8f1; color:#3a3327;
+  }
+  .lettering-row select{
+    font-family:'Inter',sans-serif; font-size:12px; padding:8px 8px;
+    border:1px solid #b9ac8c; border-radius:2px; background:#fbf8f1; color:#3a3327;
+    max-width:150px;
+  }
+  .lettering-add-btn{
+    font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    padding:9px 14px; border:1px solid #1b1710; background:#1b1710; color:var(--paper);
+    border-radius:2px; cursor:pointer; white-space:nowrap;
+  }
+  .font-upload-row{ display:flex; align-items:center; gap:8px; margin-bottom:14px; }
+  .font-upload-row label{
+    font-family:'Oswald',sans-serif; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
+    color:#6b6250; cursor:pointer; text-decoration:underline;
+  }
+  .fusion-details summary{
+    font-family:'Oswald',sans-serif; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
+    color:#6b6250; cursor:pointer; margin-bottom:10px;
+  }
+  .fusion-inputs{ display:flex; gap:8px; margin-bottom:10px; }
+  .fusion-modebar{ display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap; }
+  .fusion-modebar button{
+    font-family:'Inter',sans-serif; font-size:11px; padding:6px 11px; border-radius:999px;
+    border:1px solid #b9ac8c; background:#fbf8f1; color:#6b6250; cursor:pointer;
+  }
+  .fusion-modebar button.active{ background:#1b1710; border-color:#1b1710; color:var(--paper); }
+  .fusion-match{
+    display:flex; align-items:center; gap:8px; font-size:12px; color:#3a3327;
+    background:#fbf8f1; border:1px solid #b9ac8c; border-radius:3px; padding:8px 10px; margin-bottom:10px;
+  }
+  .fusion-match b{ color:#1b1710; }
+  .fusion-match .dot{ width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .fusion-match .dot.good{ background:#5f8a4f; }
+  .fusion-match .dot.mid{ background:#c98a34; }
+  .fusion-match .dot.bad{ background:#b34d43; }
+
   .flash-item{
     aspect-ratio:1;
     background:#fbf8f1;
@@ -246,6 +288,15 @@
   .overlay-img{
     width:100%; height:100%; object-fit:contain;
     pointer-events:none;
+  }
+  .overlay-layer.is-text{
+    width:auto; height:auto; min-width:50px; min-height:36px;
+    display:flex; align-items:center; justify-content:center;
+    padding:4px 8px;
+  }
+  .overlay-text{
+    font-size:46px; line-height:1.05; white-space:nowrap; pointer-events:none;
+    font-weight:600;
   }
   /* Controles (redimensionar/girar/remover) ficam ocultos por padrão e só aparecem
      na camada selecionada, pra não poluir a visualização quando há várias camadas. */
@@ -500,6 +551,37 @@
           <input type="file" id="customFlashInput" accept="image/*">
         </label>
       </div>
+
+      <div class="lettering-panel">
+        <h2>Lettering / texto</h2>
+        <div class="sub">Simule um nome ou frase direto na pele, na fonte que quiser</div>
+
+        <div class="lettering-row">
+          <input id="letteringText" type="text" placeholder="Escreva o texto (ex: um nome)" maxlength="26">
+          <select id="letteringFont"></select>
+        </div>
+        <div class="font-upload-row">
+          <label for="fontUploadInput">+ carregar fonte própria (.ttf/.otf/.woff)</label>
+          <input type="file" id="fontUploadInput" accept=".ttf,.otf,.woff,.woff2" multiple style="display:none;">
+        </div>
+        <div class="lettering-row">
+          <button class="lettering-add-btn" id="addTextLayerBtn" style="width:100%;">+ Adicionar como camada</button>
+        </div>
+
+        <details class="fusion-details">
+          <summary>Fusão de dois nomes / ambigrama (avançado)</summary>
+          <div class="fusion-inputs">
+            <input id="fusionWordA" type="text" placeholder="Palavra A (lida normal)" maxlength="18">
+            <input id="fusionWordB" type="text" placeholder="Palavra B (na virada)" maxlength="18">
+          </div>
+          <div class="fusion-modebar" id="fusionModeBar">
+            <button type="button" class="active" data-mode="rot">Rotação 180° (de cabeça pra baixo)</button>
+            <button type="button" data-mode="mirh">Espelho (lado a lado)</button>
+          </div>
+          <div class="fusion-match" id="fusionMatch"></div>
+          <button class="lettering-add-btn" id="addFusionBtn" style="width:100%;">+ Adicionar fusão como 2 camadas</button>
+        </details>
+      </div>
     </div>
 
     <!-- CANVAS -->
@@ -531,6 +613,7 @@
         <input type="file" id="bodyPhotoInput" accept="image/*" capture="environment">
         <button class="btn" id="resetBtn">Reiniciar</button>
         <button class="btn" id="downloadBtn" disabled>Baixar preview</button>
+        <button class="btn" id="shareBtn" disabled>↗ Compartilhar</button>
       </div>
 
       <div class="base-picker">
@@ -571,6 +654,29 @@
         </div>
       </div>
 
+      <div class="controls" id="textControls" style="display:none;">
+        <div class="control">
+          <label>Cor do texto</label>
+          <input type="color" id="textColor" value="#1b1710" style="width:100%; height:38px; border:1px solid var(--line); border-radius:4px; padding:2px; background:none;">
+        </div>
+        <div class="control">
+          <label>Contorno <span id="strokeWidthVal">0px</span></label>
+          <input type="range" id="strokeWidthRange" min="0" max="8" value="0">
+        </div>
+        <div class="control">
+          <label>Cor do contorno</label>
+          <input type="color" id="strokeColor" value="#000000" style="width:100%; height:38px; border:1px solid var(--line); border-radius:4px; padding:2px; background:none;">
+        </div>
+        <div class="control">
+          <label>Sombra</label>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="checkbox" id="shadowOn">
+            <input type="range" id="shadowBlurRange" min="0" max="20" value="4" style="flex:1;">
+            <input type="color" id="shadowColor" value="#000000" style="width:44px; height:32px; padding:2px; border:1px solid var(--line); border-radius:4px; background:none;">
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -588,6 +694,7 @@
   const uploadBtn = document.getElementById('uploadBtn');
   const resetBtn = document.getElementById('resetBtn');
   const downloadBtn = document.getElementById('downloadBtn');
+  const shareBtn = document.getElementById('shareBtn');
 
   const canvasShell = document.getElementById('canvasShell');
   const emptyState = document.getElementById('emptyState');
@@ -604,6 +711,115 @@
   const rotRange = document.getElementById('rotRange');
   const flipBtn = document.getElementById('flipBtn');
   const rotVal = document.getElementById('rotVal');
+
+  const textControls = document.getElementById('textControls');
+  const textColor = document.getElementById('textColor');
+  const strokeWidthRange = document.getElementById('strokeWidthRange');
+  const strokeWidthVal = document.getElementById('strokeWidthVal');
+  const strokeColor = document.getElementById('strokeColor');
+  const shadowOn = document.getElementById('shadowOn');
+  const shadowBlurRange = document.getElementById('shadowBlurRange');
+  const shadowColor = document.getElementById('shadowColor');
+
+  const letteringText = document.getElementById('letteringText');
+  const letteringFont = document.getElementById('letteringFont');
+  const fontUploadInput = document.getElementById('fontUploadInput');
+  const addTextLayerBtn = document.getElementById('addTextLayerBtn');
+  const fusionWordA = document.getElementById('fusionWordA');
+  const fusionWordB = document.getElementById('fusionWordB');
+  const fusionModeBar = document.getElementById('fusionModeBar');
+  const fusionMatch = document.getElementById('fusionMatch');
+  const addFusionBtn = document.getElementById('addFusionBtn');
+
+  // ---------- Fontes (curadas + upload do cliente) ----------
+  let fontList = [
+    {name:'Editorial (Fraunces)', family:"'Fraunces', serif"},
+    {name:'Gótico / Old English', family:"'Pirata One', serif"},
+    {name:'Script clássica', family:"'Great Vibes', cursive"},
+    {name:'Chicano / blackletter bold', family:"'UnifrakturCook', serif"},
+    {name:'Fineline / monoline', family:"'Mrs Saint Delafield', cursive"},
+  ];
+
+  function refreshFontSelect(){
+    const prev = letteringFont.value;
+    letteringFont.innerHTML = '';
+    fontList.forEach(f => {
+      const opt = document.createElement('option');
+      opt.value = f.family; opt.textContent = f.name;
+      letteringFont.appendChild(opt);
+    });
+    if(fontList.some(f => f.family === prev)) letteringFont.value = prev;
+  }
+  refreshFontSelect();
+
+  fontUploadInput.addEventListener('change', (e) => {
+    Array.from(e.target.files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const family = 'custom-' + file.name.replace(/\.[^/.]+$/, '').replace(/[^a-zA-Z0-9]/g, '') + '-' + Date.now();
+        const fontFace = new FontFace(family, `url(${ev.target.result})`);
+        fontFace.load().then(loaded => {
+          document.fonts.add(loaded);
+          fontList.push({name:'✎ ' + file.name.replace(/\.[^/.]+$/, ''), family:`'${family}'`});
+          refreshFontSelect();
+          letteringFont.value = `'${family}'`;
+        }).catch(() => {
+          alert('Não consegui carregar essa fonte (' + file.name + '). Tente outro arquivo.');
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = '';
+  });
+
+  // ---------- Classificação letra a letra (fusão / ambigrama) ----------
+  const rotationPairs = {b:'q',q:'b',d:'p',p:'d',n:'u',u:'n',m:'w',w:'m'};
+  const rotationSelf = new Set(['h','o','s','x','z','0','1','8',' ','-']);
+  const rotationWeak = {a:'e',e:'a',i:'i',l:'l',g:'q',y:'l',c:'u'};
+  const mirhPairs = {b:'d',d:'b',p:'q',q:'p'};
+  const mirhSelf = new Set(['a','h','i','m','o','t','u','v','w','x','y','0','8',' ','-']);
+  const mirhWeak = {n:'n',s:'s',c:'c'};
+  function classifyChar(mode, ch){
+    const lower = ch.toLowerCase();
+    let self, pairs, weak;
+    if(mode==='rot'){ self=rotationSelf; pairs=rotationPairs; weak=rotationWeak; }
+    else { self=mirhSelf; pairs=mirhPairs; weak=mirhWeak; }
+    if(self.has(lower)) return {tier:'strong', out:lower};
+    if(pairs[lower]) return {tier:'strong', out:pairs[lower]};
+    if(weak[lower]) return {tier:'weak', out:weak[lower]};
+    if(lower===' '||lower==='-') return {tier:'strong', out:lower};
+    return {tier:'none', out:'·'};
+  }
+
+  let fusionMode = 'rot';
+  fusionModeBar.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      fusionModeBar.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      fusionMode = btn.dataset.mode;
+      updateFusionMatch();
+    });
+  });
+
+  function updateFusionMatch(){
+    const a = fusionWordA.value.trim();
+    const b = fusionWordB.value.trim();
+    if(!a || !b){ fusionMatch.innerHTML = '<span style="color:#8a7f66;">Digite as duas palavras pra ver a compatibilidade</span>'; return; }
+    const chars = a.toLowerCase().split('');
+    const ordered = chars.slice().reverse();
+    const predicted = ordered.map(c => classifyChar(fusionMode, c));
+    const target = b.toLowerCase().padEnd(predicted.length, ' ').split('').slice(0, predicted.length);
+    let strong = 0;
+    predicted.forEach((p, i) => { if(p.out === target[i]) strong++; });
+    const total = predicted.length;
+    const pct = Math.round((strong/total)*100);
+    const dotClass = pct >= 70 ? 'good' : pct >= 40 ? 'mid' : 'bad';
+    fusionMatch.innerHTML = `<span class="dot ${dotClass}"></span> <b>${strong}/${total}</b> letras encaixam naturalmente nessa transformação (${pct}%)`;
+  }
+  fusionWordA.addEventListener('input', updateFusionMatch);
+  fusionWordB.addEventListener('input', updateFusionMatch);
+  updateFusionMatch();
+
 
   // ---------- Flashes carregadas diretamente da pasta /flash do repositório ----------
   // Caminhos relativos: este arquivo deve ficar na RAIZ do repositório (mesmo nível de flash.html),
@@ -636,7 +852,7 @@
     const el = document.createElement('div');
     el.className = 'flash-item';
     el.innerHTML = `<span class="num">${String(index+1).padStart(2,'0')}</span><img src="${src}" loading="lazy">`;
-    el.addEventListener('click', () => addLayer(src));
+    el.addEventListener('click', () => addImageLayer(src));
     return el;
   }
 
@@ -649,16 +865,19 @@
     });
   }
 
-  function addLayer(src){
+  function nextCascadePos(){
+    const count = layers.length;
+    const cascade = count % 5;
+    return { leftPct: 50 + (cascade - 2) * 7, topPct: 50 + (cascade - 2) * 5 };
+  }
+
+  function addImageLayer(src){
     layerSeq++;
     const id = 'layer-' + layerSeq;
-    const count = layers.length;
-    // pequeno deslocamento em cascata pra não empilhar tudo exatamente no centro
-    const cascade = count % 5;
+    const pos = nextCascadePos();
     const layer = {
-      id, src,
-      leftPct: 50 + (cascade - 2) * 7,
-      topPct: 50 + (cascade - 2) * 5,
+      id, type:'image', src,
+      leftPct: pos.leftPct, topPct: pos.topPct,
       scale: 1, rotation: 0, opacity: 0.85, blend: 'multiply', mirror: false
     };
     layers.push(layer);
@@ -666,21 +885,52 @@
     selectLayer(id);
     updateLayerThumbs();
     updateDownloadState();
+    return layer;
+  }
+
+  function addTextLayer(text, fontFamily, posOverride){
+    layerSeq++;
+    const id = 'layer-' + layerSeq;
+    const pos = posOverride || nextCascadePos();
+    const layer = {
+      id, type:'text', text: text || 'texto',
+      fontFamily: fontFamily || fontList[0].family,
+      color: '#1b1710', strokeWidth: 0, strokeColor: '#000000',
+      shadowEnabled: false, shadowBlur: 4, shadowColor: '#000000',
+      leftPct: pos.leftPct, topPct: pos.topPct,
+      scale: 1, rotation: 0, opacity: 0.9, blend: 'normal', mirror: false
+    };
+    layers.push(layer);
+    renderLayerDOM(layer);
+    selectLayer(id);
+    updateLayerThumbs();
+    updateDownloadState();
+    return layer;
   }
 
   function renderLayerDOM(layer){
     const el = document.createElement('div');
-    el.className = 'overlay-layer';
+    el.className = 'overlay-layer' + (layer.type === 'text' ? ' is-text' : '');
     el.dataset.id = layer.id;
-    el.innerHTML = `
-      <img class="overlay-img" src="${layer.src}" alt="Camada de tatuagem">
-      <div class="rot" data-role="rot" title="Girar"></div>
-      <div class="handle" data-role="resize" title="Redimensionar"></div>
-      <div class="del" data-role="del" title="Remover camada">×</div>
-    `;
+    if(layer.type === 'text'){
+      el.innerHTML = `
+        <div class="overlay-text"></div>
+        <div class="rot" data-role="rot" title="Girar"></div>
+        <div class="handle" data-role="resize" title="Redimensionar"></div>
+        <div class="del" data-role="del" title="Remover camada">×</div>
+      `;
+      layer.textEl = el.querySelector('.overlay-text');
+    } else {
+      el.innerHTML = `
+        <img class="overlay-img" src="${layer.src}" alt="Camada de tatuagem">
+        <div class="rot" data-role="rot" title="Girar"></div>
+        <div class="handle" data-role="resize" title="Redimensionar"></div>
+        <div class="del" data-role="del" title="Remover camada">×</div>
+      `;
+      layer.imgEl = el.querySelector('.overlay-img');
+    }
     layersContainer.appendChild(el);
     layer.el = el;
-    layer.imgEl = el.querySelector('.overlay-img');
     applyLayerStyle(layer);
 
     el.addEventListener('pointerdown', (e) => {
@@ -712,8 +962,20 @@
     layer.el.style.left = layer.leftPct + '%';
     layer.el.style.top = layer.topPct + '%';
     layer.el.style.transform = `translate(-50%,-50%) rotate(${layer.rotation}deg) scale(${layer.scale * (layer.mirror ? -1 : 1)}, ${layer.scale})`;
-    layer.imgEl.style.opacity = layer.opacity;
-    layer.imgEl.style.mixBlendMode = layer.blend;
+    if(layer.type === 'text'){
+      layer.textEl.textContent = layer.text;
+      layer.textEl.style.fontFamily = layer.fontFamily;
+      layer.textEl.style.color = layer.color;
+      layer.textEl.style.opacity = layer.opacity;
+      layer.textEl.style.mixBlendMode = layer.blend;
+      layer.textEl.style.webkitTextStroke = layer.strokeWidth > 0 ? `${layer.strokeWidth}px ${layer.strokeColor}` : '';
+      layer.textEl.style.textShadow = layer.shadowEnabled
+        ? `0 0 ${layer.shadowBlur}px ${layer.shadowColor}, 0 0 ${layer.shadowBlur}px ${layer.shadowColor}`
+        : 'none';
+    } else {
+      layer.imgEl.style.opacity = layer.opacity;
+      layer.imgEl.style.mixBlendMode = layer.blend;
+    }
     layer.el.classList.toggle('selected-layer', layer.id === activeLayerId);
   }
 
@@ -725,6 +987,7 @@
     [opacityRange, blendMode, scaleRange, rotRange, flipBtn].forEach(c => c.disabled = controlsDisabled);
     if(!layer){
       activeLayerLabel.textContent = 'Nenhuma camada selecionada';
+      textControls.style.display = 'none';
       return;
     }
     opacityRange.value = Math.round(layer.opacity * 100);
@@ -736,6 +999,19 @@
     rotVal.textContent = layer.rotation + '°';
     flipBtn.classList.toggle('active', !!layer.mirror);
     activeLayerLabel.textContent = 'Editando camada ' + (layers.findIndex(l => l.id === id) + 1) + ' de ' + layers.length;
+
+    if(layer.type === 'text'){
+      textControls.style.display = 'flex';
+      textColor.value = layer.color;
+      strokeWidthRange.value = layer.strokeWidth;
+      strokeWidthVal.textContent = layer.strokeWidth + 'px';
+      strokeColor.value = layer.strokeColor;
+      shadowOn.checked = layer.shadowEnabled;
+      shadowBlurRange.value = layer.shadowBlur;
+      shadowColor.value = layer.shadowColor;
+    } else {
+      textControls.style.display = 'none';
+    }
     updateLayerThumbs();
   }
 
@@ -753,9 +1029,11 @@
       updateLayerThumbs();
       [opacityRange, blendMode, scaleRange, rotRange, flipBtn].forEach(c => c.disabled = true);
       activeLayerLabel.textContent = 'Nenhuma camada selecionada';
+      textControls.style.display = 'none';
     }
     updateDownloadState();
   }
+
 
   function updateLayerThumbs(){
     layerThumbs.innerHTML = '';
@@ -770,7 +1048,10 @@
       const thumb = document.createElement('div');
       thumb.className = 'layer-thumb' + (layer.id === activeLayerId ? ' active' : '');
       thumb.title = 'Camada ' + (i + 1);
-      thumb.innerHTML = `<img src="${layer.src}" alt="Camada ${i+1}"><div class="layer-remove" data-role="remove">×</div>`;
+      const inner = layer.type === 'text'
+        ? `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:10px;color:#eee;background:#2a241a;text-align:center;overflow:hidden;padding:2px;">✎ ${layer.text.slice(0,10)}</div>`
+        : `<img src="${layer.src}" alt="Camada ${i+1}">`;
+      thumb.innerHTML = inner + `<div class="layer-remove" data-role="remove">×</div>`;
       thumb.addEventListener('click', (e) => {
         if(e.target.dataset && e.target.dataset.role === 'remove'){
           removeLayer(layer.id);
@@ -789,7 +1070,7 @@
     const url = URL.createObjectURL(file);
     const el = buildFlashItem(url, flashGrid.querySelectorAll('.flash-item').length);
     flashGrid.insertBefore(el, flashGrid.lastElementChild);
-    addLayer(url);
+    addImageLayer(url);
   });
 
   // load from gallery-data.json style URL
@@ -934,6 +1215,67 @@
     applyLayerStyle(layer);
   });
 
+  textColor.addEventListener('input', () => {
+    const layer = layers.find(l => l.id === activeLayerId);
+    if(!layer || layer.type !== 'text') return;
+    layer.color = textColor.value;
+    applyLayerStyle(layer);
+  });
+  strokeWidthRange.addEventListener('input', () => {
+    const layer = layers.find(l => l.id === activeLayerId);
+    strokeWidthVal.textContent = strokeWidthRange.value + 'px';
+    if(!layer || layer.type !== 'text') return;
+    layer.strokeWidth = parseInt(strokeWidthRange.value, 10);
+    applyLayerStyle(layer);
+  });
+  strokeColor.addEventListener('input', () => {
+    const layer = layers.find(l => l.id === activeLayerId);
+    if(!layer || layer.type !== 'text') return;
+    layer.strokeColor = strokeColor.value;
+    applyLayerStyle(layer);
+  });
+  shadowOn.addEventListener('change', () => {
+    const layer = layers.find(l => l.id === activeLayerId);
+    if(!layer || layer.type !== 'text') return;
+    layer.shadowEnabled = shadowOn.checked;
+    applyLayerStyle(layer);
+  });
+  shadowBlurRange.addEventListener('input', () => {
+    const layer = layers.find(l => l.id === activeLayerId);
+    if(!layer || layer.type !== 'text') return;
+    layer.shadowBlur = parseInt(shadowBlurRange.value, 10);
+    applyLayerStyle(layer);
+  });
+  shadowColor.addEventListener('input', () => {
+    const layer = layers.find(l => l.id === activeLayerId);
+    if(!layer || layer.type !== 'text') return;
+    layer.shadowColor = shadowColor.value;
+    applyLayerStyle(layer);
+  });
+
+  addTextLayerBtn.addEventListener('click', () => {
+    const text = letteringText.value.trim();
+    if(!text){ letteringText.focus(); return; }
+    addTextLayer(text, letteringFont.value);
+    if(typeof gtag === 'function') gtag('event', 'add_text_layer', { event_category: 'provador' });
+  });
+
+  addFusionBtn.addEventListener('click', () => {
+    const a = fusionWordA.value.trim();
+    const b = fusionWordB.value.trim();
+    if(!a || !b){ fusionWordA.focus(); return; }
+    const center = { leftPct: 50, topPct: 50 };
+    const layerA = addTextLayer(a, letteringFont.value, center);
+    const layerB = addTextLayer(b, letteringFont.value, center);
+    if(fusionMode === 'rot') layerB.rotation = 180;
+    else if(fusionMode === 'mirh') layerB.mirror = true;
+    layerB.opacity = 0.55;
+    layerB.color = '#4fb3ac';
+    applyLayerStyle(layerB);
+    selectLayer(layerB.id);
+    if(typeof gtag === 'function') gtag('event', 'add_fusion_layers', { event_category: 'provador', event_label: fusionMode });
+  });
+
   // ---------- arrastar / redimensionar / girar (compartilhado entre camadas) ----------
   let interaction = null;
 
@@ -988,6 +1330,7 @@
   // ---------- download (compõe todas as camadas em canvas real) ----------
   function updateDownloadState(){
     downloadBtn.disabled = !(baseImg.style.display === 'block' && layers.length > 0);
+    shareBtn.disabled = downloadBtn.disabled;
   }
 
   function loadImageAsync(src){
@@ -1000,43 +1343,70 @@
     });
   }
 
-  downloadBtn.addEventListener('click', async () => {
-    try{
-      const shellRect = canvasShell.getBoundingClientRect();
-      const W = 1200;
-      const H = Math.round(W * (shellRect.height / shellRect.width));
-      const exportCanvas = document.createElement('canvas');
-      exportCanvas.width = W; exportCanvas.height = H;
-      const ctx = exportCanvas.getContext('2d');
+  async function buildExportCanvas(){
+    const shellRect = canvasShell.getBoundingClientRect();
+    const W = 1200;
+    const H = Math.round(W * (shellRect.height / shellRect.width));
+    const exportCanvas = document.createElement('canvas');
+    exportCanvas.width = W; exportCanvas.height = H;
+    const ctx = exportCanvas.getContext('2d');
+    const ratio = W / shellRect.width;
 
-      const bImg = await loadImageAsync(baseImg.src);
-      const scaleFit = Math.min(W / bImg.width, H / bImg.height);
-      const bw = bImg.width * scaleFit, bh = bImg.height * scaleFit;
-      const bx = (W - bw)/2, by = (H - bh)/2;
-      ctx.fillStyle = '#0a0a09';
-      ctx.fillRect(0,0,W,H);
-      ctx.drawImage(bImg, bx, by, bw, bh);
+    const bImg = await loadImageAsync(baseImg.src);
+    const scaleFit = Math.min(W / bImg.width, H / bImg.height);
+    const bw = bImg.width * scaleFit, bh = bImg.height * scaleFit;
+    const bx = (W - bw)/2, by = (H - bh)/2;
+    ctx.fillStyle = '#0a0a09';
+    ctx.fillRect(0,0,W,H);
+    ctx.drawImage(bImg, bx, by, bw, bh);
 
-      for(const layer of layers){
+    try { await document.fonts.ready; } catch(e) {}
+
+    for(const layer of layers){
+      const cx = layer.leftPct / 100 * W;
+      const cy = layer.topPct / 100 * H;
+
+      ctx.save();
+      ctx.globalAlpha = layer.opacity;
+      ctx.globalCompositeOperation = layer.blend === 'multiply' ? 'multiply'
+        : layer.blend === 'darken' ? 'darken'
+        : layer.blend === 'soft-light' ? 'soft-light'
+        : 'source-over';
+      ctx.translate(cx, cy);
+      ctx.rotate(layer.rotation * Math.PI/180);
+      ctx.scale(layer.scale * (layer.mirror ? -1 : 1), layer.scale);
+
+      if(layer.type === 'text'){
+        const fontSizePx = 46 * ratio;
+        ctx.font = `600 ${fontSizePx}px ${layer.fontFamily}`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        if(layer.shadowEnabled){
+          ctx.shadowColor = layer.shadowColor;
+          ctx.shadowBlur = layer.shadowBlur * ratio;
+        }
+        if(layer.strokeWidth > 0){
+          ctx.lineWidth = layer.strokeWidth * ratio;
+          ctx.strokeStyle = layer.strokeColor;
+          ctx.strokeText(layer.text, 0, 0);
+        }
+        ctx.fillStyle = layer.color;
+        ctx.fillText(layer.text, 0, 0);
+      } else {
         const oImg = await loadImageAsync(layer.src);
-        const cx = layer.leftPct / 100 * W;
-        const cy = layer.topPct / 100 * H;
         const baseSize = (layer.el.offsetWidth / shellRect.width) * W;
-
-        ctx.save();
-        ctx.globalAlpha = layer.opacity;
-        ctx.globalCompositeOperation = layer.blend === 'multiply' ? 'multiply'
-          : layer.blend === 'darken' ? 'darken'
-          : layer.blend === 'soft-light' ? 'soft-light'
-          : 'source-over';
-        ctx.translate(cx, cy);
-        ctx.rotate(layer.rotation * Math.PI/180);
-        ctx.scale(layer.scale * (layer.mirror ? -1 : 1), layer.scale);
         const ow = baseSize, oh = baseSize * (oImg.height/oImg.width);
         ctx.drawImage(oImg, -ow/2, -oh/2, ow, oh);
-        ctx.restore();
       }
+      ctx.restore();
+    }
 
+    return exportCanvas;
+  }
+
+  downloadBtn.addEventListener('click', async () => {
+    try{
+      const exportCanvas = await buildExportCanvas();
       const link = document.createElement('a');
       link.download = 'preview-tatuagem.png';
       link.href = exportCanvas.toDataURL('image/png');
@@ -1045,6 +1415,45 @@
       alert('Não foi possível gerar o download (uma das imagens pode estar bloqueando exportação). O preview na tela continua funcionando normalmente.');
     }
   });
+
+  shareBtn.addEventListener('click', async () => {
+    const shareText = 'Olha a tatuagem que eu montei no Provador do Micael Tatuagem 🖤';
+    const shareUrl = `${location.origin}${location.pathname}`;
+    let blob;
+    try{
+      const exportCanvas = await buildExportCanvas();
+      blob = await new Promise(resolve => exportCanvas.toBlob(resolve, 'image/png'));
+    }catch(err){
+      alert('Não foi possível gerar a imagem pra compartilhar. Tente baixar o preview em vez disso.');
+      return;
+    }
+
+    try {
+      if (blob && navigator.canShare) {
+        const file = new File([blob], 'preview-tatuagem.png', { type: 'image/png' });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], text: shareText, url: shareUrl });
+          return;
+        }
+      }
+      if (navigator.share) {
+        await navigator.share({ text: shareText, url: shareUrl });
+        return;
+      }
+    } catch (err) {
+      if (err && err.name === 'AbortError') return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+      const original = shareBtn.textContent;
+      shareBtn.textContent = '✓ Link copiado!';
+      setTimeout(() => { shareBtn.textContent = original; }, 2200);
+    } catch {
+      window.prompt('Copie o link abaixo pra compartilhar:', `${shareText} ${shareUrl}`);
+    }
+  });
+
 
   const searchFlash = document.getElementById('searchFlash');
   searchFlash.addEventListener('input', () => {
