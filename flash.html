@@ -308,6 +308,23 @@
       transition: opacity 0.2s ease;
     }
     .lightbox-wpp-btn:hover { opacity: 0.85; }
+    .lightbox-actions { display: flex; gap: 0.7rem; margin-top: 1.3rem; flex-wrap: wrap; justify-content: center; }
+    .lightbox-actions .lightbox-wpp-btn { margin-top: 0; }
+    .lightbox-share-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: transparent;
+      color: var(--bone);
+      border: 1px solid var(--border);
+      text-decoration: none;
+      padding: 0.75rem 1.3rem;
+      border-radius: 999px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: opacity 0.2s ease, border-color 0.2s ease;
+    }
+    .lightbox-share-btn:hover { opacity: 0.85; border-color: var(--bone); }
     .lightbox-close {
       position: absolute; top: 1.2rem; right: 1.5rem;
       font-size: 1.8rem; color: var(--bone); background: none; border: none; cursor: pointer;
@@ -447,19 +464,19 @@
 <!-- FLASH_FILTERS_START -->
     <div class="filter-group">
       <button class="filter-btn active" data-filter="all">Todos</button>
-      <span class="filter-count">415 desenhos</span>
+      <span class="filter-count">407 desenhos</span>
     </div>
     <div class="filter-group">
       <button class="filter-btn" data-filter="Old School">Old School</button>
-      <span class="filter-count">87 desenhos</span>
+      <span class="filter-count">85 desenhos</span>
     </div>
     <div class="filter-group">
       <button class="filter-btn" data-filter="Dark Art">Dark Art</button>
-      <span class="filter-count">50 desenhos</span>
+      <span class="filter-count">49 desenhos</span>
     </div>
     <div class="filter-group">
       <button class="filter-btn" data-filter="Religioso">Religioso</button>
-      <span class="filter-count">41 desenhos</span>
+      <span class="filter-count">22 desenhos</span>
     </div>
     <div class="filter-group">
       <button class="filter-btn" data-filter="Náutico">Náutico</button>
@@ -483,7 +500,7 @@
     </div>
     <div class="filter-group">
       <button class="filter-btn" data-filter="Escrita">Escrita</button>
-      <span class="filter-count">30 desenhos</span>
+      <span class="filter-count">11 desenhos</span>
     </div>
     <div class="filter-group">
       <button class="filter-btn" data-filter="Cristão">Cristão</button>
@@ -495,19 +512,7 @@
     </div>
     <div class="filter-group">
       <button class="filter-btn" data-filter="Veda">Veda</button>
-      <span class="filter-count">8 desenhos</span>
-    </div>
-    <div class="filter-group">
-      <button class="filter-btn" data-filter="Budista">Budista</button>
-      <span class="filter-count">13 desenhos</span>
-    </div>
-    <div class="filter-group">
-      <button class="filter-btn" data-filter="NeoTrad">NeoTrad</button>
-      <span class="filter-count">10 desenhos</span>
-    </div>
-    <div class="filter-group">
-      <button class="filter-btn" data-filter="BlackWork">BlackWork</button>
-      <span class="filter-count">12 desenhos</span>
+      <span class="filter-count">2 desenhos</span>
     </div>
 <!-- FLASH_FILTERS_END -->
   </div>
@@ -516,39 +521,7 @@
 
   <div class="flash-grid" id="flashGrid">
 <!-- FLASH_GRID_START -->
-      <figure class="flash-item" data-id="420" data-styles="">
-        <img src="flash/neon-noir-airwaves-1783445802236-0.webp" alt="Tatuagem flash de neon noir airwaves. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Neon Noir Airwaves</figcaption>
-      </figure>
-      <figure class="flash-item" data-id="421" data-styles="">
-        <img src="flash/last-dance-1783445804455-1.webp" alt="Tatuagem flash de last dance. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Last Dance</figcaption>
-      </figure>
-      <figure class="flash-item" data-id="422" data-styles="">
-        <img src="flash/sonic-monarchy-1783445806628-2.webp" alt="Tatuagem flash de sonic monarchy. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Sonic Monarchy</figcaption>
-      </figure>
-      <figure class="flash-item" data-id="415" data-styles="NeoTrad,BlackWork">
-        <img src="flash/eletric-slowdance-1783443556874-0.webp" alt="Tatuagem flash de eletric slowdance. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Eletric Slowdance</figcaption>
-      </figure>
-      <figure class="flash-item" data-id="416" data-styles="NeoTrad,BlackWork">
-        <img src="flash/lethal-woman-1783443559103-1.webp" alt="Tatuagem flash de lethal woman. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Lethal Woman</figcaption>
-      </figure>
-      <figure class="flash-item" data-id="417" data-styles="NeoTrad,BlackWork">
-        <img src="flash/smoke-in-the-dark-1783443561239-2.webp" alt="Tatuagem flash de smoke in the dark. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Smoke In The Dark</figcaption>
-      </figure>
-      <figure class="flash-item" data-id="418" data-styles="NeoTrad,BlackWork">
-        <img src="flash/twilight-echo-1783443563049-3.webp" alt="Tatuagem flash de twilight echo. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Twilight Echo</figcaption>
-      </figure>
-      <figure class="flash-item" data-id="419" data-styles="NeoTrad,BlackWork">
-        <img src="flash/velvet-crime-1783443565232-4.webp" alt="Tatuagem flash de velvet crime. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Velvet Crime</figcaption>
-      </figure>
-      <figure class="flash-item" data-id="367" data-styles="Dark Art">
+      <figure class="flash-item" data-id="367" data-styles="">
         <img src="flash/dancarina-5-1783310117627-0.webp" alt="Tatuagem flash de dancarina 5. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Dancarina 5</figcaption>
       </figure>
@@ -556,11 +529,11 @@
         <img src="flash/dancarina-6-1783310119728-1.webp" alt="Tatuagem flash de dancarina 6. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Dancarina 6</figcaption>
       </figure>
-      <figure class="flash-item" data-id="369" data-styles="NeoTrad,BlackWork">
+      <figure class="flash-item" data-id="369" data-styles="">
         <img src="flash/dancarina-4-1783310121569-2.webp" alt="Tatuagem flash de dancarina 4. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Dancarina 4</figcaption>
       </figure>
-      <figure class="flash-item" data-id="370" data-styles="NeoTrad,BlackWork">
+      <figure class="flash-item" data-id="370" data-styles="">
         <img src="flash/dancarina-3-1783310123609-3.webp" alt="Tatuagem flash de dancarina 3. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Dancarina 3</figcaption>
       </figure>
@@ -568,93 +541,93 @@
         <img src="flash/pinup-17-1783310125300-4.webp" alt="Tatuagem flash de pinup 17. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Pinup 17</figcaption>
       </figure>
-      <figure class="flash-item" data-id="372" data-styles="NeoTrad,BlackWork">
+      <figure class="flash-item" data-id="372" data-styles="">
         <img src="flash/dancarina-2-1783310127574-5.webp" alt="Tatuagem flash de dancarina 2. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Dancarina 2</figcaption>
       </figure>
-      <figure class="flash-item" data-id="373" data-styles="NeoTrad,BlackWork">
+      <figure class="flash-item" data-id="373" data-styles="">
         <img src="flash/dancarina-1783310129711-6.webp" alt="Tatuagem flash de dancarina. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Dancarina</figcaption>
       </figure>
-      <figure class="flash-item" data-id="374" data-styles="NeoTrad,BlackWork">
+      <figure class="flash-item" data-id="374" data-styles="">
         <img src="flash/bruxa-1783310131728-7.webp" alt="Tatuagem flash de bruxa. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Bruxa</figcaption>
       </figure>
-      <figure class="flash-item" data-id="375" data-styles="Religioso,Escrita,Budista">
-        <img src="flash/compaixaoea-religiao-mais-elevada-1783310133307-8.webp" alt="Tatuagem flash de compaixaoea religiao mais elevada. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Compaixão é a Religião Mais Elevada</figcaption>
+      <figure class="flash-item" data-id="375" data-styles="">
+        <img src="flash/compaixaoea-religiao-mais-elevada-1783310133307-8.webp" alt="Tatuagem flash de compaixaoea religiao mais elevada. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
+        <figcaption>Compaixaoea Religiao Mais Elevada</figcaption>
       </figure>
-      <figure class="flash-item" data-id="376" data-styles="Religioso,Escrita,Budista">
-        <img src="flash/solteo-que-nao-te-deixa-florescer-1783310134724-9.webp" alt="Tatuagem flash de solte o que nao te deixa florescer. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Solte o Que Não Te Deixa Florescer</figcaption>
+      <figure class="flash-item" data-id="376" data-styles="">
+        <img src="flash/solteo-que-nao-te-deixa-florescer-1783310134724-9.webp" alt="Tatuagem flash de solteo que nao te deixa florescer. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
+        <figcaption>Solteo Que Nao Te Deixa Florescer</figcaption>
       </figure>
-      <figure class="flash-item" data-id="377" data-styles="Religioso,Escrita,Budista">
+      <figure class="flash-item" data-id="377" data-styles="">
         <img src="flash/nao-faca-ao-outroo-que-te-causaria-dor-1783310136258-10.webp" alt="Tatuagem flash de nao faca ao outroo que te causaria dor. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Nao Faça Ao Outro o Que Te Causaria Dor</figcaption>
+        <figcaption>Nao Faca Ao Outroo Que Te Causaria Dor</figcaption>
       </figure>
-      <figure class="flash-item" data-id="378" data-styles="Religioso,Escrita,Budista">
-        <img src="flash/cada-respiroe-uma-nova-chance-1783310137786-11.webp" alt="Tatuagem flash de cada respiro é uma nova chance. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Cada Respiro é Uma Nova Chance</figcaption>
+      <figure class="flash-item" data-id="378" data-styles="">
+        <img src="flash/cada-respiroe-uma-nova-chance-1783310137786-11.webp" alt="Tatuagem flash de cada respiroe uma nova chance. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
+        <figcaption>Cada Respiroe Uma Nova Chance</figcaption>
       </figure>
-      <figure class="flash-item" data-id="379" data-styles="Religioso,Escrita,Budista">
-        <img src="flash/a-gratidao-transformao-que-temos-em-suficiente-1783310139284-12.webp" alt="Tatuagem flash de a gratidão transforma o que temos em suficiente. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>A Gratidão Transforma o Que Temos Em Suficiente</figcaption>
+      <figure class="flash-item" data-id="379" data-styles="">
+        <img src="flash/a-gratidao-transformao-que-temos-em-suficiente-1783310139284-12.webp" alt="Tatuagem flash de a gratidao transformao que temos em suficiente. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
+        <figcaption>A Gratidao Transformao Que Temos Em Suficiente</figcaption>
       </figure>
-      <figure class="flash-item" data-id="380" data-styles="Religioso,Escrita,Budista">
-        <img src="flash/a-sabedoria-comeca-na-aceitacao-1783310140824-13.webp" alt="Tatuagem flash de a sabedoria começa na aceitação. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
+      <figure class="flash-item" data-id="380" data-styles="">
+        <img src="flash/a-sabedoria-comeca-na-aceitacao-1783310140824-13.webp" alt="Tatuagem flash de a sabedoria começa na aceitação. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>A Sabedoria Começa Na Aceitação</figcaption>
       </figure>
-      <figure class="flash-item" data-id="381" data-styles="Religioso,Escrita,Budista">
-        <img src="flash/seja-gentil-consigo-mesmoe-com-os-outros-1783310142230-14.webp" alt="Tatuagem flash de seja gentil consigo mesmo e com os outros. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Seja Gentil Consigo Mesmo e Com Os Outros</figcaption>
+      <figure class="flash-item" data-id="381" data-styles="">
+        <img src="flash/seja-gentil-consigo-mesmoe-com-os-outros-1783310142230-14.webp" alt="Tatuagem flash de seja gentil consigo mesmoe com os outros. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
+        <figcaption>Seja Gentil Consigo Mesmoe Com Os Outros</figcaption>
       </figure>
-      <figure class="flash-item" data-id="382" data-styles="Religioso,Escrita,Budista">
-        <img src="flash/tudo-que-somose-resultado-do-qu-pensamos-1783310143646-15.webp" alt="Tatuagem flash de tudo que somos é resultado do que pensamos. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Tudo Que Somos é Resultado Do Que Pensamos</figcaption>
+      <figure class="flash-item" data-id="382" data-styles="">
+        <img src="flash/tudo-que-somose-resultado-do-qu-pensamos-1783310143646-15.webp" alt="Tatuagem flash de tudo que somose resultado do qu pensamos. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
+        <figcaption>Tudo Que Somose Resultado Do Qu Pensamos</figcaption>
       </figure>
-      <figure class="flash-item" data-id="383" data-styles="Religioso,Escrita,Budista">
-        <img src="flash/viva-com-atencao-plenaeo-milagre-acontece-1783310145177-16.webp" alt="Tatuagem flash de viva com atenção plena e o milagre acontece. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Viva Com Atenção Plena e o Milagre Acontece</figcaption>
+      <figure class="flash-item" data-id="383" data-styles="">
+        <img src="flash/viva-com-atencao-plenaeo-milagre-acontece-1783310145177-16.webp" alt="Tatuagem flash de viva com atencao plenaeo milagre acontece. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
+        <figcaption>Viva Com Atencao Plenaeo Milagre Acontece</figcaption>
       </figure>
-      <figure class="flash-item" data-id="384" data-styles="Religioso,Escrita,Budista">
-        <img src="flash/a-verdadeira-vitoriae-vencera-si-mesmo-1783310146808-17.webp" alt="Tatuagem flash de a verdadeira vitória é vencer a si mesmo. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>A Verdadeira Vitória é Vencer a Si Mesmo</figcaption>
+      <figure class="flash-item" data-id="384" data-styles="">
+        <img src="flash/a-verdadeira-vitoriae-vencera-si-mesmo-1783310146808-17.webp" alt="Tatuagem flash de a verdadeira vitoriae vencera si mesmo. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
+        <figcaption>A Verdadeira Vitoriae Vencera Si Mesmo</figcaption>
       </figure>
-      <figure class="flash-item" data-id="385" data-styles="Religioso,Escrita,Budista">
-        <img src="flash/paz-interioreo-maior-tesouro-que-existe-1783310148491-18.webp" alt="Tatuagem flash de paz interior é o maior tesouro que existe. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Paz Interior é o Maior Tesouro Que Existe</figcaption>
+      <figure class="flash-item" data-id="385" data-styles="">
+        <img src="flash/paz-interioreo-maior-tesouro-que-existe-1783310148491-18.webp" alt="Tatuagem flash de paz interioreo maior tesouro que existe. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
+        <figcaption>Paz Interioreo Maior Tesouro Que Existe</figcaption>
       </figure>
-      <figure class="flash-item" data-id="386" data-styles="Religioso,Escrita,Veda">
-        <img src="flash/aham-bramasmi-1783310149946-19.webp" alt="Tatuagem flash de aham bramasmi. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
+      <figure class="flash-item" data-id="386" data-styles="">
+        <img src="flash/aham-bramasmi-1783310149946-19.webp" alt="Tatuagem flash de aham bramasmi. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Aham Bramasmi</figcaption>
       </figure>
-      <figure class="flash-item" data-id="387" data-styles="Religioso,Escrita,Veda">
-        <img src="flash/tat-tvam-asi-1783310151433-20.webp" alt="Tatuagem flash de tat tvam asi. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
+      <figure class="flash-item" data-id="387" data-styles="">
+        <img src="flash/tat-tvam-asi-1783310151433-20.webp" alt="Tatuagem flash de tat tvam asi. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Tat Tvam Asi</figcaption>
       </figure>
-      <figure class="flash-item" data-id="388" data-styles="Religioso,Escrita,Veda">
-        <img src="flash/sarvam-kahlvidam-brahma-1783310153067-21.webp" alt="Tatuagem flash de sarvam kahlvidam brahma. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
+      <figure class="flash-item" data-id="388" data-styles="">
+        <img src="flash/sarvam-kahlvidam-brahma-1783310153067-21.webp" alt="Tatuagem flash de sarvam kahlvidam brahma. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Sarvam Kahlvidam Brahma</figcaption>
       </figure>
-      <figure class="flash-item" data-id="389" data-styles="Religioso,Escrita,Veda">
-        <img src="flash/prajnanam-brahma-1783310154600-22.webp" alt="Tatuagem flash de prajnanam brahma. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
+      <figure class="flash-item" data-id="389" data-styles="">
+        <img src="flash/prajnanam-brahma-1783310154600-22.webp" alt="Tatuagem flash de prajnanam brahma. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Prajnanam Brahma</figcaption>
       </figure>
-      <figure class="flash-item" data-id="390" data-styles="Religioso,Escrita,Veda">
+      <figure class="flash-item" data-id="390" data-styles="">
         <img src="flash/confie-no-dharma-aceiteo-queee-facao-seu-melhor-1783310156041-23.webp" alt="Tatuagem flash de confie no dharma aceiteo queee facao seu melhor. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Confie No Dharma Aceite o Que é, e Faça o Seu Melhor</figcaption>
+        <figcaption>Confie No Dharma Aceiteo Queee Facao Seu Melhor</figcaption>
       </figure>
-      <figure class="flash-item" data-id="391" data-styles="Religioso,Escrita,Budista">
-        <img src="flash/a-luz-que-buscas-esta-dentro-de-voce-1783310157503-24.webp" alt="Tatuagem flash de a luz que buscas esta dentro de voce. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>A Luz Que Buscas Está Dentro De Você</figcaption>
+      <figure class="flash-item" data-id="391" data-styles="">
+        <img src="flash/a-luz-que-buscas-esta-dentro-de-voce-1783310157503-24.webp" alt="Tatuagem flash de a luz que buscas esta dentro de voce. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
+        <figcaption>A Luz Que Buscas Esta Dentro De Voce</figcaption>
       </figure>
-      <figure class="flash-item" data-id="392" data-styles="Religioso,Escrita,Budista">
-        <img src="flash/o-corpoeo-temploa-menteeo-jardima-almaeo-mestre-1783310159018-25.webp" alt="Tatuagem flash de o corpo é o templo, a mente é o jardim, a alma é o mestre. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>O Corpo é o Templo, a Mente é o Jardim, a Alma é o Mestre</figcaption>
+      <figure class="flash-item" data-id="392" data-styles="">
+        <img src="flash/o-corpoeo-temploa-menteeo-jardima-almaeo-mestre-1783310159018-25.webp" alt="Tatuagem flash de o corpoeo temploa menteeo jardima almaeo mestre. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
+        <figcaption>O Corpoeo Temploa Menteeo Jardima Almaeo Mestre</figcaption>
       </figure>
-      <figure class="flash-item" data-id="393" data-styles="Religioso,Escrita,Veda">
-        <img src="flash/omeo-som-primordial-de-toda-criacao-1783310160449-26.webp" alt="Tatuagem flash de om é o som primordial de toda criação. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
-        <figcaption>Om é o Som Primordial De Toda Criação</figcaption>
+      <figure class="flash-item" data-id="393" data-styles="">
+        <img src="flash/omeo-som-primordial-de-toda-criacao-1783310160449-26.webp" alt="Tatuagem flash de omeo som primordial de toda criacao. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
+        <figcaption>Omeo Som Primordial De Toda Criacao</figcaption>
       </figure>
       <figure class="flash-item" data-id="394" data-styles="">
         <img src="flash/vasudhaiva-kutumbakam-1783310161896-27.webp" alt="Tatuagem flash de vasudhaiva kutumbakam. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
@@ -784,7 +757,7 @@
         <img src="flash/concha-1783304865593-10.webp" alt="Tatuagem flash de concha. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Concha</figcaption>
       </figure>
-      <figure class="flash-item" data-id="360" data-styles="Old School,BlackWork">
+      <figure class="flash-item" data-id="360" data-styles="">
         <img src="flash/sereia-3-1783304866993-11.webp" alt="Tatuagem flash de sereia 3. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Sereia 3</figcaption>
       </figure>
@@ -792,8 +765,8 @@
         <img src="flash/farol-4-1783304868543-12.webp" alt="Tatuagem flash de farol 4. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Farol 4</figcaption>
       </figure>
-      <figure class="flash-item" data-id="362" data-styles="Old School,BlackWork">
-        <img src="flash/pantera-3-1783304870092-13.webp" alt="Tatuagem flash de pantera 3. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy" />
+      <figure class="flash-item" data-id="362" data-styles="">
+        <img src="flash/pantera-3-1783304870092-13.webp" alt="Tatuagem flash de pantera 3. Disponível na Micael Tatuagem, Muriaé MG." loading="lazy" />
         <figcaption>Pantera 3</figcaption>
       </figure>
       <figure class="flash-item" data-id="363" data-styles="">
@@ -2192,7 +2165,10 @@
   <button class="lightbox-close" id="lightboxClose" aria-label="Fechar">&times;</button>
   <img id="lightboxImg" src="" alt="" />
   <p class="lightbox-caption" id="lightboxCaption"></p>
-  <a id="lightboxWpp" class="lightbox-wpp-btn" href="#" target="_blank" rel="noopener">💬 Chamar no WhatsApp sobre esse flash</a>
+  <div class="lightbox-actions">
+    <a id="lightboxWpp" class="lightbox-wpp-btn" href="#" target="_blank" rel="noopener">💬 Chamar no WhatsApp sobre esse flash</a>
+    <button id="lightboxShare" class="lightbox-share-btn" type="button">↗ Compartilhar</button>
+  </div>
 </div>
 
   <div class="flash-faq">
@@ -2309,6 +2285,8 @@
   const lightboxCaption = document.getElementById('lightboxCaption');
   const lightboxClose = document.getElementById('lightboxClose');
   const lightboxWpp = document.getElementById('lightboxWpp');
+  const lightboxShare = document.getElementById('lightboxShare');
+  let currentShare = { nome: '', imgSrc: '', flashId: '' };
 
   items.forEach(item => {
     item.addEventListener('click', () => {
@@ -2319,10 +2297,56 @@
       lightboxCaption.textContent = nome;
       const msg = `Oi Micael! Gostei do flash "${nome}", quero agendar.`;
       lightboxWpp.href = `https://wa.me/5532999666946?text=${encodeURIComponent(msg)}`;
+      currentShare = { nome, imgSrc: img.src, flashId: item.dataset.id || '' };
       lightbox.classList.add('open');
       gtag('event', 'view_flash', { event_category: 'flash', event_label: nome });
     });
   });
+
+  lightboxShare.addEventListener('click', async () => {
+    const shareUrl = `${location.origin}${location.pathname}?flash=${encodeURIComponent(currentShare.flashId)}`;
+    const shareText = `Olha o desenho "${currentShare.nome}" que encontrei no catálogo do Micael Tatuagem 🖤`;
+    gtag('event', 'share_flash', { event_category: 'flash', event_label: currentShare.nome });
+
+    try {
+      if (navigator.canShare) {
+        const resp = await fetch(currentShare.imgSrc);
+        const blob = await resp.blob();
+        const file = new File([blob], 'flash.webp', { type: blob.type || 'image/webp' });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], text: shareText, url: shareUrl });
+          return;
+        }
+      }
+      if (navigator.share) {
+        await navigator.share({ text: shareText, url: shareUrl });
+        return;
+      }
+    } catch (err) {
+      if (err && err.name === 'AbortError') return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+      lightboxShare.textContent = '✓ Link copiado!';
+      setTimeout(() => { lightboxShare.textContent = '↗ Compartilhar'; }, 2200);
+    } catch {
+      window.prompt('Copie o link abaixo pra compartilhar:', `${shareText} ${shareUrl}`);
+    }
+  });
+
+  // Deep link: ?flash=ID abre o lightbox direto no desenho compartilhado
+  (function openFromDeepLink() {
+    const params = new URLSearchParams(location.search);
+    const flashId = params.get('flash');
+    if (!flashId) return;
+    const target = items.find(item => item.dataset.id === flashId);
+    if (!target) return;
+    setTimeout(() => {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.click();
+    }, 300);
+  })();
 
   function closeLightbox() { lightbox.classList.remove('open'); }
   lightboxClose.addEventListener('click', closeLightbox);
