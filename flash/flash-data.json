@@ -21,7 +21,11 @@
     "title": "Japan Dj",
     "altText": "Tatuagem flash de japan dj. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Oriental",
+      "NeoTrad",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09"
   },
