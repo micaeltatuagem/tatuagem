@@ -204,7 +204,12 @@
     "title": "Oxum",
     "altText": "Tatuagem flash de oxum. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Old School",
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09"
   },
