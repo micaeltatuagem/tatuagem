@@ -25,17 +25,21 @@
     --text-dim:#948d7d;
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
+  html,body{margin:0;padding:0;height:100%;overflow:hidden;}
   body{
     background:
       radial-gradient(ellipse at top, #1a1815 0%, var(--ink) 55%),
       var(--ink);
     color:var(--paper);
     font-family:'Inter',sans-serif;
-    min-height:100vh;
-    padding:32px 16px 64px;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
   }
-  .wrap{max-width:1180px;margin:0 auto;}
+  .sr-only{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
 
   body::before{
     content:'';
@@ -47,53 +51,88 @@
     z-index:9999;
   }
 
-  header{
-    text-align:center;
-    margin-bottom:36px;
-    padding-bottom:24px;
+  /* ---- App shell fixo: nada rola exceto a faixa de flashs ---- */
+  .app-shell{
+    flex:1;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    max-width:1180px;
+    width:100%;
+    margin:0 auto;
+    padding:0 16px;
+  }
+  .top-strip, .bottom-strip{
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 4px;
     border-bottom:1px solid var(--line);
   }
-  header .eyebrow{
-    font-family:'Oswald',sans-serif;
-    font-size:12px;
-    letter-spacing:.35em;
-    text-transform:uppercase;
-    color:var(--gold);
-    margin-bottom:10px;
+  .bottom-strip{
+    border-bottom:none;
+    border-top:1px solid var(--line);
+    justify-content:space-between;
+    flex-wrap:wrap;
   }
-  header h1{
-    font-family:'Oswald',sans-serif;
-    font-weight:600;
-    font-size:clamp(28px,5vw,46px);
-    letter-spacing:.02em;
-    margin:0 0 8px;
-    text-transform:uppercase;
+  .strip-icons{ display:flex; gap:8px; align-items:center; }
+  .strip-btn{
+    width:38px; height:38px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    background:transparent; border:1px solid var(--line); border-radius:6px;
+    color:var(--paper); cursor:pointer; transition:border-color .15s ease, color .15s ease;
   }
-  header p{
-    color:var(--text-dim);
-    font-size:14.5px;
-    max-width:520px;
-    margin:0 auto;
-    line-height:1.5;
+  .strip-btn:hover{ border-color:var(--gold); color:var(--gold); }
+  .strip-btn:disabled{ opacity:.35; cursor:not-allowed; }
+  .strip-btn.active{ background:var(--gold); border-color:var(--gold); color:#1b1710; }
+  .strip-btn svg{ width:19px; height:19px; }
+
+  .canvas-wrap{
+    flex:1; min-height:0;
+    display:flex; align-items:center; justify-content:center;
+    padding:14px 4px;
+  }
+  .canvas-wrap .canvas-shell{
+    height:100%; width:auto; max-width:100%; aspect-ratio:4/5;
   }
 
-  .stage{
-    display:grid;
-    grid-template-columns:320px 1fr;
-    gap:24px;
-    align-items:stretch;
+  .gallery-strip{
+    flex-shrink:0;
+    border-top:1px solid var(--line);
+    padding:10px 4px;
+    display:flex; flex-direction:column; gap:8px;
+    max-height:190px;
   }
-  @media (max-width:860px){
-    .stage{grid-template-columns:1fr;}
-    /* No mobile, os controles de ajuste ficam logo apos o canvas, nao no fim da pagina */
-    .preview-panel{ display:flex; flex-direction:column; }
-    .canvas-shell{ order:1; }
-    .controls-label{ order:2; }
-    .controls{ order:3; }
-    .layers-panel{ order:4; }
-    .upload-row{ order:5; }
-    .base-picker{ order:6; }
+  .gallery-strip #searchFlash{
+    font-family:'Inter',sans-serif; font-size:12.5px; padding:8px 10px;
+    border:1px solid var(--line); border-radius:4px; background:var(--ink-soft); color:var(--paper);
   }
+
+  /* ---- Popovers (painéis contextuais, tipo Figma) ---- */
+  .popover-backdrop{
+    position:fixed; inset:0; background:rgba(0,0,0,.55);
+    z-index:290; display:none;
+  }
+  .popover-backdrop.open{ display:block; }
+  .popover{
+    position:fixed; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:min(92vw,420px); max-height:80vh; overflow-y:auto;
+    background:var(--ink-soft); border:1px solid var(--line); border-radius:8px;
+    padding:20px; z-index:300; display:none;
+  }
+  .popover.open{ display:block; }
+  .popover-close{
+    position:absolute; top:8px; right:10px; background:none; border:none;
+    color:var(--text-dim); font-size:22px; cursor:pointer; line-height:1;
+  }
+  .popover h2{
+    font-family:'Oswald',sans-serif; font-size:13px; letter-spacing:.15em;
+    text-transform:uppercase; color:var(--gold); margin:0 0 4px;
+  }
+  .popover .sub{ font-size:12px; color:var(--text-dim); margin-bottom:14px; }
+
+  .wrap{max-width:1180px;margin:0 auto;}
 
   /* ---- Papel envelhecido (compartilhado entre flash-panel e canvas-shell) ---- */
   .aged-paper{
@@ -158,12 +197,17 @@
     cursor:pointer;
   }
   .flash-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
+    display:flex;
     gap:10px;
-    max-height:520px;
-    overflow-y:auto;
-    padding-right:2px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    padding-bottom:4px;
+    flex:1;
+    min-height:0;
+  }
+  .flash-grid .flash-item, .flash-grid .upload-flash{
+    width:84px;
+    flex-shrink:0;
   }
   .flash-grid::-webkit-scrollbar{width:6px;}
   .flash-grid::-webkit-scrollbar-thumb{background:#b9ac8c;border-radius:3px;}
@@ -499,7 +543,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: -32px -16px 24px;
+  flex-shrink: 0;
 }
 .nav-logo {
   font-family: 'Inter', sans-serif;
@@ -508,6 +552,7 @@
   text-transform: uppercase;
   color: var(--paper);
   text-decoration: none;
+  flex-shrink:0;
 }
 .nav-links {
   display: flex;
@@ -515,7 +560,12 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
 }
+.nav-links::-webkit-scrollbar{ display:none; }
+.nav-links li{ flex-shrink:0; }
 .nav-links a {
   font-family: 'Inter', sans-serif;
   font-size: .88rem;
@@ -530,8 +580,7 @@
 .nav-links a.destaque:hover { opacity: .8; }
 @media (max-width: 560px) {
   .nav-logo { display: none; }
-  nav { justify-content: center; }
-  .nav-links { gap: 1rem; flex-wrap: wrap; justify-content: center; }
+  .nav-links { gap: 1rem; justify-content: flex-start; }
   .nav-links .hide-sm { display: none; }
 }
 
@@ -716,177 +765,225 @@
     <li><a href="index.html#contato">Contato</a></li>
   </ul>
 </nav>
-<div class="wrap">
+<div class="app-shell">
+  <h1 class="sr-only">Criar — Monte sua tatuagem antes de fechar</h1>
 
-  <header>
-    <div class="eyebrow">Criar</div>
-    <h1>Monte sua ideia antes de fechar</h1>
-    <p>Envie uma foto da região do corpo, escolha um ou vários flash e ajuste posição, tamanho e rotação de cada um para visualizar como a composição pode ficar sobre a sua pele. Ótimo pra montar ideia de fechamentos.</p>
-  </header>
+  <div class="top-strip">
+    <button class="strip-btn" id="uploadBtn" title="Enviar foto do corpo" aria-label="Enviar foto do corpo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7l1.5-3h5L16 7"/><circle cx="12" cy="14" r="3.2"/></svg>
+    </button>
+    <input type="file" id="bodyPhotoInput" accept="image/*" capture="environment">
+    <button class="strip-btn" id="baseToggleBtn" title="Base de corpo pronta" aria-label="Base de corpo pronta">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg>
+    </button>
+    <button class="strip-btn" id="resetBtn" title="Reiniciar" aria-label="Reiniciar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+    </button>
+    <button class="strip-btn" id="downloadBtn" disabled title="Baixar preview" aria-label="Baixar preview">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 19h16"/></svg>
+    </button>
+    <button class="strip-btn" id="shareBtn" disabled title="Compartilhar" aria-label="Compartilhar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="18" cy="5" r="2.3"/><circle cx="6" cy="12" r="2.3"/><circle cx="18" cy="19" r="2.3"/><path d="M8 10.7l8-4.4M8 13.3l8 4.4"/></svg>
+    </button>
+  </div>
 
-  <section class="stage">
-
-    <!-- FLASH SHEET PICKER -->
-    <div class="flash-panel aged-paper">
-      <h2>Flashes disponíveis</h2>
-      <div class="sub">Toque em um desenho para adicionar como nova camada. Dá pra combinar vários</div>
-
-      <div class="flash-source-row">
-        <input id="searchFlash" type="text" placeholder="Buscar flash (ex: águia, caveira, rosa)">
+  <div class="canvas-wrap">
+    <div class="canvas-shell aged-paper" id="canvasShell">
+      <div class="empty-state" id="emptyState">
+        <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#6b5f45" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="1.5"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 16l-5-5-4 4-3-3-4 4"/></svg>
+        <b>Nenhuma foto enviada</b>
+        <span>Envie a foto da região do corpo para começar o preview</span>
       </div>
+      <figure style="margin:0;">
+        <img id="baseImg" alt="Foto do corpo">
+      </figure>
+      <div id="layersContainer"></div>
+    </div>
+  </div>
 
-      <details style="margin-bottom:12px;">
-        <summary style="font-family:'Oswald',sans-serif; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#8a7f66; cursor:pointer;">Carregar de outra fonte (avançado)</summary>
-        <div class="flash-source-row" style="margin-top:8px;">
-          <input id="jsonUrl" type="text" placeholder="URL de um JSON [{ &quot;src&quot;: ... }]">
-          <button id="loadJsonBtn">Carregar</button>
-        </div>
-      </details>
+  <div class="bottom-strip">
+    <div class="controls-label" id="activeLayerLabel" style="font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--gold);">Nenhuma camada selecionada</div>
+    <div class="strip-icons">
+      <button class="strip-btn" id="flipBtn" disabled title="Espelhar" aria-label="Espelhar camada">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18"/><path d="M7 8l-3 4 3 4M17 8l3 4-3 4"/></svg>
+      </button>
+      <button class="strip-btn" id="adjustToggleBtn" title="Ajustar camada" aria-label="Ajustar camada">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h13M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="16" cy="18" r="2"/></svg>
+      </button>
+      <button class="strip-btn" id="textToggleBtn" title="Texto / lettering" aria-label="Texto e lettering">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M12 6v13"/></svg>
+      </button>
+      <button class="strip-btn" id="layersToggleBtn" title="Camadas" aria-label="Ver camadas">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l8 4.5-8 4.5-8-4.5L12 3z"/><path d="M4 12l8 4.5 8-4.5M4 16.5L12 21l8-4.5"/></svg>
+      </button>
+      <button class="strip-btn" id="deleteSelectedBtn" disabled title="Excluir camada" aria-label="Excluir camada">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 7h14M9 7V5h6v2M7 7l1 13h8l1-13"/></svg>
+      </button>
+    </div>
+  </div>
 
-      <div class="flash-grid" id="flashGrid">
-        <!-- itens inseridos via JS -->
-        <label class="upload-flash">
-          + Enviar flash
-          <input type="file" id="customFlashInput" accept="image/*">
-        </label>
-      </div>
-
-      <div class="lettering-panel">
-        <h2>Lettering / texto</h2>
-        <div class="sub">Simule um nome ou frase direto na pele, na fonte que quiser</div>
-
-        <div class="lettering-row">
-          <input id="letteringText" type="text" placeholder="Escreva o texto (ex: um nome)" maxlength="26">
-          <div class="font-picker" id="fontPicker">
-            <button type="button" class="font-picker-trigger" id="fontPickerTrigger">Fonte</button>
-            <div class="font-picker-panel" id="fontPickerPanel"></div>
-          </div>
-        </div>
-        <div class="font-upload-row">
-          <label for="fontUploadInput">+ carregar fonte própria (.ttf/.otf/.woff)</label>
-          <input type="file" id="fontUploadInput" accept=".ttf,.otf,.woff,.woff2" multiple style="display:none;">
-        </div>
-        <div class="lettering-row">
-          <button class="lettering-add-btn" id="addTextLayerBtn" style="width:100%;">+ Adicionar como camada</button>
-        </div>
-
-        <details class="fusion-details">
-          <summary>Fusão de dois nomes / ambigrama (avançado)</summary>
-          <div class="fusion-inputs">
-            <input id="fusionWordA" type="text" placeholder="Palavra A (lida normal)" maxlength="18">
-            <input id="fusionWordB" type="text" placeholder="Palavra B (na virada)" maxlength="18">
-          </div>
-          <div class="fusion-modebar" id="fusionModeBar">
-            <button type="button" class="active" data-mode="rot">Rotação 180° (de cabeça pra baixo)</button>
-            <button type="button" data-mode="mirh">Espelho (lado a lado)</button>
-          </div>
-          <div class="fusion-match" id="fusionMatch"></div>
-          <button class="lettering-add-btn" id="addFusionBtn" style="width:100%;">+ Adicionar fusão como 2 camadas</button>
-        </details>
-      </div>
+  <div class="gallery-strip aged-paper">
+    <div class="flash-source-row">
+      <input id="searchFlash" type="text" placeholder="Buscar flash (ex: águia, caveira, rosa)">
     </div>
 
-    <!-- CANVAS -->
-    <div class="preview-panel">
-
-      <div class="canvas-shell aged-paper" id="canvasShell">
-        <div class="empty-state" id="emptyState">
-          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#6b5f45" stroke-width="1.4"><rect x="3" y="5" width="18" height="14" rx="1.5"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 16l-5-5-4 4-3-3-4 4"/></svg>
-          <b>Nenhuma foto enviada</b>
-          <span>Envie a foto da região do corpo para começar o preview</span>
-        </div>
-        <figure style="margin:0;">
-          <img id="baseImg" alt="Foto do corpo">
-        </figure>
-        <div id="layersContainer"></div>
+    <details style="margin-bottom:12px;">
+      <summary style="font-family:'Oswald',sans-serif; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#8a7f66; cursor:pointer;">Carregar de outra fonte (avançado)</summary>
+      <div class="flash-source-row" style="margin-top:8px;">
+        <input id="jsonUrl" type="text" placeholder="URL de um JSON [{ &quot;src&quot;: ... }]">
+        <button id="loadJsonBtn">Carregar</button>
       </div>
+    </details>
 
-      <div class="layers-panel">
-        <div class="layers-panel-label">
-          <span>Camadas aplicadas (toque pra editar cada uma)</span>
-        </div>
-        <div class="layer-thumbs" id="layerThumbs">
-          <span class="layer-thumbs-empty">Escolha flash ao lado. Cada um vira uma camada, dá pra combinar vários pra montar uma manga</span>
-        </div>
-      </div>
-
-      <div class="upload-row">
-        <button class="btn primary" id="uploadBtn">Enviar foto do corpo</button>
-        <input type="file" id="bodyPhotoInput" accept="image/*" capture="environment">
-        <button class="btn" id="resetBtn">Reiniciar</button>
-        <button class="btn" id="downloadBtn" disabled>Baixar preview</button>
-        <button class="btn" id="shareBtn" disabled>↗ Compartilhar</button>
-      </div>
-
-      <div class="base-picker">
-        <div class="base-picker-label">ou escolha uma base de corpo pronta</div>
-        <div class="gender-toggle" id="genderToggle">
-          <button class="gender-btn active" data-gender="masculino">Masculino</button>
-          <button class="gender-btn" data-gender="feminino">Feminino</button>
-        </div>
-        <div class="base-thumbs" id="baseThumbs"></div>
-      </div>
-
-      <div class="controls-label" id="activeLayerLabel" style="font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--gold); margin-top:4px;">Nenhuma camada selecionada</div>
-      <div class="controls">
-        <div class="control">
-          <label>Opacidade <span id="opacityVal">85%</span></label>
-          <input type="range" id="opacityRange" min="20" max="100" value="85">
-        </div>
-        <div class="control">
-          <label>Mesclagem</label>
-          <select id="blendMode">
-            <option value="multiply" selected>Realista (pele)</option>
-            <option value="normal">Normal</option>
-            <option value="darken">Escurecer</option>
-            <option value="soft-light">Suave</option>
-          </select>
-        </div>
-        <div class="control">
-          <label>Escala <span id="scaleVal">100%</span></label>
-          <input type="range" id="scaleRange" min="20" max="300" value="100">
-        </div>
-        <div class="control">
-          <label>Rotação <span id="rotVal">0°</span></label>
-          <input type="range" id="rotRange" min="-180" max="180" value="0">
-        </div>
-        <div class="control">
-          <label>Espelhar</label>
-          <button type="button" class="btn" id="flipBtn" style="width:100%;" disabled>⇋ Espelhar horizontalmente</button>
-        </div>
-      </div>
-
-      <div class="controls" id="textControls" style="display:none;">
-        <div class="control">
-          <label>Cor do texto</label>
-          <input type="color" id="textColor" value="#1b1710" style="width:100%; height:38px; border:1px solid var(--line); border-radius:4px; padding:2px; background:none;">
-        </div>
-        <div class="control">
-          <label>Contorno <span id="strokeWidthVal">0px</span></label>
-          <input type="range" id="strokeWidthRange" min="0" max="8" value="0">
-        </div>
-        <div class="control">
-          <label>Cor do contorno</label>
-          <input type="color" id="strokeColor" value="#000000" style="width:100%; height:38px; border:1px solid var(--line); border-radius:4px; padding:2px; background:none;">
-        </div>
-        <div class="control">
-          <label>Sombra</label>
-          <div style="display:flex; gap:8px; align-items:center;">
-            <input type="checkbox" id="shadowOn">
-            <input type="range" id="shadowBlurRange" min="0" max="20" value="4" style="flex:1;">
-            <input type="color" id="shadowColor" value="#000000" style="width:44px; height:32px; padding:2px; border:1px solid var(--line); border-radius:4px; background:none;">
-          </div>
-        </div>
-      </div>
-
+    <div class="flash-grid" id="flashGrid">
+      <!-- itens inseridos via JS -->
+      <label class="upload-flash">
+        + Enviar flash
+        <input type="file" id="customFlashInput" accept="image/*">
+      </label>
     </div>
-  </section>
+  </div>
+</div>
 
-  <footer>Preview simulado. O resultado final pode variar conforme técnica, curvatura do corpo e cicatrização · <b>Micael Tatuagem</b></footer>
+<!-- POPOVERS: painéis contextuais, abrem por cima de tudo -->
+<div class="popover-backdrop" id="popoverBackdrop"></div>
+
+<div class="popover" id="basePopover">
+  <button class="popover-close" data-close-popover>&times;</button>
+  <h2>Base de corpo</h2>
+  <div class="sub">Sem foto própria? Escolha uma base pronta pra testar</div>
+  <div class="gender-toggle" id="genderToggle">
+    <button class="gender-btn active" data-gender="masculino">Masculino</button>
+    <button class="gender-btn" data-gender="feminino">Feminino</button>
+  </div>
+  <div class="base-thumbs" id="baseThumbs"></div>
+</div>
+
+<div class="popover" id="adjustPopover">
+  <button class="popover-close" data-close-popover>&times;</button>
+  <h2>Ajustar camada</h2>
+  <div class="controls">
+    <div class="control">
+      <label>Opacidade <span id="opacityVal">85%</span></label>
+      <input type="range" id="opacityRange" min="20" max="100" value="85">
+    </div>
+    <div class="control">
+      <label>Mesclagem</label>
+      <select id="blendMode">
+        <option value="multiply" selected>Realista (pele)</option>
+        <option value="normal">Normal</option>
+        <option value="darken">Escurecer</option>
+        <option value="soft-light">Suave</option>
+      </select>
+    </div>
+    <div class="control">
+      <label>Escala <span id="scaleVal">100%</span></label>
+      <input type="range" id="scaleRange" min="20" max="300" value="100">
+    </div>
+    <div class="control">
+      <label>Rotação <span id="rotVal">0°</span></label>
+      <input type="range" id="rotRange" min="-180" max="180" value="0">
+    </div>
+  </div>
+
+  <div class="controls" id="textControls" style="display:none;">
+    <div class="control">
+      <label>Cor do texto</label>
+      <input type="color" id="textColor" value="#1b1710" style="width:100%; height:38px; border:1px solid var(--line); border-radius:4px; padding:2px; background:none;">
+    </div>
+    <div class="control">
+      <label>Contorno <span id="strokeWidthVal">0px</span></label>
+      <input type="range" id="strokeWidthRange" min="0" max="8" value="0">
+    </div>
+    <div class="control">
+      <label>Cor do contorno</label>
+      <input type="color" id="strokeColor" value="#000000" style="width:100%; height:38px; border:1px solid var(--line); border-radius:4px; padding:2px; background:none;">
+    </div>
+    <div class="control">
+      <label>Sombra</label>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <input type="checkbox" id="shadowOn">
+        <input type="range" id="shadowBlurRange" min="0" max="20" value="4" style="flex:1;">
+        <input type="color" id="shadowColor" value="#000000" style="width:44px; height:32px; padding:2px; border:1px solid var(--line); border-radius:4px; background:none;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="popover" id="textPopover">
+  <button class="popover-close" data-close-popover>&times;</button>
+  <div class="lettering-panel" style="margin-top:0;">
+    <h2>Lettering / texto</h2>
+    <div class="sub">Simule um nome ou frase direto na pele, na fonte que quiser</div>
+
+    <div class="lettering-row">
+      <input id="letteringText" type="text" placeholder="Escreva o texto (ex: um nome)" maxlength="26">
+      <div class="font-picker" id="fontPicker">
+        <button type="button" class="font-picker-trigger" id="fontPickerTrigger">Fonte</button>
+        <div class="font-picker-panel" id="fontPickerPanel"></div>
+      </div>
+    </div>
+    <div class="font-upload-row">
+      <label for="fontUploadInput">+ carregar fonte própria (.ttf/.otf/.woff)</label>
+      <input type="file" id="fontUploadInput" accept=".ttf,.otf,.woff,.woff2" multiple style="display:none;">
+    </div>
+    <div class="lettering-row">
+      <button class="lettering-add-btn" id="addTextLayerBtn" style="width:100%;">+ Adicionar como camada</button>
+    </div>
+
+    <details class="fusion-details">
+      <summary>Fusão de dois nomes / ambigrama (avançado)</summary>
+      <div class="fusion-inputs">
+        <input id="fusionWordA" type="text" placeholder="Palavra A (lida normal)" maxlength="18">
+        <input id="fusionWordB" type="text" placeholder="Palavra B (na virada)" maxlength="18">
+      </div>
+      <div class="fusion-modebar" id="fusionModeBar">
+        <button type="button" class="active" data-mode="rot">Rotação 180° (de cabeça pra baixo)</button>
+        <button type="button" data-mode="mirh">Espelho (lado a lado)</button>
+      </div>
+      <div class="fusion-match" id="fusionMatch"></div>
+      <button class="lettering-add-btn" id="addFusionBtn" style="width:100%;">+ Adicionar fusão como 2 camadas</button>
+    </details>
+  </div>
+</div>
+
+<div class="popover" id="layersPopover">
+  <button class="popover-close" data-close-popover>&times;</button>
+  <h2>Camadas</h2>
+  <div class="sub">Toque pra selecionar e editar cada uma</div>
+  <div class="layer-thumbs" id="layerThumbs" style="flex-wrap:wrap;">
+    <span class="layer-thumbs-empty">Escolha um flash ou texto pra começar a montar</span>
+  </div>
 </div>
 
 <script>
 (function(){
+  // ---------- Popovers (painéis contextuais) ----------
+  const popoverBackdrop = document.getElementById('popoverBackdrop');
+  const baseToggleBtn = document.getElementById('baseToggleBtn');
+  const adjustToggleBtn = document.getElementById('adjustToggleBtn');
+  const textToggleBtn = document.getElementById('textToggleBtn');
+  const layersToggleBtn = document.getElementById('layersToggleBtn');
+  const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+
+  function openPopover(id){
+    document.querySelectorAll('.popover.open').forEach(p => p.classList.remove('open'));
+    document.getElementById(id).classList.add('open');
+    popoverBackdrop.classList.add('open');
+  }
+  function closeAllPopovers(){
+    document.querySelectorAll('.popover.open').forEach(p => p.classList.remove('open'));
+    popoverBackdrop.classList.remove('open');
+  }
+  popoverBackdrop.addEventListener('click', closeAllPopovers);
+  document.querySelectorAll('[data-close-popover]').forEach(btn => {
+    btn.addEventListener('click', closeAllPopovers);
+  });
+  baseToggleBtn.addEventListener('click', () => openPopover('basePopover'));
+  adjustToggleBtn.addEventListener('click', () => openPopover('adjustPopover'));
+  textToggleBtn.addEventListener('click', () => openPopover('textPopover'));
+  layersToggleBtn.addEventListener('click', () => openPopover('layersPopover'));
+
   const flashGrid = document.getElementById('flashGrid');
   const uploadFlashInput = document.getElementById('customFlashInput');
   const jsonUrlInput = document.getElementById('jsonUrl');
@@ -1256,7 +1353,7 @@
     layers.forEach(applyLayerStyle);
     const layer = layers.find(l => l.id === id);
     const controlsDisabled = !layer;
-    [opacityRange, blendMode, scaleRange, rotRange, flipBtn].forEach(c => c.disabled = controlsDisabled);
+    [opacityRange, blendMode, scaleRange, rotRange, flipBtn, deleteSelectedBtn].forEach(c => c.disabled = controlsDisabled);
     if(!layer){
       activeLayerLabel.textContent = 'Nenhuma camada selecionada';
       textControls.style.display = 'none';
@@ -1299,7 +1396,7 @@
       selectLayer(activeLayerId);
     } else {
       updateLayerThumbs();
-      [opacityRange, blendMode, scaleRange, rotRange, flipBtn].forEach(c => c.disabled = true);
+      [opacityRange, blendMode, scaleRange, rotRange, flipBtn, deleteSelectedBtn].forEach(c => c.disabled = true);
       activeLayerLabel.textContent = 'Nenhuma camada selecionada';
       textControls.style.display = 'none';
     }
@@ -1446,7 +1543,7 @@
     emptyState.style.display = 'flex';
     baseThumbs.querySelectorAll('.base-thumb').forEach(n => n.classList.remove('selected'));
     updateLayerThumbs();
-    [opacityRange, blendMode, scaleRange, rotRange, flipBtn].forEach(c => c.disabled = true);
+    [opacityRange, blendMode, scaleRange, rotRange, flipBtn, deleteSelectedBtn].forEach(c => c.disabled = true);
     activeLayerLabel.textContent = 'Nenhuma camada selecionada';
     updateDownloadState();
   });
@@ -1485,6 +1582,10 @@
     layer.mirror = !layer.mirror;
     flipBtn.classList.toggle('active', layer.mirror);
     applyLayerStyle(layer);
+  });
+
+  deleteSelectedBtn.addEventListener('click', () => {
+    if(activeLayerId) removeLayer(activeLayerId);
   });
 
   textColor.addEventListener('input', () => {
@@ -1744,7 +1845,7 @@
 
   // init
   loadFlashesFromRepo();
-  [opacityRange, blendMode, scaleRange, rotRange, flipBtn].forEach(c => c.disabled = true);
+  [opacityRange, blendMode, scaleRange, rotRange, flipBtn, deleteSelectedBtn].forEach(c => c.disabled = true);
 })();
 </script>
 <script src="flash-decor.js" defer></script>
