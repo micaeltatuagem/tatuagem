@@ -6,7 +6,11 @@
     "title": "Mantis Buda",
     "altText": "Tatuagem flash de mantis buda. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Dark Art",
+      "Religioso",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-09"
   },
