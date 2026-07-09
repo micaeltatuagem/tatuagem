@@ -215,7 +215,11 @@
     "title": "Xango",
     "altText": "Tatuagem flash de xango. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09"
   },
