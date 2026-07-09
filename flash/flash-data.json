@@ -259,7 +259,10 @@
     "title": "Machine Elf 3",
     "altText": "Tatuagem flash de machine elf 3. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-09"
   },
