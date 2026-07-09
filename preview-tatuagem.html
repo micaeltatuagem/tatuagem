@@ -97,22 +97,9 @@
 
   /* ---- Papel envelhecido (compartilhado entre flash-panel e canvas-shell) ---- */
   .aged-paper{
-    background:
-      /* grão do papel */
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-      /* dobras/vincos */
-      linear-gradient(102deg, transparent 36%, rgba(255,255,255,0.35) 37.5%, rgba(101,67,33,0.14) 39%, transparent 40.5%),
-      linear-gradient(8deg, transparent 58%, rgba(101,67,33,0.12) 59.5%, rgba(255,255,255,0.28) 61%, transparent 62.5%),
-      /* manchas de café */
-      radial-gradient(circle at 80% 20%, transparent 58%, rgba(101,67,33,0.32) 61%, rgba(101,67,33,0.14) 67%, transparent 71%),
-      radial-gradient(circle at 12% 78%, transparent 62%, rgba(101,67,33,0.26) 65%, rgba(101,67,33,0.1) 71%, transparent 75%),
-      radial-gradient(circle at 60% 92%, rgba(101,67,33,0.16), transparent 20%),
-      radial-gradient(circle at 92% 88%, rgba(101,67,33,0.12), transparent 16%),
-      /* base do papel */
-      radial-gradient(ellipse at 22% 15%, rgba(255,252,238,0.6), transparent 55%),
-      radial-gradient(ellipse at 85% 90%, rgba(120,100,60,0.18), transparent 60%),
-      linear-gradient(160deg, #e9e0c8 0%, #dccfa8 45%, #cebb8c 100%);
-    background-blend-mode: overlay, normal, normal, multiply, multiply, multiply, multiply, normal, normal, normal;
+    background-image: url('paper-texture.webp');
+    background-size: cover;
+    background-position: center;
   }
 
   /* ---- Flash sheet panel ---- */
@@ -1641,8 +1628,16 @@
     const scaleFit = Math.min(W / bImg.width, H / bImg.height);
     const bw = bImg.width * scaleFit, bh = bImg.height * scaleFit;
     const bx = (W - bw)/2, by = (H - bh)/2;
-    ctx.fillStyle = '#dccfa8';
-    ctx.fillRect(0,0,W,H);
+
+    try {
+      const paperImg = await loadImageAsync('paper-texture.webp');
+      const paperScale = Math.max(W / paperImg.width, H / paperImg.height);
+      const pw = paperImg.width * paperScale, ph = paperImg.height * paperScale;
+      ctx.drawImage(paperImg, (W-pw)/2, (H-ph)/2, pw, ph);
+    } catch(e) {
+      ctx.fillStyle = '#dccfa8';
+      ctx.fillRect(0,0,W,H);
+    }
     ctx.drawImage(bImg, bx, by, bw, bh);
 
     try { await document.fonts.ready; } catch(e) {}
