@@ -171,7 +171,11 @@
     "title": "Oxala",
     "altText": "Tatuagem flash de oxala. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09"
   },
