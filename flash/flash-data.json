@@ -56,7 +56,12 @@
     "title": "Maos Sol Olho",
     "altText": "Tatuagem flash de maos sol olho. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-10"
   },
