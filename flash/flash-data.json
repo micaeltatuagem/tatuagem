@@ -6,7 +6,13 @@
     "title": "Caveira Iogue",
     "altText": "Tatuagem flash de caveira iogue. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Dark Art",
+      "Religioso",
+      "Budista",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-10"
   },
