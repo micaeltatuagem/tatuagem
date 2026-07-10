@@ -318,7 +318,10 @@
     "title": "Rosa 6",
     "altText": "Tatuagem flash de rosa 6. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10"
   },
