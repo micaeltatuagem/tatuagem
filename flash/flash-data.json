@@ -174,7 +174,10 @@
     "title": "Farol 5",
     "altText": "Tatuagem flash de farol 5. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10"
   },
