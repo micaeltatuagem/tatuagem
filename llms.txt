@@ -4,9 +4,9 @@
 
 ## Páginas
 
-- [Início](https://micaeltatuagem.github.io/tatuagem/): apresentação do estúdio, processo de trabalho, perguntas frequentes e contato.
-- [Galeria](https://micaeltatuagem.github.io/tatuagem/galeria.html): portfólio de trabalhos realizados, com filtro por estilo.
-- [Reserva](https://micaeltatuagem.github.io/tatuagem/reserva.html): formulário para descrever a ideia de tatuagem antes do primeiro contato.
+- [Início](https://micaeltatuagem.com.br/): apresentação do estúdio, processo de trabalho, perguntas frequentes e contato.
+- [Galeria](https://micaeltatuagem.com.br/galeria.html): portfólio de trabalhos realizados, com filtro por estilo.
+- [Reserva](https://micaeltatuagem.com.br/reserva.html): formulário para descrever a ideia de tatuagem antes do primeiro contato.
 
 ## Contato
 
