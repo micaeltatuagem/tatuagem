@@ -132,7 +132,10 @@
     "title": "Pin Up 19",
     "altText": "Tatuagem flash de pin up 19. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10"
   },
