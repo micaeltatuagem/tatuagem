@@ -94,7 +94,11 @@
     "title": "Ere Rei",
     "altText": "Tatuagem flash de ere rei. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09"
   },
