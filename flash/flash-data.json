@@ -6,7 +6,10 @@
     "title": "Kimono",
     "altText": "Tatuagem flash de kimono. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Oriental",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-10"
   },
