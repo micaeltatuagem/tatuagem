@@ -216,7 +216,12 @@
     "title": "Nossa Senhora",
     "altText": "Tatuagem flash de nossa senhora. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Cristão",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10"
   },
