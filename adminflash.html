@@ -319,7 +319,7 @@
   const TAGS_PATH     = `${IMAGE_FOLDER}/tags.json`;
   const CATALOG_PAGE  = 'flash.html';
   const SITEMAP_PATH  = 'sitemap.xml';
-  const SITE_URL    = 'https://micaeltatuagem.github.io/tatuagem';
+  const SITE_URL    = 'https://micaeltatuagem.com.br';
   const DEFAULT_TAGS = ['Old School', 'Dark Art', 'Religioso', 'Náutico', 'Animais'];
 
   const SUPABASE_URL  = 'https://rpgcsejfewltricfsdrd.supabase.co';
@@ -1043,7 +1043,7 @@
     const fileData = await res.json();
     let xml = decodeURIComponent(escape(atob(fileData.content)));
 
-    const startMarker = '<loc>https://micaeltatuagem.github.io/tatuagem/flash.html</loc>';
+    const startMarker = '<loc>https://micaeltatuagem.com.br/flash.html</loc>';
     const startIdx = xml.indexOf(startMarker);
     if (startIdx === -1) throw new Error('Entrada do flash.html não encontrada no sitemap.');
     const blockEndIdx = xml.indexOf('</url>', startIdx);
@@ -1054,7 +1054,7 @@
     const header = firstImageIdx !== -1 ? block.slice(0, firstImageIdx) : block;
 
     const imagesXml = gallery.map(it => `      <image:image>
-        <image:loc>https://micaeltatuagem.github.io/tatuagem/${it.imageUrl}</image:loc>
+        <image:loc>https://micaeltatuagem.com.br/${it.imageUrl}</image:loc>
         <image:title>Tatuagem Flash ${escapeHtml(it.title)}</image:title>
         <image:caption>${escapeHtml(it.altText || it.title)}</image:caption>
       </image:image>`).join('\n');
