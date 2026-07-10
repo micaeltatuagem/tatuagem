@@ -118,7 +118,10 @@
     "title": "Serpente 8",
     "altText": "Tatuagem flash de serpente 8. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10"
   },
