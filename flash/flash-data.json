@@ -20,7 +20,10 @@
     "title": "Tigre 4",
     "altText": "Tatuagem flash de tigre 4. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10"
   },
