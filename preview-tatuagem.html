@@ -1125,6 +1125,20 @@
   ];
   let currentFontFamily = fontList[0].family;
 
+  function familyToSlug(family){
+    const match = family.match(/'([^']+)'/);
+    const raw = match ? match[1] : family;
+    return raw.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+  }
+  function slugToFont(slug){
+    return fontList.find(f => familyToSlug(f.family) === slug);
+  }
+  function buildShareUrlWithFont(){
+    const params = new URLSearchParams(location.search);
+    params.set('font', familyToSlug(currentFontFamily));
+    return `${location.origin}${location.pathname}?${params.toString()}`;
+  }
+
   let fontPickerObserver = null;
   function renderFontPicker(){
     fontPickerPanel.innerHTML = '';
@@ -1149,6 +1163,7 @@
         fontPickerTrigger.style.fontFamily = f.family;
         fontPickerPanel.classList.remove('open');
         renderFontPicker();
+        history.replaceState(null, '', buildShareUrlWithFont());
       });
       fontPickerPanel.appendChild(opt);
       fontPickerObserver.observe(opt);
@@ -1157,6 +1172,19 @@
   renderFontPicker();
   fontPickerTrigger.textContent = fontList[0].name;
   fontPickerTrigger.style.fontFamily = fontList[0].family;
+
+  // Deep link: ?font=slug pré-seleciona a fonte compartilhada
+  (function applyFontFromDeepLink(){
+    const params = new URLSearchParams(location.search);
+    const slug = params.get('font');
+    if(!slug) return;
+    const found = slugToFont(slug);
+    if(!found) return;
+    currentFontFamily = found.family;
+    fontPickerTrigger.textContent = found.name;
+    fontPickerTrigger.style.fontFamily = found.family;
+    renderFontPicker();
+  })();
 
   fontPickerTrigger.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -1863,7 +1891,7 @@
       const platform = btn.dataset.platform;
       shareMenu.classList.remove('open');
       const shareText = 'Olha a tatuagem que eu montei no Criar do Micael Tatuagem 🖤';
-      const shareUrl = `${location.origin}${location.pathname}`;
+      const shareUrl = buildShareUrlWithFont();
 
       if (platform === 'whatsapp') {
         window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank', 'noopener');
