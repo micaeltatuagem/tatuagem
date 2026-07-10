@@ -76,7 +76,10 @@
     "title": "Hannya",
     "altText": "Tatuagem flash de hannya. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10"
   },
