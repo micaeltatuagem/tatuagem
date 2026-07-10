@@ -281,7 +281,7 @@
   const IMAGE_FOLDER = 'galeria';
   const DATA_PATH   = `${IMAGE_FOLDER}/gallery-data.json`;
   const SITEMAP_PATH = 'sitemap.xml';
-  const SITE_URL    = 'https://micaeltatuagem.github.io/tatuagem';
+  const SITE_URL    = 'https://micaeltatuagem.com.br';
   const DEFAULT_TAGS = ['Dark Art', 'Blackwork', 'Colorido', 'Ornamental'];
 
   const SUPABASE_URL  = 'https://rpgcsejfewltricfsdrd.supabase.co';
@@ -743,7 +743,7 @@
     const fileData = await res.json();
     let xml = decodeURIComponent(escape(atob(fileData.content)));
 
-    const startMarker = '<loc>https://micaeltatuagem.github.io/tatuagem/galeria.html</loc>';
+    const startMarker = '<loc>https://micaeltatuagem.com.br/galeria.html</loc>';
     const startIdx = xml.indexOf(startMarker);
     if (startIdx === -1) throw new Error('Entrada do galeria.html não encontrada no sitemap.');
     const blockEndIdx = xml.indexOf('</url>', startIdx);
@@ -756,7 +756,7 @@
     const imagesXml = gallery.map(it => {
       const estilos = (it.styles || []).join(', ');
       return `      <image:image>
-        <image:loc>https://micaeltatuagem.github.io/tatuagem/${it.imageUrl}</image:loc>
+        <image:loc>https://micaeltatuagem.com.br/${it.imageUrl}</image:loc>
         <image:title>Tatuagem ${escapeHtml(it.title)}</image:title>
         <image:caption>${escapeHtml(estilos)} — Tatuagem ${escapeHtml(it.title)} — Micael Faccio, tatuador em Muriaé MG</image:caption>
       </image:image>`;
