@@ -343,10 +343,14 @@
     "id": 504,
     "filename": "morte-1783645985811-24.webp",
     "imageUrl": "flash/morte-1783645985811-24.webp",
-    "title": "Morte",
+    "title": "Morte 19",
     "altText": "Tatuagem flash de morte. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Dark Art",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10"
   },
