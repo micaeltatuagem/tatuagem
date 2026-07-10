@@ -261,7 +261,11 @@
     "title": "Diabo Frontal",
     "altText": "Tatuagem flash de diabo frontal. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Dark Art",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10"
   },
