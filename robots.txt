@@ -38,4 +38,4 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Sitemap: https://micaeltatuagem.github.io/tatuagem/sitemap.xml
+Sitemap: https://micaeltatuagem.com.br/sitemap.xml
