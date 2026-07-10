@@ -66,7 +66,11 @@
     "title": "Preto Velho 1",
     "altText": "Tatuagem flash de preto velho 1. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09"
   },
