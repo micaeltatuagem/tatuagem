@@ -116,7 +116,11 @@
     "title": "Vovo Nana",
     "altText": "Tatuagem flash de vovo nana. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09"
   },
