@@ -33,6 +33,7 @@
     color:var(--paper);
     font-family:'Inter',sans-serif;
     height:100vh;
+    height:100dvh;
     display:flex;
     flex-direction:column;
   }
@@ -88,6 +89,24 @@
   .strip-btn.active{ background:var(--gold); border-color:var(--gold); color:#1b1710; }
   .strip-btn svg{ width:19px; height:19px; }
 
+  .share-menu{
+    display:none;
+    position:absolute; top:calc(100% + 8px); left:50%; transform:translateX(-50%);
+    background:var(--ink-soft); border:1px solid var(--line);
+    border-radius:8px; padding:0.4rem; min-width:230px;
+    box-shadow:0 12px 32px rgba(0,0,0,0.5); z-index:310;
+  }
+  .share-menu.open{ display:flex; flex-direction:column; gap:0.15rem; }
+  .share-menu button{
+    display:flex; align-items:center; gap:0.6rem;
+    width:100%; text-align:left;
+    background:none; border:none; color:var(--paper);
+    font-family:'Inter',sans-serif; font-size:0.86rem;
+    padding:0.6rem 0.7rem; border-radius:5px; cursor:pointer;
+    transition:background 0.15s ease;
+  }
+  .share-menu button:hover{ background:rgba(212,201,176,0.08); }
+
   .canvas-wrap{
     flex:1; min-height:0;
     display:flex; align-items:center; justify-content:center;
@@ -100,10 +119,25 @@
   .gallery-strip{
     flex-shrink:0;
     border-top:1px solid var(--line);
-    padding:10px 4px;
-    display:flex; flex-direction:column; gap:8px;
-    max-height:190px;
+    padding:6px 4px;
+    display:flex; flex-direction:column; gap:6px;
+    max-height:112px;
+    transition:max-height .22s ease;
+    position:relative;
   }
+  .gallery-strip.expanded{
+    max-height:48vh;
+  }
+  .gallery-expand-handle{
+    position:absolute; top:-14px; left:50%; transform:translateX(-50%);
+    width:44px; height:14px;
+    background:var(--ink-soft); border:1px solid var(--line); border-bottom:none;
+    border-radius:6px 6px 0 0;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; color:var(--text-dim);
+  }
+  .gallery-expand-handle svg{ width:14px; height:14px; transition:transform .2s ease; transform:rotate(180deg); }
+  .gallery-strip.expanded .gallery-expand-handle svg{ transform:rotate(0deg); }
   .gallery-strip #searchFlash{
     font-family:'Inter',sans-serif; font-size:12.5px; padding:8px 10px;
     border:1px solid var(--line); border-radius:4px; background:var(--ink-soft); color:var(--paper);
@@ -117,7 +151,7 @@
   .popover-backdrop.open{ display:block; }
   .popover{
     position:fixed; left:50%; top:50%; transform:translate(-50%,-50%);
-    width:min(92vw,420px); max-height:80vh; overflow-y:auto;
+    width:min(92vw,420px); max-height:80vh; overflow-y:auto; overflow-x:hidden;
     background:var(--ink-soft); border:1px solid var(--line); border-radius:8px;
     padding:20px; z-index:300; display:none;
   }
@@ -213,9 +247,9 @@
   .flash-grid::-webkit-scrollbar-thumb{background:#b9ac8c;border-radius:3px;}
 
   .lettering-panel{ margin-top:18px; }
-  .lettering-row{ display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap; }
+  .lettering-row{ display:flex; flex-direction:column; gap:8px; margin-bottom:10px; }
   .lettering-row input[type=text]{
-    flex:1; font-family:'Inter',sans-serif; font-size:13px; padding:9px 10px;
+    width:100%; font-family:'Inter',sans-serif; font-size:13px; padding:9px 10px;
     border:1px solid #b9ac8c; border-radius:2px; background:#fbf8f1; color:#3a3327;
   }
   .lettering-row select{
@@ -223,19 +257,19 @@
     border:1px solid #b9ac8c; border-radius:2px; background:#fbf8f1; color:#3a3327;
     max-width:150px;
   }
-  .font-picker{ position:relative; flex-shrink:0; }
+  .font-picker{ position:relative; width:100%; }
   .font-picker-trigger{
     font-family:'Inter',sans-serif; font-size:13px; padding:9px 10px;
     border:1px solid #b9ac8c; border-radius:2px; background:#fbf8f1; color:#3a3327;
-    cursor:pointer; text-align:left; min-width:150px; max-width:180px;
+    cursor:pointer; text-align:left; width:100%;
     overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
     display:flex; align-items:center; justify-content:space-between; gap:6px;
   }
   .font-picker-trigger::after{ content:'▾'; font-size:9px; opacity:.6; flex-shrink:0; }
   .font-picker-panel{
-    position:absolute; top:calc(100% + 4px); right:0; z-index:30;
+    position:absolute; top:calc(100% + 4px); left:0; right:0; z-index:30;
     background:#fbf8f1; border:1px solid #b9ac8c; border-radius:4px;
-    box-shadow:0 10px 28px rgba(0,0,0,.28); min-width:220px; max-height:280px; overflow-y:auto;
+    box-shadow:0 10px 28px rgba(0,0,0,.28); max-height:220px; overflow-y:auto; overflow-x:hidden;
     display:none;
   }
   .font-picker-panel.open{ display:block; }
@@ -782,9 +816,17 @@
     <button class="strip-btn" id="downloadBtn" disabled title="Baixar preview" aria-label="Baixar preview">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 19h16"/></svg>
     </button>
-    <button class="strip-btn" id="shareBtn" disabled title="Compartilhar" aria-label="Compartilhar">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="18" cy="5" r="2.3"/><circle cx="6" cy="12" r="2.3"/><circle cx="18" cy="19" r="2.3"/><path d="M8 10.7l8-4.4M8 13.3l8 4.4"/></svg>
-    </button>
+    <div class="share-wrap" id="shareWrap" style="position:relative;">
+      <button class="strip-btn" id="shareBtn" disabled title="Compartilhar" aria-label="Compartilhar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="18" cy="5" r="2.3"/><circle cx="6" cy="12" r="2.3"/><circle cx="18" cy="19" r="2.3"/><path d="M8 10.7l8-4.4M8 13.3l8 4.4"/></svg>
+      </button>
+      <div class="share-menu" id="shareMenu">
+        <button type="button" data-platform="whatsapp">💬 WhatsApp</button>
+        <button type="button" data-platform="facebook">📘 Facebook</button>
+        <button type="button" data-platform="native">📤 Mais opções (Instagram, etc.)</button>
+        <button type="button" data-platform="copy">🔗 Copiar link</button>
+      </div>
+    </div>
   </div>
 
   <div class="canvas-wrap">
@@ -822,7 +864,10 @@
     </div>
   </div>
 
-  <div class="gallery-strip aged-paper">
+  <div class="gallery-strip aged-paper" id="galleryStrip">
+    <div class="gallery-expand-handle" id="galleryExpandHandle" title="Expandir/recolher galeria" aria-label="Expandir ou recolher galeria de flashs">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
     <div class="flash-source-row">
       <input id="searchFlash" type="text" placeholder="Buscar flash (ex: águia, caveira, rosa)">
     </div>
@@ -960,6 +1005,11 @@
 (function(){
   // ---------- Popovers (painéis contextuais) ----------
   const popoverBackdrop = document.getElementById('popoverBackdrop');
+  const galleryStrip = document.getElementById('galleryStrip');
+  const galleryExpandHandle = document.getElementById('galleryExpandHandle');
+  galleryExpandHandle.addEventListener('click', () => {
+    galleryStrip.classList.toggle('expanded');
+  });
   const baseToggleBtn = document.getElementById('baseToggleBtn');
   const adjustToggleBtn = document.getElementById('adjustToggleBtn');
   const textToggleBtn = document.getElementById('textToggleBtn');
@@ -1797,43 +1847,72 @@
     }
   });
 
-  shareBtn.addEventListener('click', async () => {
-    const shareText = 'Olha a tatuagem que eu montei no Criar do Micael Tatuagem 🖤';
-    const shareUrl = `${location.origin}${location.pathname}`;
-    let blob;
-    try{
-      const exportCanvas = await buildExportCanvas();
-      blob = await new Promise(resolve => exportCanvas.toBlob(resolve, 'image/png'));
-    }catch(err){
-      alert('Não foi possível gerar a imagem pra compartilhar. Tente baixar o preview em vez disso.');
-      return;
-    }
+  const shareWrap = document.getElementById('shareWrap');
+  const shareMenu = document.getElementById('shareMenu');
 
-    try {
-      if (blob && navigator.canShare) {
-        const file = new File([blob], 'preview-tatuagem.png', { type: 'image/png' });
-        if (navigator.canShare({ files: [file] })) {
-          await navigator.share({ files: [file], text: shareText, url: shareUrl });
-          return;
-        }
-      }
-      if (navigator.share) {
-        await navigator.share({ text: shareText, url: shareUrl });
+  shareBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    shareMenu.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (!shareWrap.contains(e.target)) shareMenu.classList.remove('open');
+  });
+
+  shareMenu.querySelectorAll('button[data-platform]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const platform = btn.dataset.platform;
+      shareMenu.classList.remove('open');
+      const shareText = 'Olha a tatuagem que eu montei no Criar do Micael Tatuagem 🖤';
+      const shareUrl = `${location.origin}${location.pathname}`;
+
+      if (platform === 'whatsapp') {
+        window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank', 'noopener');
         return;
       }
-    } catch (err) {
-      if (err && err.name === 'AbortError') return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
-      const original = shareBtn.textContent;
-      shareBtn.textContent = '✓ Link copiado!';
-      setTimeout(() => { shareBtn.textContent = original; }, 2200);
-    } catch {
-      window.prompt('Copie o link abaixo pra compartilhar:', `${shareText} ${shareUrl}`);
-    }
+      if (platform === 'facebook') {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank', 'noopener,width=600,height=480');
+        return;
+      }
+      if (platform === 'native') {
+        let blob;
+        try{
+          const exportCanvas = await buildExportCanvas();
+          blob = await new Promise(resolve => exportCanvas.toBlob(resolve, 'image/png'));
+        }catch(err){
+          alert('Não foi possível gerar a imagem pra compartilhar. Tente baixar o preview em vez disso.');
+          return;
+        }
+        try {
+          if (blob && navigator.canShare) {
+            const file = new File([blob], 'criar-tatuagem.png', { type: 'image/png' });
+            if (navigator.canShare({ files: [file] })) {
+              await navigator.share({ files: [file], text: shareText, url: shareUrl });
+              return;
+            }
+          }
+          if (navigator.share) {
+            await navigator.share({ text: shareText, url: shareUrl });
+            return;
+          }
+          alert('Seu navegador não tem um menu de compartilhar nativo. Use uma das outras opções ou copie o link.');
+        } catch (err) {
+          if (err && err.name === 'AbortError') return;
+        }
+        return;
+      }
+      if (platform === 'copy') {
+        try {
+          await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+          const original = shareBtn.title;
+          shareBtn.title = 'Link copiado!';
+          setTimeout(() => { shareBtn.title = original; }, 2200);
+        } catch {
+          window.prompt('Copie o link abaixo pra compartilhar:', `${shareText} ${shareUrl}`);
+        }
+      }
+    });
   });
+
 
 
   const searchFlash = document.getElementById('searchFlash');
