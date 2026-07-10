@@ -160,7 +160,10 @@
     "title": "Amor",
     "altText": "Tatuagem flash de amor. Disponível na Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10"
   },
