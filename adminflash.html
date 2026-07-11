@@ -409,6 +409,16 @@
       return;
     }
 
+    txtEl.textContent = 'Gerando páginas de compartilhamento...';
+    for (const item of newItems) {
+      try {
+        await withRetry(() => commitShareCard(item), 2, 'pagina de compartilhamento: ' + item.title);
+      } catch (err) {
+        console.warn('Pagina de compartilhamento nao gerada (nao critico):', item.title, err.message);
+      }
+      await new Promise(r => setTimeout(r, 250));
+    }
+
     progEl.className = 'upload-progress';
     btn.disabled = false;
     input.value = '';
@@ -812,12 +822,18 @@
       setProgress(true, 'Salvando metadados...', 80);
       const gallery = getGallery();
       const newId   = gallery.length ? Math.max(...gallery.map(i=>i.id)) + 1 : 1;
+      const finalAltText = altText || `Tatuagem flash de ${title.toLowerCase()}. Disponível no Micael Tatuagem, Muriaé MG.`;
       gallery.unshift({
         id: newId, filename, imageUrl, title,
-        altText: altText || `Tatuagem flash de ${title.toLowerCase()}. Disponível no Micael Tatuagem, Muriaé MG.`,
+        altText: finalAltText,
         description: desc, styles, showInDecor: true, date: new Date().toISOString().split('T')[0]
       });
       await saveGallery(gallery);
+      try {
+        await withRetry(() => commitShareCard({ id: newId, title, altText: finalAltText, imageUrl, slug }), 2, 'pagina de compartilhamento');
+      } catch (err) {
+        console.warn('Pagina de compartilhamento nao gerada (nao critico):', err.message);
+      }
 
       setProgress(true, 'Concluído!', 100);
       setTimeout(() => setProgress(false), 1500);
@@ -1036,6 +1052,52 @@
   }
 
   // ── COMMIT: sincroniza as entradas de imagem do flash.html no sitemap.xml (SEO/Google Imagens) ──
+  function slugify(str) {
+    return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+  }
+
+  // Gera uma paginazinha estatica por flash, so pra robos de preview (WhatsApp/Facebook)
+  // lerem a imagem certa quando o link e compartilhado. Nao precisa de retry forte:
+  // se falhar, o item continua funcionando normalmente no catalogo, so o preview de
+  // link fica com a imagem generica ate a proxima tentativa.
+  async function commitShareCard(item) {
+    const slug = item.slug || slugify(item.title);
+    const html = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escapeHtml(item.title)} · Flash disponível · Micael Tatuagem</title>
+<meta name="robots" content="noindex, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="${escapeHtml(item.title)} · Flash disponível · Micael Tatuagem">
+<meta property="og:description" content="${escapeHtml(item.altText)}">
+<meta property="og:image" content="${SITE_URL}/${item.imageUrl}">
+<meta property="og:url" content="${SITE_URL}/f/${item.id}-${slug}.html">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Micael Tatuagem">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${escapeHtml(item.title)} · Micael Tatuagem">
+<meta name="twitter:description" content="${escapeHtml(item.altText)}">
+<meta name="twitter:image" content="${SITE_URL}/${item.imageUrl}">
+<link rel="canonical" href="${SITE_URL}/flash.html?flash=${item.id}-${slug}">
+<meta http-equiv="refresh" content="0; url=${SITE_URL}/flash.html?flash=${item.id}-${slug}">
+<style>body{background:#0a0a0a;color:#d4c9b0;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;}a{color:#c0392b;}</style>
+</head>
+<body>
+<script>location.replace('${SITE_URL}/flash.html?flash=${item.id}-${slug}');<\/script>
+<p>Abrindo "${escapeHtml(item.title)}" no catálogo...<br><a href="${SITE_URL}/flash.html?flash=${item.id}-${slug}">Clique aqui se não for redirecionado</a></p>
+</body>
+</html>
+`;
+    const path = `f/${item.id}-${slug}.html`;
+    const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
+    const content = btoa(unescape(encodeURIComponent(html)));
+    const body = { message: `Gera pagina de compartilhamento: ${item.title}`, content, branch: BRANCH };
+    const res = await fetch(url, { method:'PUT', headers:{Authorization:`Bearer ${GH_TOKEN}`,'Content-Type':'application/json'}, body:JSON.stringify(body) });
+    if (!res.ok) { const e = await res.json(); throw new Error(e.message || 'Erro ao gerar pagina de compartilhamento'); }
+  }
+
   async function commitSitemap(gallery) {
     const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${SITEMAP_PATH}`;
     const res = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` } });
