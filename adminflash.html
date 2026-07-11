@@ -379,7 +379,7 @@
 
         newItems.push({
           id: nextId++, filename, imageUrl, title,
-          altText: `Tatuagem flash de ${title.toLowerCase()}. Disponível na Micael Tatuagem, Muriaé MG.`,
+          altText: `Tatuagem flash de ${title.toLowerCase()}. Disponível no Micael Tatuagem, Muriaé MG.`,
           description: '', styles: [], showInDecor: true,
           date: new Date().toISOString().split('T')[0]
         });
@@ -432,7 +432,7 @@
     const title = document.getElementById('imageTitle').value.trim();
     const altEl = document.getElementById('imageAltText');
     if (!title) return;
-    altEl.value = `Tatuagem flash de ${title.toLowerCase()}. Disponível na Micael Tatuagem, Muriaé MG.`;
+    altEl.value = `Tatuagem flash de ${title.toLowerCase()}. Disponível no Micael Tatuagem, Muriaé MG.`;
   }
 
   // ── INIT ──
@@ -814,7 +814,7 @@
       const newId   = gallery.length ? Math.max(...gallery.map(i=>i.id)) + 1 : 1;
       gallery.unshift({
         id: newId, filename, imageUrl, title,
-        altText: altText || `Tatuagem flash de ${title.toLowerCase()}. Disponível na Micael Tatuagem, Muriaé MG.`,
+        altText: altText || `Tatuagem flash de ${title.toLowerCase()}. Disponível no Micael Tatuagem, Muriaé MG.`,
         description: desc, styles, showInDecor: true, date: new Date().toISOString().split('T')[0]
       });
       await saveGallery(gallery);
