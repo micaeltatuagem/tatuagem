@@ -2343,14 +2343,18 @@
       lightboxWpp.href = `https://wa.me/5532999666946?text=${encodeURIComponent(msg)}`;
       currentShare = { nome, imgSrc: img.src, flashId: item.dataset.id || '', slug: slugify(nome) };
       lightbox.classList.add('open');
-      history.replaceState(null, '', buildShareUrl());
+      history.replaceState(null, '', buildAddressBarUrl());
       gtag('event', 'view_flash', { event_category: 'flash', event_label: nome });
     });
   });
 
-  function buildShareUrl(){
+  function buildAddressBarUrl(){
     const idPart = currentShare.slug ? `${currentShare.flashId}-${currentShare.slug}` : currentShare.flashId;
     return `${location.origin}${location.pathname}?flash=${encodeURIComponent(idPart)}`;
+  }
+  function buildShareUrl(){
+    const idPart = currentShare.slug ? `${currentShare.flashId}-${currentShare.slug}` : currentShare.flashId;
+    return `${location.origin}/f/${encodeURIComponent(idPart)}.html`;
   }
   function buildShareText(){
     return `Olha o desenho "${currentShare.nome}" que encontrei no catálogo do Micael Tatuagem 🖤`;
