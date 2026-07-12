@@ -188,6 +188,47 @@
     border:1px solid var(--line); border-radius:4px; background:var(--ink-soft); color:var(--paper);
   }
 
+  /* ---- Layout desktop: workspace ocupa a tela toda, galeria vira painel lateral ---- */
+  @media (min-width:980px){
+    .app-shell{
+      max-width:1800px;
+      padding:0 28px;
+      display:grid;
+      grid-template-columns: 1fr minmax(280px,360px);
+      grid-template-rows: auto 1fr auto;
+      grid-template-areas:
+        "top      gallery"
+        "canvas   gallery"
+        "bottom   gallery";
+      column-gap:22px;
+    }
+    .top-strip{ grid-area:top; }
+    .canvas-wrap{ grid-area:canvas; padding:10px 0; }
+    .bottom-strip{ grid-area:bottom; }
+    .gallery-strip{
+      grid-area:gallery;
+      max-height:none !important;
+      height:100%;
+      border-top:none;
+      border-left:1px solid var(--line);
+      padding:0 0 0 18px;
+      margin-left:4px;
+    }
+    .gallery-expand-handle{ display:none; }
+    .flash-grid{
+      flex-wrap:wrap;
+      overflow-x:hidden;
+      overflow-y:auto;
+      align-content:flex-start;
+    }
+    .flash-grid .flash-item, .flash-grid .upload-flash{
+      width:calc(33.333% - 7px);
+    }
+    .canvas-wrap .canvas-shell{
+      max-width:94%;
+    }
+  }
+
   /* ---- Popovers (painéis contextuais, tipo Figma) ---- */
   .popover-backdrop{
     position:fixed; inset:0; background:rgba(0,0,0,.55);
@@ -1325,7 +1366,8 @@
     try {
       const res = await fetch(`flash/flash-data.json?t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
-      allFlashes = data.map(it => ({ src: it.imageUrl, nome: it.title }));
+      // itens com draft:true ainda estão sendo revisados no painel admin e não aparecem aqui
+      allFlashes = data.filter(it => !it.draft).map(it => ({ src: it.imageUrl, nome: it.title }));
     } catch (err) {
       console.warn('Nao foi possivel carregar flash/flash-data.json:', err.message);
       allFlashes = [];
@@ -1343,7 +1385,8 @@
   function buildFlashItem(src, index, nome){
     const el = document.createElement('div');
     el.className = 'flash-item';
-    el.innerHTML = `<span class="num">${String(index+1).padStart(2,'0')}</span><img src="${src}" loading="lazy">`;
+    const altText = nome || `Opção de flash ${index+1}`;
+    el.innerHTML = `<span class="num">${String(index+1).padStart(2,'0')}</span><img src="${src}" alt="${altText}" loading="lazy">`;
     el.addEventListener('click', () => addImageLayer(src));
     return el;
   }
@@ -1352,8 +1395,9 @@
     // limpa tudo menos o botão de upload
     flashGrid.querySelectorAll('.flash-item').forEach(n => n.remove());
     list.forEach((item, i) => {
-      const src = typeof item === 'string' ? item : item.src;
-      flashGrid.insertBefore(buildFlashItem(src, i), flashGrid.lastElementChild);
+      const src  = typeof item === 'string' ? item : item.src;
+      const nome = typeof item === 'string' ? '' : item.nome;
+      flashGrid.insertBefore(buildFlashItem(src, i, nome), flashGrid.lastElementChild);
     });
   }
 
@@ -1532,7 +1576,7 @@
     if(!layers.length){
       const empty = document.createElement('span');
       empty.className = 'layer-thumbs-empty';
-      empty.textContent = 'Escolha flash ao lado. Cada um vira uma camada, dá pra combinar vários pra montar uma manga';
+      empty.textContent = 'Escolha um flash ao lado. Cada um vira uma camada, dá pra combinar vários pra montar uma manga';
       layerThumbs.appendChild(empty);
       return;
     }
