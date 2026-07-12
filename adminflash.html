@@ -381,7 +381,8 @@
           id: nextId++, filename, imageUrl, title,
           altText: `Tatuagem flash de ${title.toLowerCase()}. Disponível no Micael Tatuagem, Muriaé MG.`,
           description: '', styles: [], showInDecor: true,
-          date: new Date().toISOString().split('T')[0]
+          date: new Date().toISOString().split('T')[0],
+          draft: true
         });
         ok++;
       } catch (err) {
@@ -693,6 +694,7 @@
           <input type="checkbox" class="select-item-check" data-id="${img.id}" ${selectedIds.has(img.id)?'checked':''} onchange="toggleSelectItem(${img.id}, this.checked)" />
         </label>
         <img src="${img.imageUrl || ''}" class="gallery-item-image" alt="${img.title}" loading="lazy" />
+        ${img.draft ? '<span style="position:absolute;top:.4rem;right:.4rem;background:#a11d2b;color:#fff;font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.2rem .5rem;border-radius:4px;z-index:2;">Rascunho</span>' : ''}
         <div class="gallery-item-info">
           <div class="gallery-item-title">${img.title}</div>
           <div class="gallery-item-filename">${img.filename || ''}</div>
@@ -962,7 +964,7 @@
       }
 
       btnSalvar.textContent = 'Salvando...';
-      const gallery = getGallery().map(i => i.id===id ? {...i, title, altText:alt, description:desc, styles, filename, imageUrl} : i);
+      const gallery = getGallery().map(i => i.id===id ? {...i, title, altText:alt, description:desc, styles, filename, imageUrl, draft: false} : i);
       await saveGallery(gallery);
       renderGallery();
       closeEditModal();
@@ -990,7 +992,7 @@
 
   // ── COMMIT: manifest.json (usado pela decoração aleatória do site) ──
   async function commitManifest(gallery) {
-    const filenames = gallery.filter(i => i.showInDecor !== false).map(i => i.filename).filter(Boolean);
+    const filenames = gallery.filter(i => i.showInDecor !== false && !i.draft).map(i => i.filename).filter(Boolean);
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(filenames, null, 2))));
     const url     = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${MANIFEST_PATH}`;
     let sha = null;
@@ -1003,6 +1005,9 @@
   // ── COMMIT: regenera o grid estatico do flash.html (crawlable, sem depender de JS) ──
   // ── COMMIT: regenera grid + filtros do flash.html numa unica leitura/escrita ──
   async function commitCatalogPage(gallery, tags) {
+    // itens com draft:true ainda estao sendo revisados no painel e nao entram no catalogo publico
+    gallery = gallery.filter(i => !i.draft);
+
     const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${CATALOG_PAGE}`;
     const res = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` } });
     if (!res.ok) throw new Error('Não foi possível ler flash.html para atualizar.');
@@ -1099,6 +1104,9 @@
   }
 
   async function commitSitemap(gallery) {
+    // itens com draft:true ainda estao sendo revisados no painel e nao entram no sitemap
+    gallery = gallery.filter(i => !i.draft);
+
     const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${SITEMAP_PATH}`;
     const res = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` } });
     if (!res.ok) throw new Error('Não foi possível ler sitemap.xml.');
