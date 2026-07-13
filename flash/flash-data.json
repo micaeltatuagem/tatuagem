@@ -764,11 +764,16 @@
     "imageUrl": "flash/machine-elf-3-1783641233914-23.webp",
     "title": "Machine Elf 3",
     "altText": "Tatuagem flash de machine elf 3. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Forma geométrica no topo, corpo entrelaçado em torção abaixo: a fronteira entre máquina e entidade orgânica, visão que aparece em estados alterados profundos. NeoTrad com pegada dark art, traço fino, estrelas reforçando o clima de outro plano.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 462,
