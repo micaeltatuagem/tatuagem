@@ -937,11 +937,15 @@
     "imageUrl": "flash/neon-coast-voodoo-1783512988237-21.webp",
     "title": "Neon Coast Voodoo",
     "altText": "Tatuagem flash de neon coast voodoo. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Pôster estilo cartaz de show, com uma mulher tocando guitarra em primeiro plano, cenário com palmeiras e elementos costeiros ao fundo. Texto \"Neon Coast Voodoo\" no topo, estética vintage de flyer de rock. NeoTrad com pegada dark art, traço fino em blackwork.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 472,
