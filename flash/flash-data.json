@@ -427,13 +427,17 @@
     "id": 441,
     "filename": "escorpiao-3-1783645967334-13.webp",
     "imageUrl": "flash/escorpiao-3-1783645967334-13.webp",
-    "title": "Escorpiao 3",
-    "altText": "Tatuagem flash de escorpiao 3. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Escorpiao Ultra Bold",
+    "altText": "Tatuagem flash de escorpião ultra bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Descrição para o Escorpião Ultra Bold:\nDescrição:\nSilhueta sólida, cauda arqueada pronta pra picar: perigo condensado em forma pura. Traço grosso, contraste absoluto, símbolo direto de defesa e instinto.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Animais",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 442,
