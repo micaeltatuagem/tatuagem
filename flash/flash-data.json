@@ -443,13 +443,17 @@
     "id": 442,
     "filename": "escorpiao-4-1783649710410-2.webp",
     "imageUrl": "flash/escorpiao-4-1783649710410-2.webp",
-    "title": "Escorpiao 4",
+    "title": "Escorpião 4",
     "altText": "Tatuagem flash de escorpiao 4. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Cauda arqueada, garras abertas, estrelas em volta marcando presença: instinto de defesa em traço fino e detalhado. NeoTrad com pegada blackwork, linha limpa, cada segmento do corpo bem definido.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Animais",
+      "NeoTrad",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 443,
