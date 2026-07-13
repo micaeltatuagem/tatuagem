@@ -1834,10 +1834,15 @@
     "imageUrl": "flash/dancarina-2-1783310127574-5.webp",
     "title": "Dancarina 2",
     "altText": "Tatuagem flash de dancarina 2. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Braço erguido, tecido envolvendo o corpo, movimento em pleno gesto: dança capturada no auge. Old school com pegada blackwork e psicodélica, traço denso e fluido.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
-    "date": "2026-07-06"
+    "date": "2026-07-06",
+    "draft": false
   },
   {
     "id": 373,
