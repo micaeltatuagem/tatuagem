@@ -229,11 +229,17 @@
     "imageUrl": "flash/caveira-iogue-1783649706201-0.webp",
     "title": "Caveira Iogue",
     "altText": "Tatuagem flash de caveira iogue. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Esqueleto em posição de lótus, mãos em mudra, aura irradiando da caveira: o corpo se foi, mas a prática continua. Símbolo direto de que o que sustenta a meditação não é a carne. Traço fino, dark art puro, sem enfeite desnecessário.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Veda",
+      "Budista",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 430,
