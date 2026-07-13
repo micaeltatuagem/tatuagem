@@ -1636,11 +1636,16 @@
     "imageUrl": "flash/vovo-1-1783641196600-2.webp",
     "title": "Vovo 1",
     "altText": "Tatuagem flash de vovo 1. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Representação de Vovó, entidade de umbanda ligada à sabedoria e ancestralidade, sentada com as mãos postadas, lenço na cabeça e colar de contas. Estrelas ao redor completando o traço. Blackwork com pegada old school e religiosa/umbanda.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 514,
