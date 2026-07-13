@@ -815,11 +815,16 @@
     "imageUrl": "flash/machine-elf-6-1783641228633-20.webp",
     "title": "Machine Elf 6",
     "altText": "Tatuagem flash de machine elf 6. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Rosto emerge de um fluxo orgânico no topo, encimado por uma estrela de seis pontas com um olho no centro. Abaixo, um rosto com terceiro olho se funde a formas fluidas que escorrem como lágrimas ou raízes. Estrelas ao redor completam a atmosfera de visão em outro plano. NeoTrad com pegada dark art, traço fino em blackwork.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 465,
