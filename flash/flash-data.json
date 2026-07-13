@@ -527,11 +527,16 @@
     "imageUrl": "flash/flor-olho-2-1783649718239-6.webp",
     "title": "Flor Olho 2",
     "altText": "Tatuagem flash de flor olho 2. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Flor aberta com um olho no centro, folhagem envolvendo a composição: natureza que observa em vez de só existir. NeoTrad psicodélico com pegada dark art e blackwork, traço denso, estrelas completando o clima místico.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 448,
