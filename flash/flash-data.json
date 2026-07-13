@@ -281,11 +281,14 @@
     "imageUrl": "flash/crimson-serpent-1783513003294-28.webp",
     "title": "Crimson Serpent",
     "altText": "Tatuagem flash de crimson serpent. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Figura reclinada em pose de cartaz vintage, nome da peça em destaque logo acima: sedução e perigo lado a lado. NeoTrad de estilo pôster de filme B, traço fino e detalhado.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 433,
