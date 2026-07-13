@@ -6167,15 +6167,18 @@
     "id": 136,
     "filename": "tubarao8.webp",
     "imageUrl": "flash/tubarao8.webp",
-    "title": "Tubarão 8",
-    "altText": "Tatuagem flash de tubarão 8. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
+    "title": "Mandíbula de Tubarão",
+    "altText": "Tatuagem flash de Mandíbula de Tubarão. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Mandíbula escancarada, fileiras de dentes em posição de ataque: pura ameaça, sem escala pra suavizar. Old school marítimo com pegada blackwork, traço denso, ícone de respeito ao mar e ao que vive nele.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
     "date": "2025-01-01",
     "styles": [
+      "Old School",
       "Náutico",
-      "Animais"
+      "Animais",
+      "BlackWork"
     ],
-    "showInDecor": true
+    "showInDecor": true,
+    "draft": false
   },
   {
     "id": 137,
