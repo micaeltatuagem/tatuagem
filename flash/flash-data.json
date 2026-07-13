@@ -901,13 +901,18 @@
     "id": 469,
     "filename": "morte-1783645985811-24.webp",
     "imageUrl": "flash/morte-1783645985811-24.webp",
-    "title": "Morte",
-    "altText": "Tatuagem flash de morte. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Morte Ultra Bold",
+    "altText": "Tatuagem flash de morte ultra bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "A Morte em silhueta sólida, empunhando sua foice, capuz cobrindo o rosto em contraste com o crânio à mostra. Traço grosso, contraste marcado, visual gráfico e direto. Blackwork puro com pegada old school.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Dark Art",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 470,
