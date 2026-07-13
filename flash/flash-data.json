@@ -360,13 +360,17 @@
     "id": 437,
     "filename": "ere-doce-1783641205676-7.webp",
     "imageUrl": "flash/ere-doce-1783641205676-7.webp",
-    "title": "Ere Doce",
-    "altText": "Tatuagem flash de ere doce. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Erê Doce",
+    "altText": "Tatuagem flash de erê doce. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Criança com cata-vento e doce na mão, laço de fita embaixo: pureza e alegria como presença espiritual, ligada às crianças da Umbanda. Traço fino em blackwork, delicado, feito com respeito à tradição.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 438,
