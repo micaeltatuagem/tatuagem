@@ -1554,11 +1554,15 @@
     "imageUrl": "flash/twilight-echo-1783443563049-3.webp",
     "title": "Twilight Echo",
     "altText": "Tatuagem flash de twilight echo. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Pôster estilo bar noturno, com mulher fumando ao lado de garrafas de bebida e um piano ao fundo. Texto \"Twilight Echo\" em destaque no design, clima de jazz bar vintage. NeoTrad com pegada dark art, traço fino em blackwork.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-07",
-    "draft": true
+    "draft": false
   },
   {
     "id": 509,
