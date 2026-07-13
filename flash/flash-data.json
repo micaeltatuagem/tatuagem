@@ -149,13 +149,17 @@
     "id": 424,
     "filename": "caveira-adaga-3-1783645980696-21.webp",
     "imageUrl": "flash/caveira-adaga-3-1783645980696-21.webp",
-    "title": "Caveira Adaga 3",
-    "altText": "Tatuagem flash de caveira adaga 3. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Caveira Adaga Ultra Bold 2",
+    "altText": "Tatuagem flash de Caveira Adaga Ultra Bold 2. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Lâmina atravessando o crânio, sangue escorrendo sem pudor: aqui a mortalidade não é sugerida, é encarada de frente. Traço grosso, contraste absoluto, old school pesado. Pra quem quer marca forte, sem meio-termo.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 425,
