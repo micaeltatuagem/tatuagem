@@ -887,11 +887,15 @@
     "imageUrl": "flash/mathilda-1783647954933-1.webp",
     "title": "Mathilda",
     "altText": "Tatuagem flash de mathilda. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Retrato de perfil inspirado na Mathilda, personagem do filme \"O Profissional\" (Léon), com cabelo curto e franja, colar de contas no pescoço, cercada por estrelas cintilantes. Traço fino em blackwork com contraste marcado entre luz e sombra no rosto. NeoTrad com pegada dark art.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 469,
