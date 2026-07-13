@@ -1419,11 +1419,17 @@
     "imageUrl": "flash/shiva-shakti-1783512943951-2.webp",
     "title": "Shiva Shakti",
     "altText": "Tatuagem flash de shiva shakti. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Dois rostos entrelaçados, adornados com flores e joias, representando a união entre Shiva e Shakti, princípios masculino e feminino na tradição hindu. Traço fino e detalhado em blackwork, clima espiritual e ornamentado. Dark art com pegada religiosa/veda.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Religioso",
+      "Veda",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 501,
