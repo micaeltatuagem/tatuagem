@@ -577,13 +577,18 @@
     "id": 450,
     "filename": "iemanja-1783641214355-12.webp",
     "imageUrl": "flash/iemanja-1783641214355-12.webp",
-    "title": "Iemanja",
-    "altText": "Tatuagem flash de iemanja. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Iemanjá",
+    "altText": "Tatuagem flash de iemanjá. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Espelho na mão, cabelo solto como onda, presença que acalma e acolhe: rainha do mar em traço old school. Blackwork denso, símbolo de proteção e maternidade.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 451,
