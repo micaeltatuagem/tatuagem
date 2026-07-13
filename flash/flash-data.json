@@ -461,11 +461,15 @@
     "imageUrl": "flash/escorpiao-5-1783649708231-1.webp",
     "title": "Escorpiao 5",
     "altText": "Tatuagem flash de escorpiao 5. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Cauda enroscada, garras firmes, estrela guiando o olhar: instinto e precisão em traço fino e detalhado. Composição limpa, corpo bem definido, símbolo de defesa que não titubeia.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Animais",
+      "NeoTrad",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 444,
