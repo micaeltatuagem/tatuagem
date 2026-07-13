@@ -19,13 +19,17 @@
     "id": 416,
     "filename": "aguia-5-1783645957453-7.webp",
     "imageUrl": "flash/aguia-5-1783645957453-7.webp",
-    "title": "Aguia 5",
-    "altText": "Tatuagem flash de aguia 5. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Águia Ultra Bold",
+    "altText": "Tatuagem flash de Águia Ultra Bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Asas abertas, garras à mostra: a águia carrega força, visão e liberdade em traço old school clássico com peso blackwork. Contraste total, sem enrolação, pele pedindo pra ser marcada.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 417,
