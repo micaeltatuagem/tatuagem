@@ -410,13 +410,18 @@
     "id": 440,
     "filename": "ere-tambor-1783641203787-6.webp",
     "imageUrl": "flash/ere-tambor-1783641203787-6.webp",
-    "title": "Ere Tambor",
-    "altText": "Tatuagem flash de ere tambor. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Erê Tambor",
+    "altText": "Tatuagem flash de erê tambor. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Descrição para o Erê Tambor:\nDescrição:\nCriança tocando tambor, ritmo em movimento: som que chama e celebra. Old school com pegada blackwork, traço firme, feito com respeito à tradição das crianças da Umbanda.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 441,
