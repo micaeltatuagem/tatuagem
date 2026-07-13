@@ -628,11 +628,18 @@
     "imageUrl": "flash/kali-ma-1783512946278-3.webp",
     "title": "Kali Ma",
     "altText": "Tatuagem flash de kali ma. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Olhar fixo, cabelo em movimento, adorno frontal marcando poder: a deusa que destrói pra transformar. NeoTrad com pegada dark art, traço denso e detalhado, presença que impõe respeito.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Religioso",
+      "Veda",
+      "NeoTrad",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 454,
