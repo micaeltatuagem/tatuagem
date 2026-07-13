@@ -1801,10 +1801,15 @@
     "imageUrl": "flash/dancarina-3-1783310123609-3.webp",
     "title": "Dancarina 3",
     "altText": "Tatuagem flash de dancarina 3. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Rosto simétrico, adorno mandálico moldando a cabeça, símbolo geométrico flutuando ao lado: presença ritual em traço old school com pegada blackwork e psicodélica. Olhar direto, denso em detalhe.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
-    "date": "2026-07-06"
+    "date": "2026-07-06",
+    "draft": false
   },
   {
     "id": 371,
