@@ -852,11 +852,18 @@
     "imageUrl": "flash/maos-sol-olho-1783649714318-4.webp",
     "title": "Maos Sol Olho",
     "altText": "Tatuagem flash de maos sol olho. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Um grande olho central com íris detalhada, envolto por raios como um sol, ladeado por duas mãos que emergem das laterais em gesto ritualístico. NeoTrad com pegada dark art, traço fino em blackwork.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Religioso",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 467,
