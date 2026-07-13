@@ -1471,11 +1471,15 @@
     "imageUrl": "flash/smoke-rings-1783512978952-17.webp",
     "title": "Smoke Rings",
     "altText": "Tatuagem flash de smoke rings. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Pôster estilo vintage, com mulher fumando, cabelo esvoaçante se misturando à fumaça em padrão decorativo. Texto \"Smoke Rings & Other Things\" compondo o design, clima retrô e psicodélico. NeoTrad com pegada dark art, traço fino em blackwork.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 504,
