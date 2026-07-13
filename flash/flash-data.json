@@ -1586,11 +1586,15 @@
     "imageUrl": "flash/velvet-after-dark-1783512974467-15.webp",
     "title": "Velvet After Dark",
     "altText": "Tatuagem flash de velvet after dark. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Pôster estilo pin up vintage, com mulher em vestido decotado, fumando, cercada por fumaça e uma cidade estilizada ao fundo. Texto \"Velvet After Dark\" em destaque no topo. NeoTrad com pegada dark art, traço fino em blackwork e clima psicodélico.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 511,
