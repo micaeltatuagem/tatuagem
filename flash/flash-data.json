@@ -869,13 +869,17 @@
     "id": 467,
     "filename": "mariposa-caveira-1783645984148-23.webp",
     "imageUrl": "flash/mariposa-caveira-1783645984148-23.webp",
-    "title": "Mariposa Caveira",
-    "altText": "Tatuagem flash de mariposa caveira. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Mariposa Caveira Ultra Bold",
+    "altText": "Tatuagem flash de mariposa caveira ultra bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Mariposa em silhueta sólida totalmente preta, com uma caveira estilizada no centro do corpo. Traço grosso e contraste marcado, sem detalhamento fino — visual gráfico e direto. Blackwork puro.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Animais",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 468,
