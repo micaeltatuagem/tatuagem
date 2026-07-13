@@ -1088,11 +1088,15 @@
     "imageUrl": "flash/oxum-1783641225291-18.webp",
     "title": "Oxum",
     "altText": "Tatuagem flash de oxum. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Representação de Oxum, orixá das águas doces, do amor e da beleza, com turbante e adornos, segurando um espelho na mão. Faixa com o nome \"Oxum\" na base, estrelas e gotas ao redor completando o traço. Blackwork com pegada old school e umbanda.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 481,
