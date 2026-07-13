@@ -165,13 +165,16 @@
     "id": 425,
     "filename": "caveira-ancora-1783513001654-27.webp",
     "imageUrl": "flash/caveira-ancora-1783513001654-27.webp",
-    "title": "Caveira Ancora",
-    "altText": "Tatuagem flash de caveira ancora. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Caveira Âncora",
+    "altText": "Tatuagem flash de caveira âncora. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Caveira e âncora, dois símbolos de peso: mortalidade e firmeza andando juntos. Estrelas ao redor marcam a direção de quem não se perde mesmo em mar revolto. Old school clássico, traço grosso, contraste absoluto.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 426,
