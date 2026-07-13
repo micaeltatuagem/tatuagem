@@ -1503,11 +1503,18 @@
     "imageUrl": "flash/sono-de-vishnu-1783512948979-4.webp",
     "title": "Sono De Vishnu",
     "altText": "Tatuagem flash de sono de vishnu. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Representação de Vishnu deitado sobre a serpente Ananta Shesha, com uma flor de lótus emergindo de seu umbigo e uma figura feminina sentada ao lado. Traço fino em blackwork, clima espiritual e simbólico da tradição hindu. Religioso/veda com pegada psicodélica.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Religioso",
+      "Veda",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 506,
