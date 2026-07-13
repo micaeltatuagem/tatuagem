@@ -832,11 +832,19 @@
     "imageUrl": "flash/mantis-buda-1783636769004-0.webp",
     "title": "Mantis Buda",
     "altText": "Tatuagem flash de mantis buda. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Figura híbrida entre inseto e entidade alienígena, com cabeça alongada e olhos grandes, sentada em posição de lótus sobre uma flor. Braços múltiplos em gesto de meditação, moldura ornamentada ao redor com estrela e lua no topo, e o símbolo Om na base. NeoTrad com pegada dark art, traço fino em blackwork.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Religioso",
+      "Budista",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 466,
