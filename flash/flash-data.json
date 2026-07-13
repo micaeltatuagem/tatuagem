@@ -1785,10 +1785,13 @@
     "imageUrl": "flash/dancarina-4-1783310121569-2.webp",
     "title": "Dancarina 4",
     "altText": "Tatuagem flash de dancarina 4. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Rosto simétrico, adorno mandálico moldando a cabeça, símbolos místicos ao redor: presença ritual mais do que dança. Traço fino e detalhado, psicodélico denso, olhar direto que hipnotiza.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Psicodélico"
+    ],
     "showInDecor": true,
-    "date": "2026-07-06"
+    "date": "2026-07-06",
+    "draft": false
   },
   {
     "id": 370,
