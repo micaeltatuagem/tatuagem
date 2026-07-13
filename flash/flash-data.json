@@ -294,13 +294,19 @@
     "id": 433,
     "filename": "danca-1783512939661-0.webp",
     "imageUrl": "flash/danca-1783512939661-0.webp",
-    "title": "Danca",
-    "altText": "Tatuagem flash de danca. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Dança com a Morte",
+    "altText": "Tatuagem flash de Dança com a Morte. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Ceifador e mulher dançando, capa esvoaçante, estrelas em volta: a morte como parceira de valsa, não como inimiga. Old school com pegada dark art e blackwork, traço fluido, cena que transforma o fim em movimento.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Dark Art",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 434,
