@@ -679,11 +679,15 @@
     "imageUrl": "flash/leque-1783645945684-0.webp",
     "title": "Leque",
     "altText": "Tatuagem flash de leque. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Formato aberto, padronagem geométrica densa, silhueta sólida em traço grosso: elegância oriental resumida em símbolo. Blackwork forte, contraste absoluto.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Oriental",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 457,
