@@ -1755,10 +1755,14 @@
     "imageUrl": "flash/dancarina-5-1783310117627-0.webp",
     "title": "Dancarina 5",
     "altText": "Tatuagem flash de dancarina 5. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Figura em movimento, cabelo e roupa se dissolvendo em traços soltos: corpo entregue à dança, sem contorno fixo. NeoTrad psicodélico, traço fluido, energia capturada em pleno gesto.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "Psicodélico"
+    ],
     "showInDecor": true,
-    "date": "2026-07-06"
+    "date": "2026-07-06",
+    "draft": false
   },
   {
     "id": 368,
