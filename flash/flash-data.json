@@ -1864,12 +1864,18 @@
     "id": 374,
     "filename": "bruxa-1783310131728-7.webp",
     "imageUrl": "flash/bruxa-1783310131728-7.webp",
-    "title": "Bruxa",
-    "altText": "Tatuagem flash de bruxa. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Sacerdotisa",
+    "altText": "Tatuagem flash de sacerdotisa. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Terceiro olho na testa, esfera nas mãos, adorno denso cobrindo a cabeça: figura que enxerga além do visível. NeoTrad com pegada blackwork, traço detalhado, presença de sacerdotisa mais do que de vilã.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
-    "date": "2026-07-06"
+    "date": "2026-07-06",
+    "draft": false
   },
   {
     "id": 375,
