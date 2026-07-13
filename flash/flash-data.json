@@ -542,13 +542,19 @@
     "id": 448,
     "filename": "hannya-1783645954119-5.webp",
     "imageUrl": "flash/hannya-1783645954119-5.webp",
-    "title": "Hannya",
-    "altText": "Tatuagem flash de hannya. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Hannya Ultra Bold",
+    "altText": "Tatuagem flash de hannya ultra bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Máscara japonesa clássica, chifres curvos e olhar de fúria contida: a demônio que carrega ciúme e vingança na tradição oriental. Traço grosso, contraste absoluto, old school com raiz oriental.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Dark Art",
+      "Oriental",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 449,
