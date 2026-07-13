@@ -177,13 +177,17 @@
     "id": 426,
     "filename": "caveira-bold-1783645951051-3.webp",
     "imageUrl": "flash/caveira-bold-1783645951051-3.webp",
-    "title": "Caveira Bold",
-    "altText": "Tatuagem flash de caveira bold. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Caveira Ultra Bold",
+    "altText": "Tatuagem flash de caveira ultra bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Caveira pura, sem enfeite, sem narrativa extra: só o essencial em traço grosso e contraste absoluto. O símbolo mais direto que existe, pra quem quer clareza na pele sem precisar explicar nada.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 427,
