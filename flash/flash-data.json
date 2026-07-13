@@ -663,11 +663,15 @@
     "imageUrl": "flash/last-dance-1783445804455-1.webp",
     "title": "Last Dance",
     "altText": "Tatuagem flash de last dance. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Vestido rodando, fumaça no ar, movimento capturado em pleno passo: a última música antes do fim da noite. NeoTrad com pegada blackwork, traço elegante, estética retrô de salão.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-07",
-    "draft": true
+    "draft": false
   },
   {
     "id": 456,
