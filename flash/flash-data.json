@@ -1031,11 +1031,14 @@
     "imageUrl": "flash/serie-psicodelica-1783736416255.webp",
     "title": "Serie Psicodelica",
     "altText": "Tatuagem flash de serie psicodelica. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Folha de flash com espirais, olho que tudo vê, cogumelos, sol, lua e símbolos de estados alterados. Cada desenho pode ser escolhido individualmente ou combinado em composição, em traço old school monocromático e denso.\nGostou de algum desses ícones? Chama no WhatsApp e vamos ver qual combina com você.",
+    "styles": [
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": false,
     "date": "2026-07-11",
-    "draft": true
+    "draft": false
   },
   {
     "id": 496,
