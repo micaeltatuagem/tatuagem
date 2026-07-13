@@ -1000,13 +1000,19 @@
     "id": 475,
     "filename": "nossa-senhora-1783645970915-15.webp",
     "imageUrl": "flash/nossa-senhora-1783645970915-15.webp",
-    "title": "Nossa Senhora",
-    "altText": "Tatuagem flash de nossa senhora. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Nossa Senhora Ultra Bold",
+    "altText": "Tatuagem flash de nossa senhora ultra bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Nossa Senhora em silhueta sólida, mãos postadas em oração, envolta em manto radiante com estrelas ao redor da figura. Traço grosso, contraste marcado, visual gráfico e direto. Blackwork puro com pegada old school e religiosa.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Religioso",
+      "Cristão",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 476,
