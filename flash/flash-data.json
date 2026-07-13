@@ -6195,14 +6195,17 @@
     "id": 138,
     "filename": "veneno.webp",
     "imageUrl": "flash/veneno.webp",
-    "title": "Veneno",
-    "altText": "Tatuagem flash de veneno. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
+    "title": "Garrafa de Veneno",
+    "altText": "Tatuagem flash de garrafa de veneno. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Caveira e ossos cruzados estampados no rótulo: aviso claro, sem meio-termo. Old school pesado com toque dark art, traço denso, ícone clássico de perigo que virou símbolo por si só.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
     "date": "2025-01-01",
     "styles": [
-      "Dark Art"
+      "Old School",
+      "Dark Art",
+      "BlackWork"
     ],
-    "showInDecor": true
+    "showInDecor": true,
+    "draft": false
   },
   {
     "id": 139,
