@@ -35,13 +35,17 @@
     "id": 417,
     "filename": "amor-1783645964111-11.webp",
     "imageUrl": "flash/amor-1783645964111-11.webp",
-    "title": "Amor",
-    "altText": "Tatuagem flash de amor. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Coração Amor Ultra Bold",
+    "altText": "Tatuagem flash de Coração Amor Ultra Bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Coração clássico, folhagem em old school e a palavra que resume tudo: amor. Traço grosso, contraste absoluto, símbolo direto sem meio-termo, pra quem quer levar o desenho na pele sem precisar explicar nada.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 418,
