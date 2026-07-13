@@ -920,11 +920,16 @@
     "imageUrl": "flash/morte-violoncelo-1783512969976-13.webp",
     "title": "Morte Violoncelo",
     "altText": "Tatuagem flash de morte violoncelo. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Figura encapuzada, remetendo à Morte, sentada tocando violoncelo, com uma caveira apoiada ao lado no chão. Traço em xilogravura, texturas marcadas e clima sombrio e melancólico. Dark art com pegada neotrad.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 471,
