@@ -376,13 +376,18 @@
     "id": 438,
     "filename": "ere-rei-1783641207371-8.webp",
     "imageUrl": "flash/ere-rei-1783641207371-8.webp",
-    "title": "Ere Rei",
-    "altText": "Tatuagem flash de ere rei. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Erê Rei",
+    "altText": "Tatuagem flash de erê rei. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Criança com coroa, capa e espada em punho: realeza infantil, presença que brinca e comanda ao mesmo tempo. Old school com pegada blackwork, traço firme, feito com respeito à tradição das crianças da Umbanda.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 439,
