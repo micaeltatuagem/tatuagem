@@ -1250,13 +1250,17 @@
     "id": 490,
     "filename": "rosa-7-1783645955841-6.webp",
     "imageUrl": "flash/rosa-7-1783645955841-6.webp",
-    "title": "Rosa 7",
-    "altText": "Tatuagem flash de rosa 7. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Rosa Ultra Bold 2",
+    "altText": "Tatuagem flash de rosa ultra bold 2. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Rosa em silhueta sólida, pétalas e folhas com leve variação de ângulo em relação à primeira versão, traço grosso e ignorante, sem frescura. Contraste marcado, visual gráfico e direto. Blackwork puro com pegada old school.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 491,
