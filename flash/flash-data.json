@@ -1704,11 +1704,16 @@
     "imageUrl": "flash/vovo-maria-1783641192841-0.webp",
     "title": "Vovo Maria",
     "altText": "Tatuagem flash de vovo maria. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Representação de Vovó Maria, entidade de umbanda ligada à sabedoria e ancestralidade, com lenço na cabeça, colares e segurando uma xícara com as mãos. Faixa com o nome \"Vovó Maria\" na base, estrelas ao redor completando o traço. Blackwork com pegada old school e religiosa/umbanda.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.\n",
+    "styles": [
+      "Old School",
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 518,
