@@ -1169,11 +1169,16 @@
     "imageUrl": "flash/pose-floral-1783512955811-7.webp",
     "title": "Pose Floral",
     "altText": "Tatuagem flash de pose floral. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Mulher de costas, sentada em posição contemplativa, cabelo solto caindo pelas costas, cercada por flores e folhagens ornamentadas. Traço fino em blackwork com clima delicado e psicodélico. NeoTrad com pegada dark art.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 486,
