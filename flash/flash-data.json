@@ -196,13 +196,17 @@
     "id": 427,
     "filename": "caveira-capacete-2-1783645988082-25.webp",
     "imageUrl": "flash/caveira-capacete-2-1783645988082-25.webp",
-    "title": "Caveira Capacete 2",
-    "altText": "Tatuagem flash de caveira capacete 2. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Caveira Capacete Ultra Bold",
+    "altText": "Tatuagem flash de caveira capacete ultra bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Caveira sob capacete militar, cruz de ferro (símbolo tradicional de bravura em uso desde o século XIX, sem relação com o Terceiro Reich): mortalidade e disciplina no mesmo desenho. Traço grosso, contraste absoluto, old school pesado. Pra quem carrega a batalha como identidade, não como fardo.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 428,
