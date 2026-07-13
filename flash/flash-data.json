@@ -1602,11 +1602,15 @@
     "imageUrl": "flash/velvet-crime-1783443565232-4.webp",
     "title": "Velvet Crime",
     "altText": "Tatuagem flash de velvet crime. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Pôster estilo noir vintage, com mulher de cabelo longo e ondulado fumando, olhar intenso. Texto \"Velvet Crime — Noir Trip-Hop Vol. 1\" compondo o design, clima misterioso e sofisticado. NeoTrad com pegada dark art, traço fino em blackwork.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-07",
-    "draft": true
+    "draft": false
   },
   {
     "id": 512,
