@@ -245,13 +245,19 @@
     "id": 430,
     "filename": "cemiterio-muriae-1783512941718-1.webp",
     "imageUrl": "flash/cemiterio-muriae-1783512941718-1.webp",
-    "title": "Cemiterio Muriae",
+    "title": "Cemiterio Muriaé",
     "altText": "Tatuagem flash de cemiterio muriae. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Mausoléu, cruz no topo, nuvem pesada ao fundo: cenário de cemitério com identidade local. Traço fino em NeoTrad com pegada blackwork, atmosfera densa, referência direta à cidade.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Religioso",
+      "NeoTrad",
+      "BlackWork",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 431,
