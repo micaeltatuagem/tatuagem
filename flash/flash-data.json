@@ -953,11 +953,15 @@
     "imageUrl": "flash/neon-noir-airwaves-1783445802236-0.webp",
     "title": "Neon Noir Airwaves",
     "altText": "Tatuagem flash de neon noir airwaves. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Mulher de headphone, cabelo esvoaçante em meio a formas de fumaça ou ondas sonoras estilizadas. Texto \"Neon Noir Airwaves\" no topo, estética de capa retrô com clima psicodélico. NeoTrad com pegada blackwork, traço fino e fluido.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-07",
-    "draft": true
+    "draft": false
   },
   {
     "id": 473,
