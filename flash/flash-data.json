@@ -70,11 +70,15 @@
     "imageUrl": "flash/bassline-confession-1783512999525-26.webp",
     "title": "Bassline Confession",
     "altText": "Tatuagem flash de bassline confession. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Uma figura entregue ao som, baixo na mão, corpo dissolvendo em linhas psicodélicas que se misturam com a groove. Neotrad com pegada blackwork, traço fluido, pra quem carrega a música na pele como estado, não como palavra.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 420,
