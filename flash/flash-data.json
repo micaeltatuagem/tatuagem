@@ -1618,11 +1618,17 @@
     "imageUrl": "flash/venus-cabanel-1783512965536-11.webp",
     "title": "Venus Cabanel",
     "altText": "Tatuagem flash de venus cabanel. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Vênus deitada sobre as ondas, cercada por putti (querubins) alados, releitura inspirada na pintura \"O Nascimento de Vênus\" de Alexandre Cabanel. Traço fino em blackwork, clima clássico e mitológico. NeoTrad com pegada religiosa/psicodélica.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Religioso",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 513,
