@@ -1536,13 +1536,17 @@
     "id": 507,
     "filename": "tigre-4-1783645947797-1.webp",
     "imageUrl": "flash/tigre-4-1783645947797-1.webp",
-    "title": "Tigre 4",
-    "altText": "Tatuagem flash de tigre 4. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Tigre Ultra Bold",
+    "altText": "Tatuagem flash de tigre Ultra Bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Cabeça de tigre rugindo, em linha branca sobre fundo negro, traço grosso e ignorante, sem frescura. Contraste marcado, visual gráfico e direto, transmitindo força e agressividade. Blackwork puro com pegada old school.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Animais",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 508,
