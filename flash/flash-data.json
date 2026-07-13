@@ -1568,13 +1568,17 @@
     "id": 509,
     "filename": "twilight-echo-1783512983562-19.webp",
     "imageUrl": "flash/twilight-echo-1783512983562-19.webp",
-    "title": "Twilight Echo",
-    "altText": "Tatuagem flash de twilight echo. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Twilight Echo 2",
+    "altText": "Tatuagem flash de twilight echo 2. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Aqui vai pra Twilight Echo 2:\n\nMulher fumando, cabelo curto e franja, colar de pérolas, com uma figura ao fundo. Texto \"Twilight Echo\" em destaque no topo, clima noturno e sofisticado. NeoTrad com pegada dark art, traço fino em blackwork.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 510,
