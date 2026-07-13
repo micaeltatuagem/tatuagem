@@ -393,13 +393,18 @@
     "id": 439,
     "filename": "ere-rosa-1783641201862-5.webp",
     "imageUrl": "flash/ere-rosa-1783641201862-5.webp",
-    "title": "Ere Rosa",
-    "altText": "Tatuagem flash de ere rosa. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Erê Rosa",
+    "altText": "Tatuagem flash de erê rosa. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Criança dançando, laço no cabelo, bola na mão: leveza e brincadeira em movimento. Old school com pegada blackwork, traço firme, feito com respeito à tradição das crianças da Umbanda.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 440,
