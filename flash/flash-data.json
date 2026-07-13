@@ -747,11 +747,16 @@
     "imageUrl": "flash/machine-elf-2-1783641235713-24.webp",
     "title": "Machine Elf 2",
     "altText": "Tatuagem flash de machine elf 2. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Silhueta geométrica, entidade central emergindo de linhas que se cruzam em padrão hipnótico: a visão que aparece quando a percepção ordinária cede espaço. NeoTrad psicodélico com pegada dark art e blackwork, traço denso, estrelas marcando a fronteira com o transe.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 461,
