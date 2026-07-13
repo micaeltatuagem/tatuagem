@@ -710,11 +710,18 @@
     "imageUrl": "flash/lucifer-cabanel-1783512963202-10.webp",
     "title": "Lucifer Cabanel",
     "altText": "Tatuagem flash de lucifer cabanel. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Figura reclinada, cortejo de anjinhos pairando acima em composição clássica de Alexandre Cabanel: a queda retratada com beleza melancólica, não como monstro. NeoTrad com pegada dark art, traço fino em estilo gravura, peso religioso denso.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Religioso",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 459,
