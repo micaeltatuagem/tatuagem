@@ -1770,10 +1770,14 @@
     "imageUrl": "flash/dancarina-6-1783310119728-1.webp",
     "title": "Dancarina 6",
     "altText": "Tatuagem flash de dancarina 6. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Braço estendido, mão convidando, adornos marcando o gesto: figura em traço old school clássico, contraste absoluto, presença que chama pra dançar.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "BlackWork"
+    ],
     "showInDecor": true,
-    "date": "2026-07-06"
+    "date": "2026-07-06",
+    "draft": false
   },
   {
     "id": 369,
