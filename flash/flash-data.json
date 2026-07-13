@@ -1687,11 +1687,16 @@
     "imageUrl": "flash/vovo-conga-1783641212517-11.webp",
     "title": "Vovo Conga",
     "altText": "Tatuagem flash de vovo conga. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Representação de Vovó Conga, entidade de umbanda ligada à sabedoria e ancestralidade, com turbante, colares e segurando um cachimbo com a fumaça subindo. Faixa com o nome \"Vovó Conga\" na base, gota e estrela completando o traço. Blackwork com pegada old school e religiosa/umbanda.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 517,
