@@ -1670,11 +1670,16 @@
     "imageUrl": "flash/vovo-cigana-1783641209048-9.webp",
     "title": "Vovo Cigana",
     "altText": "Tatuagem flash de vovo cigana. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Representação de Vovó Cigana, entidade de umbanda ligada à sabedoria e ancestralidade, com lenço na cabeça, colares e brincos, segurando um baralho de cartas na mão. Faixa com o nome \"Vovó Cigana\" na base, flor e estrela completando o traço. Blackwork com pegada old school e religiosa/umbanda.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 516,
