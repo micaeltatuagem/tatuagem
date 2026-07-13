@@ -986,11 +986,15 @@
     "imageUrl": "flash/noir-reverie-1783512985933-20.webp",
     "title": "Noir Reverie",
     "altText": "Tatuagem flash de noir reverie. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Aqui vai pra Noir Reverie:\n\nPôster estilo noir vintage, com o rosto de uma mulher fumando ao lado esquerdo e um saxofonista ao fundo, clima de jazz clube. Texto \"Noir Reverie — Jazz, Vinyl, Night\" compondo o design. NeoTrad com pegada dark art, traço fino em blackwork.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 475,
