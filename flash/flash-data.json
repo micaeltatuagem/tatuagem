@@ -346,11 +346,15 @@
     "imageUrl": "flash/eletric-slowdance-1783443556874-0.webp",
     "title": "Eletric Slowdance",
     "altText": "Tatuagem flash de eletric slowdance. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Fumaça em espiral, fundo psicodélico que gira em torno da figura: transe e sedução na mesma cena. NeoTrad com pegada blackwork, traço fluido, referência direta a estética retrô hipnótica.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-07",
-    "draft": true
+    "draft": false
   },
   {
     "id": 437,
