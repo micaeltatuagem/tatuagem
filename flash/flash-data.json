@@ -475,13 +475,18 @@
     "id": 444,
     "filename": "farol-5-1783645965708-12.webp",
     "imageUrl": "flash/farol-5-1783645965708-12.webp",
-    "title": "Farol 5",
-    "altText": "Tatuagem flash de farol 5. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Farol Ultra Bold",
+    "altText": "Tatuagem flash de farol ultra bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Luz irradiando no topo, ondas batendo na base: guia pra quem navega em mar incerto. Old school náutico com pegada blackwork, traço grosso, símbolo direto de orientação e firmeza.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Náutico",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 445,
