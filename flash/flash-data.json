@@ -103,11 +103,15 @@
     "imageUrl": "flash/black-power-1783512972104-14.webp",
     "title": "Black Power",
     "altText": "Tatuagem flash de black power. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Perfil altivo, cabelo black afro em destaque, olhar de quem não pede permissão. Fundo com lua e estrelas dando peso simbólico à presença. Neotrad com pegada blackwork, traço que celebra ancestralidade e identidade sem meio-termo.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 422,
