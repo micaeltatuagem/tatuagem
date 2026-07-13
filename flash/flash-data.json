@@ -1686,11 +1686,16 @@
     "imageUrl": "flash/xango-1783641226832-19.webp",
     "title": "Xango",
     "altText": "Tatuagem flash de xango. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Representação de Xangô, orixá da justiça e dos trovões, empunhando um machado de duas lâminas (oxê) e segurando um escudo. Faixa com o nome \"Xangô\" na base, estrelas e uma gota ao redor completando o traço. Blackwork com pegada old school e religiosa/umbanda.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 367,
