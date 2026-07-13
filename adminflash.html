@@ -1016,7 +1016,7 @@
 
     // Grid (ordenado alfabeticamente pelo titulo, para navegacao previsivel)
     // Ordem de upload (mais recente primeiro, como o array ja vem). A alfabetica fica a cargo do toggle no site.
-    const gridHtml = gallery.map(img => `      <figure class="flash-item" data-id="${img.id}" data-styles="${(img.styles||[]).join(',')}">
+    const gridHtml = gallery.map(img => `      <figure class="flash-item" data-id="${img.id}" data-styles="${(img.styles||[]).join(',')}" data-description="${escapeHtml((img.description || '').replace(/\s+/g, ' ').trim())}">
         <img src="${img.imageUrl}" alt="${escapeHtml(img.altText || img.title)}" loading="lazy" />
         <figcaption>${escapeHtml(img.title)}</figcaption>
       </figure>`).join('\n');
