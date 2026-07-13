@@ -1062,11 +1062,15 @@
     "imageUrl": "flash/serie-psicodelica-1783737016407.webp",
     "title": "Serie Psicodelica",
     "altText": "Tatuagem flash de serie psicodelica. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Folha de flash com figuras dark: chifres, chama, rostos, mãos, coração, cifrão e caveiras em traço old school colorido e denso. Cada desenho pode ser escolhido individualmente ou combinado em composição.\nGostou de algum desses ícones? Chama no WhatsApp e vamos ver qual combina com você.",
+    "styles": [
+      "Psicodélico",
+      "Gnose",
+      "Colorido"
+    ],
     "showInDecor": false,
     "date": "2026-07-11",
-    "draft": true
+    "draft": false
   },
   {
     "id": 498,
