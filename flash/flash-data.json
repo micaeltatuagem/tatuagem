@@ -560,13 +560,18 @@
     "id": 449,
     "filename": "iansa-1783641221622-16.webp",
     "imageUrl": "flash/iansa-1783641221622-16.webp",
-    "title": "Iansa",
-    "altText": "Tatuagem flash de iansa. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Iansã",
+    "altText": "Tatuagem flash de iansã. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Espada em punho, cabelo ao vento, postura de guerreira: força e comando dos ventos e tempestades em traço old school. Blackwork denso, presença que não se curva.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 450,
