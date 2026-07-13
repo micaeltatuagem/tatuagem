@@ -214,11 +214,14 @@
     "imageUrl": "flash/caveira-frontal-1783512967932-12.webp",
     "title": "Caveira Frontal",
     "altText": "Tatuagem flash de caveira frontal. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Caveira vista de frente, moldura de folhagem ornamental dando simetria e delicadeza ao peso do símbolo. Neotrad com pegada blackwork, traço fino e detalhado, equilibrando mortalidade e beleza no mesmo desenho.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 429,
