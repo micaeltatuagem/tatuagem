@@ -1742,10 +1742,16 @@
     "imageUrl": "flash/pinup-17-1783310125300-4.webp",
     "title": "Pinup 17",
     "altText": "Tatuagem flash de pinup 17. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Mulher em corset, cabelo preso, cercada por folhagens estilizadas e um ambiente ornamentado ao fundo. Traço fino em blackwork com contraste marcado entre luz e sombra. NeoTrad com pegada dark art.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
-    "date": "2026-07-06"
+    "date": "2026-07-06",
+    "draft": false
   },
   {
     "id": 372,
