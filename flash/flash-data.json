@@ -312,13 +312,17 @@
     "id": 434,
     "filename": "diabo-1783645962363-10.webp",
     "imageUrl": "flash/diabo-1783645962363-10.webp",
-    "title": "Diabo",
-    "altText": "Tatuagem flash de diabo. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Diabo Ultra Bold",
+    "altText": "Tatuagem flash de diabo ultra bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Chifres, sorriso torto, olhar direto: o clássico das clássicas em old school. Traço grosso, contraste absoluto, ícone que dispensa apresentação.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Dark Art",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 435,
