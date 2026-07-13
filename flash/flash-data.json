@@ -509,11 +509,17 @@
     "imageUrl": "flash/flor-olho-1783649723000-7.webp",
     "title": "Flor Olho",
     "altText": "Tatuagem flash de flor olho. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Rosa desabrochando com um olho no centro: beleza que observa, natureza que enxerga. NeoTrad com pegada dark art e blackwork, traço fino e denso, estrelas dando profundidade à composição.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 447,
