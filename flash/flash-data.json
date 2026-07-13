@@ -6183,13 +6183,16 @@
     "imageUrl": "flash/vela.webp",
     "title": "Vela",
     "altText": "Tatuagem flash de vela. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
+    "description": "Chama acesa, estrelas ao redor: luz que guia e ilumina caminho. Símbolo simples e direto, usado em fé, ritual e proteção. Old school clássico, traço firme, presença que acalma.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
     "date": "2025-01-01",
     "styles": [
-      "Náutico",
-      "Old School"
+      "Old School",
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
     ],
-    "showInDecor": true
+    "showInDecor": true,
+    "draft": false
   },
   {
     "id": 138,
