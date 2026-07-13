@@ -1102,13 +1102,18 @@
     "id": 481,
     "filename": "pantera-4-1783645949479-2.webp",
     "imageUrl": "flash/pantera-4-1783645949479-2.webp",
-    "title": "Pantera 4",
-    "altText": "Tatuagem flash de pantera 4. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Pantera Ultra Bold",
+    "altText": "Tatuagem flash de pantera ultra bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Cabeça de pantera rugindo, em silhueta sólida com traço grosso e ignorante, sem frescura, contraste marcado. Visual gráfico e direto, transmitindo força e agressividade. Blackwork puro com pegada old school.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Animais",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 482,
