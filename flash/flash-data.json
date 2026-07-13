@@ -6210,11 +6210,13 @@
     "imageUrl": "flash/zippo.webp",
     "title": "Zippo (Isqueiro)",
     "altText": "Tatuagem flash de zippo (isqueiro). Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
+    "description": "Isqueiro aceso, coração gravado na frente: pequeno objeto, grande símbolo — chama que não apaga, mesmo depois de tanto uso. Old school clássico, traço grosso, contraste absoluto.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
     "date": "2025-01-01",
     "styles": [
-      "Old School"
+      "Old School",
+      "BlackWork"
     ],
-    "showInDecor": true
+    "showInDecor": true,
+    "draft": false
   }
 ]
