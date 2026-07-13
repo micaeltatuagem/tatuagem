@@ -1385,13 +1385,18 @@
     "id": 498,
     "filename": "serpente-8-1783645959153-8.webp",
     "imageUrl": "flash/serpente-8-1783645959153-8.webp",
-    "title": "Serpente 8",
-    "altText": "Tatuagem flash de serpente 8. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Serpente Ultra Bold",
+    "altText": "Tatuagem flash de serpente ultra bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "\nSerpente enrolada em espiral, cabeça erguida com língua para fora, em silhueta sólida com traço grosso e ignorante, sem frescura. Contraste marcado, visual gráfico e direto. Blackwork puro com pegada old school.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Animais",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 499,
