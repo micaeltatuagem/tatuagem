@@ -1046,11 +1046,15 @@
     "imageUrl": "flash/serie-psicodelica-1783736975736.webp",
     "title": "Serie Psicodelica",
     "altText": "Tatuagem flash de serie psicodelica. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Folha de flash com rostos e figuras místicas: bruxa, demônio, olho, santos e pássaro em traço old school colorido e denso. Cada desenho pode ser escolhido individualmente ou combinado em composição.\nGostou de algum desses ícones? Chama no WhatsApp e vamos ver qual combina com você.",
+    "styles": [
+      "Dark Art",
+      "Psicodélico",
+      "Colorido"
+    ],
     "showInDecor": false,
     "date": "2026-07-11",
-    "draft": true
+    "draft": false
   },
   {
     "id": 497,
