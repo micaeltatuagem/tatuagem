@@ -1282,13 +1282,18 @@
     "id": 492,
     "filename": "sagrado-coracao-2-1783645974281-17.webp",
     "imageUrl": "flash/sagrado-coracao-2-1783645974281-17.webp",
-    "title": "Sagrado Coracao 2",
-    "altText": "Tatuagem flash de sagrado coracao 2. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Sagrado Coracao Ultra Bold",
+    "altText": "Tatuagem flash de sagrado coracao ultra bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Sagrado Coração em silhueta sólida, envolto em coroa de espinhos, cruz e chamas ao topo. Traço grosso e ignorante, sem frescura, contraste marcado. Blackwork puro com pegada old school e religiosa.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Religioso",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 493,
