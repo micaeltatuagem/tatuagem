@@ -596,11 +596,15 @@
     "imageUrl": "flash/iranian-jazz-1783512958436-8.webp",
     "title": "Iranian Jazz",
     "altText": "Tatuagem flash de iranian jazz. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Figura reclinada, instrumento de corda no colo, fumaça no ar e ambiente ricamente ornamentado: encontro entre música e cultura persa. NeoTrad com pegada blackwork, traço denso, atmosfera de cena viva.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 452,
