@@ -969,11 +969,16 @@
     "imageUrl": "flash/nocturnal-reverie-1783512981271-18.webp",
     "title": "Nocturnal Reverie",
     "altText": "Tatuagem flash de nocturnal reverie. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Pôster estilo vintage circense, com uma mulher de cabelo volumoso e figurino ornamentado ao centro, cercada por elementos decorativos e um número \"1938\" no design. Texto \"Nocturnal Reverie\" em destaque no topo, moldura ornamentada. Dark art com pegada neotrad e traço fino em blackwork.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 474,
