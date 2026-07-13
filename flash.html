@@ -2713,6 +2713,9 @@
 
 <script>
   // Busca + filtro de tags (client-side, so filtra o que ja esta na pagina, nao afeta indexacao)
+  // Guarda o path real da pagina antes de qualquer replaceState() mudar o que location.pathname reporta
+  // (a barra de endereco passa a mostrar /f/id-slug.html ao abrir um item, so pra preview correto)
+  const BASE_PATH = location.pathname;
   const searchInput = document.getElementById('flashSearch');
   const flashGridEl = document.getElementById('flashGrid');
   const uploadOrderItems = Array.from(document.querySelectorAll('.flash-item')); // ordem original (upload)
@@ -2775,7 +2778,7 @@
       params.delete('flash');
       if (activeFilter === 'all') { params.delete('tag'); } else { params.set('tag', activeFilter); }
       const query = params.toString();
-      history.replaceState(null, '', `${location.pathname}${query ? '?' + query : ''}`);
+      history.replaceState(null, '', `${BASE_PATH}${query ? '?' + query : ''}`);
       gtag('event', 'filter_flash', { event_category: 'flash', event_label: activeFilter });
       applyFilters();
     });
@@ -2792,6 +2795,7 @@
   const shareWrap = document.getElementById('shareWrap');
   const shareMenu = document.getElementById('shareMenu');
   let currentShare = { nome: '', imgSrc: '', flashId: '', slug: '' };
+  let preLightboxQuery = ''; // guarda o ?tag=... ativo antes de abrir um item, pra restaurar ao fechar
 
   function slugify(str){
     return str.toLowerCase()
@@ -2811,6 +2815,9 @@
       const msg = `Oi Micael! Gostei do flash "${nome}", quero agendar.`;
       lightboxWpp.href = `https://wa.me/5532999666946?text=${encodeURIComponent(msg)}`;
       currentShare = { nome, imgSrc: img.src, flashId: item.dataset.id || '', slug: slugify(nome) };
+      const paramsNow = new URLSearchParams(location.search);
+      paramsNow.delete('flash');
+      preLightboxQuery = paramsNow.toString();
       lightbox.classList.add('open');
       history.replaceState(null, '', buildAddressBarUrl());
       gtag('event', 'view_flash', { event_category: 'flash', event_label: nome });
@@ -2818,8 +2825,10 @@
   });
 
   function buildAddressBarUrl(){
-    const idPart = currentShare.slug ? `${currentShare.flashId}-${currentShare.slug}` : currentShare.flashId;
-    return `${location.origin}${location.pathname}?flash=${encodeURIComponent(idPart)}`;
+    // Mesma URL usada pra compartilhar (/f/id-slug.html): assim, qualquer link copiado
+    // direto da barra de endereço (sem usar o botão Compartilhar) já mostra a imagem
+    // certa no preview do WhatsApp/Facebook. A pagina /f/ redireciona pro catalogo sozinha.
+    return buildShareUrl();
   }
   function buildShareUrl(){
     const idPart = currentShare.slug ? `${currentShare.flashId}-${currentShare.slug}` : currentShare.flashId;
@@ -2921,10 +2930,7 @@
 
   function closeLightbox() {
     lightbox.classList.remove('open');
-    const params = new URLSearchParams(location.search);
-    params.delete('flash');
-    const query = params.toString();
-    history.replaceState(null, '', `${location.pathname}${query ? '?' + query : ''}`);
+    history.replaceState(null, '', `${BASE_PATH}${preLightboxQuery ? '?' + preLightboxQuery : ''}`);
   }
   lightboxClose.addEventListener('click', closeLightbox);
   lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
