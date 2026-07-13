@@ -1151,13 +1151,17 @@
     "id": 484,
     "filename": "pin-up-19-1783645960771-9.webp",
     "imageUrl": "flash/pin-up-19-1783645960771-9.webp",
-    "title": "Pin Up 19",
-    "altText": "Tatuagem flash de pin up 19. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Pin Up Ultra Bold 2",
+    "altText": "Tatuagem flash de pin up ultra bold 2. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Rosto de pin up, com flor no cabelo cacheado e olhar sedutor. Traço grosso e ignorante, sem frescura, contraste marcado. Blackwork puro com pegada old school.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 485,
