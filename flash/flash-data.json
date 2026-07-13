@@ -119,11 +119,15 @@
     "imageUrl": "flash/blue-midnight-1783512951206-5.webp",
     "title": "Blue Midnight",
     "altText": "Tatuagem flash de blue midnight. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Fumaça envolvendo o rosto, lua cheia ao fundo, olhar de quem guarda segredo. Cigarro na mão, silhueta em contraluz — clima de noite que não acaba. Neotrad com pegada blackwork, traço denso pra quem curte estética de mistério e sedução.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 423,
