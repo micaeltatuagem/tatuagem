@@ -1071,11 +1071,16 @@
     "imageUrl": "flash/oxossi-1783641223482-17.webp",
     "title": "Oxossi",
     "altText": "Tatuagem flash de oxossi. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Representação de Oxóssi, com cocar de penas e empunhando arco e flecha em posição de tiro. Faixa com o nome \"Oxóssi\" na base, gotas ao redor completando o traço. Blackwork com pegada old school e religiosa/umbanda.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 480,
