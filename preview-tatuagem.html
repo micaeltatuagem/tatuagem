@@ -535,6 +535,34 @@
     border-top:1px solid var(--line);
     padding-top:14px;
   }
+  /* Painel de camadas persistente: só aparece no layout desktop (a versão modal cobre o mobile) */
+  .desktop-layers-dock{
+    display:none;
+  }
+  @media (min-width:980px){
+    .desktop-layers-dock{
+      display:block;
+      flex-shrink:0;
+      border-bottom:1px solid rgba(27,23,16,.2);
+      padding-bottom:14px;
+      margin-bottom:12px;
+    }
+    .desktop-layers-dock .layers-panel-label{
+      color:#6b6250; margin-bottom:8px;
+    }
+    .desktop-layers-dock .layer-thumbs-empty{
+      color:#8a7f66;
+    }
+    .desktop-layers-dock .layer-thumb{
+      background:#fbf8f1; border-color:#c8bb9a;
+    }
+    .desktop-layers-dock .layer-thumb.active{
+      border-color:var(--crimson-bright); box-shadow:0 0 0 2px var(--crimson-bright);
+    }
+    .desktop-layers-dock .layer-remove{
+      border-color:#fbf8f1;
+    }
+  }
   .layers-panel-label{
     font-family:'Oswald',sans-serif; font-size:10.5px; letter-spacing:.08em;
     text-transform:uppercase; color:var(--text-dim); margin-bottom:10px;
@@ -954,6 +982,12 @@
     <div class="gallery-expand-handle" id="galleryExpandHandle" title="Expandir/recolher galeria" aria-label="Expandir ou recolher galeria de flashs">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
     </div>
+    <div class="desktop-layers-dock" id="desktopLayersDock">
+      <div class="layers-panel-label"><span>Camadas</span></div>
+      <div class="layer-thumbs" id="layerThumbsDock" style="flex-wrap:wrap;">
+        <span class="layer-thumbs-empty">Escolha um flash ou texto pra começar a montar</span>
+      </div>
+    </div>
     <div class="flash-source-row">
       <input id="searchFlash" type="text" placeholder="Buscar flash (ex: águia, caveira, rosa)">
     </div>
@@ -1136,6 +1170,7 @@
   const baseImg = document.getElementById('baseImg');
   const layersContainer = document.getElementById('layersContainer');
   const layerThumbs = document.getElementById('layerThumbs');
+  const layerThumbsDock = document.getElementById('layerThumbsDock');
   const activeLayerLabel = document.getElementById('activeLayerLabel');
 
   const opacityRange = document.getElementById('opacityRange');
@@ -1382,12 +1417,47 @@
   let activeLayerId = null;
   let layerSeq = 0;
 
+  // ---------- desfazer (Ctrl+Z): pilha de snapshots do estado das camadas ----------
+  let historyStack = [];
+  const HISTORY_LIMIT = 30;
+
+  function snapshotLayers(){
+    // serializa so os dados (sem referencias de elemento DOM)
+    return layers.map(({el, imgEl, textEl, ...rest}) => ({...rest}));
+  }
+
+  function pushHistory(){
+    historyStack.push(JSON.stringify(snapshotLayers()));
+    if(historyStack.length > HISTORY_LIMIT) historyStack.shift();
+  }
+
+  function restoreLayers(snapshotJson){
+    const snapshot = JSON.parse(snapshotJson);
+    layers.forEach(l => l.el && l.el.remove());
+    layers = snapshot;
+    layers.forEach(l => renderLayerDOM(l));
+    activeLayerId = layers.length ? layers[layers.length - 1].id : null;
+    selectLayer(activeLayerId);
+    updateLayerThumbs();
+    updateDownloadState();
+  }
+
+  function undo(){
+    if(!historyStack.length) return;
+    restoreLayers(historyStack.pop());
+  }
+
   function buildFlashItem(src, index, nome){
     const el = document.createElement('div');
     el.className = 'flash-item';
+    el.draggable = true;
     const altText = nome || `Opção de flash ${index+1}`;
     el.innerHTML = `<span class="num">${String(index+1).padStart(2,'0')}</span><img src="${src}" alt="${altText}" loading="lazy">`;
     el.addEventListener('click', () => addImageLayer(src));
+    el.addEventListener('dragstart', (e) => {
+      e.dataTransfer.effectAllowed = 'copy';
+      e.dataTransfer.setData('text/plain', 'flash-src:' + src);
+    });
     return el;
   }
 
@@ -1407,10 +1477,11 @@
     return { leftPct: 50 + (cascade - 2) * 7, topPct: 50 + (cascade - 2) * 5 };
   }
 
-  function addImageLayer(src){
+  function addImageLayer(src, posOverride){
+    pushHistory();
     layerSeq++;
     const id = 'layer-' + layerSeq;
-    const pos = nextCascadePos();
+    const pos = posOverride || nextCascadePos();
     const layer = {
       id, type:'image', src,
       leftPct: pos.leftPct, topPct: pos.topPct,
@@ -1425,6 +1496,7 @@
   }
 
   function addTextLayer(text, fontFamily, posOverride){
+    pushHistory();
     layerSeq++;
     const id = 'layer-' + layerSeq;
     const pos = posOverride || nextCascadePos();
@@ -1478,6 +1550,7 @@
       }
       const p = pointerXY(e);
       const rect = canvasShell.getBoundingClientRect();
+      pushHistory();
       if(role === 'resize'){
         interaction = {type:'resize', id: layer.id, startX:p.x, startY:p.y, startScale: layer.scale};
       } else if(role === 'rot'){
@@ -1554,6 +1627,7 @@
   function removeLayer(id){
     const layer = layers.find(l => l.id === id);
     if(!layer) return;
+    pushHistory();
     layer.el.remove();
     layers = layers.filter(l => l.id !== id);
     if(activeLayerId === id){
@@ -1571,13 +1645,13 @@
   }
 
 
-  function updateLayerThumbs(){
-    layerThumbs.innerHTML = '';
+  function renderLayerThumbsInto(container){
+    container.innerHTML = '';
     if(!layers.length){
       const empty = document.createElement('span');
       empty.className = 'layer-thumbs-empty';
       empty.textContent = 'Escolha um flash ao lado. Cada um vira uma camada, dá pra combinar vários pra montar uma manga';
-      layerThumbs.appendChild(empty);
+      container.appendChild(empty);
       return;
     }
     layers.forEach((layer, i) => {
@@ -1595,8 +1669,13 @@
           selectLayer(layer.id);
         }
       });
-      layerThumbs.appendChild(thumb);
+      container.appendChild(thumb);
     });
+  }
+
+  function updateLayerThumbs(){
+    renderLayerThumbsInto(layerThumbs);
+    if(layerThumbsDock) renderLayerThumbsInto(layerThumbsDock);
   }
 
   // custom flash upload
@@ -1641,12 +1720,23 @@
   bodyPhotoInput.addEventListener('change', (e) => {
     if(e.target.files[0]) loadBodyPhoto(e.target.files[0]);
   });
-  // drag and drop
+  // drag and drop (foto do corpo solta como arquivo; flash da galeria solta como camada na posição exata)
   canvasShell.addEventListener('dragover', e => e.preventDefault());
   canvasShell.addEventListener('drop', e => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    if(file && file.type.startsWith('image/')) loadBodyPhoto(file);
+    if(file && file.type.startsWith('image/')){
+      loadBodyPhoto(file);
+      return;
+    }
+    const text = e.dataTransfer.getData('text/plain');
+    if(text && text.startsWith('flash-src:')){
+      const src = text.slice('flash-src:'.length);
+      const rect = canvasShell.getBoundingClientRect();
+      const leftPct = Math.min(97, Math.max(3, (e.clientX - rect.left) / rect.width * 100));
+      const topPct = Math.min(97, Math.max(3, (e.clientY - rect.top) / rect.height * 100));
+      addImageLayer(src, { leftPct, topPct });
+    }
   });
 
   // ---------- bases de corpo prontas ----------
@@ -1707,6 +1797,7 @@
     layers.forEach(l => l.el && l.el.remove());
     layers = [];
     activeLayerId = null;
+    historyStack = [];
     emptyState.style.display = 'flex';
     baseThumbs.querySelectorAll('.base-thumb').forEach(n => n.classList.remove('selected'));
     updateLayerThumbs();
@@ -1716,6 +1807,14 @@
   });
 
   // ---------- controles (aplicam na camada ativa) ----------
+  // registra 1 passo de undo por ajuste (ao soltar o controle), sem poluir o historico a cada tick do slider
+  [opacityRange, scaleRange, rotRange, strokeWidthRange, shadowBlurRange].forEach(input => {
+    input.addEventListener('pointerdown', () => { if(!input.disabled) pushHistory(); });
+  });
+  [blendMode, textColor, strokeColor, shadowOn, shadowColor].forEach(input => {
+    input.addEventListener('change', () => { if(!input.disabled) pushHistory(); }, { capture: true });
+  });
+
   opacityRange.addEventListener('input', () => {
     const layer = layers.find(l => l.id === activeLayerId);
     opacityVal.textContent = opacityRange.value + '%';
@@ -1746,6 +1845,7 @@
   flipBtn.addEventListener('click', () => {
     const layer = layers.find(l => l.id === activeLayerId);
     if(!layer) return;
+    pushHistory();
     layer.mirror = !layer.mirror;
     flipBtn.classList.toggle('active', layer.mirror);
     applyLayerStyle(layer);
@@ -2037,6 +2137,45 @@
     const q = searchFlash.value.trim().toLowerCase();
     const filtered = q ? allFlashes.filter(it => it.nome.toLowerCase().includes(q)) : allFlashes;
     renderFlashes(filtered);
+  });
+
+  // ---------- atalhos de teclado ----------
+  function isTypingTarget(el){
+    if(!el) return false;
+    const tag = el.tagName;
+    return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable;
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if(isTypingTarget(document.activeElement)) return;
+
+    const isUndo = (e.ctrlKey || e.metaKey) && !e.shiftKey && (e.key === 'z' || e.key === 'Z');
+    if(isUndo){
+      e.preventDefault();
+      undo();
+      return;
+    }
+
+    if(e.key === 'Delete' || e.key === 'Backspace'){
+      if(activeLayerId){
+        e.preventDefault();
+        removeLayer(activeLayerId);
+      }
+      return;
+    }
+
+    const arrowMap = { ArrowUp:[0,-1], ArrowDown:[0,1], ArrowLeft:[-1,0], ArrowRight:[1,0] };
+    if(arrowMap[e.key] && activeLayerId){
+      e.preventDefault();
+      const layer = layers.find(l => l.id === activeLayerId);
+      if(!layer) return;
+      if(!e.repeat) pushHistory();
+      const step = e.shiftKey ? 2 : 0.5;
+      const [dx, dy] = arrowMap[e.key];
+      layer.leftPct += dx * step;
+      layer.topPct += dy * step;
+      applyLayerStyle(layer);
+    }
   });
 
   // init
