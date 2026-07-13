@@ -265,11 +265,15 @@
     "imageUrl": "flash/cigarette-moon-1783512992474-23.webp",
     "title": "Cigarette Moon",
     "altText": "Tatuagem flash de cigarette moon. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Cigarro na mão, fumaça subindo, skyline urbano ao fundo: retrato de noite na cidade, estética vintage. NeoTrad com pegada blackwork, traço elegante, clima de cartaz antigo.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 432,
