@@ -695,11 +695,14 @@
     "imageUrl": "flash/lethal-woman-1783443559103-1.webp",
     "title": "Lethal Woman",
     "altText": "Tatuagem flash de lethal woman. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Cigarro na mão, olhar direto, letras psicodélicas moldando a cena: sedução com aviso embutido. Blackwork denso, traço fluido, presença que não pede desculpa por existir.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-07",
-    "draft": true
+    "draft": false
   },
   {
     "id": 458,
