@@ -328,13 +328,17 @@
     "id": 435,
     "filename": "diabo-frontal-1783645975830-18.webp",
     "imageUrl": "flash/diabo-frontal-1783645975830-18.webp",
-    "title": "Diabo Frontal",
-    "altText": "Tatuagem flash de diabo frontal. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Diabo Frontal Ultra Bold",
+    "altText": "Tatuagem flash de diabo frontal ultra bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Rosto frontal, chifres retos, expressão carregada e simétrica: presença que encara sem desviar. Dark art com pegada blackwork, traço grosso, contraste absoluto.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 436,
