@@ -1404,11 +1404,14 @@
     "imageUrl": "flash/serpente-9-1783649712439-3.webp",
     "title": "Serpente 9",
     "altText": "Tatuagem flash de serpente 9. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Cobra em posição de ataque, capuz aberto, corpo enrolado com textura detalhada de escamas. Traço fino e sombreado, com contraste realista entre luz e sombra. NeoTrad.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Animais",
+      "NeoTrad"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 500,
