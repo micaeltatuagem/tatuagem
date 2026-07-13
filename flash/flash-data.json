@@ -133,13 +133,17 @@
     "id": 423,
     "filename": "caveira-adaga-2-1783645968917-14.webp",
     "imageUrl": "flash/caveira-adaga-2-1783645968917-14.webp",
-    "title": "Caveira Adaga 2",
-    "altText": "Tatuagem flash de caveira adaga 2. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "title": "Caveira Adaga Ultra Bold",
+    "altText": "Tatuagem flash de Caveira Adaga Ultra Bold. Disponível no Micael Tatuagem, Muriaé MG.",
+    "description": "Lâmina cravada, caveira embaixo: símbolo clássico de mortalidade e coragem, sem enfeite. Traço grosso, contraste absoluto, old school na veia. Peça fechada, direta, pra quem não tem medo de encarar o fim de frente.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "BlackWork",
+      "UltraBold"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 424,
