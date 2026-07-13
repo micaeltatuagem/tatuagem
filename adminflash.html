@@ -969,6 +969,13 @@
       renderGallery();
       closeEditModal();
       showAlert('success', newFile ? '✅ Imagem substituída e alterações salvas.' : '✅ Alterações salvas.');
+
+      // gera/atualiza a pagina de preview (/f/) pra esse item -- nao bloqueia o save se falhar
+      try {
+        await withRetry(() => commitShareCard({ id, title, altText: alt, imageUrl }), 2, 'pagina de compartilhamento: ' + title);
+      } catch (err) {
+        console.warn('Pagina de compartilhamento nao gerada (nao critico):', title, err.message);
+      }
     } catch (err) {
       showAlert('error', '⚠ Falhou ao salvar (' + err.message + '). Tente de novo.');
     } finally {
