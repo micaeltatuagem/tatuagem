@@ -647,11 +647,15 @@
     "imageUrl": "flash/kimono-1783647952713-0.webp",
     "title": "Kimono",
     "altText": "Tatuagem flash de kimono. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Figura em kimono florido, olhar sereno, estrelas pontuando o fundo: elegância e tradição japonesa em traço fino. NeoTrad com pegada blackwork, composição limpa, sofisticação sem excesso.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Oriental",
+      "NeoTrad",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 455,
