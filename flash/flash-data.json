@@ -1438,11 +1438,16 @@
     "imageUrl": "flash/smile-dj-1783512976687-16.webp",
     "title": "Smile Dj",
     "altText": "Tatuagem flash de smile dj. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "DJ estilizado em traço de quadrinho, headphone com padrão em espiral, mixando em toca-discos entre duas caixas de som, com um emoji sorridente ao fundo. Estilo comics, traço fino em blackwork com pegada neotrad.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Oriental",
+      "NeoTrad",
+      "BlackWork",
+      "Comics"
+    ],
     "showInDecor": true,
     "date": "2026-07-08",
-    "draft": true
+    "draft": false
   },
   {
     "id": 502,
