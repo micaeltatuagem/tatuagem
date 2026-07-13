@@ -1034,8 +1034,10 @@
     "altText": "Tatuagem flash de serie psicodelica. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "Folha de flash com espirais, olho que tudo vê, cogumelos, sol, lua e símbolos de estados alterados. Cada desenho pode ser escolhido individualmente ou combinado em composição, em traço old school monocromático e denso.\nGostou de algum desses ícones? Chama no WhatsApp e vamos ver qual combina com você.",
     "styles": [
+      "Dark Art",
       "Psicodélico",
-      "Gnose"
+      "Gnose",
+      "Série"
     ],
     "showInDecor": false,
     "date": "2026-07-11",
