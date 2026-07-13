@@ -53,11 +53,16 @@
     "imageUrl": "flash/anjo-real-1783649716404-5.webp",
     "title": "Anjo Real",
     "altText": "Tatuagem flash de anjo real. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Múltiplos olhos, asas sobrepostas, presença que impõe mais estranhamento que conforto: essa é a imagem do anjo como descrito nos textos originais, bem diferente do querubim fofo que a gente conhece. Traço fino em blackwork, denso e cheio de detalhe.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Religioso",
+      "Cristão",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-10",
-    "draft": true
+    "draft": false
   },
   {
     "id": 419,
