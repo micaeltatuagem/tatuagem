@@ -1721,11 +1721,16 @@
     "imageUrl": "flash/vovo-nana-1783641210825-10.webp",
     "title": "Vovo Nana",
     "altText": "Tatuagem flash de vovo nana. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Representação de Vovó Nana, entidade de umbanda ligada à sabedoria e ancestralidade, com turbante, colares e segurando um cachimbo comprido com as duas mãos. Faixa com o nome \"Vovó Nana\" na base, gotas ao redor completando o traço. Blackwork com pegada old school e religiosa/umbanda.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Old School",
+      "Religioso",
+      "Umbanda",
+      "BlackWork"
+    ],
     "showInDecor": true,
     "date": "2026-07-09",
-    "draft": true
+    "draft": false
   },
   {
     "id": 519,
