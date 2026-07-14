@@ -116,11 +116,18 @@
     "imageUrl": "flash/brainiac-organica-1783996452511-6.webp",
     "title": "Brainiac Organica",
     "altText": "Tatuagem flash de brainiac organica. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Crânio alongado e coberto de textura densa, tentáculos escorrendo da base: mente que ultrapassou os limites do humano. NeoTrad com pegada dark art e psicodélica, traço denso, presença que perturba mais do que assusta.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Orgânico",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 527,
