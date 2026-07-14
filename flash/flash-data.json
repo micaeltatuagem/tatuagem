@@ -78,11 +78,18 @@
     "imageUrl": "flash/olho-organica-1783996448872-4.webp",
     "title": "Olho Organica",
     "altText": "Tatuagem flash de olho organica. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Olho envolto em textura de garras e escamas, observando de dentro de uma forma que parece viva: percepção que nasce do próprio orgânico, não de fora dele. NeoTrad com pegada dark art e psicodélica, traço denso e detalhado.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Orgânico",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 525,
