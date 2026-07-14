@@ -230,11 +230,18 @@
     "imageUrl": "flash/organica-22-1783996462391-12.webp",
     "title": "Organica 22",
     "altText": "Tatuagem flash de organica 22. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Estrela de seis pontas pairando sobre picos irregulares, textura densa na base: símbolo geométrico e crescimento orgânico dividindo a mesma paisagem. NeoTrad com pegada dark art e psicodélica, traço fino, atmosfera de cena alienígena.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Orgânico",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 533,
