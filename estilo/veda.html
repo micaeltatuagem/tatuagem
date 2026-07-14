@@ -49,11 +49,11 @@
   main { max-width:760px; margin:0 auto; padding:3rem 1.5rem 4rem; text-align:center; }
   .eyebrow { font-size:.78rem; letter-spacing:.15em; text-transform:uppercase; color:var(--rust); margin-bottom:.8rem; }
   h1 { font-family:'Cormorant Garamond', serif; font-size:2.4rem; font-weight:600; margin:0 0 1.2rem; }
-  .style-count { font-size:.82rem; color:var(--muted); margin-bottom:1.6rem; letter-spacing:.03em; }
+  .style-count { font-size:.82rem; color:var(--muted); margin-bottom:1.6rem; letter-spacing:.03em; min-height:1.2em; }
   .style-desc { font-size:1rem; line-height:1.7; color:#c9beac; margin:0 auto 2.2rem; max-width:600px; }
   .cta { display:inline-block; background:var(--blood); color:var(--bone); text-decoration:none; padding:.85rem 1.8rem; border-radius:4px; font-size:.85rem; letter-spacing:.08em; text-transform:uppercase; margin-bottom:2.8rem; transition:background .2s ease; }
   .cta:hover { background:var(--rust); }
-  .sample-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin-bottom:2.5rem; }
+  .sample-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin-bottom:2.5rem; min-height:1px; }
   .sample-item { display:block; aspect-ratio:1; background:var(--surface); border:1px solid var(--border); border-radius:4px; overflow:hidden; }
   .sample-item img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s ease; }
   .sample-item:hover img { transform:scale(1.05); }
@@ -81,53 +81,13 @@
 <main>
   <p class="eyebrow">Estilo de tatuagem</p>
   <h1>Tatuagem Veda</h1>
-  <p class="style-count">6 desenhos disponíveis no catálogo</p>
+  <p class="style-count" id="styleCount"></p>
   <p class="style-desc">Divindades e simbologia da tradição hindu e védica, com traço fino e denso, cheio de ornamentação. Composições que buscam transmitir o peso espiritual dessas figuras.</p>
   <a href="/flash.html?tag=Veda" class="cta">Ver todos os desenhos de Veda →</a>
-      <div class="sample-grid">
-        <a href="/flash.html?tag=Veda" class="sample-item">
-          <img src="/flash/caveira-iogue-1783649706201-0.webp" alt="Tatuagem flash de caveira iogue. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy">
-        </a>
-        <a href="/flash.html?tag=Veda" class="sample-item">
-          <img src="/flash/kali-ma-1783512946278-3.webp" alt="Tatuagem flash de kali ma. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy">
-        </a>
-        <a href="/flash.html?tag=Veda" class="sample-item">
-          <img src="/flash/shiva-shakti-1783512943951-2.webp" alt="Tatuagem flash de shiva shakti. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy">
-        </a>
-        <a href="/flash.html?tag=Veda" class="sample-item">
-          <img src="/flash/sono-de-vishnu-1783512948979-4.webp" alt="Tatuagem flash de sono de vishnu. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy">
-        </a>
-        <a href="/flash.html?tag=Veda" class="sample-item">
-          <img src="/flash/que-todos-os-seres-sejam-felizes-e-livres-1783276811798.webp" alt="Tatuagem flash de que todos os seres sejam felizes e livres.. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy">
-        </a>
-        <a href="/flash.html?tag=Veda" class="sample-item">
-          <img src="/flash/kali-1783170111103-5.webp" alt="Tatuagem flash de kali. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy">
-        </a>
-      </div>
+  <div class="sample-grid" id="sampleGrid"></div>
   <div class="other-styles">
     <h2>Outros estilos</h2>
-    <ul>
-        <li><a href="/estilo/old-school.html">Old School</a></li>
-        <li><a href="/estilo/dark-art.html">Dark Art</a></li>
-        <li><a href="/estilo/religioso.html">Religioso</a></li>
-        <li><a href="/estilo/nautico.html">Náutico</a></li>
-        <li><a href="/estilo/animais.html">Animais</a></li>
-        <li><a href="/estilo/tribal.html">Tribal</a></li>
-        <li><a href="/estilo/oriental.html">Oriental</a></li>
-        <li><a href="/estilo/organico.html">Orgânico</a></li>
-        <li><a href="/estilo/escrita.html">Escrita</a></li>
-        <li><a href="/estilo/cristao.html">Cristão</a></li>
-        <li><a href="/estilo/umbanda.html">Umbanda</a></li>
-        <li><a href="/estilo/budista.html">Budista</a></li>
-        <li><a href="/estilo/neotrad.html">NeoTrad</a></li>
-        <li><a href="/estilo/blackwork.html">BlackWork</a></li>
-        <li><a href="/estilo/ultrabold.html">UltraBold</a></li>
-        <li><a href="/estilo/psicodelico.html">Psicodélico</a></li>
-        <li><a href="/estilo/gnose.html">Gnose</a></li>
-        <li><a href="/estilo/colorido.html">Colorido</a></li>
-        <li><a href="/estilo/serie.html">Série</a></li>
-        <li><a href="/estilo/comics.html">Comics</a></li>
-    </ul>
+    <ul id="otherStyles"></ul>
   </div>
 </main>
 <footer>
@@ -138,5 +98,52 @@
   </p>
   <p style="margin-top:0.8rem;">© Micael Faccio · Tatuador em Muriaé, MG</p>
 </footer>
+<script>
+(function(){
+  const STYLE = "Veda";
+  const CATALOG_LINK = "/flash.html?tag=" + encodeURIComponent(STYLE);
+
+  fetch(`/flash/flash-data.json?t=${Date.now()}`, { cache: 'no-store' })
+    .then(r => r.json())
+    .then(data => {
+      const published = data.filter(it => !it.draft);
+      const items = published.filter(it => (it.styles||[]).includes(STYLE));
+      const countEl = document.getElementById('styleCount');
+      if (countEl) countEl.textContent = items.length + (items.length===1 ? ' desenho disponível no catálogo' : ' desenhos disponíveis no catálogo');
+
+      const n = 6;
+      const step = items.length ? Math.max(1, Math.floor(items.length/n)) : 1;
+      const samples = [];
+      for (let i=0; i<items.length && samples.length<n; i+=step) samples.push(items[i]);
+
+      const gridEl = document.getElementById('sampleGrid');
+      if (gridEl) {
+        if (samples.length) {
+          gridEl.innerHTML = samples.map(it => {
+            const alt = (it.altText || it.title || '').replace(/"/g,'&quot;');
+            return `<a href="${CATALOG_LINK}" class="sample-item"><img src="/${it.imageUrl}" alt="${alt}" loading="lazy"></a>`;
+          }).join('');
+        } else {
+          gridEl.innerHTML = '<p class="sample-empty">Novos desenhos nesse estilo em breve. Fale com o tatuador pra encomendar uma peça personalizada.</p>';
+        }
+      }
+    })
+    .catch(() => {});
+
+  fetch(`/flash/tags.json?t=${Date.now()}`, { cache: 'no-store' })
+    .then(r => r.json())
+    .then(tags => {
+      const others = tags.filter(t => t !== STYLE);
+      const el = document.getElementById('otherStyles');
+      if (el) {
+        el.innerHTML = others.map(t => {
+          const slug = t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+          return `<li><a href="/estilo/${slug}.html">${t}</a></li>`;
+        }).join('');
+      }
+    })
+    .catch(() => {});
+})();
+</script>
 </body>
 </html>
