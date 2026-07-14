@@ -42,11 +42,17 @@
     "imageUrl": "flash/garra-organica-1783996445622-2.webp",
     "title": "Garra Organica",
     "altText": "Tatuagem flash de garra organica. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Estrutura curva e pontuda, textura densa cobrindo cada segmento: garra que parece ter crescido direto da pele. NeoTrad com pegada dark art e psicodélica, traço detalhado, silhueta que se adapta ao corpo sem perder força.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Orgânico",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 523,
