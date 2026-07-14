@@ -553,11 +553,18 @@
     "imageUrl": "flash/organica-5-1783996490043-29.webp",
     "title": "Organica 5",
     "altText": "Tatuagem flash de organica 5. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Duas hastes se enroscam paralelas e descem em pingos na base, uma chama pequena no topo, uma estrela solta ao lado. O que sobe em fogo desce em gota, dois movimentos opostos na mesma raiz. NeoTrad com pegada dark art e psicodélica, traço fino e detalhado, presença que convida a olhar pra dentro.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Orgânico",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 550,
