@@ -183,6 +183,18 @@
     }
     .flash-search::placeholder { color: var(--muted); }
 
+    .style-description {
+      max-width: 640px;
+      margin: -1.5rem auto 2rem;
+      padding: 0 1rem;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+    .style-description:empty { display: none; margin: 0; }
+
     .flash-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -583,6 +595,8 @@
     </div>
 <!-- FLASH_FILTERS_END -->
   </div>
+
+  <p class="style-description" id="styleDescription"></p>
 
   <input type="text" id="flashSearch" class="flash-search" placeholder="Buscar (ex: águia, caveira, dragão...)" />
 
@@ -2723,6 +2737,18 @@
   const emptyMsg = document.getElementById('flashEmpty');
   const filterBtns = Array.from(document.querySelectorAll('.filter-btn'));
   let activeFilter = 'all';
+  let styleDescriptions = {};
+  const styleDescriptionEl = document.getElementById('styleDescription');
+
+  fetch(`flash/style-descriptions.json?t=${Date.now()}`, { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : {})
+    .then(data => { styleDescriptions = data; updateStyleDescription(); })
+    .catch(() => {});
+
+  function updateStyleDescription(){
+    if (!styleDescriptionEl) return;
+    styleDescriptionEl.textContent = styleDescriptions[activeFilter] || '';
+  }
 
   // ── Ordenacao: upload (padrao) vs alfabetica (toggle) ──
   const sortBtn = document.getElementById('sortToggleBtn');
@@ -2753,6 +2779,7 @@
   applySortOrder();
 
   function applyFilters() {
+    updateStyleDescription();
     const term = searchInput.value.trim().toLowerCase();
     let visibleCount = 0;
     items.forEach(item => {
