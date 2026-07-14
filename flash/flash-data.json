@@ -6,10 +6,14 @@
     "title": "Mascara Organica 1",
     "altText": "Tatuagem flash de mascara organica 1. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Dark Art",
+      "Orgânico",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 521,
