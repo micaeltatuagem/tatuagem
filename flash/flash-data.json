@@ -60,11 +60,17 @@
     "imageUrl": "flash/coluna-organica-1783996447216-3.webp",
     "title": "Coluna Organica",
     "altText": "Tatuagem flash de coluna organica. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Estrutura vertical com segmentos simétricos se repetindo, como espinha ou casulo: forma que sustenta e cresce ao mesmo tempo. NeoTrad com pegada dark art e psicodélica, traço fino e denso, silhueta alongada.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Orgânico",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 524,
