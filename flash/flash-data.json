@@ -381,11 +381,18 @@
     "imageUrl": "flash/organica-3-1783996493155-31.webp",
     "title": "Organica 3",
     "altText": "Tatuagem flash de organica 3. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Cristal no topo, corpo entrelaçado em torção crescendo da base: mineral e orgânico se fundindo numa única forma. NeoTrad com pegada dark art e psicodélica, traço fino, composição vertical densa.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Orgânico",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 552,
