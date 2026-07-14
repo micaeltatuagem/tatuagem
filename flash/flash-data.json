@@ -363,11 +363,18 @@
     "imageUrl": "flash/organica-15-1783996474241-19.webp",
     "title": "Organica 15",
     "altText": "Tatuagem flash de organica 15. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Um cubo geométrico flutua sobre um caule que se curva e se desfaz em ondas escuras. A peça revela um espaço interior tornado visível, paisagem de um estado interno em traço fechado e alto contraste. Disponível no Micael Tatuagem, Muriaé/MG. Atendimento particular, vagas limitadas — chame no WhatsApp para agendar.",
+    "styles": [
+      "Dark Art",
+      "Orgânico",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 540,
