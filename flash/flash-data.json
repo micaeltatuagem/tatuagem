@@ -515,11 +515,18 @@
     "imageUrl": "flash/organica-7-1783996486674-27.webp",
     "title": "Organica 7",
     "altText": "Tatuagem flash de organica 7. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Uma esfera geométrica pousa sobre um baú entalhado, tudo envolto por raízes e ramos que sobem e se fecham por cima como uma coroa, estrelas soltas ao redor. O que está guardado permanece guardado, a estrutura escondendo antes de revelar. NeoTrad com pegada dark art e psicodélica, traço fino e detalhado, presença que convida a olhar pra dentro.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Orgânico",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 548,
