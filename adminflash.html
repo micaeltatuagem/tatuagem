@@ -308,6 +308,7 @@
   // ── CONFIG ──
   const STORAGE_KEY = 'micaelFlash_v1';
   const TAGS_KEY    = 'micaelFlashTags';
+  const STYLE_DESC_KEY = 'micaelStyleDescriptions';
   const TOKEN_KEY   = 'ghToken';
   const REPO_OWNER  = 'micaeltatuagem';
   const REPO_NAME   = 'tatuagem';
@@ -317,6 +318,7 @@
   const DATA_PATH    = `${IMAGE_FOLDER}/flash-data.json`;
   const MANIFEST_PATH = `${IMAGE_FOLDER}/manifest.json`;
   const TAGS_PATH     = `${IMAGE_FOLDER}/tags.json`;
+  const STYLE_DESC_PATH = `${IMAGE_FOLDER}/style-descriptions.json`;
   const CATALOG_PAGE  = 'flash.html';
   const SITEMAP_PATH  = 'sitemap.xml';
   const SITE_URL    = 'https://micaeltatuagem.com.br';
@@ -527,6 +529,7 @@
     document.getElementById('adminPanel').style.display = 'block';
     await seedFromRepo();
     await seedTagsFromRepo();
+    await seedStyleDescriptionsFromRepo();
     renderTagManager();
     renderTags();
     renderGallery();
@@ -630,12 +633,18 @@
 
   function renderTagManager() {
     const tags = getTags();
+    const descriptions = getStyleDescriptions();
     const el = document.getElementById('tagManagerList');
     if (!tags.length) { el.innerHTML = '<p style="color:var(--muted);font-size:.85rem;">Nenhuma tag.</p>'; return; }
     el.innerHTML = tags.map(t => `
-      <div class="tag-manager-item">
-        <span>${t}</span>
-        <button onclick="deleteTag('${t.replace(/'/g, "\\'")}')">✕</button>
+      <div class="tag-manager-item" style="flex-direction:column;align-items:stretch;gap:.4rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span>${escapeHtml(t)}</span>
+          <button onclick="deleteTag('${t.replace(/'/g, "\\'")}')">✕</button>
+        </div>
+        <textarea class="tag-desc-input" data-tag="${escapeHtml(t)}" placeholder="Descrição do estilo (aparece no filtro do catálogo)" rows="2"
+          style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--bone);padding:8px 10px;font-size:.82rem;font-family:inherit;resize:vertical;box-sizing:border-box;">${escapeHtml(descriptions[t] || '')}</textarea>
+        <button class="btn btn-secondary tag-desc-save" data-tag="${escapeHtml(t)}" style="align-self:flex-end;font-size:.78rem;padding:5px 10px;" onclick="saveStyleDescription('${t.replace(/'/g, "\\'")}')">Salvar descrição</button>
       </div>`).join('');
   }
 
@@ -662,6 +671,12 @@
     const tags = getTags().filter(t => t !== tag);
     try {
       await saveTags(tags);
+      const descriptions = getStyleDescriptions();
+      if (tag in descriptions) {
+        delete descriptions[tag];
+        localStorage.setItem(STYLE_DESC_KEY, JSON.stringify(descriptions));
+        try { await withRetry(() => commitStyleDescriptions(descriptions), 2, 'remover descricao de estilo'); } catch {}
+      }
       renderTagManager();
       renderTags();
       showAlert('success', `✅ Tag "${tag}" removida.`);
@@ -678,6 +693,55 @@
     const body = { message: 'Atualiza flash/tags.json', content, branch: BRANCH };
     if (sha) body.sha = sha;
     await fetch(url, { method:'PUT', headers:{Authorization:`Bearer ${GH_TOKEN}`,'Content-Type':'application/json'}, body:JSON.stringify(body) });
+  }
+
+  // ── Descricoes de estilo (aparecem no filtro do catalogo e nas paginas /estilo/) ──
+  function getStyleDescriptions() {
+    try { return JSON.parse(localStorage.getItem(STYLE_DESC_KEY)) || {}; }
+    catch { return {}; }
+  }
+
+  async function seedStyleDescriptionsFromRepo() {
+    try {
+      const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${STYLE_DESC_PATH}?t=${Date.now()}`;
+      const res = await fetch(url, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && typeof data === 'object' && !Array.isArray(data)) {
+          localStorage.setItem(STYLE_DESC_KEY, JSON.stringify(data));
+        }
+      }
+    } catch {}
+  }
+
+  async function saveStyleDescription(tag) {
+    const textarea = document.querySelector(`.tag-desc-input[data-tag="${tag}"]`);
+    if (!textarea) return;
+    const btn = document.querySelector(`.tag-desc-save[data-tag="${tag}"]`);
+    const value = textarea.value.trim();
+    const descriptions = getStyleDescriptions();
+    descriptions[tag] = value;
+    if (btn) btn.textContent = 'Salvando...';
+    try {
+      localStorage.setItem(STYLE_DESC_KEY, JSON.stringify(descriptions));
+      await withRetry(() => commitStyleDescriptions(descriptions), 3, 'descricao de estilo: ' + tag);
+      showAlert('success', `✅ Descrição de "${tag}" salva.`);
+    } catch (err) {
+      showAlert('error', '⚠ Falhou ao salvar a descrição (' + err.message + '). Tente de novo.');
+    } finally {
+      if (btn) btn.textContent = 'Salvar descrição';
+    }
+  }
+
+  async function commitStyleDescriptions(descriptions) {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(descriptions, null, 2))));
+    const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${STYLE_DESC_PATH}`;
+    let sha = null;
+    try { const r = await fetch(url,{headers:{Authorization:`Bearer ${GH_TOKEN}`}}); if(r.ok) sha=(await r.json()).sha; } catch {}
+    const body = { message: 'Atualiza flash/style-descriptions.json', content, branch: BRANCH };
+    if (sha) body.sha = sha;
+    const res = await fetch(url, { method:'PUT', headers:{Authorization:`Bearer ${GH_TOKEN}`,'Content-Type':'application/json'}, body:JSON.stringify(body) });
+    if (!res.ok) { const e = await res.json(); throw new Error(e.message || 'Erro ao salvar descricoes de estilo'); }
   }
 
   // ── RENDER ──
