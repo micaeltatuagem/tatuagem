@@ -173,11 +173,18 @@
     "imageUrl": "flash/organica-25-1783996457603-9.webp",
     "title": "Organica 25",
     "altText": "Tatuagem flash de organica 25. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Textura densa em forma de coluna, esfera irregular no topo: massa orgânica que cresce sem simetria definida. NeoTrad com pegada dark art e psicodélica, traço fino e detalhado, forma que parece viva por dentro.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Orgânico",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 530,
