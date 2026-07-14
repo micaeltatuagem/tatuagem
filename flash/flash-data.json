@@ -496,11 +496,18 @@
     "imageUrl": "flash/organica-8-1783996485063-26.webp",
     "title": "Organica 8",
     "altText": "Tatuagem flash de organica 8. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Uma haste longa se entrelaça verticalmente, folhas brotando em pontos ao longo do caminho, terminando em raízes finas na base, uma estrela solta marcando o topo. O crescimento desce em vez de subir, raiz e folha na mesma linha, começo e fim se tocando. NeoTrad com pegada dark art e psicodélica, traço fino e detalhado, presença que convida a olhar pra dentro.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Orgânico",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 547,
