@@ -610,11 +610,18 @@
     "imageUrl": "flash/organica-2-1783996494821-32.webp",
     "title": "Organica 2",
     "altText": "Tatuagem flash de organica 2. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Duas hastes se entrelaçam em espiral, espinhos brotando ao longo da curva, estrelas soltas nas pontas. O entrelaçar aqui fere pra crescer, o espinho fazendo parte do mesmo caule que sustenta. NeoTrad com pegada dark art e psicodélica, traço fino e detalhado, presença que convida a olhar pra dentro.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Orgânico",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 553,
