@@ -24,11 +24,17 @@
     "imageUrl": "flash/tribal-organica-1-1783996443916-1.webp",
     "title": "Tribal Organica 1",
     "altText": "Tatuagem flash de tribal organica 1. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Forma alongada e afiada, textura densa em curvas que fogem da linha reta: tribal que abandona a geometria clássica por algo mais vivo. NeoTrad com pegada dark art, traço fino e fluido, silhueta que se adapta ao corpo.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Orgânico",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 522,
