@@ -135,11 +135,18 @@
     "imageUrl": "flash/organica-27-1783996454260-7.webp",
     "title": "Organica 27",
     "altText": "Tatuagem flash de organica 27. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Portal circular denso, camadas de textura fechando em espiral: abertura que puxa o olhar pra dentro de si mesma. NeoTrad com pegada dark art e psicodélica, traço fino e detalhado, composição hipnótica.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Orgânico",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 528,
