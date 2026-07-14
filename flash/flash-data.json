@@ -249,11 +249,18 @@
     "imageUrl": "flash/organica-21-1783996463886-13.webp",
     "title": "Organica 21",
     "altText": "Tatuagem flash de organica 21. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Pico central com esfera radiante no topo, luas cheias em fase suspensas ao redor: pequeno mundo isolado em contemplação. NeoTrad com pegada dark art e psicodélica, traço fino e denso, atmosfera de outro planeta.\nGostou dessa arte? Chama no WhatsApp e vamos marcar sua sessão.",
+    "styles": [
+      "Dark Art",
+      "Orgânico",
+      "NeoTrad",
+      "BlackWork",
+      "Psicodélico",
+      "Gnose"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 534,
