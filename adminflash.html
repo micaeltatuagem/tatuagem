@@ -677,6 +677,8 @@
         localStorage.setItem(STYLE_DESC_KEY, JSON.stringify(descriptions));
         try { await withRetry(() => commitStyleDescriptions(descriptions), 2, 'remover descricao de estilo'); } catch {}
       }
+      try { await withRetry(() => deleteEstiloPage(tag), 2, 'remover pagina de estilo'); } catch (err) { console.warn('Pagina /estilo/ nao removida (nao critico):', err.message); }
+      try { await withRetry(() => removeSitemapEntryForStyle(tag), 2, 'remover do sitemap'); } catch (err) { console.warn('Sitemap nao atualizado (nao critico):', err.message); }
       renderTagManager();
       renderTags();
       showAlert('success', `✅ Tag "${tag}" removida.`);
@@ -726,6 +728,15 @@
       localStorage.setItem(STYLE_DESC_KEY, JSON.stringify(descriptions));
       await withRetry(() => commitStyleDescriptions(descriptions), 3, 'descricao de estilo: ' + tag);
       showAlert('success', `✅ Descrição de "${tag}" salva.`);
+      // regenera a pagina /estilo/ e a entrada de sitemap correspondentes, sem bloquear o save principal
+      try {
+        const gallery = getGallery();
+        await withRetry(() => commitEstiloPage(tag, gallery), 3, 'pagina de estilo: ' + tag);
+        await withRetry(() => updateSitemapForStyle(tag, value, gallery), 2, 'sitemap (estilo: ' + tag + ')');
+      } catch (err) {
+        console.warn('Pagina /estilo/ ou sitemap nao atualizados (nao critico):', tag, err.message);
+        showAlert('error', `⚠ Descrição salva, mas a página /estilo/${slugify(tag)}.html não atualizou automaticamente. Tente salvar de novo.`);
+      }
     } catch (err) {
       showAlert('error', '⚠ Falhou ao salvar a descrição (' + err.message + '). Tente de novo.');
     } finally {
@@ -742,6 +753,284 @@
     if (sha) body.sha = sha;
     const res = await fetch(url, { method:'PUT', headers:{Authorization:`Bearer ${GH_TOKEN}`,'Content-Type':'application/json'}, body:JSON.stringify(body) });
     if (!res.ok) { const e = await res.json(); throw new Error(e.message || 'Erro ao salvar descricoes de estilo'); }
+  }
+
+  // ── Paginas /estilo/ (SEO): regeneradas automaticamente ao salvar a descricao de um estilo ──
+
+  function buildStyleMetaDescription(style, desc) {
+    const tail = ` Tatuagem ${style.toLowerCase()} pronta com Micael Faccio, em Muriaé-MG.`;
+    const LIMIT = 158;
+    const budget = LIMIT - tail.length;
+    let body;
+    if (desc.length <= budget) {
+      body = desc;
+    } else {
+      let cut = desc.slice(0, budget);
+      const lastSpace = cut.lastIndexOf(' ');
+      if (lastSpace > 0) cut = cut.slice(0, lastSpace);
+      cut = cut.replace(/[.,;:\s]+$/, '');
+      body = cut + '.';
+    }
+    return body + tail;
+  }
+
+  function heroImageForStyle(style, gallery) {
+    const published = gallery.filter(it => !it.draft);
+    const items = published.filter(it => (it.styles||[]).includes(style));
+    return items.length ? `${SITE_URL}/${items[0].imageUrl}` : `${SITE_URL}/skull.webp`;
+  }
+
+  function buildEstiloPageHtml(style, desc, gallery) {
+    const slug = slugify(style);
+    const title = `Tatuagem ${escapeHtml(style)} em Muriaé-MG | Micael Tatuagem`;
+    const metaDesc = escapeHtml(buildStyleMetaDescription(style, desc));
+    const canonical = `${SITE_URL}/estilo/${slug}.html`;
+    const catalogLink = `/flash.html?tag=${style.replace(/ /g, '+')}`;
+    const heroImg = heroImageForStyle(style, gallery);
+    const styleJson = JSON.stringify(style);
+
+    return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${title}</title>
+<meta name="description" content="${metaDesc}">
+<link rel="canonical" href="${canonical}">
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${metaDesc}">
+<meta property="og:image" content="${heroImg}">
+<meta property="og:url" content="${canonical}">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Micael Tatuagem">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${title}">
+<meta name="twitter:description" content="${metaDesc}">
+<meta name="twitter:image" content="${heroImg}">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Início", "item": "${SITE_URL}/" },
+    { "@type": "ListItem", "position": 2, "name": "Flash", "item": "${SITE_URL}/flash.html" },
+    { "@type": "ListItem", "position": 3, "name": "${escapeHtml(style)}", "item": "${canonical}" }
+  ]
+}
+<\/script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0a; --deep: #111010; --surface: #181616;
+    --bone: #d4c9b0; --blood: #8b1a1a; --rust: #c0392b;
+    --muted: #6b6560; --border: rgba(212,201,176,0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--ink); color:var(--bone); font-family:'Inter',sans-serif; }
+  nav { display:flex; align-items:center; justify-content:space-between; padding:1.2rem 1.5rem; border-bottom:1px solid var(--border); }
+  .nav-logo { font-family:'Inter',sans-serif; font-size:.95rem; letter-spacing:.08em; text-transform:uppercase; color:var(--bone); text-decoration:none; }
+  .nav-links { display:flex; gap:1.5rem; list-style:none; margin:0; padding:0; flex-wrap:wrap; }
+  .nav-links a { font-size:.85rem; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); text-decoration:none; }
+  .nav-links a:hover { color:var(--bone); }
+  main { max-width:760px; margin:0 auto; padding:3rem 1.5rem 4rem; text-align:center; }
+  .eyebrow { font-size:.78rem; letter-spacing:.15em; text-transform:uppercase; color:var(--rust); margin-bottom:.8rem; }
+  h1 { font-family:'Cormorant Garamond', serif; font-size:2.4rem; font-weight:600; margin:0 0 1.2rem; }
+  .style-count { font-size:.82rem; color:var(--muted); margin-bottom:1.6rem; letter-spacing:.03em; min-height:1.2em; }
+  .style-desc { font-size:1rem; line-height:1.7; color:#c9beac; margin:0 auto 2.2rem; max-width:600px; }
+  .cta { display:inline-block; background:var(--blood); color:var(--bone); text-decoration:none; padding:.85rem 1.8rem; border-radius:4px; font-size:.85rem; letter-spacing:.08em; text-transform:uppercase; margin-bottom:2.8rem; transition:background .2s ease; }
+  .cta:hover { background:var(--rust); }
+  .sample-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin-bottom:2.5rem; min-height:1px; }
+  .sample-item { display:block; aspect-ratio:1; background:var(--surface); border:1px solid var(--border); border-radius:4px; overflow:hidden; }
+  .sample-item img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s ease; }
+  .sample-item:hover img { transform:scale(1.05); }
+  .sample-empty { color:var(--muted); font-size:.9rem; margin-bottom:2.5rem; }
+  .other-styles { border-top:1px solid var(--border); padding-top:1.8rem; text-align:left; }
+  .other-styles h2 { font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-bottom:1rem; text-align:center; }
+  .other-styles ul { list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:.5rem .9rem; justify-content:center; }
+  .other-styles a { font-size:.82rem; color:var(--muted); text-decoration:none; border-bottom:1px solid transparent; }
+  .other-styles a:hover { color:var(--bone); border-color:var(--muted); }
+  footer { padding:2rem; text-align:center; border-top:1px solid var(--border); font-size:.85rem; letter-spacing:.1em; color:var(--muted); text-transform:uppercase; }
+  footer a { color:var(--muted); text-decoration:none; }
+  @media (max-width:560px) { .nav-links { gap:.9rem; } h1 { font-size:1.9rem; } }
+</style>
+</head>
+<body>
+<nav>
+  <a href="/index.html" class="nav-logo">Micael Tatuagem</a>
+  <ul class="nav-links">
+    <li><a href="/galeria.html">Galeria</a></li>
+    <li><a href="/flash.html">Flash</a></li>
+    <li><a href="/preview-tatuagem.html">Criar</a></li>
+    <li><a href="/index.html#contato">Contato</a></li>
+  </ul>
+</nav>
+<main>
+  <p class="eyebrow">Estilo de tatuagem</p>
+  <h1>Tatuagem ${escapeHtml(style)}</h1>
+  <p class="style-count" id="styleCount"></p>
+  <p class="style-desc">${escapeHtml(desc)}</p>
+  <a href="${catalogLink}" class="cta">Ver todos os desenhos de ${escapeHtml(style)} →</a>
+  <div class="sample-grid" id="sampleGrid"></div>
+  <div class="other-styles">
+    <h2>Outros estilos</h2>
+    <ul id="otherStyles"></ul>
+  </div>
+</main>
+<footer>
+  <p>
+    <a href="/index.html">← Voltar à home</a>
+    &nbsp;·&nbsp;
+    <a href="/flash.html">Catálogo completo</a>
+  </p>
+  <p style="margin-top:0.8rem;">© Micael Faccio · Tatuador em Muriaé, MG</p>
+</footer>
+<script>
+(function(){
+  const STYLE = ${styleJson};
+  const CATALOG_LINK = "/flash.html?tag=" + encodeURIComponent(STYLE);
+
+  fetch(\`/flash/flash-data.json?t=\${Date.now()}\`, { cache: 'no-store' })
+    .then(r => r.json())
+    .then(data => {
+      const published = data.filter(it => !it.draft);
+      const items = published.filter(it => (it.styles||[]).includes(STYLE));
+      const countEl = document.getElementById('styleCount');
+      if (countEl) countEl.textContent = items.length + (items.length===1 ? ' desenho disponível no catálogo' : ' desenhos disponíveis no catálogo');
+
+      const n = 6;
+      const step = items.length ? Math.max(1, Math.floor(items.length/n)) : 1;
+      const samples = [];
+      for (let i=0; i<items.length && samples.length<n; i+=step) samples.push(items[i]);
+
+      const gridEl = document.getElementById('sampleGrid');
+      if (gridEl) {
+        if (samples.length) {
+          gridEl.innerHTML = samples.map(it => {
+            const alt = (it.altText || it.title || '').replace(/"/g,'&quot;');
+            return \`<a href="\${CATALOG_LINK}" class="sample-item"><img src="/\${it.imageUrl}" alt="\${alt}" loading="lazy"></a>\`;
+          }).join('');
+        } else {
+          gridEl.innerHTML = '<p class="sample-empty">Novos desenhos nesse estilo em breve. Fale com o tatuador pra encomendar uma peça personalizada.</p>';
+        }
+      }
+    })
+    .catch(() => {});
+
+  fetch(\`/flash/tags.json?t=\${Date.now()}\`, { cache: 'no-store' })
+    .then(r => r.json())
+    .then(tags => {
+      const others = tags.filter(t => t !== STYLE);
+      const el = document.getElementById('otherStyles');
+      if (el) {
+        el.innerHTML = others.map(t => {
+          const slug = t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+          return \`<li><a href="/estilo/\${slug}.html">\${t}</a></li>\`;
+        }).join('');
+      }
+    })
+    .catch(() => {});
+})();
+<\/script>
+</body>
+</html>
+`;
+  }
+
+  async function commitEstiloPage(style, gallery) {
+    const desc = getStyleDescriptions()[style] || '';
+    const slug = slugify(style);
+    const path = `estilo/${slug}.html`;
+    const html = buildEstiloPageHtml(style, desc, gallery);
+    const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
+    let sha = null;
+    try { const r = await fetch(url, {headers:{Authorization:`Bearer ${GH_TOKEN}`}}); if (r.ok) sha = (await r.json()).sha; } catch {}
+    const content = btoa(unescape(encodeURIComponent(html)));
+    const body = { message: `Atualiza pagina /estilo/${slug}.html`, content, branch: BRANCH };
+    if (sha) body.sha = sha;
+    const res = await fetch(url, { method:'PUT', headers:{Authorization:`Bearer ${GH_TOKEN}`,'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    if (!res.ok) { const e = await res.json(); throw new Error(e.message || 'Erro ao gerar pagina de estilo'); }
+  }
+
+  async function deleteEstiloPage(style) {
+    const slug = slugify(style);
+    const path = `estilo/${slug}.html`;
+    const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
+    let sha = null;
+    try { const r = await fetch(url, {headers:{Authorization:`Bearer ${GH_TOKEN}`}}); if (r.ok) sha = (await r.json()).sha; } catch {}
+    if (!sha) return;
+    const body = { message: `Remove pagina /estilo/${slug}.html (estilo deletado)`, sha, branch: BRANCH };
+    await fetch(url, { method:'DELETE', headers:{Authorization:`Bearer ${GH_TOKEN}`,'Content-Type':'application/json'}, body: JSON.stringify(body) });
+  }
+
+  function escapeXml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  async function updateSitemapForStyle(style, desc, gallery) {
+    const slug = slugify(style);
+    const loc = `${SITE_URL}/estilo/${slug}.html`;
+    const published = gallery.filter(it => !it.draft);
+    const items = published.filter(it => (it.styles||[]).includes(style));
+    const hero = items[0];
+    const today = new Date().toISOString().split('T')[0];
+
+    let imageBlock = '';
+    if (hero) {
+      imageBlock = `
+      <image:image>
+        <image:loc>${SITE_URL}/${escapeXml(hero.imageUrl)}</image:loc>
+        <image:title>Tatuagem ${escapeXml(style)}</image:title>
+        <image:caption>${escapeXml(desc.slice(0,150))}</image:caption>
+      </image:image>`;
+    }
+    const urlBlock = `  <url>
+    <loc>${loc}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>${imageBlock}
+  </url>`;
+
+    const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/sitemap.xml`;
+    const res = await fetch(url, {headers:{Authorization:`Bearer ${GH_TOKEN}`}});
+    if (!res.ok) throw new Error('Nao foi possivel ler sitemap.xml');
+    const fileData = await res.json();
+    let xml = decodeURIComponent(escape(atob(fileData.content)));
+
+    const escLoc = loc.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const blockRegex = new RegExp(`\\s*<url>\\s*<loc>${escLoc}</loc>[\\s\\S]*?</url>`);
+
+    if (blockRegex.test(xml)) {
+      xml = xml.replace(blockRegex, '\n' + urlBlock);
+    } else {
+      xml = xml.replace('</urlset>', urlBlock + '\n</urlset>');
+    }
+
+    const newContent = btoa(unescape(encodeURIComponent(xml)));
+    const body = { message: `Atualiza sitemap.xml (estilo: ${style})`, content: newContent, branch: BRANCH, sha: fileData.sha };
+    const putRes = await fetch(url, { method:'PUT', headers:{Authorization:`Bearer ${GH_TOKEN}`,'Content-Type':'application/json'}, body: JSON.stringify(body) });
+    if (!putRes.ok) { const e = await putRes.json(); throw new Error(e.message || 'Erro ao atualizar sitemap'); }
+  }
+
+  async function removeSitemapEntryForStyle(style) {
+    const slug = slugify(style);
+    const loc = `${SITE_URL}/estilo/${slug}.html`;
+    const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/sitemap.xml`;
+    const res = await fetch(url, {headers:{Authorization:`Bearer ${GH_TOKEN}`}});
+    if (!res.ok) return;
+    const fileData = await res.json();
+    let xml = decodeURIComponent(escape(atob(fileData.content)));
+    const escLoc = loc.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const blockRegex = new RegExp(`\\s*<url>\\s*<loc>${escLoc}</loc>[\\s\\S]*?</url>`);
+    if (!blockRegex.test(xml)) return;
+    xml = xml.replace(blockRegex, '');
+    const newContent = btoa(unescape(encodeURIComponent(xml)));
+    const body = { message: `Remove entrada de sitemap (estilo: ${style})`, content: newContent, branch: BRANCH, sha: fileData.sha };
+    await fetch(url, { method:'PUT', headers:{Authorization:`Bearer ${GH_TOKEN}`,'Content-Type':'application/json'}, body: JSON.stringify(body) });
   }
 
   // ── RENDER ──
