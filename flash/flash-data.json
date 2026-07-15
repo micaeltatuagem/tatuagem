@@ -5532,9 +5532,14 @@
     "title": "Rosto Mulher",
     "altText": "Tatuagem flash de rosto mulher. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Old School",
+      "BlackWork",
+      "Pin-Up"
+    ],
     "showInDecor": true,
-    "date": "2026-07-04"
+    "date": "2026-07-04",
+    "draft": false
   },
   {
     "id": 191,
