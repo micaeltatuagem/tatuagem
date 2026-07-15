@@ -5061,9 +5061,14 @@
     "title": "Pin Up Techno Dont Stop",
     "altText": "Tatuagem flash de pin up techno dont stop. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pin-Up"
+    ],
     "showInDecor": true,
-    "date": "2026-07-04"
+    "date": "2026-07-04",
+    "draft": false
   },
   {
     "id": 146,
