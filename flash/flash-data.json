@@ -6520,9 +6520,12 @@
     "description": "",
     "date": "2025-01-01",
     "styles": [
-      "Old School"
+      "Old School",
+      "BlackWork",
+      "Pin-Up"
     ],
-    "showInDecor": true
+    "showInDecor": true,
+    "draft": false
   },
   {
     "id": 34,
