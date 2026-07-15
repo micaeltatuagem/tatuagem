@@ -169,9 +169,14 @@
 
     /* ── GALLERY CONTAINER ── */
     .gallery-section {
-      padding: 5rem 2rem;
+      padding: 5rem 0;
+    }
+    .gallery-section-inner {
       max-width: 1400px;
       margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 1;
     }
 
     .gallery-intro {
@@ -634,7 +639,11 @@
       }
 
       .gallery-section {
-        padding: 3rem 1rem;
+        padding: 3rem 0;
+      }
+
+      .gallery-section-inner {
+        padding: 0 1rem;
       }
 
       .gallery-grid {
@@ -840,6 +849,7 @@
 
 <!-- ── GALLERY SECTION ── -->
 <section class="gallery-section">
+<div class="gallery-section-inner">
   <div class="gallery-intro fade-in">
     <p class="gallery-intro-label" style="font-family:var(--font-body,Georgia,serif);font-style:normal;color:rgba(212,201,176,0.55);letter-spacing:0.18em;font-size:0.75rem;text-transform:uppercase;font-weight:600;">Portfólio</p>
     <p class="gallery-intro-text">
@@ -892,6 +902,7 @@
       </figure>
     </div>
   </noscript>
+</div>
 </section>
 
 <!-- ── CTA SECTION ── -->
