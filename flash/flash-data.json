@@ -3447,9 +3447,12 @@
     "title": "Pinup 11",
     "altText": "Tatuagem flash de pinup 11. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Pin-Up"
+    ],
     "showInDecor": true,
-    "date": "2026-07-06"
+    "date": "2026-07-06",
+    "draft": false
   },
   {
     "id": 410,
