@@ -173,6 +173,16 @@
   .gallery-strip.expanded{
     max-height:48vh;
   }
+  .gallery-strip.expanded .flash-grid{
+    flex-wrap:wrap;
+    overflow-x:hidden;
+    overflow-y:auto;
+    align-content:flex-start;
+  }
+  .gallery-strip.expanded .flash-grid .flash-item,
+  .gallery-strip.expanded .flash-grid .upload-flash{
+    width:calc(25% - 8px);
+  }
   .gallery-expand-handle{
     position:absolute; top:-14px; left:50%; transform:translateX(-50%);
     width:44px; height:14px;
@@ -215,7 +225,8 @@
       margin-left:4px;
     }
     .gallery-expand-handle{ display:none; }
-    .flash-grid{
+    .app-shell .style-filter-row{ display:flex; }
+    .app-shell .flash-grid{
       flex-wrap:wrap;
       overflow-x:hidden;
       overflow-y:auto;
@@ -294,6 +305,25 @@
   .flash-source-row{
     display:flex; gap:6px; margin-bottom:14px;
   }
+  .style-filter-row{
+    display:none;
+    gap:6px; overflow-x:auto; overflow-y:hidden;
+    padding-bottom:6px; margin-bottom:10px; flex-shrink:0;
+  }
+  .gallery-strip.expanded .style-filter-row{
+    display:flex;
+  }
+  .style-filter-row::-webkit-scrollbar{height:4px;}
+  .style-filter-row::-webkit-scrollbar-thumb{background:#b9ac8c;border-radius:3px;}
+  .style-chip{
+    flex-shrink:0;
+    font-family:'Oswald',sans-serif; font-size:10px; letter-spacing:.05em; text-transform:uppercase;
+    padding:5px 11px; border-radius:999px; border:1px solid #b9ac8c;
+    background:#fbf8f1; color:#6b6250; cursor:pointer; white-space:nowrap;
+    transition:background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .style-chip:hover{ border-color:var(--crimson); color:var(--crimson); }
+  .style-chip.active{ background:#1b1710; border-color:#1b1710; color:var(--paper); }
   .flash-source-row input{
     flex:1;
     font-family:'Inter',sans-serif;
@@ -992,6 +1022,8 @@
       <input id="searchFlash" type="text" placeholder="Buscar flash (ex: águia, caveira, rosa)">
     </div>
 
+    <div class="style-filter-row" id="styleFilterRow"></div>
+
     <details style="margin-bottom:12px;">
       <summary style="font-family:'Oswald',sans-serif; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#8a7f66; cursor:pointer;">Carregar de outra fonte (avançado)</summary>
       <div class="flash-source-row" style="margin-top:8px;">
@@ -1396,18 +1428,62 @@
   // Lista de flashs carregada dinamicamente do catalogo real (flash/flash-data.json),
   // assim ela nunca fica desatualizada conforme voce adiciona/edita flashs pelo painel.
   let allFlashes = [];
+  let allStyles = [];
+  let activeStyleFilter = 'all';
+
+  async function loadStylesFromRepo(){
+    try {
+      const res = await fetch(`flash/tags.json?t=${Date.now()}`, { cache: 'no-store' });
+      allStyles = await res.json();
+    } catch (err) {
+      console.warn('Nao foi possivel carregar flash/tags.json:', err.message);
+      allStyles = [];
+    }
+    renderStyleFilters();
+  }
+
+  function renderStyleFilters(){
+    const row = document.getElementById('styleFilterRow');
+    if(!row) return;
+    const all = ['all', ...allStyles];
+    row.innerHTML = all.map(s => {
+      const label = s === 'all' ? 'Todos' : s;
+      const active = s === activeStyleFilter ? ' active' : '';
+      return `<button type="button" class="style-chip${active}" data-style="${s.replace(/"/g,'&quot;')}">${label}</button>`;
+    }).join('');
+    row.querySelectorAll('.style-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeStyleFilter = btn.dataset.style;
+        row.querySelectorAll('.style-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        applyFlashFilters();
+      });
+    });
+  }
+
+  function applyFlashFilters(){
+    const q = searchFlash.value.trim().toLowerCase();
+    let filtered = allFlashes;
+    if(activeStyleFilter !== 'all'){
+      filtered = filtered.filter(it => (it.styles||[]).includes(activeStyleFilter));
+    }
+    if(q){
+      filtered = filtered.filter(it => it.nome.toLowerCase().includes(q));
+    }
+    renderFlashes(filtered);
+  }
 
   async function loadFlashesFromRepo(){
     try {
       const res = await fetch(`flash/flash-data.json?t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       // itens com draft:true ainda estão sendo revisados no painel admin e não aparecem aqui
-      allFlashes = data.filter(it => !it.draft).map(it => ({ src: it.imageUrl, nome: it.title }));
+      allFlashes = data.filter(it => !it.draft).map(it => ({ src: it.imageUrl, nome: it.title, styles: it.styles || [] }));
     } catch (err) {
       console.warn('Nao foi possivel carregar flash/flash-data.json:', err.message);
       allFlashes = [];
     }
-    renderFlashes(allFlashes);
+    applyFlashFilters();
   }
 
 
@@ -2133,11 +2209,7 @@
 
 
   const searchFlash = document.getElementById('searchFlash');
-  searchFlash.addEventListener('input', () => {
-    const q = searchFlash.value.trim().toLowerCase();
-    const filtered = q ? allFlashes.filter(it => it.nome.toLowerCase().includes(q)) : allFlashes;
-    renderFlashes(filtered);
-  });
+  searchFlash.addEventListener('input', applyFlashFilters);
 
   // ---------- atalhos de teclado ----------
   function isTypingTarget(el){
@@ -2180,6 +2252,7 @@
 
   // init
   loadFlashesFromRepo();
+  loadStylesFromRepo();
   [opacityRange, blendMode, scaleRange, rotRange, flipBtn, deleteSelectedBtn].forEach(c => c.disabled = true);
 })();
 </script>
