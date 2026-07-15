@@ -43,7 +43,7 @@
     "altText": "Tatuagem flash de micro flash 8. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
     "styles": [],
-    "showInDecor": true,
+    "showInDecor": false,
     "date": "2026-07-15",
     "draft": true
   },
@@ -103,7 +103,7 @@
     "altText": "Tatuagem flash de micro flash 3. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
     "styles": [],
-    "showInDecor": true,
+    "showInDecor": false,
     "date": "2026-07-15",
     "draft": true
   },
