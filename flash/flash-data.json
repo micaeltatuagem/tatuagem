@@ -3582,9 +3582,14 @@
     "title": "Sereia 5",
     "altText": "Tatuagem flash de sereia 5. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Old School",
+      "Náutico",
+      "Pin-Up"
+    ],
     "showInDecor": true,
-    "date": "2026-07-06"
+    "date": "2026-07-06",
+    "draft": false
   },
   {
     "id": 355,
