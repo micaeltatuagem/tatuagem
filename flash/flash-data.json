@@ -5034,9 +5034,14 @@
     "title": "Pin Up Basquete",
     "altText": "Tatuagem flash de pin up basquete. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pin-Up"
+    ],
     "showInDecor": true,
-    "date": "2026-07-04"
+    "date": "2026-07-04",
+    "draft": false
   },
   {
     "id": 144,
