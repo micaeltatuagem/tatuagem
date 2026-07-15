@@ -3747,10 +3747,13 @@
     "altText": "Tatuagem flash de pin up 9. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
     "styles": [
-      "Old School"
+      "Old School",
+      "BlackWork",
+      "Pin-Up"
     ],
     "showInDecor": true,
-    "date": "2026-07-06"
+    "date": "2026-07-06",
+    "draft": false
   },
   {
     "id": 347,
