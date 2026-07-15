@@ -3804,9 +3804,14 @@
     "title": "Pinup 7",
     "altText": "Tatuagem flash de pinup 7. Disponível no Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Old School",
+      "BlackWork",
+      "Pin-Up"
+    ],
     "showInDecor": true,
-    "date": "2026-07-05"
+    "date": "2026-07-05",
+    "draft": false
   },
   {
     "id": 317,
