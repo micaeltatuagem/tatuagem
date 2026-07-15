@@ -7055,9 +7055,13 @@
     "description": "",
     "date": "2025-01-01",
     "styles": [
-      "Old School"
+      "Old School",
+      "Náutico",
+      "BlackWork",
+      "Pin-Up"
     ],
-    "showInDecor": true
+    "showInDecor": true,
+    "draft": false
   },
   {
     "id": 73,
