@@ -133,6 +133,17 @@
 
     .flash-section { padding: 2.5rem 0 3rem; }
     .flash-section-inner { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; position: relative; z-index: 1; }
+
+    .content-panel {
+      position: relative;
+      z-index: 1;
+      background: rgba(10,10,10,0.62);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(212,201,176,0.08);
+      border-radius: 4px;
+      padding: 1.75rem 2rem;
+    }
     .flash-intro { text-align: center; max-width: 640px; margin: 0 auto 2.2rem; color: var(--muted); font-size: 0.98rem; }
     .flash-intro a { color: var(--bone); }
 
@@ -499,6 +510,7 @@
 
 <section class="flash-section">
 <div class="flash-section-inner">
+  <div class="content-panel">
   <p class="flash-intro">
     Desenhos prontos, disponíveis para fazer na hora ou servir de inspiração para um trabalho original.
     Escolheu um? Chama no <a href="https://wa.me/5532999666946?text=Ol%C3%A1.+Vi+um+flash+no+site+e+quero+agendar" target="_blank" rel="noopener" onclick="gtag('event','click_whatsapp',{event_category:'cta',event_label:'flash'})">WhatsApp</a> com o nome do desenho.
@@ -604,6 +616,7 @@
       <span class="filter-count">11 desenhos</span>
     </div>
 <!-- FLASH_FILTERS_END -->
+  </div>
   </div>
 
   <p class="style-description" id="styleDescription"></p>
