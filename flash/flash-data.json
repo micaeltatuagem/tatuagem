@@ -198,11 +198,15 @@
     "imageUrl": "flash/schopenhauer-1784166295809-12.webp",
     "title": "Schopenhauer",
     "altText": "Tatuagem flash de schopenhauer. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Schopenhauer, filósofo alemão que via a vontade como força cega por trás de toda existência, e o sofrimento como sua consequência inevitável. Traço em blackwork, marcando a severidade de quem enxergou no pessimismo uma forma de lucidez. Agende sua sessão com o Micael pelo WhatsApp",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 622,
