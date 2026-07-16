@@ -179,6 +179,17 @@
       z-index: 1;
     }
 
+    .content-panel {
+      position: relative;
+      z-index: 1;
+      background: rgba(10,10,10,0.62);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(212,201,176,0.08);
+      border-radius: 4px;
+      padding: 1.75rem 2rem;
+    }
+
     .gallery-intro {
       text-align: center;
       margin-bottom: 4rem;
@@ -850,11 +861,13 @@
 <!-- ── GALLERY SECTION ── -->
 <section class="gallery-section">
 <div class="gallery-section-inner">
+  <div class="content-panel">
   <div class="gallery-intro fade-in">
     <p class="gallery-intro-label" style="font-family:var(--font-body,Georgia,serif);font-style:normal;color:rgba(212,201,176,0.55);letter-spacing:0.18em;font-size:0.75rem;text-transform:uppercase;font-weight:600;">Portfólio</p>
     <p class="gallery-intro-text">
       Clique em qualquer obra para visualizar em detalhes
     </p>
+  </div>
   </div>
 
   <!-- ── FILTERS ── -->
