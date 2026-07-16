@@ -814,6 +814,13 @@
     </div>
 
     <div class="field">
+      <label for="idade">Idade <span class="req">*</span></label>
+      <input type="number" id="idade" placeholder="Sua idade" min="1" max="120" inputmode="numeric" autocomplete="off" />
+      <p class="hint">Atendimento disponível apenas para maiores de 18 anos.</p>
+      <p class="hint" id="idade-aviso" style="display:none; color:var(--error);"></p>
+    </div>
+
+    <div class="field">
       <label for="whatsapp">WhatsApp <span class="req">*</span></label>
       <input type="tel" id="whatsapp" placeholder="(32) 99999-9999" autocomplete="tel" />
       <p class="hint">Será o seu identificador único no sistema.</p>
@@ -1042,9 +1049,28 @@
     }
   });
 
-  // ── Habilitar botão quando aceite marcado ────────────────────
-  document.getElementById('aceite').addEventListener('change', function () {
-    document.getElementById('btn-submit').disabled = !this.checked;
+  // ── Habilitar botão apenas com aceite marcado E idade valida (18+) ──
+  function atualizarBotaoSubmit() {
+    const aceite = document.getElementById('aceite').checked;
+    const idadeVal = document.getElementById('idade').value.trim();
+    const idade = parseInt(idadeVal, 10);
+    const idadeOk = idadeVal && !isNaN(idade) && idade >= 18;
+    document.getElementById('btn-submit').disabled = !(aceite && idadeOk);
+  }
+
+  document.getElementById('aceite').addEventListener('change', atualizarBotaoSubmit);
+
+  document.getElementById('idade').addEventListener('input', function () {
+    const idadeVal = this.value.trim();
+    const idade = parseInt(idadeVal, 10);
+    const avisoEl = document.getElementById('idade-aviso');
+    if (idadeVal && !isNaN(idade) && idade > 0 && idade < 18) {
+      avisoEl.textContent = 'Atendimento disponível apenas para maiores de 18 anos.';
+      avisoEl.style.display = 'block';
+    } else {
+      avisoEl.style.display = 'none';
+    }
+    atualizarBotaoSubmit();
   });
 
   // ── Submit ───────────────────────────────────────────────────
@@ -1052,6 +1078,8 @@
     limparErro();
 
     const nome     = document.getElementById('nome').value.trim();
+    const idadeVal = document.getElementById('idade').value.trim();
+    const idade    = parseInt(idadeVal, 10);
     const whatsapp = formatarWhats(document.getElementById('whatsapp').value);
     const email    = document.getElementById('email').value.trim() || null;
     const canal    = document.getElementById('canal').value;
@@ -1059,6 +1087,8 @@
 
     // Validações básicas
     if (!nome) return mostrarErro('Preencha o nome completo.');
+    if (!idadeVal || isNaN(idade) || idade < 1) return mostrarErro('Preencha sua idade.');
+    if (idade < 18) return mostrarErro('Atendimento disponível apenas para maiores de 18 anos. Não é possível concluir o cadastro para menores de idade.');
     if (whatsapp.length < 10) return mostrarErro('WhatsApp inválido.');
     if (!canal) return mostrarErro('Diga como conheceu o Micael.');
     if (canal === 'indicacao' && codInput && !codigoValido) {
