@@ -184,11 +184,15 @@
     "imageUrl": "flash/al-farabi-1784209174108-12.webp",
     "title": "Al Farabi",
     "altText": "Tatuagem flash de al farabi. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Al-Farabi, filósofo persa conhecido como o segundo mestre depois de Aristóteles, que uniu a filosofia grega à política e à metafísica islâmica. Traço em blackwork, com o padrão geométrico ao fundo marcando a tradição islâmica que atravessa seu pensamento. Agende sua sessão com o Micael pelo WhatsApp.\"",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 640,
