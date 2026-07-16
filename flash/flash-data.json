@@ -312,11 +312,15 @@
     "imageUrl": "flash/marco-aurelio-1784209208780-20.webp",
     "title": "Marco Aurelio",
     "altText": "Tatuagem flash de marco aurelio. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Marco Aurélio, imperador e filósofo estoico, autor de Meditações, um diário íntimo sobre a virtude e a aceitação do destino. Traço em blackwork, com a coluna e o laurel marcando o poder que ele soube exercer com moderação e disciplina. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 648,
