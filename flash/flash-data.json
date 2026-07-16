@@ -37,11 +37,15 @@
     "imageUrl": "flash/chanakia-1784166279565-2.webp",
     "title": "Chanakia",
     "altText": "Tatuagem flash de chanakia. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Chanakya, filósofo e estrategista indiano, autor do Arthashastra e mentor por trás da fundação do império Máuria. Traço em blackwork com toques neotrad, unindo a austeridade do sábio à arquitetura que carrega sua tradição. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 612,
