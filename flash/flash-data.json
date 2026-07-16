@@ -508,11 +508,17 @@
     "imageUrl": "flash/buda-3-1784049348918-5.webp",
     "title": "Buda 3",
     "altText": "Tatuagem flash de buda 3. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Buda, representado em serenidade absoluta, símbolo do despertar e do fim do sofrimento pelo desapego. Traço em blackwork com toques neotrad, marcando a paz de quem alcançou o meio do caminho entre o excesso e a renúncia. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Religioso",
+      "Budista",
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-14",
-    "draft": true
+    "draft": false
   },
   {
     "id": 588,
