@@ -101,11 +101,15 @@
     "imageUrl": "flash/leibniz-1784209160100-7.webp",
     "title": "Leibniz",
     "altText": "Tatuagem flash de leibniz. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Leibniz, filósofo e matemático alemão que via o universo como o melhor dos mundos possíveis, cada existência regida por uma razão suficiente. Traço em blackwork, com a coluna ao fundo marcando o pensador que dividiu com Newton a invenção do cálculo. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 635,
