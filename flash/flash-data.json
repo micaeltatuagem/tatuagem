@@ -248,11 +248,15 @@
     "imageUrl": "flash/platao-1784209192100-16.webp",
     "title": "Platao",
     "altText": "Tatuagem flash de platao. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Platão, filósofo grego que via a realidade sensível como sombra de um mundo de formas perfeitas e imutáveis. Traço em blackwork, marcando a serenidade de quem fundou a Academia e moldou toda a filosofia ocidental depois dele. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 644,
