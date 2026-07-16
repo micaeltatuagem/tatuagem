@@ -804,6 +804,18 @@
       .sobre-compare img { height: auto; }
     }
 
+    /* ── Painel de conteudo padrao: separa texto do flash decorativo de fundo ── */
+    .content-panel {
+      position: relative;
+      z-index: 1;
+      background: rgba(10,10,10,0.62);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(212,201,176,0.08);
+      border-radius: 4px;
+      padding: 1.75rem 2rem;
+    }
+
   </style>
 </head>
 <body>
@@ -871,8 +883,10 @@
           <figcaption>Tatuagem</figcaption>
         </figure>
       </div>
+      <div class="content-panel">
       <p>Todo desenho vem de algum lugar. Aquelas mãos em oração que todo mundo tatua são de Albrecht Dürer, desenhadas em homenagem ao seu irmão que trabalhou nas minas de carvão para pagar seus estudos. Pesquisar a origem de uma referência é entender quem fez, como e por quê, e é isso que transforma uma releitura em um trabalho original.</p>
         <p>Quase três décadas dedicadas à tatuagem e à pesquisa de símbolos religiosos, espirituais e mitológicos. Atendimento privativo, agenda limitada, no estúdio em Muriaé-MG — recebendo clientes de toda a Zona da Mata mineira (Ubá, Cataguases, Leopoldina, Carangola, Ponte Nova, Viçosa e Juiz de Fora). Uma conversa sem compromisso para começar.</p>
+      </div>
       </div>
       <div class="pilares">
         <div class="pilar">
@@ -948,6 +962,7 @@
   <div class="inner">
     <p class="eyebrow">Perguntas Frequentes</p>
     <h2>Dúvidas comuns</h2>
+    <div class="content-panel">
     <div class="faq-list">
 
       <div class="faq-item">
@@ -990,6 +1005,7 @@
         <div class="faq-a">O portfólio completo está disponível na <a href="galeria.html">galeria do site</a> e também no <a href="https://instagram.com/micaeltatuagem" target="_blank" rel="noopener">Instagram</a>.</div>
       </div>
 
+    </div>
     </div>
   </div>
 </section>
