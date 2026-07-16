@@ -69,11 +69,15 @@
     "imageUrl": "flash/mozi-1784166282956-4.webp",
     "title": "Mozi",
     "altText": "Tatuagem flash de mozi. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Mozi, filósofo chinês fundador do moísmo, defensor do amor universal (jian'ai), a ideia de que o cuidado deve se estender a todos sem distinção de família, clã ou nação. Traço em blackwork, marcando a serenidade de quem propôs uma ética prática contra os privilégios do seu tempo. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 614,
