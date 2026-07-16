@@ -5,14 +5,15 @@
     "imageUrl": "flash/sun-tzu-1784211375906.webp",
     "title": "Sun Tzu",
     "altText": "Tatuagem flash de sun tzu. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
+    "description": "Sun Tzu, estrategista chinês autor de A Arte da Guerra, obra que transformou a guerra em pensamento e a estratégia em filosofia. Traço em blackwork, marcando o pensador cujos princípios atravessaram séculos e hoje se aplicam muito além dos campos de batalha. Agende sua sessão com o Micael pelo WhatsApp.",
     "styles": [
       "NeoTrad",
       "BlackWork",
       "Pensadores"
     ],
     "showInDecor": true,
-    "date": "2026-07-16"
+    "date": "2026-07-16",
+    "draft": false
   },
   {
     "id": 627,
