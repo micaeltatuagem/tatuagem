@@ -101,11 +101,15 @@
     "imageUrl": "flash/rousseau-1784166286106-6.webp",
     "title": "Rousseau",
     "altText": "Tatuagem flash de rousseau. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Rousseau, filósofo iluminista que via o homem como naturalmente bom, corrompido pela sociedade e pela propriedade. Traço em blackwork, com a pena marcando o pensador por trás do Contrato Social e de uma nova ideia de liberdade. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 616,
