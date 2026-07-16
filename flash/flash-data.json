@@ -150,11 +150,15 @@
     "imageUrl": "flash/ibn-bajjah-1784166291001-9.webp",
     "title": "Ibn Bajjah",
     "altText": "Tatuagem flash de ibn bajjah. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Ibn Bajjah, filósofo andaluz que defendia a possibilidade do homem alcançar a perfeição pela razão, mesmo isolado numa sociedade imperfeita. Traço em blackwork, com o padrão geométrico ao fundo marcando sua origem na tradição islâmica ibérica. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 619,
