@@ -262,11 +262,15 @@
     "imageUrl": "flash/ibn-rushd-1784166302599-16.webp",
     "title": "Ibn Rushd",
     "altText": "Tatuagem flash de ibn rushd. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Ibn Rushd, filósofo andaluz conhecido no Ocidente como Averróis, que defendeu a razão e a filosofia de Aristóteles dentro do pensamento islâmico. Traço em blackwork, com a coluna ao fundo marcando a ponte que ele construiu entre o mundo árabe e a filosofia clássica. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 626,
