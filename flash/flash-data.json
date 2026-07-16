@@ -117,11 +117,15 @@
     "imageUrl": "flash/cicero-1784209163911-8.webp",
     "title": "Cicero",
     "altText": "Tatuagem flash de cicero. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Cícero, filósofo e orador romano que defendeu a lei natural e a república como bases da vida justa. Traço em blackwork, com a coluna ao fundo marcando o pensador que uniu retórica e filosofia na defesa da virtude cívica. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 636,
