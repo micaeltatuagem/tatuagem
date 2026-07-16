@@ -296,11 +296,15 @@
     "imageUrl": "flash/epicteto-1784209203312-19.webp",
     "title": "Epicteto",
     "altText": "Tatuagem flash de epicteto. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Epicteto, filósofo estoico que ensinava a distinguir o que está em nosso controle do que não está, a chave para a liberdade interior. Traço em blackwork, com o fogo marcando a força de quem, mesmo tendo sido escravo, transformou a filosofia em resistência. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 647,
