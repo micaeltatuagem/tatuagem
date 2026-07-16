@@ -166,11 +166,15 @@
     "imageUrl": "flash/thomas-hobbes-1784166292707-10.webp",
     "title": "Thomas Hobbes",
     "altText": "Tatuagem flash de thomas hobbes. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Thomas Hobbes, filósofo inglês que resumiu o estado de natureza na frase homem é o lobo do homem, a guerra de todos contra todos que só o Estado pode conter. Traço em blackwork, marcando a severidade de quem via na ordem, e não na liberdade plena, a condição da paz. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 620,
