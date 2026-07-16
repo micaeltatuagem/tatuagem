@@ -134,11 +134,15 @@
     "imageUrl": "flash/sabedoria-indigena-1784166289222-8.webp",
     "title": "Sabedoria Indigena",
     "altText": "Tatuagem flash de sabedoria indigena. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Sabedoria Indígena, figura que representa os líderes e pajés das tradições nativas, guardiões de um conhecimento ligado à terra e à natureza. Traço em blackwork, com as palmeiras marcando a conexão entre a sabedoria e o território que a sustenta. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 618,
