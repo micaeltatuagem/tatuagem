@@ -182,11 +182,15 @@
     "imageUrl": "flash/thomas-more-1784166294273-11.webp",
     "title": "Thomas More",
     "altText": "Tatuagem flash de thomas more. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Thomas More, filósofo e estadista inglês, autor de Utopia, a visão de uma sociedade ideal que deu nome ao gênero. Traço em blackwork, com a cidade ao fundo marcando o mundo imaginado que o tornou referência do pensamento político. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 621,
