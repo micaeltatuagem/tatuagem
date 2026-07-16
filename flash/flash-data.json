@@ -133,11 +133,15 @@
     "imageUrl": "flash/confucio-1784209166229-9.webp",
     "title": "Confucio",
     "altText": "Tatuagem flash de confucio. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Confúcio, filósofo chinês que via na virtude e no respeito às relações humanas o caminho para a harmonia social. Traço em blackwork, marcando a serenidade de quem moldou por séculos a ética e a educação no Extremo Oriente. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 637,
