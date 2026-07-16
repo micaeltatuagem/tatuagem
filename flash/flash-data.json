@@ -232,11 +232,15 @@
     "imageUrl": "flash/pascal-1784209190102-15.webp",
     "title": "Pascal",
     "altText": "Tatuagem flash de pascal. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Pascal, filósofo e matemático francês que apostou na existência de Deus como escolha racional diante da incerteza, a famosa aposta de Pascal. Traço em blackwork, com os livros ao fundo marcando o pensador que uniu ciência exata e busca espiritual. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 643,
