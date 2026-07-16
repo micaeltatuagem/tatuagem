@@ -21,11 +21,15 @@
     "imageUrl": "flash/al-kindi-1784166277830-1.webp",
     "title": "Al Kindi",
     "altText": "Tatuagem flash de al kindi. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Al-Kindi, filósofo e tradutor, conhecido como o primeiro grande pensador árabe a unir a filosofia grega ao pensamento islâmico. Traço em blackwork com toques neotrad, marcando a solidez da figura e o valor do conhecimento que ele carregava. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 611,
