@@ -214,11 +214,15 @@
     "imageUrl": "flash/spinoza-1784166297514-13.webp",
     "title": "Spinoza",
     "altText": "Tatuagem flash de spinoza. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Spinoza, filósofo racionalista que identificava Deus e a natureza como uma única substância, tudo o que existe sendo expressão dessa mesma realidade. Traço em blackwork, marcando a serenidade de quem via no entendimento racional o caminho para a liberdade. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 623,
