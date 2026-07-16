@@ -344,11 +344,15 @@
     "imageUrl": "flash/nietzche-1784209217722-22.webp",
     "title": "Nietzche",
     "altText": "Tatuagem flash de nietzche. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Nietzsche, filósofo alemão que anunciou a morte de Deus e propôs o super-homem como aquele capaz de criar seus próprios valores. Traço em blackwork, com a pena marcando o pensador que fez da filosofia um ataque direto à moral e à mediocridade do seu tempo. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 650,
