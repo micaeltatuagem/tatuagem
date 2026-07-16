@@ -53,11 +53,15 @@
     "imageUrl": "flash/tomas-de-aquino-1784209151225-4.webp",
     "title": "Tomas De Aquino",
     "altText": "Tatuagem flash de tomas de aquino. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Tomás de Aquino, filósofo e teólogo escolástico que uniu fé e razão, buscando provar a existência de Deus pela lógica de Aristóteles. Traço em blackwork, com a igreja ao fundo marcando a base do pensamento católico que ele sistematizou. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 632,
