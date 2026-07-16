@@ -83,13 +83,17 @@
     "id": 614,
     "filename": "empedocles-1784166284510-5.webp",
     "imageUrl": "flash/empedocles-1784166284510-5.webp",
-    "title": "Empedocles",
+    "title": "Empédocles",
     "altText": "Tatuagem flash de empedocles. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Empédocles, filósofo pré-socrático que explicava o cosmos pela combinação de quatro raízes, terra, água, ar e fogo, movidas pelas forças do Amor e da Discórdia. Traço em blackwork, com a coluna ao fundo marcando sua ligação com o pensamento clássico grego. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 615,
