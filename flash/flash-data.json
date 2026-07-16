@@ -200,11 +200,15 @@
     "imageUrl": "flash/maimonides-1784209185443-13.webp",
     "title": "Maimonides",
     "altText": "Tatuagem flash de maimonides. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Maimônides, filósofo e rabino sefardita que uniu razão e fé judaica, buscando conciliar Aristóteles com a Torá. Traço em blackwork, com a torre ao fundo marcando sua origem na Espanha andaluza, berço do encontro entre culturas. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 641,
