@@ -69,11 +69,15 @@
     "imageUrl": "flash/montaigne-1784209154823-5.webp",
     "title": "Montaigne",
     "altText": "Tatuagem flash de montaigne. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Montaigne, filósofo francês criador do ensaio como forma de pensamento, o que sei eu, a pergunta que guiava sua busca pelo autoconhecimento. Traço em blackwork, com a coluna ao fundo marcando o humanista que preferiu a dúvida honesta às certezas do seu tempo. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 633,
