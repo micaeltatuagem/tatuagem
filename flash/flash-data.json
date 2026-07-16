@@ -264,11 +264,15 @@
     "imageUrl": "flash/socrates-1784209196737-17.webp",
     "title": "Socrates",
     "altText": "Tatuagem flash de socrates. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Sócrates, filósofo grego que dizia só saber que nada sabia, e fazia da pergunta, não da resposta, seu método de ensinar. Traço em blackwork, com a coluna ao fundo marcando o pensador que morreu por defender a filosofia acima de tudo. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 645,
