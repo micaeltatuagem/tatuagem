@@ -37,11 +37,15 @@
     "imageUrl": "flash/pitagoras-1784209146103-2.webp",
     "title": "Pitagoras",
     "altText": "Tatuagem flash de pitagoras. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Pitágoras, filósofo e matemático grego que via nos números a essência de toda a realidade, o cosmos organizado por proporção e harmonia. Traço em blackwork, marcando a serenidade de quem uniu matemática, música e misticismo num só sistema de pensamento. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 631,
