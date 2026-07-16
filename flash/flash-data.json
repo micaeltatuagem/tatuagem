@@ -117,11 +117,16 @@
     "imageUrl": "flash/sabedoria-africana-1784166287698-7.webp",
     "title": "Sabedoria Africana",
     "altText": "Tatuagem flash de sabedoria africana. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Sabedoria Africana, figura que representa os anciãos e sábios das tradições orais do continente, guardiões de conhecimento passado de geração em geração. Traço em blackwork, com o baobá e a cabaça marcando a ligação entre a sabedoria e a terra que a sustenta. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Umbanda",
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 617,
