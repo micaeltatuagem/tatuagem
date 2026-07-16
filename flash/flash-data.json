@@ -246,11 +246,15 @@
     "imageUrl": "flash/voltaire-1784166300806-15.webp",
     "title": "Voltaire",
     "altText": "Tatuagem flash de voltaire. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Voltaire, filósofo iluminista, voz afiada contra a intolerância religiosa e o abuso de poder da Igreja e do Estado. Traço em blackwork, com os livros ao fundo marcando o intelectual que fez da razão e da ironia suas armas. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 625,
