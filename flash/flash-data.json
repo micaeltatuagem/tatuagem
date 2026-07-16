@@ -149,11 +149,15 @@
     "imageUrl": "flash/lucrecio-1784209168704-10.webp",
     "title": "Lucrecio",
     "altText": "Tatuagem flash de lucrecio. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Lucrécio, poeta e filósofo romano que expôs o epicurismo em versos, defendendo um universo feito de átomos e sem intervenção divina. Traço em blackwork, com a coluna ao fundo marcando o autor de Da Natureza das Coisas, obra que atravessou séculos como poesia e ciência. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 638,
