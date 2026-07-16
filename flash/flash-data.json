@@ -326,13 +326,17 @@
     "id": 648,
     "filename": "diogenes-1784209211924-21.webp",
     "imageUrl": "flash/diogenes-1784209211924-21.webp",
-    "title": "Diogenes",
+    "title": "Diógenes",
     "altText": "Tatuagem flash de diogenes. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Diógenes, filósofo cínico que vivia num barril e desafiava as convenções sociais, dizendo buscar um homem honesto com uma lanterna acesa em pleno dia. Traço em blackwork, com os livros ao fundo marcando o pensador que preferiu a liberdade radical a qualquer conforto. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 649,
