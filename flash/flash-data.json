@@ -5,8 +5,12 @@
     "imageUrl": "flash/ibn-sina-1784209141830-0.webp",
     "title": "Ibn Sina",
     "altText": "Tatuagem flash de ibn sina. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Ibn Sina, filósofo e médico persa conhecido no Ocidente como Avicena, autor do Cânone da Medicina e uma das maiores referências da filosofia islâmica. Traço em blackwork, com o ornamento geométrico ao fundo marcando a tradição islâmica que atravessa sua obra. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
     "draft": false
