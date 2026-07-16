@@ -230,11 +230,15 @@
     "imageUrl": "flash/descartes-1784166299187-14.webp",
     "title": "Descartes",
     "altText": "Tatuagem flash de descartes. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Descartes, filósofo racionalista que resumiu sua busca por certeza na frase penso, logo existo, o único ponto de partida que resistia à dúvida. Traço em blackwork, marcando o pensador por trás do modelo cartesiano, que separou mente e corpo e mudou o rumo da filosofia moderna. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 624,
