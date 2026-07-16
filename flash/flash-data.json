@@ -21,11 +21,15 @@
     "imageUrl": "flash/heraclito-1784209143770-1.webp",
     "title": "Heraclito",
     "altText": "Tatuagem flash de heraclito. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Heráclito, filósofo pré-socrático que via o fogo e o fluxo constante como essência da realidade, tudo muda e nada permanece o mesmo. Traço em blackwork, com a coluna ao fundo marcando o pensador que resumiu o mundo na ideia de que ninguém entra duas vezes no mesmo rio. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 629,
