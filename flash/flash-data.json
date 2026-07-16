@@ -85,11 +85,15 @@
     "imageUrl": "flash/kant-1784209157667-6.webp",
     "title": "Kant",
     "altText": "Tatuagem flash de kant. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Kant, filósofo alemão que colocou a razão como juiz de si mesma, e o imperativo categórico como bússola da moral. Traço em blackwork, marcando a rigidez de quem separou o que podemos conhecer do que só podemos pensar. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 634,
