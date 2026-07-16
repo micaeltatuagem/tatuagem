@@ -360,11 +360,15 @@
     "imageUrl": "flash/bertrand-russell-1784209223276-23.webp",
     "title": "Bertrand Russell",
     "altText": "Tatuagem flash de bertrand russell. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Bertrand Russell, filósofo e matemático britânico, coautor dos Principia Mathematica e defensor de uma filosofia fundada na lógica e na clareza racional. Traço em blackwork, marcando o pensador que também foi ativista incansável contra a guerra e pela liberdade de pensamento. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 609,
