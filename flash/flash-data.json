@@ -280,11 +280,15 @@
     "imageUrl": "flash/seneca-1784209200828-18.webp",
     "title": "Seneca",
     "altText": "Tatuagem flash de seneca. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Sêneca, filósofo estoico romano que ensinava a aceitar o que não se pode controlar, e a temer menos a morte do que o tempo mal vivido. Traço em blackwork, com a balança marcando o equilíbrio como base de toda sua filosofia prática. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 646,
