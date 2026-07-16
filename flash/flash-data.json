@@ -165,11 +165,18 @@
     "imageUrl": "flash/nagarjuna-1784209171100-11.webp",
     "title": "Nagarjuna",
     "altText": "Tatuagem flash de nagarjuna. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Nagarjuna, filósofo budista indiano fundador do madhyamaka, a doutrina do meio que via a vacuidade como natureza última de todos os fenômenos. Traço em blackwork, com o símbolo Om marcando sua ligação com a tradição espiritual indiana. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Religioso",
+      "Veda",
+      "Budista",
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 639,
