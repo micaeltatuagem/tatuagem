@@ -278,11 +278,15 @@
     "imageUrl": "flash/maquiavel-1784166304290-17.webp",
     "title": "Maquiavel",
     "altText": "Tatuagem flash de maquiavel. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Maquiavel, filósofo político florentino que separou moral e poder, defendendo que os fins justificam os meios na conquista e manutenção do Estado. Traço em blackwork, com a pena ao fundo marcando o autor de O Príncipe, o mais lido e o mais mal compreendido tratado sobre poder. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 598,
