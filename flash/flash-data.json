@@ -53,11 +53,15 @@
     "imageUrl": "flash/anaxagoras-1784166281280-3.webp",
     "title": "Anaxagoras",
     "altText": "Tatuagem flash de anaxagoras. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Anaxágoras, filósofo pré-socrático que via a mente (nous) como o princípio ordenador do cosmos, aquilo que separa e organiza toda a matéria. Traço em blackwork, com a esfera armilar marcando sua ligação com a astronomia e o estudo do céu. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 613,
