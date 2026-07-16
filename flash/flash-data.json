@@ -5,11 +5,15 @@
     "imageUrl": "flash/zhuangzi-1784166276216-0.webp",
     "title": "Zhuangzi",
     "altText": "Tatuagem flash de zhuangzi. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Zhuangzi, filósofo taoísta, representado com a borboleta do seu sonho, a dúvida entre ser uma borboleta sonhando que era homem, ou um homem sonhando que era borboleta. Traço em blackwork, com contraste entre a solidez da figura e a leveza do detalhe que a acompanha. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-16",
-    "draft": true
+    "draft": false
   },
   {
     "id": 610,
