@@ -405,19 +405,25 @@
       background: var(--surface);
       padding: 1.8rem 1.4rem;
     }
-    .etapa-num {
-      font-family: var(--font-ui);
-      font-size: .82rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--accent-dim);
-      margin-bottom: .8rem;
+    .etapa-icon {
+      color: var(--accent);
+      margin-bottom: 1rem;
     }
+    .etapa-icon svg { width: 26px; height: 26px; display: block; }
     .etapa-titulo {
       font-size: 1.1rem;
       font-weight: bold;
       color: var(--ink);
       margin-bottom: .6rem;
+    }
+    .etapa-titulo a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color .2s ease;
+    }
+    .etapa-titulo a:hover {
+      border-color: var(--ink-muted);
     }
     .etapa p {
       font-family: var(--font-ui);
@@ -893,7 +899,7 @@
       <div class="pilares">
         <div class="pilar">
           <div class="pilar-titulo">Escuta</div>
-          <p>A consulta antecede qualquer rascunho. O projeto é construído a partir das referências trazidas por você.</p>
+          <p>A consulta antecede qualquer rascunho. O projeto é construído a partir das referências escolhidas por você.</p>
         </div>
         <div class="pilar">
           <div class="pilar-titulo">Técnica</div>
@@ -912,7 +918,38 @@
 
     <div class="content-panel sobre-texto-full">
       <p>Todo desenho vem de algum lugar. Aquelas mãos em oração que todo mundo tatua são de Albrecht Dürer, desenhadas em homenagem ao seu irmão que trabalhou nas minas de carvão para pagar seus estudos. Pesquisar a origem de uma referência é entender quem fez, como e por quê, e é isso que transforma uma releitura em um trabalho original.</p>
-      <p>Quase três décadas dedicadas à tatuagem e à pesquisa de símbolos religiosos, espirituais e mitológicos. Atendimento privativo, agenda limitada, no estúdio em Muriaé-MG. Uma conversa sem compromisso para começar.</p>
+      <p>Quase três décadas dedicadas à tatuagem e à pesquisa de símbolos religiosos, espirituais e mitológicos. Atendimento privativo, ambiente controlado, sem pressa de agenda. O estúdio fica pertinho, no topo do João XXIII, em Muriaé-MG. Venha visitar e fazer sua tatuagem.</p>
+      <p>Somente materiais de primeira linha, para que sua tatuagem seja motivo de orgulho por muitos anos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Processo ──────────────────────────────────────────────── -->
+<section id="processo">
+  <div class="inner">
+    <p class="eyebrow">No site</p>
+    <h2>Por onde começar</h2>
+    <div class="etapas">
+      <div class="etapa">
+        <div class="etapa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="1.5"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 16l-5-5-4 4-3-3-4 4"/></svg></div>
+        <div class="etapa-titulo"><a href="galeria.html">Galeria</a></div>
+        <p>Sessões finalizadas, pra ver o traço e o acabamento antes de decidir.</p>
+      </div>
+      <div class="etapa">
+        <div class="etapa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <div class="etapa-titulo"><a href="flash.html">Flash</a></div>
+        <p>Mais de 600 desenhos prontos, cada um com sua história. Cresce todo dia.</p>
+      </div>
+      <div class="etapa">
+        <div class="etapa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
+        <div class="etapa-titulo"><a href="preview-tatuagem.html">Criar</a></div>
+        <p>Simule a composição na foto do seu corpo antes de fechar a ideia.</p>
+      </div>
+      <div class="etapa">
+        <div class="etapa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/><path d="M9 16l2 2 4-4"/></svg></div>
+        <div class="etapa-titulo"><a href="reserva.html">Reserva</a></div>
+        <p>Já sabe o que quer? Comece o agendamento aqui mesmo.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -931,36 +968,6 @@
       Micael Faccio tatua nos estilos blackwork, dark art, colorido (neo-tradicional) e ornamental,
       em Muriaé-MG. Veja o <a href="galeria.html" style="color:var(--accent);text-decoration:none;">portfólio completo na galeria</a>.
     </p>
-  </div>
-</section>
-
-<!-- ── Processo ──────────────────────────────────────────────── -->
-<section id="processo">
-  <div class="inner">
-    <p class="eyebrow">Processo</p>
-    <h2>Como funciona</h2>
-    <div class="etapas">
-      <div class="etapa">
-        <div class="etapa-num">I</div>
-        <div class="etapa-titulo">Consulta</div>
-        <p>Conversa por mensagem para entender o projeto, o corpo e a intenção. Sem compromisso, sem pressa.</p>
-      </div>
-      <div class="etapa">
-        <div class="etapa-num">II</div>
-        <div class="etapa-titulo">Desenvolvimento</div>
-        <p>Você traz as referências e as ideias. Eu monto um desenho exclusivo pensado para o seu corpo: proporção, movimento e como o traço vai envelhecer na pele.</p>
-      </div>
-      <div class="etapa">
-        <div class="etapa-num">III</div>
-        <div class="etapa-titulo">Sessão</div>
-        <p>Atendimento privativo, ambiente controlado, sem pressa de agenda.</p>
-      </div>
-      <div class="etapa">
-        <div class="etapa-num">IV</div>
-        <div class="etapa-titulo">Protocolo</div>
-        <p>Somente materiais de primeira linha para que sua tatuagem seja motivo de orgulho por muitos anos.</p>
-      </div>
-    </div>
   </div>
 </section>
 
