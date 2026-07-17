@@ -17,11 +17,15 @@
     "imageUrl": "flash/jean-paul-sartre-1784250705559-1.webp",
     "title": "Jean Paul Sartre",
     "altText": "Tatuagem flash de jean paul sartre. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Jean-Paul Sartre, filósofo existencialista francês que via o homem condenado à liberdade, responsável por criar seu próprio sentido num mundo sem essência prévia. Traço em blackwork, com o cachimbo marcando a imagem clássica do intelectual parisiense que ele encarnou. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "NeoTrad",
+      "BlackWork",
+      "Pensadores"
+    ],
     "showInDecor": true,
     "date": "2026-07-17",
-    "draft": true
+    "draft": false
   },
   {
     "id": 654,
