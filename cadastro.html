@@ -37,9 +37,6 @@
   }
   </script>
 
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 
   <style>
     /* ── Tokens ─────────────────────────────────────────────── */
@@ -292,6 +289,32 @@
     .btn-submit:hover  { opacity: 0.9; }
     .btn-submit:active { transform: scale(0.99); }
     .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-cta {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+      background: #7a8c3a;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: var(--radius);
+      font-family: var(--font-ui);
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 1rem;
+      transition: opacity .2s, transform .1s;
+    }
+    .btn-cta:hover  { opacity: 0.9; }
+    .btn-cta:active { transform: scale(0.99); }
+    .cta-note {
+      text-align: center;
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+      margin-top: 1rem;
+    }
 
     /* ── Estados ─────────────────────────────────────────────── */
     .msg-error {
@@ -802,147 +825,19 @@
     </div>
   </div>
 
-  <!-- Formulário -->
+  <!-- CTA para o formulario unico -->
   <div class="form-wrap">
-    <h2>Preencha para participar</h2>
-
-    <div class="msg-error" id="msg-error"></div>
-
-    <div class="field">
-      <label for="nome">Nome completo <span class="req">*</span></label>
-      <input type="text" id="nome" placeholder="Seu nome" autocomplete="name" />
-    </div>
-
-    <div class="field">
-      <label for="idade">Idade <span class="req">*</span></label>
-      <input type="number" id="idade" placeholder="Sua idade" min="1" max="120" inputmode="numeric" autocomplete="off" />
-      <p class="hint">Atendimento disponível apenas para maiores de 18 anos.</p>
-      <p class="hint" id="idade-aviso" style="display:none; color:var(--error);"></p>
-    </div>
-
-    <div class="field">
-      <label for="whatsapp">WhatsApp <span class="req">*</span></label>
-      <input type="tel" id="whatsapp" placeholder="(32) 99999-9999" autocomplete="tel" />
-      <p class="hint">Será o seu identificador único no sistema.</p>
-    </div>
-
-    <div class="field">
-      <label for="email">E-mail <span style="color:var(--ink-faint);font-size:.85em;">(opcional)</span></label>
-      <input type="email" id="email" placeholder="voce@email.com" autocomplete="email" />
-    </div>
-
-    <div class="field">
-      <label for="canal">Como conheceu o Micael? <span class="req">*</span></label>
-      <div class="select-wrap">
-        <select id="canal">
-          <option value="" disabled selected>Selecione</option>
-          <option value="panfleto">Panfleto</option>
-          <option value="instagram">Instagram</option>
-          <option value="indicacao">Indicação de amigo</option>
-          <option value="outro">Outro</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="field" id="campo-codigo">
-      <label for="codigo-indicador">Tem um código de indicação? <span style="color:var(--ink-faint);font-size:.85em;">(opcional)</span></label>
-      <div class="codigo-wrap">
-        <input type="text" id="codigo-indicador" placeholder="MT-XXXX" style="text-transform:uppercase;" />
-        <button type="button" class="btn-verificar" id="btn-verificar">Verificar</button>
-      </div>
-      <p class="codigo-status" id="codigo-status"></p>
-    </div>
-
-    <label class="aceite">
-      <input type="checkbox" id="aceite" />
-      <span>Concordo em receber contatos do Micael Tatuagem via WhatsApp sobre minhas promoções e agendamentos. Meus dados não serão compartilhados com terceiros.</span>
-    </label>
-
-    <button class="btn-submit" id="btn-submit" disabled>Cadastrar e garantir benefícios</button>
-
-    <p class="hint" style="text-align:center; margin-top:1rem;">Após o cadastro você recebe seu código de indicação pessoal.</p>
+    <h2>Como participar</h2>
+    <p style="color:var(--ink-muted); font-family:var(--font-body,Georgia,serif); line-height:1.6; margin-bottom:1.6rem;">
+      O cadastro para os dois benefícios é feito direto no formulário de reserva, junto com
+      sua ideia de tatuagem. Ao final, você recebe seu código de indicação pessoal e as instruções
+      para ativar o desconto de 20%.
+    </p>
+    <a class="btn-cta" href="reserva.html">Preencher e participar →</a>
+    <p class="cta-note">Um único formulário: sua ideia de tatuagem e seus benefícios.</p>
   </div>
 
 </main>
-
-<!-- ── Tela de sucesso ───────────────────────────────────────── -->
-<div id="tela-sucesso">
-  <div class="sucesso-icon">✦</div>
-  <h2>Cadastro confirmado</h2>
-  <p>Você já tem os dois benefícios garantidos.</p>
-
-  <!-- ── Código de indicação em destaque ───────────────────────── -->
-  <div class="codigo-gerado">
-    <div class="label-cod">Seu código de indicação</div>
-    <div class="cod" id="cod-exibido">MT-0000</div>
-  </div>
-
-  <div class="share-section" style="margin-top:0;padding-top:1rem;">
-    <p style="font-family:var(--font-ui);font-size:.9rem;color:var(--ink-muted);line-height:1.6;margin-bottom:1rem;text-align:center;">
-      Guarde este código e compartilhe com amigos.<br>
-      A cada <strong style="color:var(--ink);">5 que tatuarem</strong>, você ganha uma sessão grátis.
-    </p>
-
-    <div class="share-link-box" style="margin-bottom:.8rem;">
-      <span id="share-link-txt">…</span>
-      <button class="btn-copiar" id="btn-copiar-link">Copiar</button>
-    </div>
-
-    <div class="share-btns" style="grid-template-columns:1fr;">
-      <a class="share-btn whats" id="share-whats" href="#" target="_blank">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        Compartilhar no WhatsApp
-      </a>
-      <button class="share-btn native" id="share-native">
-        ↑ Compartilhar via…
-      </button>
-    </div>
-
-    <p class="share-hint" style="margin-top:.8rem;">
-      Cada amigo que <strong style="color:var(--ink);">efetivamente tatuar</strong> conta +1.
-      O Micael confirma manualmente e te avisa quando chegar a 5.
-    </p>
-  </div>
-
-  <!-- ── Como usar o desconto de 20% ──────────────────────────── -->
-  <div class="share-section" style="text-align:left;">
-    <p class="share-label" style="text-align:center;">Como garantir seu desconto de 20%</p>
-
-    <div style="display:flex;flex-direction:column;gap:.9rem;margin-bottom:1.6rem;">
-      <div style="display:flex;gap:.8rem;align-items:flex-start;">
-        <span style="font-family:monospace;font-size:1.1rem;color:var(--accent);min-width:1.6rem;">1.</span>
-        <p style="font-family:var(--font-ui);font-size:.95rem;color:var(--ink-muted);line-height:1.5;">
-          Siga o perfil <strong style="color:var(--ink);">@micaeltatuagem</strong> no Instagram.
-        </p>
-      </div>
-      <div style="display:flex;gap:.8rem;align-items:flex-start;">
-        <span style="font-family:monospace;font-size:1.1rem;color:var(--accent);min-width:1.6rem;">2.</span>
-        <p style="font-family:var(--font-ui);font-size:.95rem;color:var(--ink-muted);line-height:1.5;">
-          Baixe a imagem abaixo e poste no seu <strong style="color:var(--ink);">Stories</strong> marcando <strong style="color:var(--ink);">@micaeltatuagem</strong>.
-        </p>
-      </div>
-      <div style="display:flex;gap:.8rem;align-items:flex-start;">
-        <span style="font-family:monospace;font-size:1.1rem;color:var(--accent);min-width:1.6rem;">3.</span>
-        <p style="font-family:var(--font-ui);font-size:.95rem;color:var(--ink-muted);line-height:1.5;">
-          Assim que eu ver a marcação, envio seu voucher de desconto direto pelo WhatsApp.
-        </p>
-      </div>
-    </div>
-
-    <div class="stories-preview">
-      <img src="arteparapostarInsta.webp" alt="Imagem para postar no Stories" loading="lazy" />
-      <div class="stories-preview-label">Esta é a imagem para postar</div>
-    </div>
-    <a id="btn-baixar-img" href="arteparapostarInsta.webp" download="micael-tatuagem-stories.webp"
-       style="display:flex;align-items:center;justify-content:center;gap:.6rem;
-              width:100%;padding:.9rem;border-radius:4px;
-              background:var(--surface);border:1px solid var(--accent-dim);
-              color:var(--accent);font-family:var(--font-ui);font-size:.95rem;
-              font-weight:600;text-decoration:none;transition:opacity .2s;margin-bottom:1.6rem;">
-      ↓ Baixar imagem para o Stories
-    </a>
-  </div>
-</div>
 
 <div class="skull-base">
   <img src="flash/caveiraDireita.webp"   alt="" loading="lazy" />
@@ -962,288 +857,6 @@
   </a>
 </footer>
 
-<!-- ── Scripts ───────────────────────────────────────────────── -->
-<script>
-  // ── Config Supabase ─────────────────────────────────────────
-  // SUBSTITUA pelas suas credenciais
-  const SUPABASE_URL  = 'https://rpgcsejfewltricfsdrd.supabase.co';
-  const SUPABASE_ANON = 'sb_publishable_7LF70sbQS_es_uco138rqw_YfbqnIsa';
-
-  const { createClient } = supabase;
-  const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
-
-  // ── Utilitários ─────────────────────────────────────────────
-  function gerarCodigo() {
-    const n = Math.floor(1000 + Math.random() * 9000);
-    return `MT-${n}`;
-  }
-
-  function formatarWhats(v) {
-    return v.replace(/\D/g, '');
-  }
-
-  function mostrarErro(msg) {
-    const el = document.getElementById('msg-error');
-    el.textContent = msg;
-    el.style.display = 'block';
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-
-  function limparErro() {
-    const el = document.getElementById('msg-error');
-    el.style.display = 'none';
-    el.textContent = '';
-  }
-
-  // ── Máscara WhatsApp ─────────────────────────────────────────
-  document.getElementById('whatsapp').addEventListener('input', function () {
-    let v = this.value.replace(/\D/g, '').slice(0, 11);
-    if (v.length > 10) {
-      v = v.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
-    } else if (v.length > 6) {
-      v = v.replace(/^(\d{2})(\d{4,5})(\d{0,4})$/, '($1) $2-$3');
-    } else if (v.length > 2) {
-      v = v.replace(/^(\d{2})(\d+)$/, '($1) $2');
-    }
-    this.value = v;
-  });
-
-  // ── Mostrar campo código quando "indicação" ──────────────────
-  document.getElementById('canal').addEventListener('change', function () {
-    if (this.value === 'indicacao' && !document.getElementById('codigo-indicador').value) {
-      document.getElementById('codigo-indicador').focus();
-    }
-  });
-
-  // ── Verificar código de indicação ───────────────────────────
-  let codigoValido = false;
-
-  document.getElementById('btn-verificar').addEventListener('click', async function () {
-    const cod = document.getElementById('codigo-indicador').value.trim().toUpperCase();
-    const statusEl = document.getElementById('codigo-status');
-
-    if (!cod) {
-      statusEl.textContent = 'Digite o código antes de verificar.';
-      statusEl.className = 'codigo-status err';
-      return;
-    }
-
-    this.textContent = '...';
-    this.disabled = true;
-
-    const { data, error } = await sb
-      .rpc('verificar_codigo_indicacao', { cod })
-      .maybeSingle();
-
-    this.textContent = 'Verificar';
-    this.disabled = false;
-
-    if (error || !data) {
-      statusEl.textContent = 'Código não encontrado. Confira com quem te indicou.';
-      statusEl.className = 'codigo-status err';
-      codigoValido = false;
-    } else {
-      statusEl.textContent = `✓ Código de ${data.nome} confirmado.`;
-      statusEl.className = 'codigo-status ok';
-      codigoValido = true;
-    }
-  });
-
-  // ── Habilitar botão apenas com aceite marcado E idade valida (18+) ──
-  function atualizarBotaoSubmit() {
-    const aceite = document.getElementById('aceite').checked;
-    const idadeVal = document.getElementById('idade').value.trim();
-    const idade = parseInt(idadeVal, 10);
-    const idadeOk = idadeVal && !isNaN(idade) && idade >= 18;
-    document.getElementById('btn-submit').disabled = !(aceite && idadeOk);
-  }
-
-  document.getElementById('aceite').addEventListener('change', atualizarBotaoSubmit);
-
-  document.getElementById('idade').addEventListener('input', function () {
-    const idadeVal = this.value.trim();
-    const idade = parseInt(idadeVal, 10);
-    const avisoEl = document.getElementById('idade-aviso');
-    if (idadeVal && !isNaN(idade) && idade > 0 && idade < 18) {
-      avisoEl.textContent = 'Atendimento disponível apenas para maiores de 18 anos.';
-      avisoEl.style.display = 'block';
-    } else {
-      avisoEl.style.display = 'none';
-    }
-    atualizarBotaoSubmit();
-  });
-
-  // ── Submit ───────────────────────────────────────────────────
-  document.getElementById('btn-submit').addEventListener('click', async function () {
-    limparErro();
-
-    const nome     = document.getElementById('nome').value.trim();
-    const idadeVal = document.getElementById('idade').value.trim();
-    const idade    = parseInt(idadeVal, 10);
-    const whatsapp = formatarWhats(document.getElementById('whatsapp').value);
-    const email    = document.getElementById('email').value.trim() || null;
-    const canal    = document.getElementById('canal').value;
-    const codInput = document.getElementById('codigo-indicador').value.trim().toUpperCase();
-
-    // Validações básicas
-    if (!nome) return mostrarErro('Preencha o nome completo.');
-    if (!idadeVal || isNaN(idade) || idade < 1) return mostrarErro('Preencha sua idade.');
-    if (idade < 18) return mostrarErro('Atendimento disponível apenas para maiores de 18 anos. Não é possível concluir o cadastro para menores de idade.');
-    if (whatsapp.length < 10) return mostrarErro('WhatsApp inválido.');
-    if (!canal) return mostrarErro('Diga como conheceu o Micael.');
-    if (canal === 'indicacao' && codInput && !codigoValido) {
-      return mostrarErro('Código de indicação inválido. Verifique antes de continuar.');
-    }
-
-    this.disabled = true;
-    this.textContent = 'Cadastrando...';
-
-    // Gerar código único — tenta até encontrar um que não existe
-    let codigo = '';
-    let tentativas = 0;
-    while (!codigo && tentativas < 10) {
-      tentativas++;
-      const candidato = gerarCodigo();
-      const { data: existe } = await sb
-        .rpc('codigo_existe', { cod: candidato });
-      if (!existe) codigo = candidato;
-    }
-
-    if (!codigo) {
-      this.disabled = false;
-      this.textContent = 'Cadastrar e garantir benefícios';
-      return mostrarErro('Erro ao gerar código. Tente novamente.');
-    }
-
-    const payload = {
-      nome,
-      whatsapp,
-      email,
-      codigo_indicacao: codigo,
-      indicado_por: (canal === 'indicacao' && codigoValido && codInput) ? codInput : null,
-      canal,
-    };
-
-    const { error } = await sb.from('clientes_promo').insert([payload]);
-
-    if (error) {
-      this.disabled = false;
-      this.textContent = 'Cadastrar e garantir benefícios';
-      if (error.code === '23505') {
-        // WhatsApp já cadastrado — busca os dados e abre o painel
-        const { data: existente } = await sb
-          .rpc('buscar_cliente_por_whatsapp', { wpp: whatsapp })
-          .maybeSingle();
-        if (existente) {
-          document.getElementById('tela-form').style.display = 'none';
-          mostrarPainel(existente.codigo_indicacao);
-          return;
-        }
-        return mostrarErro('Este WhatsApp já está cadastrado. Se precisar de ajuda, entre em contato.');
-      }
-      return mostrarErro('Erro ao cadastrar. Tente novamente ou entre em contato pelo WhatsApp.');
-    }
-
-    // Sucesso — novo cadastro
-    document.getElementById('tela-form').style.display = 'none';
-    mostrarPainel(codigo);
-  });
-
-  // ── Monta e exibe o painel de indicação ──────────────────────
-  function mostrarPainel(codigo) {
-    const tela = document.getElementById('tela-sucesso');
-    tela.style.display = 'block';
-    document.getElementById('cod-exibido').textContent = codigo;
-
-    const BASE_URL = 'https://micaeltatuagem.com.br/cadastro.html';
-    const shareUrl = `${BASE_URL}?ref=${codigo}`;
-
-    // Mensagem de convite (WhatsApp)
-    const msgWhats = encodeURIComponent(
-      `Ei! Me cadastrei nas promoções do Micael Tatuagem em Muriaé e ganhei 20% de desconto na primeira tattoo. ` +
-      `Você também pode! Se usar meu código *${codigo}* na hora do cadastro, conta pra minha promoção vitalícia. 🖤\n\n` +
-      `👉 ${shareUrl}`
-    );
-
-    // Exibir link de indicação
-    document.getElementById('share-link-txt').textContent = shareUrl;
-
-    // Botão copiar link
-    document.getElementById('btn-copiar-link').addEventListener('click', function () {
-      navigator.clipboard.writeText(shareUrl).then(() => {
-        this.textContent = 'Copiado ✓';
-        this.classList.add('copied');
-        setTimeout(() => { this.textContent = 'Copiar'; this.classList.remove('copied'); }, 2500);
-      }).catch(() => {
-        const ta = document.createElement('textarea');
-        ta.value = shareUrl; document.body.appendChild(ta);
-        ta.select(); document.execCommand('copy');
-        document.body.removeChild(ta);
-        this.textContent = 'Copiado ✓';
-        this.classList.add('copied');
-        setTimeout(() => { this.textContent = 'Copiar'; this.classList.remove('copied'); }, 2500);
-      });
-    });
-
-    // WhatsApp share de indicação (abre próprio WhatsApp do cliente)
-    document.getElementById('share-whats').href = `https://wa.me/?text=${msgWhats}`;
-
-    // Web Share API (nativo do celular)
-    const shareNativeBtn = document.getElementById('share-native');
-    if (navigator.share) {
-      shareNativeBtn.addEventListener('click', () => {
-        navigator.share({
-          title: 'Promoção Micael Tatuagem',
-          text: `Usa meu código ${codigo} e garanta 20% de desconto na primeira tattoo!`,
-          url: shareUrl,
-        }).catch(() => {});
-      });
-    } else {
-      shareNativeBtn.addEventListener('click', function () {
-        navigator.clipboard.writeText(shareUrl).catch(() => {});
-        this.textContent = '✓ Link copiado!';
-        setTimeout(() => { this.textContent = '↑ Compartilhar via…'; }, 2500);
-      });
-    }
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  } // fim mostrarPainel
-
-  // ── Ler ?ref= da URL e pré-preencher código ────────────────
-  (function preencherRef() {
-    const params = new URLSearchParams(window.location.search);
-    const ref = params.get('ref');
-    if (!ref) return;
-    const cod = ref.toUpperCase();
-    // Selecionar "indicação" no canal
-    const select = document.getElementById('canal');
-    select.value = 'indicacao';
-    select.dispatchEvent(new Event('change'));
-    // Preencher o campo de código
-    const input = document.getElementById('codigo-indicador');
-    input.value = cod;
-    // Verificar automaticamente
-    setTimeout(async () => {
-      const statusEl = document.getElementById('codigo-status');
-      const { data, error } = await sb
-        .rpc('verificar_codigo_indicacao', { cod })
-        .maybeSingle();
-      if (!error && data) {
-        statusEl.textContent = `✓ Você foi convidado por ${data.nome}.`;
-        statusEl.className = 'codigo-status ok';
-        codigoValido = true;
-      }
-    }, 800);
-  })();
-
-  // ── Máscara código (uppercase automático) ───────────────────
-  document.getElementById('codigo-indicador').addEventListener('input', function () {
-    this.value = this.value.toUpperCase();
-    codigoValido = false;
-    document.getElementById('codigo-status').textContent = '';
-    document.getElementById('codigo-status').className = 'codigo-status';
-  });
-</script>
 
 
 
