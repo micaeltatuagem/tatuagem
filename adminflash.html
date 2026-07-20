@@ -1427,6 +1427,12 @@
   // link fica com a imagem generica ate a proxima tentativa.
   async function commitShareCard(item) {
     const slug = item.slug || slugify(item.title);
+    // Usa a descricao rica escrita a mao quando existir (melhor pro preview de link e pra
+    // buscadores/IA entenderem a peca especifica); cai pro alt-text generico so se ainda
+    // nao tiver descricao preenchida.
+    const shareDesc = (item.description && item.description.trim())
+      ? item.description.trim().slice(0, 200)
+      : item.altText;
     const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -1436,14 +1442,14 @@
 <meta name="robots" content="noindex, follow">
 <meta property="og:type" content="website">
 <meta property="og:title" content="${escapeHtml(item.title)} · Flash disponível · Micael Tatuagem">
-<meta property="og:description" content="${escapeHtml(item.altText)}">
+<meta property="og:description" content="${escapeHtml(shareDesc)}">
 <meta property="og:image" content="${SITE_URL}/${item.imageUrl}">
 <meta property="og:url" content="${SITE_URL}/f/${item.id}-${slug}.html">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Micael Tatuagem">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${escapeHtml(item.title)} · Micael Tatuagem">
-<meta name="twitter:description" content="${escapeHtml(item.altText)}">
+<meta name="twitter:description" content="${escapeHtml(shareDesc)}">
 <meta name="twitter:image" content="${SITE_URL}/${item.imageUrl}">
 <link rel="canonical" href="${SITE_URL}/flash.html?flash=${item.id}-${slug}">
 <meta http-equiv="refresh" content="0; url=${SITE_URL}/flash.html?flash=${item.id}-${slug}">
@@ -1483,11 +1489,16 @@
     const firstImageIdx = block.indexOf('<image:image>');
     const header = firstImageIdx !== -1 ? block.slice(0, firstImageIdx) : block;
 
-    const imagesXml = gallery.map(it => `      <image:image>
+    const imagesXml = gallery.map(it => {
+      const caption = (it.description && it.description.trim())
+        ? it.description.trim().slice(0, 150)
+        : (it.altText || it.title);
+      return `      <image:image>
         <image:loc>https://micaeltatuagem.com.br/${it.imageUrl}</image:loc>
         <image:title>Tatuagem Flash ${escapeHtml(it.title)}</image:title>
-        <image:caption>${escapeHtml(it.altText || it.title)}</image:caption>
-      </image:image>`).join('\n');
+        <image:caption>${escapeHtml(caption)}</image:caption>
+      </image:image>`;
+    }).join('\n');
 
     const newBlock = header + imagesXml + '\n  ';
     xml = xml.slice(0, startIdx) + newBlock + xml.slice(blockEndIdx);
