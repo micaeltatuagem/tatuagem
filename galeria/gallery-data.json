@@ -1,544 +1,624 @@
 [
-  {
-    "id": 46,
-    "filename": "1783100126046-tribal-organico.png",
-    "imageUrl": "galeria/1783100126046-tribal-organico.png",
-    "title": "Tribal orgânico",
-    "altText": "tribal organico",
-    "description": "",
-    "styles": [
-      "Organica"
-    ],
-    "date": "2026-07-03"
-  },
-  {
-    "id": 1,
-    "filename": "JimPhillipsSkaterGirl.webp",
-    "imageUrl": "galeria/JimPhillipsSkaterGirl.webp",
-    "title": "Jim Phillips — Skater Girl",
-    "styles": [
-      "Colorido"
-    ],
-    "altText": "Jim Phillips — Skater Girl — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 2,
-    "filename": "KirbyThor.webp",
-    "imageUrl": "galeria/KirbyThor.webp",
-    "title": "Kirby Thor",
-    "styles": [
-      "Colorido",
-      "Figurativo"
-    ],
-    "altText": "Kirby Thor — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 3,
-    "filename": "MarilynBold.webp",
-    "imageUrl": "galeria/MarilynBold.webp",
-    "title": "Marilyn Bold",
-    "styles": [
-      "Blackwork"
-    ],
-    "altText": "Marilyn Bold — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 4,
-    "filename": "PopLichtenstein.webp",
-    "imageUrl": "galeria/PopLichtenstein.webp",
-    "title": "Pop Art Lichtenstein",
-    "styles": [
-      "Colorido"
-    ],
-    "altText": "Pop Art Lichtenstein — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 5,
-    "filename": "adagaTigre.webp",
-    "imageUrl": "galeria/adagaTigre.webp",
-    "title": "Adaga e Tigre",
-    "styles": [
-      "Dark Art",
-      "Blackwork"
-    ],
-    "altText": "Adaga e Tigre — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 6,
-    "filename": "aguia.webp",
-    "imageUrl": "galeria/aguia.webp",
-    "title": "Águia",
-    "styles": [
-      "Blackwork"
-    ],
-    "altText": "Águia — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 7,
-    "filename": "andorinha.webp",
-    "imageUrl": "galeria/andorinha.webp",
-    "title": "Andorinha",
-    "styles": [
-      "Colorido"
-    ],
-    "altText": "Andorinha — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 8,
-    "filename": "andorinhaNuca.webp",
-    "imageUrl": "galeria/andorinhaNuca.webp",
-    "title": "Andorinha na Nuca",
-    "styles": [
-      "Blackwork"
-    ],
-    "altText": "Andorinha na Nuca — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 9,
-    "filename": "baphomet.webp",
-    "imageUrl": "galeria/baphomet.webp",
-    "title": "Baphomet",
-    "styles": [
-      "Dark Art",
-      "Blackwork"
-    ],
-    "altText": "Baphomet — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 10,
-    "filename": "baphometTraco.webp",
-    "imageUrl": "galeria/baphometTraco.webp",
-    "title": "Baphomet Traço",
-    "styles": [
-      "Dark Art",
-      "Blackwork"
-    ],
-    "altText": "Baphomet Traço — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 11,
-    "filename": "bobCuspe.webp",
-    "imageUrl": "galeria/bobCuspe.webp",
-    "title": "Bob Cuspe",
-    "styles": [
-      "Colorido",
-      "Comics"
-    ],
-    "altText": "Bob Cuspe — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 12,
-    "filename": "boldGirl.webp",
-    "imageUrl": "galeria/boldGirl.webp",
-    "title": "Bold Girl",
-    "styles": [
-      "Blackwork"
-    ],
-    "altText": "Bold Girl — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 13,
-    "filename": "borboleta.webp",
-    "imageUrl": "galeria/borboleta.webp",
-    "title": "Borboleta",
-    "styles": [
-      "Colorido"
-    ],
-    "altText": "Borboleta — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 14,
-    "filename": "carta.webp",
-    "imageUrl": "galeria/carta.webp",
-    "title": "Carta",
-    "styles": [
-      "Ornamental"
-    ],
-    "altText": "Carta — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 15,
-    "filename": "cobraadaga.webp",
-    "imageUrl": "galeria/cobraadaga.webp",
-    "title": "Cobra e Adaga",
-    "styles": [
-      "Dark Art",
-      "Blackwork"
-    ],
-    "altText": "Cobra e Adaga — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 16,
-    "filename": "dragao.webp",
-    "imageUrl": "galeria/dragao.webp",
-    "title": "Dragão",
-    "styles": [
-      "Dark Art",
-      "Blackwork"
-    ],
-    "altText": "Dragão — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 17,
-    "filename": "existenciaEssencia.webp",
-    "imageUrl": "galeria/existenciaEssencia.webp",
-    "title": "Existência e Essência",
-    "styles": [
-      "Blackwork",
-      "Escrita"
-    ],
-    "altText": "Existência e Essência — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 18,
-    "filename": "fazendoDragao.webp",
-    "imageUrl": "galeria/fazendoDragao.webp",
-    "title": "Fazendo Dragão",
-    "styles": [
-      "Dark Art"
-    ],
-    "altText": "Fazendo Dragão — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 19,
-    "filename": "fazendoPopArt.webp",
-    "imageUrl": "galeria/fazendoPopArt.webp",
-    "title": "Fazendo Pop Art",
-    "styles": [
-      "Colorido"
-    ],
-    "altText": "Fazendo Pop Art — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 20,
-    "filename": "fenixCabeca.webp",
-    "imageUrl": "galeria/fenixCabeca.webp",
-    "title": "Fênix — Cabeça",
-    "styles": [
-      "Dark Art",
-      "Blackwork"
-    ],
-    "altText": "Fênix — Cabeça — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 21,
-    "filename": "ganesh.webp",
-    "imageUrl": "galeria/ganesh.webp",
-    "title": "Ganesha",
-    "styles": [
-      "Ornamental",
-      "Blackwork"
-    ],
-    "altText": "Ganesha — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 22,
-    "filename": "gueixaCostas.webp",
-    "imageUrl": "galeria/gueixaCostas.webp",
-    "title": "Gueixa nas Costas",
-    "styles": [
-      "Colorido"
-    ],
-    "altText": "Gueixa nas Costas — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 23,
-    "filename": "jesus.webp",
-    "imageUrl": "galeria/jesus.webp",
-    "title": "Jesus",
-    "styles": [
-      "Blackwork"
-    ],
-    "altText": "Jesus — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 24,
-    "filename": "lourosPeito.webp",
-    "imageUrl": "galeria/lourosPeito.webp",
-    "title": "Louros no Peito",
-    "styles": [
-      "Ornamental",
-      "Blackwork"
-    ],
-    "altText": "Louros no Peito — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 25,
-    "filename": "mulherCaveira.webp",
-    "imageUrl": "galeria/mulherCaveira.webp",
-    "title": "Mulher Caveira",
-    "styles": [
-      "Dark Art",
-      "Colorido"
-    ],
-    "altText": "Mulher Caveira — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 26,
-    "filename": "mulherNeoTrad.webp",
-    "imageUrl": "galeria/mulherNeoTrad.webp",
-    "title": "Mulher Neo Tradicional",
-    "styles": [
-      "Colorido"
-    ],
-    "altText": "Mulher Neo Tradicional — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 27,
-    "filename": "naja.webp",
-    "imageUrl": "galeria/naja.webp",
-    "title": "Naja",
-    "styles": [
-      "Blackwork"
-    ],
-    "altText": "Naja — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 28,
-    "filename": "peonias.webp",
-    "imageUrl": "galeria/peonias.webp",
-    "title": "Peônias",
-    "styles": [
-      "Colorido"
-    ],
-    "altText": "Peônias — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 31,
-    "filename": "polvo3.webp",
-    "imageUrl": "galeria/polvo3.webp",
-    "title": "Traço Polvo",
-    "styles": [
-      "Figurativo"
-    ],
-    "altText": "Traço Polvo  — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 32,
-    "filename": "polvo4.webp",
-    "imageUrl": "galeria/polvo4.webp",
-    "title": "Polvo",
-    "styles": [
-      "Colorido",
-      "Figurativo"
-    ],
-    "altText": "Polvo 4 — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 33,
-    "filename": "rebordosa.webp",
-    "imageUrl": "galeria/rebordosa.webp",
-    "title": "Rebordosa",
-    "styles": [
-      "Colorido"
-    ],
-    "altText": "Rebordosa — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 34,
-    "filename": "robertCrumb.webp",
-    "imageUrl": "galeria/robertCrumb.webp",
-    "title": "Robert Crumb",
-    "styles": [
-      "Colorido"
-    ],
-    "altText": "Robert Crumb — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 35,
-    "filename": "rosaAquarela.webp",
-    "imageUrl": "galeria/rosaAquarela.webp",
-    "title": "Rosa Aquarela",
-    "styles": [
-      "Colorido"
-    ],
-    "altText": "Rosa Aquarela — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 36,
-    "filename": "rosaCoverUp.webp",
-    "imageUrl": "galeria/rosaCoverUp.webp",
-    "title": "Rosa Cover-Up",
-    "styles": [
-      "Colorido"
-    ],
-    "altText": "Rosa Cover-Up — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 37,
-    "filename": "sublime.webp",
-    "imageUrl": "galeria/sublime.webp",
-    "title": "Sublime",
-    "styles": [
-      "Colorido"
-    ],
-    "altText": "Sublime — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 38,
-    "filename": "tag.webp",
-    "imageUrl": "galeria/tag.webp",
-    "title": "Tag",
-    "styles": [
-      "Blackwork"
-    ],
-    "altText": "Tag — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 39,
-    "filename": "tribal.webp",
-    "imageUrl": "galeria/tribal.webp",
-    "title": "Tribal",
-    "styles": [
-      "Blackwork"
-    ],
-    "altText": "Tribal — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 40,
-    "filename": "tribalorganico.webp",
-    "imageUrl": "galeria/tribalorganico.webp",
-    "title": "Tribal Orgânico",
-    "styles": [
-      "Blackwork"
-    ],
-    "altText": "Tribal Orgânico — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 41,
-    "filename": "tubarao1.webp",
-    "imageUrl": "galeria/tubarao1.webp",
-    "title": "Tubarão 1",
-    "styles": [
-      "Blackwork"
-    ],
-    "altText": "Tubarão 1 — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 42,
-    "filename": "tubarao2.webp",
-    "imageUrl": "galeria/tubarao2.webp",
-    "title": "Tubarão 2",
-    "styles": [
-      "Blackwork"
-    ],
-    "altText": "Tubarão 2 — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 43,
-    "filename": "tubarao3.webp",
-    "imageUrl": "galeria/tubarao3.webp",
-    "title": "Tubarão 3",
-    "styles": [
-      "Blackwork"
-    ],
-    "altText": "Tubarão 3 — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 44,
-    "filename": "valentinaCrepax.webp",
-    "imageUrl": "galeria/valentinaCrepax.webp",
-    "title": "Valentina Crepax",
-    "styles": [
-      "Colorido"
-    ],
-    "altText": "Valentina Crepax — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  },
-  {
-    "id": 45,
-    "filename": "wolverine.webp",
-    "imageUrl": "galeria/wolverine.webp",
-    "title": "Wolverine",
-    "styles": [
-      "Dark Art",
-      "Colorido"
-    ],
-    "altText": "Wolverine — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "date": "2025-01-01"
-  }
+    {
+        "id": 46,
+        "filename": "1783100126046-tribal-organico.webp",
+        "imageUrl": "galeria/1783100126046-tribal-organico.webp",
+        "title": "Tribal orgânico",
+        "altText": "tribal organico",
+        "description": "",
+        "styles": [
+            "Organica"
+        ],
+        "date": "2026-07-03"
+    },
+    {
+        "id": 1,
+        "filename": "JimPhillipsSkaterGirl.webp",
+        "imageUrl": "galeria/JimPhillipsSkaterGirl.webp",
+        "title": "Jim Phillips — Skater Girl",
+        "styles": [
+            "Colorido"
+        ],
+        "altText": "Jim Phillips — Skater Girl — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 2,
+        "filename": "KirbyThor.webp",
+        "imageUrl": "galeria/KirbyThor.webp",
+        "title": "Kirby Thor",
+        "styles": [
+            "Colorido",
+            "Figurativo"
+        ],
+        "altText": "Kirby Thor — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 3,
+        "filename": "MarilynBold.webp",
+        "imageUrl": "galeria/MarilynBold.webp",
+        "title": "Marilyn Bold",
+        "styles": [
+            "Blackwork"
+        ],
+        "altText": "Marilyn Bold — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 4,
+        "filename": "PopLichtenstein.webp",
+        "imageUrl": "galeria/PopLichtenstein.webp",
+        "title": "Pop Art Lichtenstein",
+        "styles": [
+            "Colorido"
+        ],
+        "altText": "Pop Art Lichtenstein — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 5,
+        "filename": "adagaTigre.webp",
+        "imageUrl": "galeria/adagaTigre.webp",
+        "title": "Adaga e Tigre",
+        "styles": [
+            "Dark Art",
+            "Blackwork"
+        ],
+        "altText": "Adaga e Tigre — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 6,
+        "filename": "aguia.webp",
+        "imageUrl": "galeria/aguia.webp",
+        "title": "Águia",
+        "styles": [
+            "Blackwork"
+        ],
+        "altText": "Águia — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 7,
+        "filename": "andorinha.webp",
+        "imageUrl": "galeria/andorinha.webp",
+        "title": "Andorinha",
+        "styles": [
+            "Colorido"
+        ],
+        "altText": "Andorinha — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 8,
+        "filename": "andorinhaNuca.webp",
+        "imageUrl": "galeria/andorinhaNuca.webp",
+        "title": "Andorinha na Nuca",
+        "styles": [
+            "Blackwork"
+        ],
+        "altText": "Andorinha na Nuca — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 9,
+        "filename": "baphomet.webp",
+        "imageUrl": "galeria/baphomet.webp",
+        "title": "Baphomet",
+        "styles": [
+            "Dark Art",
+            "Blackwork"
+        ],
+        "altText": "Baphomet — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 10,
+        "filename": "baphometTraco.webp",
+        "imageUrl": "galeria/baphometTraco.webp",
+        "title": "Baphomet Traço",
+        "styles": [
+            "Dark Art",
+            "Blackwork"
+        ],
+        "altText": "Baphomet Traço — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 11,
+        "filename": "bobCuspe.webp",
+        "imageUrl": "galeria/bobCuspe.webp",
+        "title": "Bob Cuspe",
+        "styles": [
+            "Colorido",
+            "Comics"
+        ],
+        "altText": "Bob Cuspe — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 12,
+        "filename": "boldGirl.webp",
+        "imageUrl": "galeria/boldGirl.webp",
+        "title": "Bold Girl",
+        "styles": [
+            "Blackwork"
+        ],
+        "altText": "Bold Girl — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 13,
+        "filename": "borboleta.webp",
+        "imageUrl": "galeria/borboleta.webp",
+        "title": "Borboleta",
+        "styles": [
+            "Colorido"
+        ],
+        "altText": "Borboleta — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 14,
+        "filename": "carta.webp",
+        "imageUrl": "galeria/carta.webp",
+        "title": "Carta",
+        "styles": [
+            "Ornamental"
+        ],
+        "altText": "Carta — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 15,
+        "filename": "cobraadaga.webp",
+        "imageUrl": "galeria/cobraadaga.webp",
+        "title": "Cobra e Adaga",
+        "styles": [
+            "Dark Art",
+            "Blackwork"
+        ],
+        "altText": "Cobra e Adaga — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 16,
+        "filename": "dragao.webp",
+        "imageUrl": "galeria/dragao.webp",
+        "title": "Dragão",
+        "styles": [
+            "Dark Art",
+            "Blackwork"
+        ],
+        "altText": "Dragão — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 17,
+        "filename": "existenciaEssencia.webp",
+        "imageUrl": "galeria/existenciaEssencia.webp",
+        "title": "Existência e Essência",
+        "styles": [
+            "Blackwork",
+            "Escrita"
+        ],
+        "altText": "Existência e Essência — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 18,
+        "filename": "fazendoDragao.webp",
+        "imageUrl": "galeria/fazendoDragao.webp",
+        "title": "Fazendo Dragão",
+        "styles": [
+            "Dark Art"
+        ],
+        "altText": "Fazendo Dragão — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 19,
+        "filename": "fazendoPopArt.webp",
+        "imageUrl": "galeria/fazendoPopArt.webp",
+        "title": "Fazendo Pop Art",
+        "styles": [
+            "Colorido"
+        ],
+        "altText": "Fazendo Pop Art — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 20,
+        "filename": "fenixCabeca.webp",
+        "imageUrl": "galeria/fenixCabeca.webp",
+        "title": "Fênix — Cabeça",
+        "styles": [
+            "Dark Art",
+            "Blackwork"
+        ],
+        "altText": "Fênix — Cabeça — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 21,
+        "filename": "ganesh.webp",
+        "imageUrl": "galeria/ganesh.webp",
+        "title": "Ganesha",
+        "styles": [
+            "Ornamental",
+            "Blackwork"
+        ],
+        "altText": "Ganesha — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 22,
+        "filename": "gueixaCostas.webp",
+        "imageUrl": "galeria/gueixaCostas.webp",
+        "title": "Gueixa nas Costas",
+        "styles": [
+            "Colorido"
+        ],
+        "altText": "Gueixa nas Costas — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 23,
+        "filename": "jesus.webp",
+        "imageUrl": "galeria/jesus.webp",
+        "title": "Jesus",
+        "styles": [
+            "Blackwork"
+        ],
+        "altText": "Jesus — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 24,
+        "filename": "lourosPeito.webp",
+        "imageUrl": "galeria/lourosPeito.webp",
+        "title": "Louros no Peito",
+        "styles": [
+            "Ornamental",
+            "Blackwork"
+        ],
+        "altText": "Louros no Peito — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 25,
+        "filename": "mulherCaveira.webp",
+        "imageUrl": "galeria/mulherCaveira.webp",
+        "title": "Mulher Caveira",
+        "styles": [
+            "Dark Art",
+            "Colorido"
+        ],
+        "altText": "Mulher Caveira — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 26,
+        "filename": "mulherNeoTrad.webp",
+        "imageUrl": "galeria/mulherNeoTrad.webp",
+        "title": "Mulher Neo Tradicional",
+        "styles": [
+            "Colorido"
+        ],
+        "altText": "Mulher Neo Tradicional — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 27,
+        "filename": "naja.webp",
+        "imageUrl": "galeria/naja.webp",
+        "title": "Naja",
+        "styles": [
+            "Blackwork"
+        ],
+        "altText": "Naja — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 28,
+        "filename": "peonias.webp",
+        "imageUrl": "galeria/peonias.webp",
+        "title": "Peônias",
+        "styles": [
+            "Colorido"
+        ],
+        "altText": "Peônias — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 31,
+        "filename": "polvo3.webp",
+        "imageUrl": "galeria/polvo3.webp",
+        "title": "Traço Polvo",
+        "styles": [
+            "Figurativo"
+        ],
+        "altText": "Traço Polvo  — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 32,
+        "filename": "polvo4.webp",
+        "imageUrl": "galeria/polvo4.webp",
+        "title": "Polvo",
+        "styles": [
+            "Colorido",
+            "Figurativo"
+        ],
+        "altText": "Polvo 4 — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 33,
+        "filename": "rebordosa.webp",
+        "imageUrl": "galeria/rebordosa.webp",
+        "title": "Rebordosa",
+        "styles": [
+            "Colorido"
+        ],
+        "altText": "Rebordosa — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 34,
+        "filename": "robertCrumb.webp",
+        "imageUrl": "galeria/robertCrumb.webp",
+        "title": "Robert Crumb",
+        "styles": [
+            "Colorido"
+        ],
+        "altText": "Robert Crumb — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 35,
+        "filename": "rosaAquarela.webp",
+        "imageUrl": "galeria/rosaAquarela.webp",
+        "title": "Rosa Aquarela",
+        "styles": [
+            "Colorido"
+        ],
+        "altText": "Rosa Aquarela — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 36,
+        "filename": "rosaCoverUp.webp",
+        "imageUrl": "galeria/rosaCoverUp.webp",
+        "title": "Rosa Cover-Up",
+        "styles": [
+            "Colorido"
+        ],
+        "altText": "Rosa Cover-Up — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 37,
+        "filename": "sublime.webp",
+        "imageUrl": "galeria/sublime.webp",
+        "title": "Sublime",
+        "styles": [
+            "Colorido"
+        ],
+        "altText": "Sublime — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 38,
+        "filename": "tag.webp",
+        "imageUrl": "galeria/tag.webp",
+        "title": "Tag",
+        "styles": [
+            "Blackwork"
+        ],
+        "altText": "Tag — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 39,
+        "filename": "tribal.webp",
+        "imageUrl": "galeria/tribal.webp",
+        "title": "Tribal",
+        "styles": [
+            "Blackwork"
+        ],
+        "altText": "Tribal — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 40,
+        "filename": "tribalorganico.webp",
+        "imageUrl": "galeria/tribalorganico.webp",
+        "title": "Tribal Orgânico",
+        "styles": [
+            "Blackwork"
+        ],
+        "altText": "Tribal Orgânico — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 41,
+        "filename": "tubarao1.webp",
+        "imageUrl": "galeria/tubarao1.webp",
+        "title": "Tubarão 1",
+        "styles": [
+            "Blackwork"
+        ],
+        "altText": "Tubarão 1 — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 42,
+        "filename": "tubarao2.webp",
+        "imageUrl": "galeria/tubarao2.webp",
+        "title": "Tubarão 2",
+        "styles": [
+            "Blackwork"
+        ],
+        "altText": "Tubarão 2 — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 43,
+        "filename": "tubarao3.webp",
+        "imageUrl": "galeria/tubarao3.webp",
+        "title": "Tubarão 3",
+        "styles": [
+            "Blackwork"
+        ],
+        "altText": "Tubarão 3 — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 44,
+        "filename": "valentinaCrepax.webp",
+        "imageUrl": "galeria/valentinaCrepax.webp",
+        "title": "Valentina Crepax",
+        "styles": [
+            "Colorido"
+        ],
+        "altText": "Valentina Crepax — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 45,
+        "filename": "wolverine.webp",
+        "imageUrl": "galeria/wolverine.webp",
+        "title": "Wolverine",
+        "styles": [
+            "Dark Art",
+            "Colorido"
+        ],
+        "altText": "Wolverine — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "date": "2025-01-01"
+    },
+    {
+        "id": 47,
+        "filename": "1781643432172-tatuagem-valentina.webp",
+        "imageUrl": "galeria/1781643432172-tatuagem-valentina.webp",
+        "title": "Valentina",
+        "altText": "Valentina — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "styles": [],
+        "date": "2026-07-20"
+    },
+    {
+        "id": 48,
+        "filename": "1781643494250-tatuagem-thor.webp",
+        "imageUrl": "galeria/1781643494250-tatuagem-thor.webp",
+        "title": "Thor",
+        "altText": "Thor — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "styles": [],
+        "date": "2026-07-20"
+    },
+    {
+        "id": 49,
+        "filename": "1781647267215-tatuagem-aguia.webp",
+        "imageUrl": "galeria/1781647267215-tatuagem-aguia.webp",
+        "title": "Águia",
+        "altText": "Águia — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "styles": [],
+        "date": "2026-07-20"
+    },
+    {
+        "id": 50,
+        "filename": "1781647329279-tatuagem-serpente.webp",
+        "imageUrl": "galeria/1781647329279-tatuagem-serpente.webp",
+        "title": "Serpente",
+        "altText": "Serpente — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "styles": [],
+        "date": "2026-07-20"
+    },
+    {
+        "id": 51,
+        "filename": "1781648577280-tatuagem-ganesha.webp",
+        "imageUrl": "galeria/1781648577280-tatuagem-ganesha.webp",
+        "title": "Ganesha",
+        "altText": "Ganesha — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "styles": [],
+        "date": "2026-07-20"
+    },
+    {
+        "id": 52,
+        "filename": "1781655126876-tatuagem-tubarao.webp",
+        "imageUrl": "galeria/1781655126876-tatuagem-tubarao.webp",
+        "title": "Tubarão",
+        "altText": "Tubarão — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "styles": [],
+        "date": "2026-07-20"
+    },
+    {
+        "id": 53,
+        "filename": "1781655164650-tatuagem-pop-art.webp",
+        "imageUrl": "galeria/1781655164650-tatuagem-pop-art.webp",
+        "title": "Pop Art",
+        "altText": "Pop Art — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "styles": [],
+        "date": "2026-07-20"
+    },
+    {
+        "id": 54,
+        "filename": "1781655205001-tatuagem-mulher-caveira.webp",
+        "imageUrl": "galeria/1781655205001-tatuagem-mulher-caveira.webp",
+        "title": "Mulher Caveira",
+        "altText": "Mulher Caveira — tatuagem por Micael Faccio, Muriaé MG",
+        "description": "",
+        "styles": [],
+        "date": "2026-07-20"
+    }
 ]
