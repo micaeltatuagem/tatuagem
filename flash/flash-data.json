@@ -4776,8 +4776,10 @@
     "imageUrl": "flash/rosa-5-1783310174230-35.webp",
     "title": "Rosa 5",
     "altText": "Tatuagem flash de rosa 5. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Rosa clássica em traço old school, um dos ícones mais recorrentes da tatuagem tradicional. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -4787,8 +4789,10 @@
     "imageUrl": "flash/flores-1783310175945-36.webp",
     "title": "Flores",
     "altText": "Tatuagem flash de flores. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Composição floral em traço orgânico, mais solto e natural. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Orgânico"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -4796,10 +4800,12 @@
     "id": 404,
     "filename": "coracao-adaga-2-1783310177560-37.webp",
     "imageUrl": "flash/coracao-adaga-2-1783310177560-37.webp",
-    "title": "Coracao Adaga 2",
+    "title": "Coração Adaga 2",
     "altText": "Tatuagem flash de coracao adaga 2. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Coração cravado com adaga, um dos combos mais clássicos da old school. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -4879,10 +4885,13 @@
     "id": 410,
     "filename": "coracao-sailor-beware-1783310188624-43.webp",
     "imageUrl": "flash/coracao-sailor-beware-1783310188624-43.webp",
-    "title": "Coracao Sailor Beware",
+    "title": "Coração Sailor Beware",
     "altText": "Tatuagem flash de coracao sailor beware. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Coração com a frase Sailor Beware, clássico da tradição marinheira da old school. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -4946,10 +4955,12 @@
     "id": 349,
     "filename": "coracao-love-1783304850180-0.webp",
     "imageUrl": "flash/coracao-love-1783304850180-0.webp",
-    "title": "Coracao Love",
+    "title": "Coração Love",
     "altText": "Tatuagem flash de coracao love. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Coração com a palavra Love, ícone direto e atemporal da old school. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -5063,10 +5074,14 @@
     "id": 357,
     "filename": "androninha-5-1783304862470-8.webp",
     "imageUrl": "flash/androninha-5-1783304862470-8.webp",
-    "title": "Androninha 5",
+    "title": "Andorinha 5",
     "altText": "Tatuagem flash de androninha 5. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Andorinha em voo, ícone tradicional de retorno e proteção do marinheiro. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico",
+      "Animais"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -5134,8 +5149,11 @@
     "imageUrl": "flash/pantera-3-1783304870092-13.webp",
     "title": "Pantera 3",
     "altText": "Tatuagem flash de pantera 3. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Pantera em traço old school, um dos animais mais recorrentes da tatuagem tradicional. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Animais"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -5190,8 +5208,10 @@
     "imageUrl": "flash/pinup-10-1783304876115-17.webp",
     "title": "Pinup 10",
     "altText": "Tatuagem flash de pinup 10. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Pin-up clássica, traço old school com charme retrô. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Pin-Up"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -7266,8 +7286,10 @@
     "imageUrl": "flash/rosa-4-1783170176125-44.webp",
     "title": "Rosa 4",
     "altText": "Tatuagem flash de rosa 4. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Outra rosa clássica em traço old school. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -7277,8 +7299,10 @@
     "imageUrl": "flash/bola-oito-2-1783170177651-45.webp",
     "title": "Bola Oito 2",
     "altText": "Tatuagem flash de bola oito 2. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Bola oito de sinuca, ícone clássico ligado ao acaso e à sorte. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -7342,10 +7366,13 @@
     "id": 193,
     "filename": "aguia-4-1783170185485-50.webp",
     "imageUrl": "flash/aguia-4-1783170185485-50.webp",
-    "title": "Aguia 4",
+    "title": "Águia 4",
     "altText": "Tatuagem flash de aguia 4. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Águia em voo, símbolo de liberdade e força, clássico da old school. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Animais"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -7382,8 +7409,11 @@
     "imageUrl": "flash/buldogue-1783170190358-53.webp",
     "title": "Buldogue",
     "altText": "Tatuagem flash de buldogue. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Buldogue em traço old school, símbolo de lealdade e teimosia. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Animais"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -7407,8 +7437,11 @@
     "imageUrl": "flash/tigre-3-1783170193664-55.webp",
     "title": "Tigre 3",
     "altText": "Tatuagem flash de tigre 3. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Tigre em traço old school, força e ferocidade em traço clássico. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Animais"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -7486,10 +7519,12 @@
     "id": 204,
     "filename": "mascara-oni-1783170203203-61.webp",
     "imageUrl": "flash/mascara-oni-1783170203203-61.webp",
-    "title": "Mascara Oni",
+    "title": "Máscara Oni",
     "altText": "Tatuagem flash de mascara oni. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Máscara oni, figura clássica do folclore japonês, símbolo de proteção contra o mal. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Oriental"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -7512,8 +7547,10 @@
     "imageUrl": "flash/esqueleto-skater-1783170206345-63.webp",
     "title": "Esqueleto Skater",
     "altText": "Tatuagem flash de esqueleto skater. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Esqueleto andando de skate, mistura de humor negro com cultura urbana. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Dark Art"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -7577,8 +7614,11 @@
     "imageUrl": "flash/ratazana-1783170213909-68.webp",
     "title": "Ratazana",
     "altText": "Tatuagem flash de ratazana. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Ratazana em traço old school, ícone urbano de sobrevivência e malandragem. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Animais"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -7586,10 +7626,13 @@
     "id": 212,
     "filename": "palhaco-1783170215477-69.webp",
     "imageUrl": "flash/palhaco-1783170215477-69.webp",
-    "title": "Palhaco",
+    "title": "Palhaço",
     "altText": "Tatuagem flash de palhaco. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Palhaço em estética sombria, clássico do imaginário de terror. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Dark Art",
+      "Comics"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -7612,8 +7655,10 @@
     "imageUrl": "flash/bola-oito-1783170218735-71.webp",
     "title": "Bola Oito",
     "altText": "Tatuagem flash de bola oito. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Bola oito de sinuca, ícone clássico ligado ao acaso e à sorte. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -7636,8 +7681,10 @@
     "imageUrl": "flash/florzinha-1783170223461-74.webp",
     "title": "Florzinha",
     "altText": "Tatuagem flash de florzinha. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Flor pequena em traço old school, ícone delicado e discreto. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
