@@ -68,14 +68,16 @@
   // ── Passagens fractais ───────────────────────────────────────
   // Cada passagem tem: raio de colisão, tamanho CSS, opacidade, quantidade base
   // OVERLAP: quanto maior, mais espaçados ficam os ícones (evita "mancha" de acúmulo de transparência)
-  const OVERLAP = 1.7;
+  const OVERLAP = 1.35;
 
   const PASSES = [
     // [r_colisão_px, width_css,                        op_range,        n_base]
-    [ 130, 'clamp(160px,22vw,300px)',                  [0.08, 0.11],    5  ],
-    [  80, 'clamp(95px,13vw,175px)',                   [0.07, 0.10],    7  ],
-    [  48, 'clamp(55px,8vw,105px)',                    [0.06, 0.09],    12 ],
-    [  26, 'clamp(28px,4.5vw,58px)',                   [0.05, 0.08],    18 ],
+    [ 130, 'clamp(160px,22vw,300px)',                  [0.09, 0.12],    5  ],
+    [  80, 'clamp(95px,13vw,175px)',                   [0.08, 0.11],    8  ],
+    [  48, 'clamp(55px,8vw,105px)',                    [0.07, 0.10],    14 ],
+    [  26, 'clamp(28px,4.5vw,58px)',                   [0.06, 0.09],    22 ],
+    [  13, 'clamp(14px,2.2vw,28px)',                   [0.05, 0.08],    32 ],
+    [   6, 'clamp(7px,1.1vw,14px)',                    [0.04, 0.07],    45 ],
   ];
 
   function overlaps(placed, cx, cy, r) {
