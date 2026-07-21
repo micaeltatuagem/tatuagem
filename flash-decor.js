@@ -112,7 +112,7 @@
     // Quantidade proporcional à área da seção
     const area   = W * H;
     const refArea = 960 * 500;
-    const n      = Math.round(nBase * Math.max(0.5, area / refArea));
+    const n      = Math.round(nBase * Math.min(2.2, Math.max(0.5, area / refArea)));
     const imgs   = shuffle(pool).slice(0, Math.min(n * 3, pool.length)); // pool generoso
     let placed_count = 0;
 
