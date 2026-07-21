@@ -848,6 +848,36 @@
       color: var(--ink);
       border-color: var(--ink-muted);
     }
+
+    /* ── Localização / mapa ──────────────────────────────────── */
+    .local-endereco {
+      font-family: var(--font-ui);
+      font-size: 1.05rem;
+      color: var(--ink-muted);
+      margin-bottom: 1.8rem;
+      line-height: 1.6;
+    }
+    .mapa-container {
+      width: 100%;
+      height: 420px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 1.2rem;
+      background: var(--surface);
+    }
+    .mapa-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--ink-muted);
+      font-family: var(--font-ui);
+      font-size: 1rem;
+    }
+    @media (max-width: 600px) {
+      .mapa-container { height: 300px; }
+    }
   </style>
 </head>
 <body>
@@ -862,6 +892,7 @@
     <li><a href="preview-tatuagem.html">Criar</a></li>
     <li class="hide-sm"><a href="#processo">Processo</a></li>
     <li><a href="#promocoes" class="destaque">Promoções</a></li>
+    <li class="hide-sm"><a href="#localizacao">Localização</a></li>
     <li><a href="#contato">Contato</a></li>
   </ul>
 </nav>
@@ -1076,6 +1107,19 @@
 
     </div>
     </div>
+  </div>
+</section>
+
+<!-- ── Localização ───────────────────────────────────────────── -->
+<section id="localizacao">
+  <div class="inner">
+    <p class="eyebrow">Onde fica</p>
+    <h2>Estúdio em Muriaé, MG</h2>
+    <p class="local-endereco">R. Astrogildo Figueiredo de Barros, 469 — Muriaé, MG · Atendimento com hora marcada</p>
+    <div id="mapa" class="mapa-container">
+      <div class="mapa-loading">Carregando mapa…</div>
+    </div>
+    <a class="galeria-link" href="https://www.google.com/maps/search/?api=1&query=R.+Astrogildo+Figueiredo+de+Barros%2C+469%2C+Muria%C3%A9%2C+MG" target="_blank" rel="noopener">↗ abrir no Google Maps</a>
   </div>
 </section>
 
@@ -1331,5 +1375,54 @@
 
 
 <script src="flash-decor.js" defer></script>
+
+<!-- ── Mapa do estúdio ─────────────────────────────────────────── -->
+<script>
+function initMapaEstudio() {
+  const endereco = "R. Astrogildo Figueiredo de Barros, 469, Muriaé, MG";
+  const geocoder = new google.maps.Geocoder();
+
+  const estiloEscuro = [
+    { elementType: "geometry", stylers: [{ color: "#0a0a0a" }] },
+    { elementType: "labels.text.stroke", stylers: [{ color: "#0a0a0a" }] },
+    { elementType: "labels.text.fill", stylers: [{ color: "#777777" }] },
+    { featureType: "road", elementType: "geometry", stylers: [{ color: "#1e1e1e" }] },
+    { featureType: "road", elementType: "geometry.stroke", stylers: [{ color: "#2e2e2e" }] },
+    { featureType: "water", elementType: "geometry", stylers: [{ color: "#111111" }] },
+    { featureType: "poi", elementType: "geometry", stylers: [{ color: "#111111" }] },
+    { featureType: "poi.park", elementType: "geometry", stylers: [{ color: "#141a10" }] },
+    { featureType: "administrative", elementType: "geometry", stylers: [{ color: "#2e2e2e" }] },
+    { featureType: "transit", elementType: "geometry", stylers: [{ color: "#1e1e1e" }] }
+  ];
+
+  geocoder.geocode({ address: endereco }, function (results, status) {
+    const mapaDiv = document.getElementById("mapa");
+    if (status !== "OK" || !results[0]) {
+      mapaDiv.innerHTML = '<div class="mapa-loading">Não foi possível carregar o mapa.</div>';
+      return;
+    }
+
+    const local = results[0].geometry.location;
+    mapaDiv.innerHTML = "";
+
+    const map = new google.maps.Map(mapaDiv, {
+      center: local,
+      zoom: 16,
+      styles: estiloEscuro,
+      disableDefaultUI: true,
+      zoomControl: true,
+    });
+
+    new google.maps.Marker({
+      position: local,
+      map: map,
+      title: "Micael Tatuagem",
+    });
+  });
+}
+</script>
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDt5ZOD2Su6S7nJlVlUMJ-JNPQ0bzeT2lY&callback=initMapaEstudio">
+</script>
 </body>
 </html>
