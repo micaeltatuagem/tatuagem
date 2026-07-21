@@ -4952,8 +4952,11 @@
     "imageUrl": "flash/caravela-6-1783304853313-2.webp",
     "title": "Caravela 6",
     "altText": "Tatuagem flash de caravela 6. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Caravela clássica em traço old school, símbolo de viagem e descoberta. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -4963,8 +4966,11 @@
     "imageUrl": "flash/andorinha-6-1783304854893-3.webp",
     "title": "Andorinha 6",
     "altText": "Tatuagem flash de andorinha 6. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Andorinha em voo, um dos ícones mais tradicionais da tatuagem náutica, ligado à ideia de retorno pra casa. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -4972,10 +4978,14 @@
     "id": 353,
     "filename": "caveira-capitao-1783304856338-4.webp",
     "imageUrl": "flash/caveira-capitao-1783304856338-4.webp",
-    "title": "Caveira Capitao",
+    "title": "Caveira Capitão",
     "altText": "Tatuagem flash de caveira capitao. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Caveira com chapéu de capitão, mistura clássica entre marinha e memento mori. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico",
+      "Dark Art"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -4999,10 +5009,13 @@
     "id": 355,
     "filename": "ancora-6-1783304859459-6.webp",
     "imageUrl": "flash/ancora-6-1783304859459-6.webp",
-    "title": "Ancora 6",
+    "title": "Âncora 6",
     "altText": "Tatuagem flash de ancora 6. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Âncora em traço grosso old school, símbolo de estabilidade e porto seguro. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -5037,10 +5050,13 @@
     "id": 358,
     "filename": "caravela-na-garrafa-1783304863828-9.webp",
     "imageUrl": "flash/caravela-na-garrafa-1783304863828-9.webp",
-    "title": "Caravela Na Garrafa",
+    "title": "Caravela na Garrafa",
     "altText": "Tatuagem flash de caravela na garrafa. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Caravela dentro de garrafa, um clássico dos flashes marítimos, remetendo a viagens guardadas com cuidado. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -5050,8 +5066,11 @@
     "imageUrl": "flash/concha-1783304865593-10.webp",
     "title": "Concha",
     "altText": "Tatuagem flash de concha. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Concha do mar em traço old school, ícone simples e atemporal. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -5077,8 +5096,11 @@
     "imageUrl": "flash/farol-4-1783304868543-12.webp",
     "title": "Farol 4",
     "altText": "Tatuagem flash de farol 4. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Farol clássico guiando quem navega em mar aberto. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -5097,10 +5119,13 @@
     "id": 363,
     "filename": "ancora-5-1783304871553-14.webp",
     "imageUrl": "flash/ancora-5-1783304871553-14.webp",
-    "title": "Ancora 5",
+    "title": "Âncora 5",
     "altText": "Tatuagem flash de ancora 5. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Outra variação de âncora em old school, símbolo náutico clássico. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -5110,8 +5135,11 @@
     "imageUrl": "flash/caravela-5-1783304873041-15.webp",
     "title": "Caravela 5",
     "altText": "Tatuagem flash de caravela 5. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Caravela em traço old school, remetendo à era das grandes navegações. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-06"
   },
@@ -5969,10 +5997,13 @@
     "id": 281,
     "filename": "ancora-1783190923265-1.webp",
     "imageUrl": "flash/ancora-1783190923265-1.webp",
-    "title": "Ancora",
+    "title": "Âncora",
     "altText": "Tatuagem flash de ancora. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Âncora simples, um dos ícones mais tradicionais da tatuagem old school, símbolo de firmeza. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -5980,10 +6011,13 @@
     "id": 282,
     "filename": "ancora-adaga-1783190924854-2.webp",
     "imageUrl": "flash/ancora-adaga-1783190924854-2.webp",
-    "title": "Ancora Adaga",
+    "title": "Âncora Adaga",
     "altText": "Tatuagem flash de ancora adaga. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Âncora cruzada com adaga, combinação clássica old school entre firmeza e proteção. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -6706,10 +6740,13 @@
     "id": 154,
     "filename": "concha-perola-1783170122890-11.webp",
     "imageUrl": "flash/concha-perola-1783170122890-11.webp",
-    "title": "Concha Perola",
+    "title": "Concha Pérola",
     "altText": "Tatuagem flash de concha perola. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Concha com pérola, ícone náutico com um toque mais delicado. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -6730,8 +6767,11 @@
     "imageUrl": "flash/ampulheta-2-1783170126132-13.webp",
     "title": "Ampulheta 2",
     "altText": "Tatuagem flash de ampulheta 2. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Ampulheta em traço old school, lembrete clássico do tempo que passa. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Dark Art"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -6741,8 +6781,11 @@
     "imageUrl": "flash/ampulheta-caveira-1783170127826-14.webp",
     "title": "Ampulheta Caveira",
     "altText": "Tatuagem flash de ampulheta caveira. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Ampulheta com caveira, combinação clássica de memento mori: o tempo passa e a morte é certa. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Dark Art"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -6750,10 +6793,13 @@
     "id": 158,
     "filename": "ancora-hope-1783170129466-15.webp",
     "imageUrl": "flash/ancora-hope-1783170129466-15.webp",
-    "title": "Ancora Hope",
+    "title": "Âncora Hope",
     "altText": "Tatuagem flash de ancora hope. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Âncora com a palavra Hope, símbolo náutico de esperança e fé. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -6763,8 +6809,11 @@
     "imageUrl": "flash/caravela-4-1783170131054-16.webp",
     "title": "Caravela 4",
     "altText": "Tatuagem flash de caravela 4. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Caravela old school, ícone marítimo clássico. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -6796,8 +6845,11 @@
     "imageUrl": "flash/cavalo-marinho-1783170135842-19.webp",
     "title": "Cavalo Marinho",
     "altText": "Tatuagem flash de cavalo marinho. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Cavalo-marinho em traço old school, criatura do mar como símbolo de força tranquila. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -6807,8 +6859,11 @@
     "imageUrl": "flash/caravela-3-1783170137450-20.webp",
     "title": "Caravela 3",
     "altText": "Tatuagem flash de caravela 3. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Mais uma caravela old school, ícone recorrente da tradição marítima na tatuagem. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -6827,10 +6882,13 @@
     "id": 167,
     "filename": "bussola-1783170144160-24.webp",
     "imageUrl": "flash/bussola-1783170144160-24.webp",
-    "title": "Bussola",
+    "title": "Bússola",
     "altText": "Tatuagem flash de bussola. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Bússola em old school, símbolo de direção e orientação. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -6840,8 +6898,11 @@
     "imageUrl": "flash/poseidon-1783170145587-25.webp",
     "title": "Poseidon",
     "altText": "Tatuagem flash de poseidon. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Poseidon, deus grego dos mares, em traço old school. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -6849,10 +6910,13 @@
     "id": 169,
     "filename": "mensagem-garrafa-1783170147393-26.webp",
     "imageUrl": "flash/mensagem-garrafa-1783170147393-26.webp",
-    "title": "Mensagem Garrafa",
+    "title": "Mensagem na Garrafa",
     "altText": "Tatuagem flash de mensagem garrafa. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Mensagem na garrafa, ícone náutico clássico ligado à esperança e ao desconhecido. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -6862,8 +6926,11 @@
     "imageUrl": "flash/farol-3-1783170149009-27.webp",
     "title": "Farol 3",
     "altText": "Tatuagem flash de farol 3. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Outro farol clássico, guia de quem navega em mar aberto. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -7106,8 +7173,11 @@
     "imageUrl": "flash/andorinha-4-1783170183855-49.webp",
     "title": "Andorinha 4",
     "altText": "Tatuagem flash de andorinha 4. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Andorinha em voo, ícone tradicional de retorno e proteção do marinheiro. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -7137,10 +7207,13 @@
     "id": 195,
     "filename": "ancora-4-1783170188707-52.webp",
     "imageUrl": "flash/ancora-4-1783170188707-52.webp",
-    "title": "Ancora 4",
+    "title": "Âncora 4",
     "altText": "Tatuagem flash de ancora 4. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Mais uma âncora old school, símbolo de estabilidade. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
@@ -7161,8 +7234,11 @@
     "imageUrl": "flash/estrela-naval-1783170191997-54.webp",
     "title": "Estrela Naval",
     "altText": "Tatuagem flash de estrela naval. Disponível no Micael Tatuagem, Muriaé MG.",
-    "description": "",
-    "styles": [],
+    "description": "Estrela naval old school, ícone de orientação e tradição marítima. Agende sua sessão com o Micael pelo WhatsApp.",
+    "styles": [
+      "Old School",
+      "Náutico"
+    ],
     "showInDecor": true,
     "date": "2026-07-04"
   },
