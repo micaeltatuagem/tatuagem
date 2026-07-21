@@ -242,6 +242,27 @@
     <div class="tag-manager-list" id="tagManagerList"></div>
   </div>
 
+  <!-- Conteudo + FAQ de cada estilo (paginas /estilo/) -->
+  <div class="form-section">
+    <h2>Conteúdo &amp; FAQ dos estilos</h2>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:-.4rem;margin-bottom:1rem;">
+      Texto longo e perguntas frequentes que aparecem na página <code>/estilo/&lt;nome&gt;.html</code> de cada estilo, com schema FAQPage pra IA/buscadores. Ao salvar, a página é republicada automaticamente.
+    </p>
+    <select id="estiloContentSelect" onchange="loadEstiloContentIntoForm(this.value)" style="width:100%;margin-bottom:1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--bone);padding:8px 12px;font-size:.85rem;"></select>
+
+    <h3 style="font-size:.9rem;margin-bottom:.5rem;">Seções de texto</h3>
+    <div id="estiloSections"></div>
+    <button type="button" class="btn btn-secondary" onclick="addSectionRow()">+ Adicionar seção</button>
+
+    <h3 style="font-size:.9rem;margin:1.2rem 0 .5rem;">Perguntas frequentes</h3>
+    <div id="estiloFaq"></div>
+    <button type="button" class="btn btn-secondary" onclick="addFaqRow()">+ Adicionar pergunta</button>
+
+    <div style="margin-top:1.2rem;">
+      <button class="btn btn-primary" id="estiloContentSaveBtn" onclick="saveEstiloContent()">Salvar conteúdo e FAQ</button>
+    </div>
+  </div>
+
   <!-- Flash existentes -->
   <div class="form-section">
     <h2>Flashs Publicados</h2>
@@ -319,6 +340,8 @@
   const MANIFEST_PATH = `${IMAGE_FOLDER}/manifest.json`;
   const TAGS_PATH     = `${IMAGE_FOLDER}/tags.json`;
   const STYLE_DESC_PATH = `${IMAGE_FOLDER}/style-descriptions.json`;
+  const ESTILO_CONTENT_KEY  = 'micaelEstiloContent';
+  const ESTILO_CONTENT_PATH = `${IMAGE_FOLDER}/estilo-content.json`;
   const CATALOG_PAGE  = 'flash.html';
   const SITEMAP_PATH  = 'sitemap.xml';
   const SITE_URL    = 'https://micaeltatuagem.com.br';
@@ -530,9 +553,11 @@
     await seedFromRepo();
     await seedTagsFromRepo();
     await seedStyleDescriptionsFromRepo();
+    await seedEstiloContentFromRepo();
     renderTagManager();
     renderTags();
     renderGallery();
+    renderEstiloContentEditor();
     updateStats();
     checkGitHubStatus();
   }
@@ -659,6 +684,7 @@
       await saveTags(tags);
       renderTagManager();
       renderTags();
+      renderEstiloContentEditor();
       input.value = '';
       showAlert('success', `✅ Tag "${val}" adicionada.`);
     } catch (err) {
@@ -679,8 +705,15 @@
       }
       try { await withRetry(() => deleteEstiloPage(tag), 2, 'remover pagina de estilo'); } catch (err) { console.warn('Pagina /estilo/ nao removida (nao critico):', err.message); }
       try { await withRetry(() => removeSitemapEntryForStyle(tag), 2, 'remover do sitemap'); } catch (err) { console.warn('Sitemap nao atualizado (nao critico):', err.message); }
+      const contentMap = getEstiloContent();
+      if (tag in contentMap) {
+        delete contentMap[tag];
+        localStorage.setItem(ESTILO_CONTENT_KEY, JSON.stringify(contentMap));
+        try { await withRetry(() => commitEstiloContent(contentMap), 2, 'remover conteudo de estilo'); } catch {}
+      }
       renderTagManager();
       renderTags();
+      renderEstiloContentEditor();
       showAlert('success', `✅ Tag "${tag}" removida.`);
     } catch (err) {
       showAlert('error', '⚠ Falhou ao remover a tag (' + err.message + '). Tente de novo.');
@@ -755,6 +788,118 @@
     if (!res.ok) { const e = await res.json(); throw new Error(e.message || 'Erro ao salvar descricoes de estilo'); }
   }
 
+  // ── Conteudo longo + FAQ de cada estilo (usado no bloco de texto e no schema FAQPage da pagina /estilo/) ──
+  function getEstiloContent() {
+    try { return JSON.parse(localStorage.getItem(ESTILO_CONTENT_KEY)) || {}; }
+    catch { return {}; }
+  }
+
+  async function seedEstiloContentFromRepo() {
+    try {
+      const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${ESTILO_CONTENT_PATH}?t=${Date.now()}`;
+      const res = await fetch(url, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && typeof data === 'object' && !Array.isArray(data)) {
+          localStorage.setItem(ESTILO_CONTENT_KEY, JSON.stringify(data));
+        }
+      }
+    } catch {}
+  }
+
+  async function commitEstiloContent(contentMap) {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(contentMap, null, 2))));
+    const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${ESTILO_CONTENT_PATH}`;
+    let sha = null;
+    try { const r = await fetch(url,{headers:{Authorization:`Bearer ${GH_TOKEN}`}}); if(r.ok) sha=(await r.json()).sha; } catch {}
+    const body = { message: 'Atualiza flash/estilo-content.json', content, branch: BRANCH };
+    if (sha) body.sha = sha;
+    const res = await fetch(url, { method:'PUT', headers:{Authorization:`Bearer ${GH_TOKEN}`,'Content-Type':'application/json'}, body:JSON.stringify(body) });
+    if (!res.ok) { const e = await res.json(); throw new Error(e.message || 'Erro ao salvar conteudo/FAQ de estilo'); }
+  }
+
+  // ── Editor de conteudo/FAQ no painel ──
+  function renderEstiloContentEditor() {
+    const sel = document.getElementById('estiloContentSelect');
+    if (!sel) return;
+    const tags = getTags();
+    sel.innerHTML = tags.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+    if (tags.length) loadEstiloContentIntoForm(sel.value);
+  }
+
+  function loadEstiloContentIntoForm(style) {
+    const data = getEstiloContent()[style] || { sections: [], faq: [] };
+    const sectionsEl = document.getElementById('estiloSections');
+    const faqEl = document.getElementById('estiloFaq');
+    sectionsEl.innerHTML = '';
+    faqEl.innerHTML = '';
+    (data.sections.length ? data.sections : [{heading:'',text:''}]).forEach(s => addSectionRow(s.heading, s.text));
+    (data.faq.length ? data.faq : [{q:'',a:''}]).forEach(f => addFaqRow(f.q, f.a));
+  }
+
+  function addSectionRow(heading='', text='') {
+    const wrap = document.getElementById('estiloSections');
+    const row = document.createElement('div');
+    row.className = 'estilo-section-row';
+    row.style.cssText = 'border:1px solid #333;border-radius:6px;padding:.7rem;margin-bottom:.6rem;';
+    row.innerHTML = `
+      <input type="text" class="section-heading" placeholder="Título da seção (ex: História do estilo)" value="${escapeHtml(heading)}" style="width:100%;margin-bottom:.4rem;">
+      <textarea class="section-text" placeholder="Texto da seção" rows="3" style="width:100%;">${escapeHtml(text)}</textarea>
+      <button type="button" class="btn-secondary" onclick="this.closest('.estilo-section-row').remove()" style="margin-top:.4rem;">Remover seção</button>
+    `;
+    wrap.appendChild(row);
+  }
+
+  function addFaqRow(q='', a='') {
+    const wrap = document.getElementById('estiloFaq');
+    const row = document.createElement('div');
+    row.className = 'estilo-faq-row';
+    row.style.cssText = 'border:1px solid #333;border-radius:6px;padding:.7rem;margin-bottom:.6rem;';
+    row.innerHTML = `
+      <input type="text" class="faq-q" placeholder="Pergunta" value="${escapeHtml(q)}" style="width:100%;margin-bottom:.4rem;">
+      <textarea class="faq-a" placeholder="Resposta" rows="2" style="width:100%;">${escapeHtml(a)}</textarea>
+      <button type="button" class="btn-secondary" onclick="this.closest('.estilo-faq-row').remove()" style="margin-top:.4rem;">Remover pergunta</button>
+    `;
+    wrap.appendChild(row);
+  }
+
+  async function saveEstiloContent() {
+    const sel = document.getElementById('estiloContentSelect');
+    const style = sel.value;
+    if (!style) return;
+
+    const sections = Array.from(document.querySelectorAll('#estiloSections .estilo-section-row')).map(row => ({
+      heading: row.querySelector('.section-heading').value.trim(),
+      text: row.querySelector('.section-text').value.trim()
+    })).filter(s => s.heading || s.text);
+
+    const faq = Array.from(document.querySelectorAll('#estiloFaq .estilo-faq-row')).map(row => ({
+      q: row.querySelector('.faq-q').value.trim(),
+      a: row.querySelector('.faq-a').value.trim()
+    })).filter(f => f.q || f.a);
+
+    const btn = document.getElementById('estiloContentSaveBtn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Salvando...'; }
+
+    try {
+      const contentMap = getEstiloContent();
+      contentMap[style] = { sections, faq };
+      localStorage.setItem(ESTILO_CONTENT_KEY, JSON.stringify(contentMap));
+      await withRetry(() => commitEstiloContent(contentMap), 3, 'conteudo de estilo: ' + style);
+
+      const gallery = getGallery();
+      await withRetry(() => commitEstiloPage(style, gallery), 3, 'pagina de estilo: ' + style);
+      const desc = getStyleDescriptions()[style] || '';
+      await withRetry(() => updateSitemapForStyle(style, desc, gallery), 2, 'sitemap (estilo: ' + style + ')');
+
+      showAlert('success', `✅ Conteúdo e FAQ de "${style}" salvos e página republicada.`);
+    } catch (err) {
+      showAlert('error', '⚠ Falhou ao salvar conteúdo/FAQ (' + err.message + '). Tente de novo.');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = 'Salvar conteúdo e FAQ'; }
+    }
+  }
+
   // ── Paginas /estilo/ (SEO): regeneradas automaticamente ao salvar a descricao de um estilo ──
 
   function buildStyleMetaDescription(style, desc) {
@@ -780,6 +925,48 @@
     return items.length ? `${SITE_URL}/${items[0].imageUrl}` : `${SITE_URL}/skull.webp`;
   }
 
+  function buildFaqSchema(faq) {
+    if (!faq || !faq.length) return '';
+    const entities = faq.map(f => `    {
+      "@type": "Question",
+      "name": ${JSON.stringify(f.q)},
+      "acceptedAnswer": { "@type": "Answer", "text": ${JSON.stringify(f.a)} }
+    }`).join(',\n');
+    return `
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+${entities}
+  ]
+}
+<\/script>`;
+  }
+
+  function buildContentBlockHtml(sections) {
+    if (!sections || !sections.length) return '';
+    const body = sections.map(s => `    <h2>${escapeHtml(s.heading)}</h2>
+    <p>${escapeHtml(s.text)}</p>`).join('\n');
+    return `
+  <div class="style-content">
+${body}
+  </div>`;
+  }
+
+  function buildFaqBlockHtml(faq) {
+    if (!faq || !faq.length) return '';
+    const body = faq.map(f => `    <details class="faq-item">
+      <summary>${escapeHtml(f.q)}</summary>
+      <p>${escapeHtml(f.a)}</p>
+    </details>`).join('\n');
+    return `
+  <div class="style-faq">
+    <h2>Perguntas frequentes</h2>
+${body}
+  </div>`;
+  }
+
   function buildEstiloPageHtml(style, desc, gallery) {
     const slug = slugify(style);
     const title = `Tatuagem ${escapeHtml(style)} em Muriaé-MG | Micael Tatuagem`;
@@ -788,6 +975,31 @@
     const catalogLink = `/flash.html?tag=${style.replace(/ /g, '+')}`;
     const heroImg = heroImageForStyle(style, gallery);
     const styleJson = JSON.stringify(style);
+    const contentData = getEstiloContent()[style] || { sections: [], faq: [] };
+    const faqSchema = buildFaqSchema(contentData.faq);
+    const contentBlock = buildContentBlockHtml(contentData.sections);
+    const faqBlock = buildFaqBlockHtml(contentData.faq);
+
+    // Bake estatico de contagem/amostras/links -- mesma logica do script de runtime,
+    // calculada aqui pra robos sem JS (e IA) verem o conteudo real na primeira resposta.
+    // O script de runtime continua rodando por cima pra manter isso sempre fresco pro usuario.
+    const published = gallery.filter(it => !it.draft);
+    const items = published.filter(it => (it.styles||[]).includes(style));
+    const countText = items.length + (items.length===1 ? ' desenho disponível no catálogo' : ' desenhos disponíveis no catálogo');
+    const n = 6;
+    const step = items.length ? Math.max(1, Math.floor(items.length/n)) : 1;
+    const samples = [];
+    for (let i=0; i<items.length && samples.length<n; i+=step) samples.push(items[i]);
+    const sampleGridHtml = samples.length
+      ? samples.map(it => {
+          const alt = (it.altText || it.title || '').replace(/"/g,'&quot;');
+          return `<a href="${catalogLink}" class="sample-item"><img src="/${it.imageUrl}" alt="${alt}" loading="lazy"></a>`;
+        }).join('')
+      : '<p class="sample-empty">Novos desenhos nesse estilo em breve. Fale com o tatuador pra encomendar uma peça personalizada.</p>';
+    const otherStylesHtml = getTags().filter(t => t !== style).map(t => {
+      const s = slugify(t);
+      return `<li><a href="/estilo/${s}.html">${escapeHtml(t)}</a></li>`;
+    }).join('');
 
     return `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -820,7 +1032,7 @@
     { "@type": "ListItem", "position": 3, "name": "${escapeHtml(style)}", "item": "${canonical}" }
   ]
 }
-<\/script>
+<\/script>${faqSchema}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -849,6 +1061,18 @@
   .sample-item img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s ease; }
   .sample-item:hover img { transform:scale(1.05); }
   .sample-empty { color:var(--muted); font-size:.9rem; margin-bottom:2.5rem; }
+  .style-content { text-align:left; border-top:1px solid var(--border); padding-top:2.2rem; margin-bottom:2.6rem; }
+  .style-content h2 { font-family:'Cormorant Garamond', serif; font-size:1.5rem; font-weight:600; margin:0 0 .9rem; color:var(--bone); }
+  .style-content h2:not(:first-child) { margin-top:1.8rem; }
+  .style-content p { font-size:.95rem; line-height:1.75; color:#c9beac; margin:0 0 1rem; }
+  .style-faq { border-top:1px solid var(--border); padding-top:2.2rem; margin-bottom:2.6rem; text-align:left; }
+  .style-faq h2 { font-family:'Cormorant Garamond', serif; font-size:1.5rem; font-weight:600; margin:0 0 1.2rem; text-align:center; }
+  .faq-item { border-bottom:1px solid var(--border); padding:1rem 0; }
+  .faq-item summary { cursor:pointer; font-size:.95rem; color:var(--bone); list-style:none; display:flex; justify-content:space-between; gap:1rem; }
+  .faq-item summary::-webkit-details-marker { display:none; }
+  .faq-item summary::after { content:'+'; color:var(--rust); font-size:1.1rem; flex-shrink:0; }
+  .faq-item[open] summary::after { content:'−'; }
+  .faq-item p { font-size:.88rem; line-height:1.65; color:#a89e8e; margin:.8rem 0 0; }
   .other-styles { border-top:1px solid var(--border); padding-top:1.8rem; text-align:left; }
   .other-styles h2 { font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-bottom:1rem; text-align:center; }
   .other-styles ul { list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:.5rem .9rem; justify-content:center; }
@@ -872,13 +1096,13 @@
 <main>
   <p class="eyebrow">Estilo de tatuagem</p>
   <h1>Tatuagem ${escapeHtml(style)}</h1>
-  <p class="style-count" id="styleCount"></p>
+  <p class="style-count" id="styleCount">${countText}</p>
   <p class="style-desc">${escapeHtml(desc)}</p>
   <a href="${catalogLink}" class="cta">Ver todos os desenhos de ${escapeHtml(style)} →</a>
-  <div class="sample-grid" id="sampleGrid"></div>
+  <div class="sample-grid" id="sampleGrid">${sampleGridHtml}</div>${contentBlock}${faqBlock}
   <div class="other-styles">
     <h2>Outros estilos</h2>
-    <ul id="otherStyles"></ul>
+    <ul id="otherStyles">${otherStylesHtml}</ul>
   </div>
 </main>
 <footer>
@@ -1328,6 +1552,18 @@
         await withRetry(() => commitShareCard({ id, title, altText: alt, imageUrl }), 2, 'pagina de compartilhamento: ' + title);
       } catch (err) {
         console.warn('Pagina de compartilhamento nao gerada (nao critico):', title, err.message);
+      }
+
+      // regenera as paginas /estilo/ dos estilos afetados (antigos + novos), pra og:image e
+      // contagem nunca ficarem desatualizados quando um item novo vira o "primeiro" da tag
+      // -- nao bloqueia o save principal se falhar
+      const affectedStyles = Array.from(new Set([...(current.styles||[]), ...styles]));
+      for (const st of affectedStyles) {
+        try {
+          await withRetry(() => commitEstiloPage(st, gallery), 2, 'pagina de estilo: ' + st);
+        } catch (err) {
+          console.warn('Pagina /estilo/ nao atualizada (nao critico):', st, err.message);
+        }
       }
     } catch (err) {
       showAlert('error', '⚠ Falhou ao salvar (' + err.message + '). Tente de novo.');
