@@ -687,6 +687,18 @@
       renderEstiloContentEditor();
       input.value = '';
       showAlert('success', `✅ Tag "${val}" adicionada.`);
+
+      // gera a pagina /estilo/ e a entrada de sitemap na hora, mesmo sem descricao ainda
+      // (fica com o texto vazio ate voce preencher a descricao/conteudo depois)
+      // -- nao bloqueia o fluxo principal se falhar
+      try {
+        const gallery = getGallery();
+        await withRetry(() => commitEstiloPage(val, gallery), 2, 'pagina de estilo: ' + val);
+        await withRetry(() => updateSitemapForStyle(val, '', gallery), 2, 'sitemap (estilo: ' + val + ')');
+      } catch (err) {
+        console.warn('Pagina /estilo/ nao criada automaticamente (nao critico):', val, err.message);
+        showAlert('error', `⚠ Tag criada, mas a página /estilo/${slugify(val)}.html não gerou automaticamente. Salve a descrição do estilo pra tentar de novo.`);
+      }
     } catch (err) {
       showAlert('error', '⚠ Falhou ao salvar a tag (' + err.message + '). Tente de novo.');
     }
