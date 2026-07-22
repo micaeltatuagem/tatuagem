@@ -137,12 +137,17 @@
 
         const rot  = rnd(-40, 40).toFixed(1);
         const op   = (opRange[0] + Math.random() * (opRange[1] - opRange[0])).toFixed(3);
+        // Em paginas de fundo claro (data-decor-light no <body>), os icones sao pretos
+        // sobre transparente: sem inverter, ja ficam com cara de traco a lapis sobre o
+        // papel. Em paginas de fundo escuro, inverte pra bone/branco como sempre.
+        const lightBg = document.body.hasAttribute('data-decor-light');
+        const filterCss = lightBg ? '' : 'filter:invert(1);';
 
         img.style.cssText = [
           'position:absolute',
           'pointer-events:none',
           'user-select:none',
-          'filter:invert(1)',
+          filterCss,
           'height:auto',
           'z-index:0',
           `width:${passCss}`,
@@ -162,7 +167,7 @@
   function getGuardRects() {
     const guards = [];
     document.querySelectorAll(
-      '#galeria img[src*="galeria/"], .gallery-grid img, figure img, .carousel-frame img'
+      '#galeria img[src*="galeria/"], .gallery-grid img, figure img, .carousel-frame img, .flash-poster'
     ).forEach(img => {
       const r = img.getBoundingClientRect();
       if (r.width > 80) {
@@ -185,7 +190,7 @@
     if (path.includes('reserva'))  return ['header','section','main','footer'];
     if (path.includes('anamnese')) return ['header','section','main','footer'];
     if (path.includes('flash'))    return ['header','section','main','footer'];
-    if (path.includes('preview-tatuagem')) return ['header','section','main','footer'];
+    if (path.includes('fisiologia-da-tatuagem')) return ['header','section','main','footer'];
     // index / default
     return ['#hero','#sobre','#galeria','#processo','#faq','#promocoes','#contato'];
   }
