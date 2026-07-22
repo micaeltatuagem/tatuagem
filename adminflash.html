@@ -931,6 +931,13 @@
     return body + tail;
   }
 
+  // Texto do og:description/twitter:description: separado da description de SEO.
+  // A de SEO e densa em palavra-chave pra buscador; essa aqui e curta e com CTA,
+  // pensada pra quem recebe o link direto (WhatsApp etc), nao pra quem acha via busca.
+  function buildStyleShareDescription(style) {
+    return `Curtiu ${style}? Chama no WhatsApp e vê se encaixa na agenda.`;
+  }
+
   function heroImageForStyle(style, gallery) {
     const published = gallery.filter(it => !it.draft);
     const items = published.filter(it => (it.styles||[]).includes(style));
@@ -983,6 +990,7 @@ ${body}
     const slug = slugify(style);
     const title = `Tatuagem ${escapeHtml(style)} em Muriaé-MG | Micael Tatuagem`;
     const metaDesc = escapeHtml(buildStyleMetaDescription(style, desc));
+    const shareDesc = escapeHtml(buildStyleShareDescription(style));
     const canonical = `${SITE_URL}/estilo/${slug}.html`;
     const catalogLink = `/flash.html?tag=${style.replace(/ /g, '+')}`;
     const heroImg = heroImageForStyle(style, gallery);
@@ -1025,14 +1033,14 @@ ${body}
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
 <meta property="og:title" content="${title}">
-<meta property="og:description" content="${metaDesc}">
+<meta property="og:description" content="${shareDesc}">
 <meta property="og:image" content="${heroImg}">
 <meta property="og:url" content="${canonical}">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Micael Tatuagem">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="${title}">
-<meta name="twitter:description" content="${metaDesc}">
+<meta name="twitter:description" content="${shareDesc}">
 <meta name="twitter:image" content="${heroImg}">
 <script type="application/ld+json">
 {
@@ -1675,12 +1683,9 @@ ${body}
   // link fica com a imagem generica ate a proxima tentativa.
   async function commitShareCard(item) {
     const slug = item.slug || slugify(item.title);
-    // Usa a descricao rica escrita a mao quando existir (melhor pro preview de link e pra
-    // buscadores/IA entenderem a peca especifica); cai pro alt-text generico so se ainda
-    // nao tiver descricao preenchida.
-    const shareDesc = (item.description && item.description.trim())
-      ? item.description.trim().slice(0, 200)
-      : item.altText;
+    // Pagina e noindex (so serve pro robo de preview do WhatsApp/Facebook ler a imagem certa),
+    // entao a description aqui pode ser puro CTA, sem compromisso nenhum com SEO.
+    const shareDesc = `${item.title} disponível. Chama no WhatsApp pra fechar.`;
     const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
