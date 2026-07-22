@@ -319,6 +319,12 @@
       <div class="hub-card-desc">Catálogo de desenhos prontos, alt text e decoração do site.</div>
     </a>
 
+    <a class="hub-card" id="card-aerografia" href="adminaerografia.html">
+      <span class="hub-card-icon">🎨</span>
+      <div class="hub-card-title">Aerografia</div>
+      <div class="hub-card-desc">Galeria de quadros e murais, upload e edição de peças.</div>
+    </a>
+
     <a class="hub-card" id="card-corpos" href="admincorpos.html">
       <span class="hub-card-icon">🧍</span>
       <div class="hub-card-title">Bases de corpo</div>
@@ -340,7 +346,7 @@
   </div>
 
   <div class="token-notice" id="tokenNotice" style="display:none;">
-    ⚠️ Senha do admin não informada. Os painéis de <strong>Galeria</strong>, <strong>Flash</strong> e <strong>Bases de corpo</strong> não conseguirão fazer uploads. <a href="#" onclick="logout()" style="color:var(--gold-dim);text-decoration:underline;">Fazer login novamente</a> para informar a senha.
+    ⚠️ Senha do admin não informada. Os painéis de <strong>Galeria</strong>, <strong>Flash</strong>, <strong>Aerografia</strong> e <strong>Bases de corpo</strong> não conseguirão fazer uploads. <a href="#" onclick="logout()" style="color:var(--gold-dim);text-decoration:underline;">Fazer login novamente</a> para informar a senha.
   </div>
 
   <div class="hub-footer">
@@ -422,11 +428,12 @@
 
     const card = document.getElementById('card-galeria');
     const cardFlash = document.getElementById('card-flash');
+    const cardAerografia = document.getElementById('card-aerografia');
     const cardCorpos = document.getElementById('card-corpos');
 
     if (!token) {
       document.getElementById('tokenNotice').style.display = 'block';
-      [card, cardFlash, cardCorpos].forEach(c => {
+      [card, cardFlash, cardAerografia, cardCorpos].forEach(c => {
         c.style.opacity = '0.55';
         c.removeAttribute('href');
         c.style.cursor = 'pointer';
@@ -438,6 +445,7 @@
     } else {
       card.href = 'admingaleria.html';
       cardFlash.href = 'adminflash.html';
+      cardAerografia.href = 'adminaerografia.html';
       cardCorpos.href = 'admincorpos.html';
     }
   }
