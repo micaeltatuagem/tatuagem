@@ -505,11 +505,38 @@
   }
   .canvas-shell .empty-state span{font-size:12.5px; max-width:260px;}
 
+  .zoom-stage{
+    position:absolute; inset:0;
+    transform-origin:center center;
+    will-change:transform;
+  }
+  .canvas-shell.zoomed .zoom-stage{ cursor:grab; }
+  .canvas-shell.zoomed .zoom-stage:active{ cursor:grabbing; }
+
   #baseImg{
     position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
     display:none;
   }
   #layersContainer{ position:absolute; inset:0; }
+
+  .zoom-controls{
+    position:absolute; right:10px; bottom:10px; z-index:50;
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    background:rgba(13,13,13,.72); border:1px solid var(--line); border-radius:6px;
+    padding:4px; backdrop-filter:blur(4px);
+  }
+  .zoom-btn{
+    width:30px; height:30px; border:none; background:transparent; color:var(--paper);
+    font-family:'Inter',sans-serif; font-size:17px; cursor:pointer; border-radius:4px;
+    display:flex; align-items:center; justify-content:center; line-height:1; padding:0;
+  }
+  .zoom-btn:hover{ background:rgba(212,201,176,.14); color:var(--gold); }
+  .zoom-btn:disabled{ opacity:.3; cursor:not-allowed; }
+  .zoom-level{
+    font-family:'Oswald',sans-serif; font-size:9.5px; letter-spacing:.03em;
+    color:var(--text-dim); padding:2px 0; user-select:none;
+  }
+
   .overlay-layer{
     position:absolute; top:50%; left:50%;
     width:160px; height:160px;
@@ -990,10 +1017,18 @@
         <b>Nenhuma foto enviada</b>
         <span>Envie a foto da região do corpo para começar o preview</span>
       </div>
-      <figure style="margin:0;">
-        <img id="baseImg" alt="Foto do corpo">
-      </figure>
-      <div id="layersContainer"></div>
+      <div class="zoom-stage" id="zoomStage">
+        <figure style="margin:0;">
+          <img id="baseImg" alt="Foto do corpo">
+        </figure>
+        <div id="layersContainer"></div>
+      </div>
+      <div class="zoom-controls" id="zoomControls">
+        <button class="zoom-btn" id="zoomInBtn" type="button" title="Aumentar zoom" aria-label="Aumentar zoom">+</button>
+        <div class="zoom-level" id="zoomLevelLabel">100%</div>
+        <button class="zoom-btn" id="zoomOutBtn" type="button" title="Diminuir zoom" aria-label="Diminuir zoom" disabled>−</button>
+        <button class="zoom-btn" id="zoomResetBtn" type="button" title="Redefinir zoom" aria-label="Redefinir zoom" style="font-size:12px;">⤢</button>
+      </div>
     </div>
   </div>
 
@@ -1208,6 +1243,7 @@
   const shareBtn = document.getElementById('shareBtn');
 
   const canvasShell = document.getElementById('canvasShell');
+  const zoomStage = document.getElementById('zoomStage');
   const emptyState = document.getElementById('emptyState');
   const baseImg = document.getElementById('baseImg');
   const layersContainer = document.getElementById('layersContainer');
@@ -1244,6 +1280,112 @@
   const fusionModeBar = document.getElementById('fusionModeBar');
   const fusionMatch = document.getElementById('fusionMatch');
   const addFusionBtn = document.getElementById('addFusionBtn');
+
+  // ---------- Zoom do canvas (roda do mouse, pinça no touch, botões) ----------
+  const zoomInBtn = document.getElementById('zoomInBtn');
+  const zoomOutBtn = document.getElementById('zoomOutBtn');
+  const zoomResetBtn = document.getElementById('zoomResetBtn');
+  const zoomLevelLabel = document.getElementById('zoomLevelLabel');
+
+  const ZOOM_MIN = 1;
+  const ZOOM_MAX = 4;
+  let zoomLevel = 1;
+  let panX = 0;
+  let panY = 0;
+
+  function clampPan(){
+    const rect = canvasShell.getBoundingClientRect();
+    const maxPanX = Math.max(0, (zoomLevel - 1) * rect.width / 2);
+    const maxPanY = Math.max(0, (zoomLevel - 1) * rect.height / 2);
+    panX = Math.min(maxPanX, Math.max(-maxPanX, panX));
+    panY = Math.min(maxPanY, Math.max(-maxPanY, panY));
+  }
+
+  function applyZoomTransform(){
+    zoomStage.style.transform = `translate(${panX}px, ${panY}px) scale(${zoomLevel})`;
+    zoomLevelLabel.textContent = Math.round(zoomLevel * 100) + '%';
+    zoomOutBtn.disabled = zoomLevel <= ZOOM_MIN + 0.001;
+    zoomInBtn.disabled = zoomLevel >= ZOOM_MAX - 0.001;
+    canvasShell.classList.toggle('zoomed', zoomLevel > ZOOM_MIN + 0.001);
+  }
+
+  function resetZoom(){
+    zoomLevel = 1; panX = 0; panY = 0;
+    applyZoomTransform();
+  }
+
+  function setZoomAtPoint(newZoom, clientX, clientY){
+    newZoom = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, newZoom));
+    const rect = canvasShell.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const localX = (clientX - cx - panX) / zoomLevel;
+    const localY = (clientY - cy - panY) / zoomLevel;
+    panX = clientX - cx - localX * newZoom;
+    panY = clientY - cy - localY * newZoom;
+    zoomLevel = newZoom;
+    clampPan();
+    applyZoomTransform();
+  }
+
+  zoomInBtn.addEventListener('click', () => {
+    const rect = canvasShell.getBoundingClientRect();
+    setZoomAtPoint(zoomLevel + 0.5, rect.left + rect.width / 2, rect.top + rect.height / 2);
+  });
+  zoomOutBtn.addEventListener('click', () => {
+    const rect = canvasShell.getBoundingClientRect();
+    setZoomAtPoint(zoomLevel - 0.5, rect.left + rect.width / 2, rect.top + rect.height / 2);
+  });
+  zoomResetBtn.addEventListener('click', resetZoom);
+
+  // roda do mouse / trackpad: aproxima/afasta o canvas, centrado no cursor
+  canvasShell.addEventListener('wheel', (e) => {
+    if(baseImg.style.display !== 'block') return;
+    e.preventDefault();
+    const delta = -e.deltaY * 0.0016;
+    setZoomAtPoint(zoomLevel + delta, e.clientX, e.clientY);
+  }, { passive:false });
+
+  // pinça de dois dedos no celular
+  let pinchState = null;
+  canvasShell.addEventListener('touchstart', (e) => {
+    if(e.touches.length === 2){
+      const [t1, t2] = e.touches;
+      const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+      pinchState = { dist, zoom: zoomLevel };
+      panDrag = null;
+    }
+  }, { passive:true });
+  canvasShell.addEventListener('touchmove', (e) => {
+    if(e.touches.length === 2 && pinchState){
+      e.preventDefault();
+      const [t1, t2] = e.touches;
+      const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+      const midX = (t1.clientX + t2.clientX) / 2;
+      const midY = (t1.clientY + t2.clientY) / 2;
+      setZoomAtPoint(pinchState.zoom * (dist / pinchState.dist), midX, midY);
+    }
+  }, { passive:false });
+  canvasShell.addEventListener('touchend', (e) => {
+    if(e.touches.length < 2) pinchState = null;
+  });
+  canvasShell.addEventListener('touchcancel', () => { pinchState = null; });
+
+  // arrastar com um dedo/mouse na área vazia do canvas (fora de uma camada) pra navegar quando tá com zoom
+  let panDrag = null;
+  canvasShell.addEventListener('pointerdown', (e) => {
+    if(zoomLevel <= ZOOM_MIN + 0.001) return;
+    if(e.target.closest('.overlay-layer')) return;
+    panDrag = { startX: e.clientX, startY: e.clientY, startPanX: panX, startPanY: panY };
+  });
+  window.addEventListener('pointermove', (e) => {
+    if(!panDrag) return;
+    panX = panDrag.startPanX + (e.clientX - panDrag.startX);
+    panY = panDrag.startPanY + (e.clientY - panDrag.startY);
+    clampPan();
+    applyZoomTransform();
+  });
+  window.addEventListener('pointerup', () => { panDrag = null; });
 
   // ---------- Fontes (curadas + upload do cliente) ----------
   let fontList = [
@@ -1800,6 +1942,7 @@
     baseImg.src = url;
     baseImg.style.display = 'block';
     emptyState.style.display = 'none';
+    resetZoom();
     updateDownloadState();
   }
   uploadBtn.addEventListener('click', () => bodyPhotoInput.click());
@@ -1886,6 +2029,7 @@
     historyStack = [];
     emptyState.style.display = 'flex';
     baseThumbs.querySelectorAll('.base-thumb').forEach(n => n.classList.remove('selected'));
+    resetZoom();
     updateLayerThumbs();
     [opacityRange, blendMode, scaleRange, rotRange, flipBtn, deleteSelectedBtn].forEach(c => c.disabled = true);
     activeLayerLabel.textContent = 'Nenhuma camada selecionada';
@@ -2018,13 +2162,15 @@
     const p = pointerXY(e);
 
     if(interaction.type === 'move'){
-      const dxPct = (p.x - interaction.startX) / rect.width * 100;
-      const dyPct = (p.y - interaction.startY) / rect.height * 100;
+      // divide pelo zoomLevel: em tela ampliada, cada pixel do mouse corresponde
+      // a um deslocamento menor na posição real (não ampliada) da camada.
+      const dxPct = (p.x - interaction.startX) / (rect.width * zoomLevel) * 100;
+      const dyPct = (p.y - interaction.startY) / (rect.height * zoomLevel) * 100;
       layer.leftPct = interaction.startLeftPct + dxPct;
       layer.topPct = interaction.startTopPct + dyPct;
     } else if(interaction.type === 'resize'){
       const delta = (p.x - interaction.startX + p.y - interaction.startY) / 2;
-      let newScale = interaction.startScale + delta / 140;
+      let newScale = interaction.startScale + delta / (140 * zoomLevel);
       newScale = Math.max(0.2, Math.min(3, newScale));
       layer.scale = newScale;
       if(layer.id === activeLayerId){
