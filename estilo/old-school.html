@@ -30,6 +30,34 @@
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "O que é tatuagem old school?",
+      "acceptedAnswer": { "@type": "Answer", "text": "É o estilo mais antigo da tatuagem ocidental, marcado por linhas grossas, poucas cores e ícones fixos como âncoras, andorinhas, rosas e adagas. Popularizado por tatuadores como Sailor Jerry no início do século 20." }
+    },
+    {
+      "@type": "Question",
+      "name": "Por que a old school envelhece melhor que outros estilos?",
+      "acceptedAnswer": { "@type": "Answer", "text": "O traço grosso e o preenchimento sólido seguram melhor a tinta ao longo dos anos, ao contrário de detalhes finos que tendem a borrar com o tempo." }
+    },
+    {
+      "@type": "Question",
+      "name": "Old school e neotradicional são a mesma coisa?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Não. A old school usa paleta limitada e composições simples. A neotradicional herda o traço grosso, mas adiciona sombreamento e mais cor." }
+    },
+    {
+      "@type": "Question",
+      "name": "Quanto tempo leva pra fazer uma peça old school?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Varia com tamanho e região do corpo. Peças de flash prontas (como as do catálogo) costumam ser mais rápidas que projetos originais." }
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -58,6 +86,18 @@
   .sample-item img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s ease; }
   .sample-item:hover img { transform:scale(1.05); }
   .sample-empty { color:var(--muted); font-size:.9rem; margin-bottom:2.5rem; }
+  .style-content { text-align:left; border-top:1px solid var(--border); padding-top:2.2rem; margin-bottom:2.6rem; }
+  .style-content h2 { font-family:'Cormorant Garamond', serif; font-size:1.5rem; font-weight:600; margin:0 0 .9rem; color:var(--bone); }
+  .style-content h2:not(:first-child) { margin-top:1.8rem; }
+  .style-content p { font-size:.95rem; line-height:1.75; color:#c9beac; margin:0 0 1rem; }
+  .style-faq { border-top:1px solid var(--border); padding-top:2.2rem; margin-bottom:2.6rem; text-align:left; }
+  .style-faq h2 { font-family:'Cormorant Garamond', serif; font-size:1.5rem; font-weight:600; margin:0 0 1.2rem; text-align:center; }
+  .faq-item { border-bottom:1px solid var(--border); padding:1rem 0; }
+  .faq-item summary { cursor:pointer; font-size:.95rem; color:var(--bone); list-style:none; display:flex; justify-content:space-between; gap:1rem; }
+  .faq-item summary::-webkit-details-marker { display:none; }
+  .faq-item summary::after { content:'+'; color:var(--rust); font-size:1.1rem; flex-shrink:0; }
+  .faq-item[open] summary::after { content:'−'; }
+  .faq-item p { font-size:.88rem; line-height:1.65; color:#a89e8e; margin:.8rem 0 0; }
   .other-styles { border-top:1px solid var(--border); padding-top:1.8rem; text-align:left; }
   .other-styles h2 { font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); margin-bottom:1rem; text-align:center; }
   .other-styles ul { list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:.5rem .9rem; justify-content:center; }
@@ -85,6 +125,38 @@
   <p class="style-desc">Traço grosso, contraste absoluto entre preto e pele, sem meio-termo. Âncoras, adagas, rosas, caveiras: os ícones clássicos da tatuagem, desenhados pra durar décadas sem perder a leitura. É o estilo mais antigo e também o mais resistente ao tempo.</p>
   <a href="/flash.html?tag=Old+School" class="cta">Ver todos os desenhos de Old School →</a>
   <div class="sample-grid" id="sampleGrid"><a href="/flash.html?tag=Old+School" class="sample-item"><img src="/flash/adaga-sepente-1783645972639-16.webp" alt="Tatuagem flash de Adaga Serpente Ultra Bold. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy"></a><a href="/flash.html?tag=Old+School" class="sample-item"><img src="/flash/sagrado-coracao-2-1783645974281-17.webp" alt="Tatuagem flash de sagrado coracao ultra bold. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy"></a><a href="/flash.html?tag=Old+School" class="sample-item"><img src="/flash/pin-up-9-1783297599013.webp" alt="Tatuagem flash de pin up 9. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy"></a><a href="/flash.html?tag=Old+School" class="sample-item"><img src="/flash/mensagem-garrafa-1783170147393-26.webp" alt="Tatuagem flash de mensagem garrafa. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy"></a><a href="/flash.html?tag=Old+School" class="sample-item"><img src="/flash/bola8.webp" alt="Tatuagem flash de bola 8. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy"></a><a href="/flash.html?tag=Old+School" class="sample-item"><img src="/flash/ferradura1.webp" alt="Tatuagem flash de ferradura 1. Disponível no Micael Tatuagem, Muriaé MG." loading="lazy"></a></div>
+  <div class="style-content">
+    <h2>História do old school</h2>
+    <p>A tatuagem old school nasceu no início do século 20, nos portos e bases militares dos Estados Unidos. Marinheiros voltavam de viagem com peças feitas em máquinas rústicas, tinta limitada e agulhas que não perdoavam detalhe fino — por isso o traço grosso virou necessidade antes de virar estilo. Norman &quot;Sailor Jerry&quot; Collins, no Havaí, é o nome mais citado quando se fala da old school americana: ele consolidou o repertório de âncoras, andorinhas, punhais e mulheres pin-up que até hoje define o estilo.
+
+Características
+Contorno preto espesso, poucas cores (preto, vermelho e verde entram na paleta clássica), sombreamento mínimo e composições simétricas e diretas. Não é um estilo de sutileza — é um estilo de clareza: o desenho precisa se sustentar de longe e continuar legível daqui a vinte anos.
+
+Por que ela envelhece bem
+Tinta se espalha um pouco sob a pele com o tempo. Traços finos perdem definição nesse processo; traços grossos absorvem essa dispersão sem comprometer a leitura do desenho. É por isso que uma old school feita há trinta anos ainda é reconhecível, enquanto trabalhos de linha fina tendem a borrar.
+
+Old school x neotradicional
+As duas compartilham o contorno grosso, mas a neotradicional adiciona sombreamento gradual, profundidade e uma paleta bem mais ampla — enquanto a old school se mantém fiel à simplicidade original. Se quiser algo com mais volume e cor, vale ver a página de NeoTrad.</p>
+  </div>
+  <div class="style-faq">
+    <h2>Perguntas frequentes</h2>
+    <details class="faq-item">
+      <summary>O que é tatuagem old school?</summary>
+      <p>É o estilo mais antigo da tatuagem ocidental, marcado por linhas grossas, poucas cores e ícones fixos como âncoras, andorinhas, rosas e adagas. Popularizado por tatuadores como Sailor Jerry no início do século 20.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Por que a old school envelhece melhor que outros estilos?</summary>
+      <p>O traço grosso e o preenchimento sólido seguram melhor a tinta ao longo dos anos, ao contrário de detalhes finos que tendem a borrar com o tempo.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Old school e neotradicional são a mesma coisa?</summary>
+      <p>Não. A old school usa paleta limitada e composições simples. A neotradicional herda o traço grosso, mas adiciona sombreamento e mais cor.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Quanto tempo leva pra fazer uma peça old school?</summary>
+      <p>Varia com tamanho e região do corpo. Peças de flash prontas (como as do catálogo) costumam ser mais rápidas que projetos originais.</p>
+    </details>
+  </div>
   <div class="other-styles">
     <h2>Outros estilos</h2>
     <ul id="otherStyles"><li><a href="/estilo/dark-art.html">Dark Art</a></li><li><a href="/estilo/religioso.html">Religioso</a></li><li><a href="/estilo/nautico.html">Náutico</a></li><li><a href="/estilo/animais.html">Animais</a></li><li><a href="/estilo/tribal.html">Tribal</a></li><li><a href="/estilo/oriental.html">Oriental</a></li><li><a href="/estilo/organico.html">Orgânico</a></li><li><a href="/estilo/escrita.html">Escrita</a></li><li><a href="/estilo/cristao.html">Cristão</a></li><li><a href="/estilo/umbanda.html">Umbanda</a></li><li><a href="/estilo/veda.html">Veda</a></li><li><a href="/estilo/budista.html">Budista</a></li><li><a href="/estilo/neotrad.html">NeoTrad</a></li><li><a href="/estilo/blackwork.html">BlackWork</a></li><li><a href="/estilo/ultrabold.html">UltraBold</a></li><li><a href="/estilo/psicodelico.html">Psicodélico</a></li><li><a href="/estilo/gnose.html">Gnose</a></li><li><a href="/estilo/colorido.html">Colorido</a></li><li><a href="/estilo/serie.html">Série</a></li><li><a href="/estilo/comics.html">Comics</a></li><li><a href="/estilo/pin-up.html">Pin-Up</a></li><li><a href="/estilo/micro-flash.html">Micro Flash</a></li><li><a href="/estilo/pensadores.html">Pensadores</a></li></ul>
@@ -137,7 +209,7 @@
       const el = document.getElementById('otherStyles');
       if (el) {
         el.innerHTML = others.map(t => {
-          const slug = t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+          const slug = t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
           return `<li><a href="/estilo/${slug}.html">${t}</a></li>`;
         }).join('');
       }
