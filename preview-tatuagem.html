@@ -1969,25 +1969,28 @@
   });
 
   // ---------- bases de corpo prontas ----------
-  // Fica na pasta /corpos, separada por gênero. Para adicionar novas fotos,
-  // basta subir o arquivo em corpos/masculino/ ou corpos/feminino/ e incluir
-  // uma linha aqui com o caminho e um nome descritivo (ex: região do corpo).
-  const bodyBases = {
-    masculino: [
-      {src:'corpos/masculino/corpo-lateral-braco-ombro.webp', nome:'Braço e ombro, lateral'},
-    ],
-    feminino: [
-      {src:'corpos/feminino/corpo-lateral-braco-ombro.webp', nome:'Braço e ombro, lateral'},
-    ]
-  };
-
+  // Catálogo gerenciado pelo painel admincorpos.html (Hub Admin → Bases de corpo).
+  // Cada upload feito lá vai pra corpos/masculino/ ou corpos/feminino/ e entra
+  // automaticamente em corpos/corpos-data.json, que é o que carregamos aqui.
+  let allBodyBases = [];
   const genderToggle = document.getElementById('genderToggle');
   const baseThumbs = document.getElementById('baseThumbs');
   let currentGender = 'masculino';
 
+  async function loadBodyBasesFromRepo(){
+    try {
+      const res = await fetch(`corpos/corpos-data.json?t=${Date.now()}`, { cache: 'no-store' });
+      allBodyBases = await res.json();
+    } catch (err) {
+      console.warn('Nao foi possivel carregar corpos/corpos-data.json:', err.message);
+      allBodyBases = [];
+    }
+    renderBaseThumbs();
+  }
+
   function renderBaseThumbs(){
     baseThumbs.innerHTML = '';
-    const list = bodyBases[currentGender] || [];
+    const list = allBodyBases.filter(item => item.gender === currentGender);
     if(!list.length){
       const empty = document.createElement('div');
       empty.className = 'base-thumb-empty';
@@ -1999,11 +2002,11 @@
       const thumb = document.createElement('div');
       thumb.className = 'base-thumb';
       thumb.title = item.nome;
-      thumb.innerHTML = `<img src="${item.src}" alt="${item.nome}" loading="lazy">`;
+      thumb.innerHTML = `<img src="${item.imageUrl}" alt="${item.nome}" loading="lazy">`;
       thumb.addEventListener('click', () => {
         baseThumbs.querySelectorAll('.base-thumb').forEach(t => t.classList.remove('selected'));
         thumb.classList.add('selected');
-        loadBodyPhotoFromUrl(item.src);
+        loadBodyPhotoFromUrl(item.imageUrl);
       });
       baseThumbs.appendChild(thumb);
     });
@@ -2018,7 +2021,7 @@
     });
   });
 
-  renderBaseThumbs();
+  loadBodyBasesFromRepo();
 
   resetBtn.addEventListener('click', () => {
     baseImg.style.display = 'none';
