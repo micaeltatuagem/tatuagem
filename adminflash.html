@@ -1073,6 +1073,11 @@ ${body}
     // Preferimos o card social gerado (moldura + flash-decor); cai pra imagem crua
     // so se a geracao/commit do card tiver falhado.
     const heroImg = heroImgOverride || heroImageForStyle(style, gallery);
+    // Dimensoes so sao conhecidas (1200x630) quando o card foi gerado; no fallback
+    // pra imagem crua nao da pra declarar isso, senao o Facebook usa dimensao errada.
+    const imgDimsTags = heroImgOverride
+      ? '\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n<meta property="og:image:type" content="image/jpeg">'
+      : '';
     const styleJson = JSON.stringify(style);
     const contentData = getEstiloContent()[style] || { sections: [], faq: [] };
     const faqSchema = buildFaqSchema(contentData.faq);
@@ -1113,7 +1118,7 @@ ${body}
 <meta property="og:type" content="website">
 <meta property="og:title" content="${title}">
 <meta property="og:description" content="${shareDesc}">
-<meta property="og:image" content="${heroImg}">
+<meta property="og:image" content="${heroImg}">${imgDimsTags}
 <meta property="og:url" content="${canonical}">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Micael Tatuagem">
@@ -1779,14 +1784,19 @@ ${body}
     const shareDesc = `${item.title} disponível. Chama no WhatsApp pra fechar.`;
 
     let heroImg = `${SITE_URL}/${item.imageUrl}`; // fallback: imagem crua
+    let heroImgIsCard = false;
     try {
       const cardPath = `og-cards/flash/${item.id}-${slug}.jpg`;
       const dataUrl = await buildOgCardDataUrl(heroImg, `${item.title} · Muriaé-MG`);
       await commitOgCard(cardPath, dataUrl);
       heroImg = `${SITE_URL}/${cardPath}`;
+      heroImgIsCard = true;
     } catch (e) {
       console.warn('Card social da peça falhou, usando imagem crua:', e);
     }
+    const imgDimsTags = heroImgIsCard
+      ? '\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n<meta property="og:image:type" content="image/jpeg">'
+      : '';
 
     const html = `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -1798,7 +1808,7 @@ ${body}
 <meta property="og:type" content="website">
 <meta property="og:title" content="${escapeHtml(item.title)} · Flash disponível · Micael Tatuagem">
 <meta property="og:description" content="${escapeHtml(shareDesc)}">
-<meta property="og:image" content="${heroImg}">
+<meta property="og:image" content="${heroImg}">${imgDimsTags}
 <meta property="og:url" content="${SITE_URL}/f/${item.id}-${slug}.html">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Micael Tatuagem">
