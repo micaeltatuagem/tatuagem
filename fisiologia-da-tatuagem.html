@@ -55,6 +55,7 @@
     --flash-green: #35635a;
     --line: rgba(20,22,28,0.14);
     --paper-line: rgba(236,229,216,0.18);
+    --copy: 19px;
   }
 
   *{box-sizing:border-box;}
@@ -64,7 +65,7 @@
     background:var(--paper);
     color:var(--ink);
     font-family:'Inter', sans-serif;
-    font-size:17px;
+    font-size:var(--copy);
     font-weight:700;
     line-height:1.65;
     -webkit-font-smoothing:antialiased;
@@ -89,6 +90,39 @@
     max-width:1040px;
     margin:0 auto;
     padding:0 32px;
+  }
+
+  /* ---------- LEGIBILIDADE SOBRE DECORATIVOS ---------- */
+  /* Nas seções com flash decorativo ao fundo (data-decor-light),
+     o .wrap ganha um box translúcido atrás pra garantir contraste. */
+  section[data-decor-light] > .wrap{
+    position:relative;
+    z-index:1;
+  }
+  section[data-decor-light] > .wrap::before{
+    content:'';
+    position:absolute;
+    inset:-28px -24px;
+    background:rgba(236,229,216,0.86);
+    border-radius:6px;
+    z-index:-1;
+    pointer-events:none;
+  }
+  section[data-decor-light].alert-section > .wrap::before{
+    content:none;
+  }
+  footer[data-decor-light]{
+    position:relative;
+    z-index:1;
+  }
+  footer[data-decor-light]::before{
+    content:'';
+    position:absolute;
+    inset:-14px -20px;
+    background:rgba(236,229,216,0.86);
+    border-radius:6px;
+    z-index:-1;
+    pointer-events:none;
   }
 
   /* ---------- HERO ---------- */
@@ -207,7 +241,7 @@
   .hero-sub{
     font-family:'Cormorant Garamond', serif;
     font-style:italic;
-    font-size:20px;
+    font-size:var(--copy);
     color:rgba(236,229,216,0.72);
     max-width:520px;
     margin-top:28px;
@@ -247,10 +281,11 @@
     margin-top:10px;
   }
   .section-note{
-    max-width:280px;
+    max-width:340px;
     font-family:'Cormorant Garamond', serif;
-    font-size:15px;
-    color:rgba(20,22,28,0.62);
+    font-size:var(--copy);
+    line-height:1.4;
+    color:rgba(20,22,28,0.72);
     text-align:right;
   }
   @media(max-width:720px){
@@ -289,11 +324,11 @@
     padding-top:3px;
   }
   .layer-item h3{
-    font-size:18px;
+    font-size:26px;
     font-weight:600;
     margin-bottom:6px;
   }
-  .layer-item p{margin:0; font-size:15.5px; color:rgba(20,22,28,0.78);}
+  .layer-item p{margin:0; font-size:var(--copy); color:rgba(20,22,28,0.78);}
 
   .skin-diagram{
     background:var(--ink);
@@ -318,14 +353,14 @@
   .tl-item:last-child{border-bottom:1px solid var(--line);}
   .tl-day{
     font-family:'Inter', sans-serif;
-    font-size:15px;
+    font-size:16px;
     letter-spacing:0.05em;
     text-transform:uppercase;
     color:var(--oxblood);
     padding-top:2px;
   }
   .tl-body h3{
-    font-size:20px;
+    font-size:26px;
     font-weight:600;
     margin-bottom:8px;
     text-transform:none;
@@ -333,7 +368,7 @@
     font-family:'Cormorant Garamond', serif;
     font-style:italic;
   }
-  .tl-body p{margin:0; color:rgba(20,22,28,0.8);}
+  .tl-body p{margin:0; font-size:var(--copy); color:rgba(20,22,28,0.8);}
 
   /* ---------- CUIDADOS GRID ---------- */
   .care-grid{
@@ -349,7 +384,7 @@
     padding:40px;
   }
   .care-col h3{
-    font-size:14px;
+    font-size:20px;
     letter-spacing:0.12em;
     margin-bottom:26px;
     display:flex;
@@ -362,7 +397,7 @@
   .care-col li{
     padding:14px 0;
     border-top:1px solid var(--line);
-    font-size:16px;
+    font-size:var(--copy);
     display:flex;
     gap:14px;
   }
@@ -383,7 +418,7 @@
     border-bottom:none;
   }
   .alert-section .section-tag{color:var(--oxblood-bright);}
-  .alert-section .section-note{color:rgba(236,229,216,0.55);}
+  .alert-section .section-note{color:rgba(236,229,216,0.85); font-size:22px;}
   .alert-grid{
     display:grid;
     grid-template-columns:repeat(3, 1fr);
@@ -396,7 +431,7 @@
     background:var(--ink);
     padding:32px 28px;
   }
-  .alert-card .mono{font-size:12px; color:var(--oxblood-bright); letter-spacing:0.1em;}
+  .alert-card .mono{font-size:13px; color:var(--oxblood-bright); letter-spacing:0.1em;}
 
   .term-grid{
     display:grid;
@@ -408,17 +443,17 @@
   }
   @media(max-width:720px){.term-grid{grid-template-columns:1fr;}}
   .term-card{background:var(--paper); padding:32px;}
-  .term-card .mono{font-size:12px; color:var(--oxblood); letter-spacing:0.1em;}
+  .term-card .mono{font-size:13px; color:var(--oxblood); letter-spacing:0.1em;}
   .term-card h3{
     font-family:'Cormorant Garamond', serif;
     font-style:italic;
     text-transform:none;
     letter-spacing:0;
-    font-size:19px;
+    font-size:26px;
     margin:10px 0 8px;
     font-weight:500;
   }
-  .term-card p{margin:0; font-size:15px; color:rgba(20,22,28,0.78);}
+  .term-card p{margin:0; font-size:var(--copy); color:rgba(20,22,28,0.78);}
   .flash-poster{
     max-width:460px;
     margin:0 auto 56px;
@@ -442,18 +477,65 @@
     font-style:italic;
     text-transform:none;
     letter-spacing:0;
-    font-size:19px;
+    font-size:26px;
     margin:10px 0 8px;
     font-weight:500;
   }
-  .alert-card p{margin:0; font-size:15px; color:rgba(236,229,216,0.72);}
+  .alert-card p{margin:0; font-size:var(--copy); color:rgba(236,229,216,0.72);}
+
+  /* ---------- MITO / FATO ---------- */
+  .myth-list{ margin-top:8px; }
+  .myth-item{
+    padding:32px 0;
+    border-top:1px solid var(--line);
+  }
+  .myth-item:first-child{ border-top:none; padding-top:0; }
+  .myth-row{
+    display:flex;
+    align-items:baseline;
+    gap:16px;
+    margin-bottom:12px;
+  }
+  .myth-label{
+    font-family:'Inter', sans-serif;
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:0.14em;
+    color:var(--oxblood-bright);
+    flex-shrink:0;
+  }
+  .myth-text{
+    font-family:'Inter', sans-serif;
+    font-style:italic;
+    font-size:var(--copy);
+    color:rgba(20,22,28,0.55);
+  }
+  .fact-row{
+    display:flex;
+    align-items:flex-start;
+    gap:16px;
+  }
+  .fact-label{
+    font-family:'Inter', sans-serif;
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:0.14em;
+    color:var(--flash-green);
+    flex-shrink:0;
+    padding-top:3px;
+  }
+  .fact-text{
+    margin:0;
+    font-size:var(--copy);
+    color:rgba(20,22,28,0.82);
+  }
 
   .disclaimer{
     margin-top:48px;
     padding:20px 24px;
     border:1px solid var(--paper-line);
     font-family:'Inter', sans-serif;
-    font-size:13.5px;
+    font-size:var(--copy);
     color:rgba(236,229,216,0.68);
     line-height:1.7;
   }
