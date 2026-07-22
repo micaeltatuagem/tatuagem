@@ -140,7 +140,10 @@
         // Em paginas de fundo claro (data-decor-light no <body>), os icones sao pretos
         // sobre transparente: sem inverter, ja ficam com cara de traco a lapis sobre o
         // papel. Em paginas de fundo escuro, inverte pra bone/branco como sempre.
-        const lightBg = document.body.hasAttribute('data-decor-light');
+        // A cor do decor agora e por secao (nao por pagina inteira): uma secao com
+        // data-decor-light fica com o traco preto original (efeito lapis sobre fundo
+        // claro); sem esse atributo, inverte pra bone/branco (fundo escuro), como sempre.
+        const lightBg = el.closest('[data-decor-light]') !== null;
         const filterCss = lightBg ? '' : 'filter:invert(1);';
 
         img.style.cssText = [
