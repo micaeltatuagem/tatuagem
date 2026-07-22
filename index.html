@@ -926,7 +926,7 @@
   </ul>
 </nav>
 
-<div style="text-align:center; padding:0.65rem 1rem; font-size:0.85rem; background:rgba(200,169,110,0.08); border-bottom:1px solid var(--border);">
+<div id="google-rating-badge" style="text-align:center; padding:0.65rem 1rem; font-size:0.85rem; background:rgba(200,169,110,0.08); border-bottom:1px solid var(--border);">
   <a href="https://share.google/6yOF2PsXduhjoFIGC" target="_blank" rel="noopener" style="color:var(--ink-muted); text-decoration:none;">
     <span style="color:var(--accent);">★★★★★</span> 5,0 no Google · 2 avaliações
   </a>
@@ -1414,9 +1414,37 @@
 
 <!-- ── Mapa do estúdio ─────────────────────────────────────────── -->
 <script>
+const PLACE_ID_MICAEL = "ChIJ30vnR6bHvAARnHEoIHgXMdY";
+
+async function carregarAvaliacaoGoogle() {
+  const badge = document.getElementById('google-rating-badge');
+  if (!badge) return;
+  try {
+    const place = new google.maps.places.Place({ id: PLACE_ID_MICAEL });
+    await place.fetchFields({ fields: ['rating', 'userRatingCount', 'googleMapsURI'] });
+
+    if (!place.rating || !place.userRatingCount) throw new Error('sem dados de avaliação');
+
+    const arredondado = Math.round(place.rating);
+    const estrelas = '★'.repeat(arredondado) + '☆'.repeat(5 - arredondado);
+    const notaFormatada = place.rating.toFixed(1).replace('.', ',');
+    const plural = place.userRatingCount === 1 ? 'avaliação' : 'avaliações';
+
+    badge.innerHTML = `
+      <a href="${place.googleMapsURI}" target="_blank" rel="noopener" style="color:var(--ink-muted); text-decoration:none;">
+        <span style="color:var(--accent);">${estrelas}</span> ${notaFormatada} no Google · ${place.userRatingCount} ${plural}
+      </a>`;
+  } catch (e) {
+    // mantém o conteúdo estático já presente no HTML como fallback
+    console.warn('Não foi possível carregar avaliação do Google:', e);
+  }
+}
+
 function initMapaEstudio() {
   const endereco = "R. Astrogildo Figueiredo de Barros, 469, Muriaé, MG";
   const geocoder = new google.maps.Geocoder();
+
+  carregarAvaliacaoGoogle();
 
   const estiloEscuro = [
     { elementType: "geometry", stylers: [{ color: "#0a0a0a" }] },
@@ -1458,7 +1486,7 @@ function initMapaEstudio() {
 }
 </script>
 <script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDt5ZOD2Su6S7nJlVlUMJ-JNPQ0bzeT2lY&callback=initMapaEstudio">
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDt5ZOD2Su6S7nJlVlUMJ-JNPQ0bzeT2lY&libraries=places&callback=initMapaEstudio">
 </script>
 </body>
 </html>
