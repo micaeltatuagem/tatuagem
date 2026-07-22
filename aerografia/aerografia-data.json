@@ -30,8 +30,10 @@
     "title": "Cabeca Dragao",
     "altText": "Aerografia: cabeca dragao. Micael Tatuagem, Muriaé MG.",
     "description": "",
-    "styles": [],
+    "styles": [
+      "Paredes/Murais"
+    ],
     "date": "2026-07-22",
-    "draft": true
+    "draft": false
   }
 ]
