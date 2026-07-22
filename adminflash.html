@@ -955,7 +955,7 @@
     ['ancora1.webp', 1080, 500, 100], ['lua.webp', 1000, 555, 50],
     ['ferradura2.webp', 600, 55, 50],
   ];
-  const OG_DECOR_OPACITY = 0.22; // icones sao silhuetas escuras; sem tingir de bone, somem no fundo escuro
+  const OG_DECOR_OPACITY = 0.38; // ainda sutil, mas visivel de verdade (antes sumia demais)
 
   function loadImg(url) {
     return new Promise((resolve, reject) => {
@@ -1012,7 +1012,7 @@
     }
 
     const matX0 = 600 - 170, matY0 = 290 - 210, matX1 = 600 + 170, matY1 = 290 + 190;
-    ctx.fillStyle = '#1a1715';
+    ctx.fillStyle = '#f2ede1'; // branco quente (papel de flash sheet) - o flash e traco preto
     ctx.fillRect(matX0, matY0, matX1 - matX0, matY1 - matY0);
     ctx.strokeStyle = '#8b1a1a'; ctx.lineWidth = 2;
     ctx.strokeRect(matX0 + 1, matY0 + 1, matX1 - matX0 - 2, matY1 - matY0 - 2);
@@ -1024,8 +1024,9 @@
     const matCy = (matY0 + matY1) / 2;
     ctx.drawImage(main, 600 - mw / 2, matCy - mh / 2, mw, mh);
 
-    drawSpacedText(ctx, 'MICAEL TATUAGEM', 600, 528, '34px Georgia, serif', '#d4c9b0', 6);
-    drawSpacedText(ctx, subtitle.toUpperCase(), 600, 560, '15px Arial, sans-serif', '#6b6560', 2);
+    drawSpacedText(ctx, 'MICAEL TATUAGEM', 600, 508, '32px Georgia, serif', '#d4c9b0', 6);
+    drawSpacedText(ctx, subtitle.toUpperCase(), 600, 538, '15px Arial, sans-serif', '#6b6560', 2);
+    drawSpacedText(ctx, 'CHAMA NO WHATSAPP PRA FECHAR', 600, 568, '16px Arial, sans-serif', '#8b1a1a', 1.5);
 
     return canvas.toDataURL('image/jpeg', 0.88);
   }
