@@ -162,6 +162,47 @@ contagem de itens `draft:false` em `flash-data.json` — a diferença mostra o q
   pelo painel volta pro menu antigo. Já atualizado em 22/07/2026 junto com as páginas.
 - `sitemap.xml` — regenerado a cada save no painel (`commitSitemap()`), filtra drafts.
 
+### `/page-gen.js` — módulo compartilhado de páginas de categoria/peça (22/07/2026)
+Extraído do sistema de `/estilo/` do `adminflash.html` pra ser reaproveitável por
+qualquer painel admin. Carregado via `<script src="/page-gen.js"></script>` antes do
+script inline de cada admin. Expõe `window.PageGen` com:
+- `buildCategoryPageHtml(cfg)` / `buildItemPageHtml(cfg)` — montam o HTML completo da
+  página (head/nav/footer iguais em todo o site, `<nav>` idêntico ao do index — se o
+  menu do site mudar, esse módulo também precisa ser editado manualmente, do jeito que
+  `buildEstiloPageHtml` precisa).
+- `buildContentBlockHtml`/`buildFaqBlockHtml`/`buildFaqSchema`/`buildBreadcrumbSchema` —
+  helpers puros de HTML/schema.org, sem estado.
+- `renderContentEditor`/`addContentSectionRow`/`addContentFaqRow`/`collectContentSections`/
+  `collectContentFaq` — o form de seções+FAQ do painel (mesmo padrão do `adminflash.html`,
+  só que genérico: os IDs dos containers são passados por parâmetro).
+- `commitTextFile`/`deleteFile`/`ghGetSha` — commit genérico via worker proxy.
+- `upsertSitemapEntry`/`removeSitemapEntry` — genéricos, por `loc` (URL completa).
+
+Cada painel que usa o módulo mantém seu próprio `content.json` (`{categorias:{}, pecas:{}}`)
+e suas próprias funções de "montar o cfg e chamar o PageGen" (não dá pra generalizar isso
+sem perder as particularidades de cada galeria — nome dos campos, textos, etc.).
+
+**Aerografia** (`adminaerografia.html`) foi o primeiro a usar, com dois tipos de página:
+- `/aerografia/categoria-{slug}.html` — uma por categoria (`Quadros`, `Paredes/Murais`),
+  editável na aba "Conteúdo & FAQ das categorias". Grid de amostras + contagem carregam
+  ao vivo de `aerografia/aerografia-data.json` + `aerografia/tags.json`.
+- `/aerografia/peca-{id}-{slug}.html` — uma por peça individual (opcional — só é gerada
+  se algo for salvo pra ela), editável na aba "Conteúdo & FAQ de peças individuais".
+  Página 100% estática (sem fetch em runtime), foto grande + texto + FAQ.
+- Conteúdo fica em `aerografia/content.json`. Ao deletar uma categoria (`deleteTag`), a
+  página e a entrada de sitemap correspondentes são limpas automaticamente
+  (`deleteCategoryPage`); ao deletar uma peça isso **não** acontece ainda (página velha
+  fica órfã, inofensiva mas não removida — pendente).
+- Card social (og:image) usa a imagem crua da peça direto, sem o card decorado
+  (moldura/flash-decor) que `/estilo/` tem — simplificação deliberada pra essa primeira
+  versão.
+
+**Corpos** (`admincorpos.html`) foi **propositalmente deixado de fora**: as fotos ali são
+referência de corpo pro simulador (`preview-tatuagem.html`), não um portfólio público —
+não tem página pra gerar.
+
+**Galeria** (`admingaleria.html`) — ainda pendente de conectar ao `page-gen.js`.
+
 ## Onde cada coisa mora
 
 | Arquivo | O que é |
