@@ -1076,22 +1076,22 @@
     <div class="etapas">
       <div class="etapa">
         <div class="etapa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="1.5"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 16l-5-5-4 4-3-3-4 4"/></svg></div>
-        <div class="etapa-titulo"><a href="galeria.html">Galeria</a></div>
+        <div class="etapa-titulo"><a href="galeria.html" onclick="gtag('event','click_card',{event_category:'navegacao',event_label:'galeria'})">Galeria</a></div>
         <p>Sessões finalizadas, pra ver o traço e o acabamento antes de decidir.</p>
       </div>
       <div class="etapa">
         <div class="etapa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
-        <div class="etapa-titulo"><a href="flash.html">Flash</a></div>
+        <div class="etapa-titulo"><a href="flash.html" onclick="gtag('event','click_card',{event_category:'navegacao',event_label:'flash'})">Flash</a></div>
         <p>Mais de 600 desenhos prontos, cada um com sua história. Cresce todo dia.</p>
       </div>
       <div class="etapa">
         <div class="etapa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
-        <div class="etapa-titulo"><a href="preview-tatuagem.html">Criar</a></div>
+        <div class="etapa-titulo"><a href="preview-tatuagem.html" onclick="gtag('event','click_card',{event_category:'navegacao',event_label:'criar'})">Criar</a></div>
         <p>Simule a composição na foto do seu corpo antes de fechar a ideia.</p>
       </div>
       <div class="etapa">
         <div class="etapa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/><path d="M9 16l2 2 4-4"/></svg></div>
-        <div class="etapa-titulo"><a href="reserva.html">Reserva</a></div>
+        <div class="etapa-titulo"><a href="reserva.html" onclick="gtag('event','click_card',{event_category:'navegacao',event_label:'reserva'})">Reserva</a></div>
         <p>Já sabe o que quer? Comece o agendamento aqui mesmo.</p>
       </div>
     </div>
@@ -1206,7 +1206,7 @@
 
       <div class="faq-item">
         <div class="faq-q">Onde posso ver o portfólio de trabalhos?</div>
-        <div class="faq-a">O portfólio completo está disponível na <a href="galeria.html">galeria do site</a> e também no <a href="https://instagram.com/micaeltatuagem" target="_blank" rel="noopener">Instagram</a>.</div>
+        <div class="faq-a">O portfólio completo está disponível na <a href="galeria.html">galeria do site</a> e também no <a href="https://instagram.com/micaeltatuagem" target="_blank" rel="noopener" onclick="gtag('event','click_instagram',{event_category:'social',event_label:'faq'})">Instagram</a>.</div>
       </div>
 
     </div>
@@ -1289,8 +1289,8 @@
       <a href="reserva.html" style="color:var(--ink-muted);text-decoration:underline;text-underline-offset:3px;">ou prefere contar sua ideia primeiro? Preencha o formulário de reserva →</a>
     </p>
     <div class="contato-extras">
-      <a href="https://instagram.com/micaeltatuagem" target="_blank" rel="noopener">Instagram</a>
-      <a href="mailto:micaeltattoo@gmail.com">E-mail</a>
+      <a href="https://instagram.com/micaeltatuagem" target="_blank" rel="noopener" onclick="gtag('event','click_instagram',{event_category:'social',event_label:'footer'})">Instagram</a>
+      <a href="mailto:micaeltattoo@gmail.com" onclick="gtag('event','click_email',{event_category:'contato',event_label:'footer'})">E-mail</a>
     </div>
   </div>
 </section>
@@ -1410,6 +1410,20 @@
       </div>`;
     }
   })();
+
+  // ── Rastreamento do catálogo de estilos (24 links, via delegação) ──
+  document.addEventListener('DOMContentLoaded', function () {
+    var lista = document.querySelector('.estilos-list');
+    if (!lista) return;
+    lista.addEventListener('click', function (e) {
+      var link = e.target.closest('a');
+      if (!link) return;
+      gtag('event', 'click_estilo', {
+        event_category: 'catalogo',
+        event_label: link.textContent.trim()
+      });
+    });
+  });
 </script>
 
 <!-- Schema.org LocalBusiness -->
