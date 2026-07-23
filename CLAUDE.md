@@ -161,13 +161,14 @@ contagem de itens `draft:false` em `flash-data.json` — a diferença mostra o q
 
 | Arquivo | O que é |
 |---|---|
-| `index.html` | Home. Seções: hero, sobre, processo (agora "por onde começar", 4 cards de ferramentas), galeria (carrossel), faq, promoções, contato |
+| `index.html` | Home. Seções: hero, sobre, processo (agora "por onde começar", 4 cards de ferramentas — sem link direto no menu, ver nota do menu abaixo), galeria (carrossel), localização, faq, promoções, contato |
 | `flash.html` | Catálogo de flash (500+ itens), filtro por estilo, busca, lightbox |
 | `galeria.html` | Portfólio de sessões finalizadas |
 | `preview-tatuagem.html` | "Criar" — simulador de tatuagem na foto do corpo, app de tela única (sem header/main/section padrão — `flash-decor.js` não decora essa página) |
 | `reserva.html` | Formulário único: ideia de tatuagem + cadastro no programa de promoção/indicação. Salva no Supabase, gera código de indicação, monta mensagem de WhatsApp |
 | `cadastro.html` | Vitrine das promoções (–20% primeira tattoo, indicação 5→1), CTA pro `reserva.html`. Redireciona sozinho se receber `?ref=` de link antigo |
 | `anamnese.html` | Ficha de cadastro/anamnese, formulário longo |
+| `fisiologia-da-tatuagem.html` | "Cuidados" — conteúdo educativo sobre fisiologia da pele e cuidados pós-tatuagem |
 | `adminflash.html` | Painel admin (senha), gerencia catálogo, tags/estilos, backup |
 | `flash-decor.js` | Script de decoração de fundo (flash artwork de baixa opacidade), compartilhado por várias páginas |
 | `flash/flash-data.json` | Fonte da verdade do catálogo (508+ itens) |
@@ -181,9 +182,20 @@ contagem de itens `draft:false` em `flash-data.json` — a diferença mostra o q
   `galeria.html` receberam até agora. `reserva.html`/`anamnese.html`/`cadastro.html`
   não, porque a maior parte do conteúdo delas já é campo de formulário (protegido por
   fundo próprio) — mas vale reavaliar se crescerem trechos de texto corrido.
-- O menu (`Processo`) mantém esse nome por pedido explícito do usuário mesmo com o
-  conteúdo da seção tendo mudado de "como funciona" pra "por onde começar" — não trocar
-  sem confirmar de novo.
+- O menu já não tem mais o item `Processo`: foi substituído por `Cuidados` (linkando pra
+  `fisiologia-da-tatuagem.html`) e ganhou um item `Localização` novo. A seção `#processo`
+  (agora com o texto "por onde começar") continua existindo em `index.html`, só não tem
+  mais link direto no menu. Esse menu atualizado está sincronizado em `index.html` e nas
+  7 páginas internas "padrão" (`galeria.html`, `flash.html`, `aerografia.html`,
+  `preview-tatuagem.html`, `reserva.html`, `cadastro.html`, `anamnese.html`) — atualizado
+  em 22/07/2026.
+- **Pendente**: as 24 páginas de `/estilo/` e as ~25 páginas "órfãs" na raiz (`animais.html`,
+  `blackwork.html` etc. — duplicatas antigas cujo `canonical` já aponta pra versão em
+  `/estilo/`, sem nenhum link ativo apontando pra elas) ainda usam um menu mais antigo e
+  mais curto (sem `hide-sm`, sem `Cuidados`/`Localização`, paths absolutos tipo
+  `/index.html`). Não foram tocadas nessa atualização — avaliar se vale sincronizar
+  também, e nesse caso lembrar que usam paths absolutos (`/index.html`, `/flash.html`
+  etc.) em vez de relativos.
 - O sistema de indicação/promoção do `reserva.html` supõe que a tabela `clientes_promo`
   no Supabase só tem as colunas nome/whatsapp/email/codigo_indicacao/indicado_por/canal.
   **Não adicionar campos novos no payload de insert sem confirmar o schema** — inserir
