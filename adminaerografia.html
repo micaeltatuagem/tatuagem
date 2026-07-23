@@ -242,6 +242,48 @@
     <div class="tag-manager-list" id="tagManagerList"></div>
   </div>
 
+  <!-- Conteudo + FAQ por categoria (paginas /aerografia/categoria-*.html) -->
+  <div class="form-section">
+    <h2>Conteúdo &amp; FAQ das categorias</h2>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:-.4rem;margin-bottom:1rem;">
+      Texto longo e perguntas frequentes que aparecem na página <code>/aerografia/categoria-&lt;nome&gt;.html</code> de cada categoria, com schema FAQPage pra IA/buscadores. Ao salvar, a página é (re)gerada automaticamente.
+    </p>
+    <select id="aeroCategoryContentSelect" onchange="loadCategoryContentIntoForm(this.value)" style="width:100%;margin-bottom:1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--bone);padding:8px 12px;font-size:.85rem;"></select>
+
+    <h3 style="font-size:.9rem;margin-bottom:.5rem;">Seções de texto</h3>
+    <div id="aeroCategorySections"></div>
+    <button type="button" class="btn btn-secondary" onclick="PageGen.addContentSectionRow('aeroCategorySections')">+ Adicionar seção</button>
+
+    <h3 style="font-size:.9rem;margin:1.2rem 0 .5rem;">Perguntas frequentes</h3>
+    <div id="aeroCategoryFaq"></div>
+    <button type="button" class="btn btn-secondary" onclick="PageGen.addContentFaqRow('aeroCategoryFaq')">+ Adicionar pergunta</button>
+
+    <div style="margin-top:1.2rem;">
+      <button class="btn btn-primary" id="aeroCategorySaveBtn" onclick="saveCategoryContent()">Salvar conteúdo e gerar página</button>
+    </div>
+  </div>
+
+  <!-- Conteudo + FAQ por peca individual (paginas /aerografia/peca-*.html) -->
+  <div class="form-section">
+    <h2>Conteúdo &amp; FAQ de peças individuais</h2>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:-.4rem;margin-bottom:1rem;">
+      Cria uma página própria pra uma peça específica (<code>/aerografia/peca-&lt;id&gt;-&lt;slug&gt;.html</code>), com foto grande, texto e FAQ. Opcional — só gera pra peças em que você preencher algo aqui.
+    </p>
+    <select id="aeroItemContentSelect" onchange="loadItemContentIntoForm(this.value)" style="width:100%;margin-bottom:1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--bone);padding:8px 12px;font-size:.85rem;"></select>
+
+    <h3 style="font-size:.9rem;margin-bottom:.5rem;">Seções de texto</h3>
+    <div id="aeroItemSections"></div>
+    <button type="button" class="btn btn-secondary" onclick="PageGen.addContentSectionRow('aeroItemSections')">+ Adicionar seção</button>
+
+    <h3 style="font-size:.9rem;margin:1.2rem 0 .5rem;">Perguntas frequentes</h3>
+    <div id="aeroItemFaq"></div>
+    <button type="button" class="btn btn-secondary" onclick="PageGen.addContentFaqRow('aeroItemFaq')">+ Adicionar pergunta</button>
+
+    <div style="margin-top:1.2rem;">
+      <button class="btn btn-primary" id="aeroItemSaveBtn" onclick="saveItemContent()">Salvar conteúdo e gerar página</button>
+    </div>
+  </div>
+
   <!-- Peças existentes -->
   <div class="form-section">
     <h2>Peças Publicadas</h2>
@@ -304,10 +346,13 @@
 
 <div id="toastContainer" style="position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:.5rem;align-items:center;pointer-events:none;"></div>
 
+<script src="/page-gen.js"></script>
 <script>
   // ── CONFIG ──
   const STORAGE_KEY = 'micaelAerografia_v1';
   const TAGS_KEY    = 'micaelAerografiaTags';
+  const CONTENT_KEY = 'micaelAerografiaContent';
+  const SITE_URL    = 'https://micaeltatuagem.com.br';
   const TOKEN_KEY   = 'ghToken';
   const REPO_OWNER  = 'micaeltatuagem';
   const REPO_NAME   = 'tatuagem';
@@ -316,6 +361,7 @@
   const IMAGE_FOLDER = 'aerografia';
   const DATA_PATH    = `${IMAGE_FOLDER}/aerografia-data.json`;
   const TAGS_PATH     = `${IMAGE_FOLDER}/tags.json`;
+  const CONTENT_PATH  = `${IMAGE_FOLDER}/content.json`;
   const CATALOG_PAGE  = 'aerografia.html';
   const DEFAULT_TAGS = ['Quadros', 'Paredes/Murais'];
 
@@ -513,8 +559,11 @@
     document.getElementById('adminPanel').style.display = 'block';
     await seedFromRepo();
     await seedTagsFromRepo();
+    await seedContentFromRepo();
     renderTagManager();
     renderTags();
+    renderContentCategorySelect();
+    renderContentItemSelect();
     renderGallery();
     updateStats();
     checkGitHubStatus();
@@ -628,6 +677,7 @@
       await saveTags(tags);
       renderTagManager();
       renderTags();
+      renderContentCategorySelect();
       input.value = '';
       showAlert('success', `✅ Categoria "${val}" adicionada.`);
     } catch (err) {
@@ -640,8 +690,10 @@
     const tags = getTags().filter(t => t !== tag);
     try {
       await saveTags(tags);
+      await deleteCategoryPage(tag);
       renderTagManager();
       renderTags();
+      renderContentCategorySelect();
       showAlert('success', `✅ Categoria "${tag}" removida.`);
     } catch (err) {
       showAlert('error', '⚠ Falhou ao remover a categoria (' + err.message + '). Tente de novo.');
@@ -658,8 +710,236 @@
     await fetch(url, { method:'PUT', headers:{Authorization:`Bearer ${GH_TOKEN}`,'Content-Type':'application/json'}, body:JSON.stringify(body) });
   }
 
+  // ── Conteudo + FAQ (categorias e pecas) e geracao das paginas /aerografia/ ──
+
+  function getContent() {
+    try { return JSON.parse(localStorage.getItem(CONTENT_KEY)) || { categorias: {}, pecas: {} }; }
+    catch { return { categorias: {}, pecas: {} }; }
+  }
+
+  async function commitContent(contentMap) {
+    localStorage.setItem(CONTENT_KEY, JSON.stringify(contentMap));
+    await PageGen.commitTextFile({
+      workerUrl: WORKER_URL, owner: REPO_OWNER, repo: REPO_NAME, branch: BRANCH, ghToken: GH_TOKEN,
+      path: CONTENT_PATH, text: JSON.stringify(contentMap, null, 2),
+      message: 'Atualiza ' + CONTENT_PATH
+    });
+  }
+
+  async function seedContentFromRepo() {
+    try {
+      const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${CONTENT_PATH}?t=${Date.now()}`;
+      const res = await fetch(url, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && typeof data === 'object') localStorage.setItem(CONTENT_KEY, JSON.stringify(data));
+      }
+    } catch {}
+  }
+
+  function renderContentCategorySelect() {
+    const sel = document.getElementById('aeroCategoryContentSelect');
+    const tags = getTags();
+    sel.innerHTML = tags.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+    if (tags.length) loadCategoryContentIntoForm(tags[0]);
+  }
+
+  function renderContentItemSelect() {
+    const sel = document.getElementById('aeroItemContentSelect');
+    const gallery = getGallery().filter(i => !i.draft);
+    sel.innerHTML = gallery.map(i => `<option value="${i.id}">${escapeHtml(i.title)}</option>`).join('');
+    if (gallery.length) loadItemContentIntoForm(String(gallery[0].id));
+  }
+
+  function loadCategoryContentIntoForm(name) {
+    const data = getContent().categorias[name] || { sections: [], faq: [] };
+    PageGen.renderContentEditor('aeroCategorySections', 'aeroCategoryFaq', data);
+  }
+
+  function loadItemContentIntoForm(id) {
+    const data = getContent().pecas[id] || { sections: [], faq: [] };
+    PageGen.renderContentEditor('aeroItemSections', 'aeroItemFaq', data);
+  }
+
+  function heroImageForCategory(name, gallery) {
+    const published = gallery.filter(it => !it.draft);
+    const item = published.find(it => (it.styles || []).includes(name));
+    return item ? `${SITE_URL}/${item.imageUrl}` : `${SITE_URL}/favicon.png`;
+  }
+
+  async function commitCategoryPage(name) {
+    const contentData = getContent().categorias[name] || { sections: [], faq: [] };
+    const slug = PageGen.slugify(name);
+    const path = `${IMAGE_FOLDER}/categoria-${slug}.html`;
+    const gallery = getGallery();
+    const tags = getTags();
+    const published = gallery.filter(it => !it.draft);
+    const items = published.filter(it => (it.styles || []).includes(name));
+    const countText = items.length + (items.length === 1 ? ' peça disponível' : ' peças disponíveis');
+    const n = 6;
+    const step = items.length ? Math.max(1, Math.floor(items.length / n)) : 1;
+    const samples = [];
+    for (let i = 0; i < items.length && samples.length < n; i += step) samples.push(items[i]);
+    const sampleGridHtmlInitial = samples.length
+      ? samples.map(it => {
+          const alt = (it.altText || it.title || '').replace(/"/g, '&quot;');
+          return `<a href="/${IMAGE_FOLDER}.html?tag=${encodeURIComponent(name)}" class="sample-item"><img src="/${it.imageUrl}" alt="${alt}" loading="lazy"></a>`;
+        }).join('')
+      : '<p class="sample-empty">Novas peças em breve. Fale com o tatuador pra encomendar algo personalizado.</p>';
+    const otherItemsHtmlInitial = tags.filter(t => t !== name).map(t => {
+      const s = PageGen.slugify(t);
+      return `<li><a href="/${IMAGE_FOLDER}/categoria-${s}.html">${escapeHtml(t)}</a></li>`;
+    }).join('');
+
+    const heroImg = heroImageForCategory(name, gallery);
+    const canonical = `${SITE_URL}/${path}`;
+
+    const html = PageGen.buildCategoryPageHtml({
+      siteUrl: SITE_URL,
+      title: `Aerografia ${name} em Muriaé-MG | Micael Tatuagem`,
+      metaDesc: `Aerografia em ${name.toLowerCase()} com Micael Faccio, em Muriaé-MG.`,
+      shareDesc: `Curtiu essa aerografia em ${name}? Chama no WhatsApp e vê se encaixa na agenda.`,
+      canonical, heroImg, heroImgIsGenerated: false,
+      breadcrumbs: [
+        { name: 'Início', url: `${SITE_URL}/` },
+        { name: 'Aerografia', url: `${SITE_URL}/aerografia.html` },
+        { name, url: canonical }
+      ],
+      eyebrow: 'Aerografia', h1: name,
+      introText: '',
+      ctaLabel: `Ver todas as peças de ${name} →`,
+      ctaLink: `/aerografia.html?tag=${encodeURIComponent(name)}`,
+      countTextInitial: countText,
+      sampleGridHtmlInitial,
+      otherItemsLabel: 'Outras categorias',
+      otherItemsHtmlInitial,
+      sections: contentData.sections, faq: contentData.faq,
+      runtime: {
+        dataUrl: `/${DATA_PATH}`, tagsUrl: `/${TAGS_PATH}`,
+        filterField: 'styles', categoryValue: name,
+        catalogLinkBase: `/${IMAGE_FOLDER}.html`, catalogLinkParam: 'tag',
+        otherPageUrlTemplate: `/${IMAGE_FOLDER}/categoria-{slug}.html`
+      }
+    });
+
+    await PageGen.commitTextFile({
+      workerUrl: WORKER_URL, owner: REPO_OWNER, repo: REPO_NAME, branch: BRANCH, ghToken: GH_TOKEN,
+      path, text: html, message: `Atualiza pagina /${path}`
+    });
+
+    await PageGen.upsertSitemapEntry({
+      workerUrl: WORKER_URL, owner: REPO_OWNER, repo: REPO_NAME, branch: BRANCH, ghToken: GH_TOKEN,
+      loc: canonical, imageUrl: heroImg, imageTitle: `Aerografia ${name}`,
+      imageCaption: `Aerografia em ${name} · Muriaé-MG`,
+      message: `Atualiza sitemap.xml (aerografia: ${name})`
+    });
+  }
+
+  async function deleteCategoryPage(name) {
+    const slug = PageGen.slugify(name);
+    const path = `${IMAGE_FOLDER}/categoria-${slug}.html`;
+    try {
+      await PageGen.deleteFile({
+        workerUrl: WORKER_URL, owner: REPO_OWNER, repo: REPO_NAME, branch: BRANCH, ghToken: GH_TOKEN,
+        path, message: `Remove pagina /${path} (categoria deletada)`
+      });
+      await PageGen.removeSitemapEntry({
+        workerUrl: WORKER_URL, owner: REPO_OWNER, repo: REPO_NAME, branch: BRANCH, ghToken: GH_TOKEN,
+        loc: `${SITE_URL}/${path}`
+      });
+      const contentMap = getContent();
+      delete contentMap.categorias[name];
+      await commitContent(contentMap);
+    } catch (e) { console.warn('Falha ao limpar pagina de categoria deletada:', e); }
+  }
+
+  async function saveCategoryContent() {
+    const sel = document.getElementById('aeroCategoryContentSelect');
+    const name = sel.value;
+    if (!name) return;
+    const sections = PageGen.collectContentSections('aeroCategorySections');
+    const faq = PageGen.collectContentFaq('aeroCategoryFaq');
+    const btn = document.getElementById('aeroCategorySaveBtn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Salvando...'; }
+    try {
+      const contentMap = getContent();
+      contentMap.categorias[name] = { sections, faq };
+      await withRetry(() => commitContent(contentMap), 3, 'conteudo de categoria: ' + name);
+      await withRetry(() => commitCategoryPage(name), 3, 'pagina de categoria: ' + name);
+      showAlert('success', `✅ Conteúdo de "${name}" salvo e página republicada.`);
+    } catch (err) {
+      showAlert('error', '⚠ Falhou ao salvar conteúdo (' + err.message + '). Tente de novo.');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = 'Salvar conteúdo e gerar página'; }
+    }
+  }
+
+  async function commitItemPage(id) {
+    const gallery = getGallery();
+    const item = gallery.find(i => String(i.id) === String(id));
+    if (!item) throw new Error('Peça não encontrada');
+    const contentData = getContent().pecas[id] || { sections: [], faq: [] };
+    const slug = PageGen.slugify(item.title);
+    const path = `${IMAGE_FOLDER}/peca-${item.id}-${slug}.html`;
+    const heroImg = `${SITE_URL}/${item.imageUrl}`;
+    const canonical = `${SITE_URL}/${path}`;
+
+    const html = PageGen.buildItemPageHtml({
+      siteUrl: SITE_URL,
+      title: `${item.title} · Aerografia em Muriaé-MG | Micael Tatuagem`,
+      metaDesc: (item.description || `Aerografia "${item.title}", feita por Micael Faccio em Muriaé-MG.`).slice(0, 158),
+      shareDesc: `Curtiu essa peça? Chama no WhatsApp e vê se encaixa na agenda.`,
+      canonical, heroImg, heroImgIsGenerated: false,
+      breadcrumbs: [
+        { name: 'Início', url: `${SITE_URL}/` },
+        { name: 'Aerografia', url: `${SITE_URL}/aerografia.html` },
+        { name: item.title, url: canonical }
+      ],
+      eyebrow: 'Aerografia', h1: item.title,
+      heroAlt: item.altText || item.title,
+      introText: item.description || '',
+      backLinkLabel: '← Ver todas as aerografias',
+      backLinkUrl: '/aerografia.html',
+      sections: contentData.sections, faq: contentData.faq
+    });
+
+    await PageGen.commitTextFile({
+      workerUrl: WORKER_URL, owner: REPO_OWNER, repo: REPO_NAME, branch: BRANCH, ghToken: GH_TOKEN,
+      path, text: html, message: `Atualiza pagina /${path}`
+    });
+
+    await PageGen.upsertSitemapEntry({
+      workerUrl: WORKER_URL, owner: REPO_OWNER, repo: REPO_NAME, branch: BRANCH, ghToken: GH_TOKEN,
+      loc: canonical, imageUrl: heroImg, imageTitle: item.title,
+      imageCaption: item.description || item.title,
+      message: `Atualiza sitemap.xml (peça: ${item.title})`
+    });
+  }
+
+  async function saveItemContent() {
+    const sel = document.getElementById('aeroItemContentSelect');
+    const id = sel.value;
+    if (!id) return;
+    const sections = PageGen.collectContentSections('aeroItemSections');
+    const faq = PageGen.collectContentFaq('aeroItemFaq');
+    const btn = document.getElementById('aeroItemSaveBtn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Salvando...'; }
+    try {
+      const contentMap = getContent();
+      contentMap.pecas[id] = { sections, faq };
+      await withRetry(() => commitContent(contentMap), 3, 'conteudo de peca: ' + id);
+      await withRetry(() => commitItemPage(id), 3, 'pagina de peca: ' + id);
+      showAlert('success', `✅ Conteúdo salvo e página republicada.`);
+    } catch (err) {
+      showAlert('error', '⚠ Falhou ao salvar conteúdo (' + err.message + '). Tente de novo.');
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = 'Salvar conteúdo e gerar página'; }
+    }
+  }
+
   function renderGallery() {
     const gallery   = getGallery();
+    if (document.getElementById('aeroItemContentSelect')) renderContentItemSelect();
     const container = document.getElementById('galleryList');
     if (!gallery.length) {
       container.innerHTML = '<p style="color:var(--muted);padding:1rem;">Nenhuma peça ainda.</p>';
