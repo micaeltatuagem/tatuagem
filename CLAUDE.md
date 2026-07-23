@@ -201,7 +201,22 @@ sem perder as particularidades de cada galeria — nome dos campos, textos, etc.
 referência de corpo pro simulador (`preview-tatuagem.html`), não um portfólio público —
 não tem página pra gerar.
 
-**Galeria** (`admingaleria.html`) — ainda pendente de conectar ao `page-gen.js`.
+**Galeria** (`admingaleria.html`) usa o mesmo padrão de `/aerografia/` (categoria + peça),
+com uma ressalva: `galeria.html` (a página pública) **não** lê `?tag=` da URL — só tem
+filtro por clique em botão. Então o CTA de "ver mais" e o link das amostras no grid
+apontam pra `/galeria.html` sem pré-filtrar (funciona, só não abre já filtrado).
+
+**Corpos** (`admincorpos.html`) também foi conectado, mas é diferente dos outros três:
+não tem uma lista de tags gerenciada — a "categoria" é o valor de `nome` (parte do corpo,
+texto livre digitado no upload, ex: "braço", "perna", "costas") que já existe em cada foto,
+então as opções do seletor vêm de `[...new Set(getGallery().map(i => i.nome))]`. Por causa
+disso, o `page-gen.js` precisou de um ajuste: o filtro do runtime agora aceita tanto campo
+array (`styles: [...]`, usado por flash/aerografia/galeria) quanto campo de valor único
+(`nome`, usado por corpos) — `Array.isArray(val) ? val.includes(x) : val === x`.
+Ideia por trás: texto sobre posicionamento (dor, cicatrização, tamanho recomendado) por
+região do corpo. Ainda **não existe um hub público** linkando pra essas páginas — elas
+existem e entram no sitemap normalmente, mas o CTA delas aponta pra `preview-tatuagem.html`
+como destino provisório. Onde (ou se) elas vão ganhar um hub próprio ainda está em aberto.
 
 ## Onde cada coisa mora
 
