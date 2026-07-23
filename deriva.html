@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deriva — esboço</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root{
+    --bg:#0a0908;
+    --red:#b31217;
+    --red-dim:rgba(179,18,23,0.35);
+    --sand:#d8b7a1;
+    --stone:#7a6d61;
+    --paper:#cfc3b8;
+    --ghost:#312a26;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0; padding:0; background:var(--bg); color:var(--paper);
+    font-family:'EB Garamond', Georgia, serif;
+    height:100%; overflow-x:hidden;
+  }
+
+  .mono{ font-family:'JetBrains Mono', monospace; }
+
+  header{
+    padding:48px 40px 20px;
+    display:flex; justify-content:space-between; align-items:flex-end;
+    flex-wrap:wrap; gap:16px;
+    border-bottom:1px solid rgba(179,18,23,0.15);
+  }
+  header .brand{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; letter-spacing:3px; text-transform:uppercase;
+    color:var(--stone);
+  }
+  header .brand a{ color:var(--stone); text-decoration:none; }
+  header h1{
+    font-size:clamp(36px, 6vw, 64px);
+    font-weight:400;
+    margin:6px 0 0;
+    letter-spacing:1px;
+    color:var(--sand);
+  }
+  header h1 em{
+    font-style:italic; color:var(--red);
+  }
+  header .tagline{
+    max-width:320px;
+    font-size:14px;
+    line-height:1.6;
+    color:var(--stone);
+    text-align:right;
+  }
+  @media (max-width:700px){
+    header{ flex-direction:column; align-items:flex-start; }
+    header .tagline{ text-align:left; }
+  }
+
+  .intro-line{
+    padding:22px 40px 0;
+    font-size:13px;
+    letter-spacing:0.5px;
+    color:var(--stone);
+    font-style:italic;
+  }
+
+  .portals{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    min-height:64vh;
+  }
+  @media (max-width:900px){
+    .portals{ grid-template-columns:1fr; min-height:auto; }
+  }
+
+  .portal{
+    position:relative;
+    height:100%;
+    min-height:280px;
+    overflow:hidden;
+    cursor:pointer;
+    border-right:1px solid rgba(179,18,23,0.12);
+    filter:brightness(0.62) saturate(0.75);
+    transition:filter 0.6s ease;
+  }
+  .portal:last-child{ border-right:none; }
+  .portal:hover{ filter:brightness(1) saturate(1); }
+
+  .portal canvas{
+    position:absolute; inset:0; width:100%; height:100%; display:block;
+  }
+
+  .portal .veil{
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(10,9,8,0.15) 0%, rgba(10,9,8,0.55) 100%);
+    pointer-events:none;
+  }
+
+  .portal .label{
+    position:absolute; left:28px; bottom:26px;
+    z-index:2;
+    opacity:0.55;
+    transition:opacity 0.5s ease, transform 0.5s ease;
+    transform:translateY(4px);
+  }
+  .portal:hover .label{ opacity:1; transform:translateY(0); }
+
+  .portal .label .name{
+    font-size:22px; letter-spacing:1px; color:var(--sand);
+    display:block;
+  }
+  .portal .label .hint{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--stone); margin-top:4px; display:block;
+  }
+
+  /* terceiro portal: vazio ainda não escrito */
+  .portal.ghost{
+    display:flex; align-items:center; justify-content:center;
+    filter:none;
+    background:
+      repeating-linear-gradient(135deg, transparent, transparent 26px, rgba(179,18,23,0.04) 26px, rgba(179,18,23,0.04) 27px);
+    cursor:default;
+  }
+  .portal.ghost .inner{
+    text-align:center; padding:20px;
+  }
+  .portal.ghost .mark{
+    width:34px; height:34px; margin:0 auto 14px;
+    border:1px solid var(--ghost);
+    border-radius:50%;
+    position:relative;
+  }
+  .portal.ghost .mark::after{
+    content:'';
+    position:absolute; inset:14px 8px;
+    border-top:1px solid var(--ghost);
+    animation:breathe 4s ease-in-out infinite;
+  }
+  @keyframes breathe{
+    0%,100%{ opacity:0.2; }
+    50%{ opacity:0.6; }
+  }
+  .portal.ghost .name{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--stone);
+  }
+
+  footer{
+    padding:26px 40px 40px;
+    display:flex; justify-content:space-between; align-items:flex-end;
+    flex-wrap:wrap; gap:12px;
+    border-top:1px solid rgba(179,18,23,0.12);
+  }
+  footer p{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; line-height:1.8; letter-spacing:0.3px;
+    color:var(--stone); max-width:480px; margin:0;
+  }
+  footer .back{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--red-dim); text-decoration:none; white-space:nowrap;
+  }
+
+  .note{
+    position:fixed; top:14px; left:14px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:10px; letter-spacing:1px;
+    color:var(--stone); background:rgba(0,0,0,0.5);
+    padding:4px 8px; border:1px solid rgba(179,18,23,0.25);
+    z-index:50; pointer-events:none;
+  }
+</style>
+</head>
+<body>
+
+<div class="note">esboço — não é a página final</div>
+
+<header>
+  <div>
+    <div class="brand"><a href="#">micaeltatuagem.com.br</a></div>
+    <h1>Der<em>i</em>va</h1>
+  </div>
+  <div class="tagline">
+    Isto não tem começo nem fim.<br>
+    Entre por qualquer janela e fique o tempo que quiser.
+  </div>
+</header>
+
+<div class="intro-line">Nenhuma dessas telas quer nada de você.</div>
+
+<div class="portals">
+
+  <div class="portal" id="p-rorschach">
+    <canvas id="c-rorschach"></canvas>
+    <div class="veil"></div>
+    <div class="label">
+      <span class="name">Rorschach</span>
+      <span class="hint">mancha ⋄ olhe até reconhecer algo</span>
+    </div>
+  </div>
+
+  <div class="portal" id="p-hyperspace">
+    <canvas id="c-hyperspace"></canvas>
+    <div class="veil"></div>
+    <div class="label">
+      <span class="name">Hiperespaço</span>
+      <span class="hint">deriva ⋄ sem destino</span>
+    </div>
+  </div>
+
+  <div class="portal ghost">
+    <div class="inner">
+      <div class="mark"></div>
+      <div class="name">em construção</div>
+    </div>
+  </div>
+
+</div>
+
+<section class="audio-module">
+  <div class="audio-head">
+    <span class="audio-title">Som <em>(opcional)</em></span>
+    <button class="audio-power" id="audioPower" data-on="0">ligar</button>
+  </div>
+  <p class="audio-desc mono">
+    Duas frequências próximas, uma em cada ouvido — use fone.
+    Nenhuma promessa de efeito, só mais uma camada pra quem quiser mexer.
+  </p>
+
+  <div class="audio-controls">
+    <div class="a-row">
+      <label>Frequência base <span class="val mono" id="valFreq">180 Hz</span></label>
+      <input type="range" id="baseFreq" min="80" max="320" value="180" step="1">
+    </div>
+    <div class="a-row">
+      <label>Batimento <span class="val mono" id="valBeat">6.0 Hz</span></label>
+      <input type="range" id="beatFreq" min="1" max="20" value="6" step="0.5">
+    </div>
+    <div class="a-row">
+      <label>Volume <span class="val mono" id="valVol">30%</span></label>
+      <input type="range" id="vol" min="0" max="80" value="30" step="1">
+    </div>
+    <div class="a-row">
+      <label>Forma de onda</label>
+      <div class="wave-toggles">
+        <div class="wave-btn active" data-wave="sine">seno</div>
+        <div class="wave-btn" data-wave="triangle">triângulo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>
+    Estudo visual, sem promessa de nada.<br>
+    Um lugar pra desconectar da tela que só quer sua atenção, dentro da tela.
+  </p>
+  <a class="back" href="#">← voltar ao site</a>
+</footer>
+
+<script>
+// ---------- preview leve do rorschach: mancha simétrica com trilha ----------
+(function(){
+  const canvas = document.getElementById('c-rorschach');
+  const ctx = canvas.getContext('2d');
+  let w, h;
+  function resize(){
+    w = canvas.width = canvas.offsetWidth;
+    h = canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let t = 0;
+  const blobs = Array.from({length: 5}, (_, i) => ({
+    a: Math.random() * Math.PI * 2,
+    r: 0.15 + Math.random() * 0.25,
+    speed: 0.15 + Math.random() * 0.2,
+    hue: 350 + Math.random() * 20
+  }));
+
+  function frame(){
+    ctx.fillStyle = 'rgba(10,9,8,0.06)';
+    ctx.fillRect(0, 0, w, h);
+
+    const cx = w / 2, cy = h / 2;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.globalCompositeOperation = 'lighter';
+
+    for (const b of blobs) {
+      const ang = b.a + t * b.speed;
+      const rad = Math.min(w, h) * b.r * (1 + Math.sin(t * 0.6 + b.a) * 0.15);
+      const x = Math.cos(ang) * rad * 0.4;
+      const y = Math.sin(ang * 0.8) * rad * 0.5;
+      const size = Math.min(w, h) * (0.05 + Math.sin(t + b.a) * 0.015);
+
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, size);
+      grad.addColorStop(0, `hsla(${b.hue}, 75%, 40%, 0.5)`);
+      grad.addColorStop(1, `hsla(${b.hue}, 75%, 20%, 0)`);
+
+      // desenha espelhado (metade esquerda / direita), igual ao rorschach real
+      ctx.fillStyle = grad;
+      ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(-x, y, size, 0, Math.PI * 2); ctx.fill();
+    }
+
+    ctx.restore();
+    t += 0.012;
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+// ---------- preview leve do hyperspace: starfield warp simplificado ----------
+(function(){
+  const canvas = document.getElementById('c-hyperspace');
+  const ctx = canvas.getContext('2d');
+  let w, h;
+  function resize(){
+    w = canvas.width = canvas.offsetWidth;
+    h = canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const N = 140;
+  const stars = Array.from({length: N}, () => ({
+    a: Math.random() * Math.PI * 2,
+    r: Math.random() * 1,
+    speed: 0.004 + Math.random() * 0.01
+  }));
+
+  function frame(){
+    ctx.fillStyle = 'rgba(10,9,8,0.25)';
+    ctx.fillRect(0, 0, w, h);
+
+    const cx = w / 2, cy = h / 2;
+    const maxR = Math.hypot(cx, cy);
+
+    ctx.globalCompositeOperation = 'lighter';
+    for (const s of stars) {
+      s.r += s.speed;
+      if (s.r > 1) { s.r = 0; s.a = Math.random() * Math.PI * 2; }
+      const dist = s.r * s.r * maxR;
+      const x = cx + Math.cos(s.a) * dist;
+      const y = cy + Math.sin(s.a) * dist;
+      const size = 0.5 + s.r * 2;
+      const alpha = s.r;
+
+      ctx.strokeStyle = `rgba(216,183,161,${alpha})`;
+      ctx.lineWidth = size;
+      const px = cx + Math.cos(s.a) * dist * 0.94;
+      const py = cy + Math.sin(s.a) * dist * 0.94;
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }
+    ctx.globalCompositeOperation = 'source-over';
+
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
+</body>
+</html>
