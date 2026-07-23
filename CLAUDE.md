@@ -154,7 +154,12 @@ contagem de itens `draft:false` em `flash-data.json` — a diferença mostra o q
   itens, imagens de exemplo e lista de "outros estilos" carregam via `fetch()` no
   carregamento da página, direto de `flash/flash-data.json` e `flash/tags.json` — nunca
   ficam desatualizadas sozinhas. Regenerada automaticamente quando a descrição daquele
-  estilo é salva no painel (aba "Estilos / Tags").
+  estilo é salva no painel (aba "Estilos / Tags"). **Gerada a partir do template
+  `buildEstiloPageHtml()` dentro de `adminflash.html`** — o `<nav>` que esse template
+  produz é HTML puro escrito à mão ali dentro, **não** lê de nenhum arquivo existente.
+  Se o menu do site mudar de novo, esse template também precisa ser editado manualmente
+  (`adminflash.html`, dentro de `buildEstiloPageHtml`), senão a próxima página gerada
+  pelo painel volta pro menu antigo. Já atualizado em 22/07/2026 junto com as páginas.
 - `sitemap.xml` — regenerado a cada save no painel (`commitSitemap()`), filtra drafts.
 
 ## Onde cada coisa mora
