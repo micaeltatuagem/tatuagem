@@ -234,7 +234,10 @@ ${SITE_FOOTER}
     .then(r => r.json())
     .then(data => {
       const published = data.filter(it => !it.draft);
-      const items = published.filter(it => (it[CFG.filterField]||[]).includes(CFG.categoryValue));
+      const items = published.filter(it => {
+        const val = it[CFG.filterField];
+        return Array.isArray(val) ? val.includes(CFG.categoryValue) : val === CFG.categoryValue;
+      });
       const countEl = document.getElementById('itemCount');
       if (countEl) countEl.textContent = items.length + (items.length===1 ? ' peça disponível' : ' peças disponíveis');
 
