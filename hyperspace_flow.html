@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Hyperspace Flow</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; overflow: hidden;
+    width: 100%; height: 100%; background: #000;
+    font-family: 'EB Garamond', Georgia, serif;
+  }
+  canvas {
+    display: block;
+    width: 100vw; height: 100vh;
+    cursor: crosshair;
+  }
+
+  #toggleBtn {
+    position: fixed;
+    top: 18px; right: 18px;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: rgba(20,20,20,0.75);
+    border: 1px solid rgba(179,18,23,0.6);
+    color: #d8b7a1;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 20;
+    display: flex; align-items: center; justify-content: center;
+    letter-spacing: 1px;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s;
+  }
+  #toggleBtn:hover { background: rgba(179,18,23,0.35); }
+
+  #panel {
+    position: fixed;
+    top: 18px; right: 18px;
+    width: 270px;
+    max-height: calc(100vh - 36px);
+    overflow-y: auto;
+    background: rgba(15,13,13,0.85);
+    border: 1px solid rgba(179,18,23,0.4);
+    border-radius: 10px;
+    padding: 18px 18px 14px;
+    color: #cfc3b8;
+    z-index: 19;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    transform: translateY(-12px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  #panel.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  #panel h1 {
+    font-size: 15px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #b31217;
+    margin: 0 0 14px;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(179,18,23,0.3);
+    padding-bottom: 8px;
+  }
+  #panel h2 {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #7a6d61;
+    margin: 16px 0 8px;
+  }
+  #panel .row {
+    margin-bottom: 13px;
+  }
+  #panel label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+    color: #a89a8c;
+  }
+  #panel label span.val {
+    color: #d8b7a1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  #panel input[type="range"] {
+    width: 100%;
+    accent-color: #b31217;
+    height: 3px;
+  }
+  #panel select {
+    width: 100%;
+    background: rgba(30,26,26,0.9);
+    color: #cfc3b8;
+    border: 1px solid rgba(179,18,23,0.4);
+    border-radius: 5px;
+    padding: 6px 8px;
+    font-size: 13px;
+    font-family: inherit;
+  }
+  #panel .toggles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  #panel .toggle-btn {
+    flex: 1 1 calc(50% - 4px);
+    text-align: center;
+    padding: 7px 0;
+    font-size: 11.5px;
+    border: 1px solid rgba(179,18,23,0.35);
+    border-radius: 5px;
+    background: rgba(30,26,26,0.6);
+    color: #a89a8c;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    user-select: none;
+  }
+  #panel .toggle-btn.active {
+    background: rgba(179,18,23,0.55);
+    color: #f2e6dc;
+    border-color: #b31217;
+  }
+  #panel button.reset {
+    width: 100%;
+    margin-top: 6px;
+    padding: 9px 0;
+    background: transparent;
+    border: 1px solid rgba(179,18,23,0.5);
+    color: #d8b7a1;
+    border-radius: 5px;
+    letter-spacing: 1px;
+    font-size: 12px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  #panel button.reset:hover {
+    background: rgba(179,18,23,0.25);
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<canvas id="plasma" style="display:none;"></canvas>
+
+<div id="toggleBtn">☰</div>
+<div id="panel">
+  <h1>Hiperespaço</h1>
+
+  <div class="row">
+    <label>Camadas (combináveis)</label>
+    <div class="toggles" id="layerToggles">
+      <div class="toggle-btn active" data-layer="stars">Estrelas</div>
+      <div class="toggle-btn active" data-layer="wormhole">Wormhole</div>
+      <div class="toggle-btn" data-layer="plasma">Plasma</div>
+      <div class="toggle-btn" data-layer="mandala">Mandala</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <label>Paleta</label>
+    <select id="palette">
+      <option value="classic">Branco clássico</option>
+      <option value="warp">Vermelho warp</option>
+      <option value="ice">Azul gelo</option>
+      <option value="matrix">Verde matrix</option>
+      <option value="multicolor">Multicor</option>
+    </select>
+  </div>
+
+  <h2>Geral</h2>
+
+  <div class="row">
+    <label>Quantidade (estrelas/anéis) <span class="val" id="valCount">550</span></label>
+    <input type="range" id="count" min="100" max="1800" value="550" step="50">
+  </div>
+
+  <div class="row">
+    <label>Velocidade (warp) <span class="val" id="valSpeed">3.0</span></label>
+    <input type="range" id="speed" min="2" max="40" value="30" step="1">
+  </div>
+
+  <div class="row">
+    <label>Rastro <span class="val" id="valTrail">70%</span></label>
+    <input type="range" id="trail" min="0" max="95" value="70" step="5">
+  </div>
+
+  <div class="row">
+    <label>Tamanho (estrelas/anéis) <span class="val" id="valSize">1.0x</span></label>
+    <input type="range" id="starSize" min="30" max="250" value="100" step="10">
+  </div>
+
+  <h2>Wormhole</h2>
+  <div class="row">
+    <label>Distorção do túnel <span class="val" id="valDistort">45%</span></label>
+    <input type="range" id="distort" min="0" max="100" value="45" step="5">
+  </div>
+
+  <h2>Plasma</h2>
+  <div class="row">
+    <label>Opacidade do plasma <span class="val" id="valPlasma">55%</span></label>
+    <input type="range" id="plasmaOpacity" min="0" max="100" value="55" step="5">
+  </div>
+  <div class="row">
+    <label>Turbulência do plasma <span class="val" id="valPlasmaTurb">1.0x</span></label>
+    <input type="range" id="plasmaTurb" min="20" max="250" value="100" step="10">
+  </div>
+
+  <h2>Mandala</h2>
+  <div class="row">
+    <label>Segmentos <span class="val" id="valSegments">8</span></label>
+    <input type="range" id="segments" min="3" max="18" value="8" step="1">
+  </div>
+
+  <h2>Navegação</h2>
+  <div class="row">
+    <label>Direção</label>
+    <div class="toggles">
+      <div class="toggle-btn active" data-dir="forward">Aproximando</div>
+      <div class="toggle-btn" data-dir="backward">Afastando</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <label>Guiar com o mouse</label>
+    <div class="toggles">
+      <div class="toggle-btn active" data-steer="on">Ligado</div>
+      <div class="toggle-btn" data-steer="off">Desligado</div>
+    </div>
+  </div>
+
+  <button class="reset" id="resetBtn">Nova rota</button>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const plasmaCanvas = document.getElementById('plasma');
+const pctx = plasmaCanvas.getContext('2d');
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+const PALETTES = {
+  classic:    () => `rgba(255,255,255,`,
+  warp:       () => `rgba(${200 + Math.floor(Math.random()*55)},${10 + Math.floor(Math.random()*40)},${10 + Math.floor(Math.random()*30)},`,
+  ice:        () => `rgba(${140 + Math.floor(Math.random()*40)},${190 + Math.floor(Math.random()*40)},255,`,
+  matrix:     () => `rgba(${20 + Math.floor(Math.random()*40)},${200 + Math.floor(Math.random()*55)},${60 + Math.floor(Math.random()*40)},`,
+  multicolor: () => {
+    const hues = ['255,80,80', '90,180,255', '255,220,90', '140,255,140', '210,120,255'];
+    return `rgba(${hues[Math.floor(Math.random()*hues.length)]},`;
+  }
+};
+
+// hue/saturação base por paleta, usado pelo plasma e pelo mandala
+const HUE_BASE = {
+  classic:    { hue: 0,   sat: 0,  cycling: false },
+  warp:       { hue: 355, sat: 82, cycling: false },
+  ice:        { hue: 205, sat: 75, cycling: false },
+  matrix:     { hue: 130, sat: 75, cycling: false },
+  multicolor: { hue: 0,   sat: 78, cycling: true }
+};
+
+const config = {
+  layers: new Set(['stars', 'wormhole']),
+  count: 550,
+  speed: 3.0,
+  trail: 70,
+  starSize: 1.0,
+  distort: 45,
+  plasmaOpacity: 55,
+  plasmaTurb: 1.0,
+  segments: 8,
+  direction: 1,
+  steer: true,
+  palette: 'classic'
+};
+
+let stars = [];
+let rings = [];
+let centerX = 0, centerY = 0;
+let targetX = 0, targetY = 0;
+let t = 0;
+
+function maxDepth() {
+  return Math.max(canvas.width, canvas.height);
+}
+
+// ---------- ESTRELAS ----------
+function resetStar(s) {
+  const md = maxDepth();
+  s.x = (Math.random() * 2 - 1) * canvas.width;
+  s.y = (Math.random() * 2 - 1) * canvas.height;
+  s.z = md * 1.2;
+  s.prevZ = s.z;
+  s.colorFn = PALETTES[config.palette]();
+}
+
+function buildStars() {
+  stars = [];
+  const md = maxDepth();
+  for (let i = 0; i < config.count; i++) {
+    const s = {
+      x: (Math.random() * 2 - 1) * canvas.width,
+      y: (Math.random() * 2 - 1) * canvas.height,
+      z: Math.random() * md * 1.2 + 1,
+      prevZ: 0,
+      colorFn: PALETTES[config.palette]()
+    };
+    s.prevZ = s.z;
+    stars.push(s);
+  }
+}
+
+function drawStars() {
+  const w = canvas.width, h = canvas.height;
+  const speed = config.speed * (w / 900);
+  const focal = Math.min(w, h) * 0.5;
+  const md = maxDepth();
+
+  for (const s of stars) {
+    s.prevZ = s.z;
+    s.z -= speed * config.direction;
+
+    if (s.z <= 1 || s.z > md * 1.3) {
+      resetStar(s);
+      continue;
+    }
+
+    const k = focal / s.z;
+    const px = centerX + s.x * k;
+    const py = centerY + s.y * k;
+    const kPrev = focal / s.prevZ;
+    const ppx = centerX + s.x * kPrev;
+    const ppy = centerY + s.y * kPrev;
+
+    const proximity = 1 - Math.min(s.z / md, 1);
+    const size = Math.max(0.4, proximity * 3.2 * config.starSize);
+    const alpha = Math.min(1, 0.15 + proximity * 1.1);
+
+    ctx.strokeStyle = s.colorFn + alpha + ')';
+    ctx.lineWidth = size;
+    ctx.beginPath();
+    ctx.moveTo(ppx, ppy);
+    ctx.lineTo(px, py);
+    ctx.stroke();
+  }
+}
+
+// ---------- WORMHOLE ----------
+function resetRing(r) {
+  const md = maxDepth();
+  r.z = md * 1.3;
+  r.seedPhase = Math.random() * Math.PI * 2;
+  r.h1 = 2 + Math.floor(Math.random() * 3);
+  r.h2 = 4 + Math.floor(Math.random() * 4);
+  r.rotSpeed = (Math.random() - 0.5) * 0.006;
+  r.rot = Math.random() * Math.PI * 2;
+  r.colorFn = PALETTES[config.palette]();
+}
+
+function buildRings() {
+  rings = [];
+  const md = maxDepth();
+  const n = Math.max(10, Math.round(config.count / 14));
+  for (let i = 0; i < n; i++) {
+    rings.push({
+      z: (i / n) * md * 1.3 + 1,
+      seedPhase: Math.random() * Math.PI * 2,
+      h1: 2 + Math.floor(Math.random() * 3),
+      h2: 4 + Math.floor(Math.random() * 4),
+      rotSpeed: (Math.random() - 0.5) * 0.006,
+      rot: Math.random() * Math.PI * 2,
+      colorFn: PALETTES[config.palette]()
+    });
+  }
+}
+
+function ringPath(cx, cy, baseR, ring) {
+  const points = 56;
+  const distortAmt = config.distort / 100;
+  ctx.beginPath();
+  for (let i = 0; i <= points; i++) {
+    const ang = (i / points) * Math.PI * 2 + ring.rot;
+    const wobble = 1
+      + distortAmt * 0.18 * Math.sin(ang * ring.h1 + t * 0.6 + ring.seedPhase)
+      + distortAmt * 0.1 * Math.sin(ang * ring.h2 - t * 0.4 + ring.seedPhase * 1.6);
+    const rr = baseR * wobble;
+    const px = cx + Math.cos(ang) * rr;
+    const py = cy + Math.sin(ang) * rr;
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.closePath();
+}
+
+function drawWormhole() {
+  const w = canvas.width, h = canvas.height;
+  const speed = config.speed * (w / 900) * 0.6;
+  const focal = Math.min(w, h) * 0.55;
+  const md = maxDepth();
+  const baseR0 = Math.min(w, h) * 0.06;
+
+  for (const r of rings) {
+    r.z -= speed * config.direction;
+    r.rot += r.rotSpeed;
+
+    if (r.z <= 1 || r.z > md * 1.35) {
+      resetRing(r);
+      continue;
+    }
+
+    const k = focal / r.z;
+    const displayR = baseR0 * k;
+    if (displayR > Math.max(w, h) * 1.4) continue;
+
+    const proximity = 1 - Math.min(r.z / md, 1);
+    const alpha = Math.min(1, 0.12 + proximity * 0.9);
+    const width = Math.max(0.8, proximity * 4.5 * config.starSize);
+
+    ctx.save();
+    ctx.strokeStyle = r.colorFn + alpha + ')';
+    ctx.lineWidth = width;
+    ctx.shadowColor = r.colorFn + Math.min(1, alpha + 0.2) + ')';
+    ctx.shadowBlur = 6 + proximity * 22;
+    ringPath(centerX, centerY, displayR, r);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+// ---------- PLASMA ----------
+const PLASMA_TARGET_W = 220;
+let plasmaImgData = null;
+
+function resizePlasmaCanvas() {
+  const scale = canvas.width / PLASMA_TARGET_W;
+  const pw = PLASMA_TARGET_W;
+  const ph = Math.max(2, Math.round(canvas.height / scale));
+  plasmaCanvas.width = pw;
+  plasmaCanvas.height = ph;
+  plasmaImgData = pctx.createImageData(pw, ph);
+}
+resizePlasmaCanvas();
+window.addEventListener('resize', resizePlasmaCanvas);
+
+function hslToRgb(h, s, l) {
+  h = ((h % 360) + 360) % 360;
+  s /= 100; l /= 100;
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+  const m = l - c / 2;
+  let r = 0, g = 0, b = 0;
+  if (h < 60)       { r = c; g = x; b = 0; }
+  else if (h < 120) { r = x; g = c; b = 0; }
+  else if (h < 180) { r = 0; g = c; b = x; }
+  else if (h < 240) { r = 0; g = x; b = c; }
+  else if (h < 300) { r = x; g = 0; b = c; }
+  else              { r = c; g = 0; b = x; }
+  return [
+    Math.round((r + m) * 255),
+    Math.round((g + m) * 255),
+    Math.round((b + m) * 255)
+  ];
+}
+
+function drawPlasma() {
+  const pw = plasmaCanvas.width, ph = plasmaCanvas.height;
+  const data = plasmaImgData.data;
+  const turb = config.plasmaTurb;
+  const base = HUE_BASE[config.palette];
+  const freq1 = 0.04 * turb, freq2 = 0.05 * turb, freq3 = 0.03 * turb, freq4 = 0.06 * turb;
+
+  let idx = 0;
+  for (let y = 0; y < ph; y++) {
+    for (let x = 0; x < pw; x++) {
+      const v = Math.sin(x * freq1 + t) +
+                Math.sin(y * freq2 - t * 0.8) +
+                Math.sin((x + y) * freq3 + t * 1.3) +
+                Math.sin(Math.sqrt((x - pw / 2) ** 2 + (y - ph / 2) ** 2) * freq4 - t * 2);
+      const norm = (v + 4) / 8; // 0..1
+
+      let hue, sat, light;
+      if (base.cycling) {
+        hue = (t * 25 + norm * 220) % 360;
+        sat = base.sat;
+        light = 12 + norm * 38;
+      } else if (base.sat === 0) {
+        hue = 0; sat = 0;
+        light = 8 + norm * 55;
+      } else {
+        hue = base.hue + (norm - 0.5) * 40;
+        sat = base.sat;
+        light = 10 + norm * 42;
+      }
+
+      const [r, g, b] = hslToRgb(hue, sat, light);
+      data[idx++] = r;
+      data[idx++] = g;
+      data[idx++] = b;
+      data[idx++] = 255;
+    }
+  }
+  pctx.putImageData(plasmaImgData, 0, 0);
+
+  const opacity = config.plasmaOpacity / 100;
+  if (opacity <= 0) return;
+  ctx.save();
+  ctx.globalAlpha = opacity;
+  ctx.imageSmoothingEnabled = true;
+  ctx.drawImage(plasmaCanvas, 0, 0, canvas.width, canvas.height);
+  ctx.restore();
+}
+
+// ---------- MANDALA ----------
+function mandalaColor(i, total) {
+  const base = HUE_BASE[config.palette];
+  let hue;
+  if (base.cycling) hue = (t * 30 + (i / total) * 360) % 360;
+  else if (base.sat === 0) hue = 0;
+  else hue = base.hue + Math.sin(t * 0.3 + i) * 20;
+  const sat = base.sat === 0 ? 0 : base.sat;
+  const light = base.sat === 0 ? (55 + Math.sin(t + i) * 25) : (50 + Math.sin(t * 0.7 + i) * 18);
+  const [r, g, b] = hslToRgb(hue, sat, light);
+  return `rgba(${r},${g},${b},`;
+}
+
+function drawMandala() {
+  const w = canvas.width, h = canvas.height;
+  const segs = config.segments;
+  const maxR = Math.min(w, h) * 0.48 * config.starSize;
+  const rotBase = t * 0.15 * config.direction;
+
+  ctx.save();
+  ctx.translate(centerX, centerY);
+
+  for (let i = 0; i < segs; i++) {
+    ctx.save();
+    ctx.rotate(rotBase + (i / segs) * Math.PI * 2);
+    if (i % 2 === 1) ctx.scale(1, -1);
+
+    const pulses = 3;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    for (let p = 0; p <= 24; p++) {
+      const f = p / 24;
+      const rad = f * maxR;
+      const width = Math.sin(f * Math.PI) * maxR * 0.22 *
+        (1 + 0.4 * Math.sin(t * 1.4 + i + f * pulses * Math.PI));
+      const ang = f * 0.9;
+      const px = Math.sin(ang) * width + rad * 0.02;
+      const py = rad;
+      ctx.lineTo(px, py);
+    }
+    for (let p = 24; p >= 0; p--) {
+      const f = p / 24;
+      const rad = f * maxR;
+      const width = Math.sin(f * Math.PI) * maxR * 0.22 *
+        (1 + 0.4 * Math.sin(t * 1.4 + i + f * pulses * Math.PI));
+      const ang = f * 0.9;
+      const px = -Math.sin(ang) * width + rad * 0.02;
+      const py = rad;
+      ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+
+    const color = mandalaColor(i, segs);
+    const grad = ctx.createLinearGradient(0, 0, 0, maxR);
+    grad.addColorStop(0, color + '0)');
+    grad.addColorStop(0.5, color + '0.55)');
+    grad.addColorStop(1, color + '0)');
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+function rebuildStarsRings() {
+  buildStars();
+  buildRings();
+}
+
+rebuildStarsRings();
+centerX = canvas.width / 2;
+centerY = canvas.height / 2;
+targetX = centerX;
+targetY = centerY;
+
+canvas.addEventListener('mousemove', (e) => {
+  targetX = e.clientX;
+  targetY = e.clientY;
+});
+canvas.addEventListener('mouseleave', () => {
+  targetX = canvas.width / 2;
+  targetY = canvas.height / 2;
+});
+canvas.addEventListener('touchmove', (e) => {
+  const touch = e.touches[0];
+  targetX = touch.clientX;
+  targetY = touch.clientY;
+}, { passive: true });
+
+function draw() {
+  const w = canvas.width, h = canvas.height;
+
+  if (config.steer) {
+    centerX += (targetX - centerX) * 0.04;
+    centerY += (targetY - centerY) * 0.04;
+  } else {
+    centerX += (w / 2 - centerX) * 0.04;
+    centerY += (h / 2 - centerY) * 0.04;
+  }
+
+  const fadeAlpha = 1 - (config.trail / 100);
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.fillStyle = `rgba(0,0,0,${Math.max(fadeAlpha, 0.05)})`;
+  ctx.fillRect(0, 0, w, h);
+
+  // camadas se somam com blend aditivo, dando aquele efeito de luz se misturando
+  ctx.globalCompositeOperation = 'lighter';
+
+  if (config.layers.has('plasma')) drawPlasma();
+  if (config.layers.has('wormhole')) drawWormhole();
+  if (config.layers.has('mandala')) drawMandala();
+  if (config.layers.has('stars')) drawStars();
+
+  ctx.globalCompositeOperation = 'source-over';
+
+  t += 0.015;
+  requestAnimationFrame(draw);
+}
+
+draw();
+
+// --- UI ---
+const toggleBtn = document.getElementById('toggleBtn');
+const panel = document.getElementById('panel');
+toggleBtn.addEventListener('click', () => {
+  panel.classList.toggle('open');
+});
+
+document.querySelectorAll('#layerToggles .toggle-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const layer = btn.dataset.layer;
+    if (config.layers.has(layer)) {
+      if (config.layers.size > 1) {
+        config.layers.delete(layer);
+        btn.classList.remove('active');
+      }
+    } else {
+      config.layers.add(layer);
+      btn.classList.add('active');
+    }
+  });
+});
+
+document.getElementById('palette').addEventListener('change', (e) => {
+  config.palette = e.target.value;
+  for (const s of stars) s.colorFn = PALETTES[config.palette]();
+  for (const r of rings) r.colorFn = PALETTES[config.palette]();
+});
+
+const countInput = document.getElementById('count');
+countInput.addEventListener('input', (e) => {
+  config.count = parseInt(e.target.value);
+  document.getElementById('valCount').textContent = config.count;
+  rebuildStarsRings();
+});
+
+const speedInput = document.getElementById('speed');
+speedInput.addEventListener('input', (e) => {
+  config.speed = parseInt(e.target.value) / 10;
+  document.getElementById('valSpeed').textContent = config.speed.toFixed(1);
+});
+
+const trailInput = document.getElementById('trail');
+trailInput.addEventListener('input', (e) => {
+  config.trail = parseInt(e.target.value);
+  document.getElementById('valTrail').textContent = config.trail + '%';
+});
+
+const sizeInput = document.getElementById('starSize');
+sizeInput.addEventListener('input', (e) => {
+  config.starSize = parseInt(e.target.value) / 100;
+  document.getElementById('valSize').textContent = config.starSize.toFixed(1) + 'x';
+});
+
+const distortInput = document.getElementById('distort');
+distortInput.addEventListener('input', (e) => {
+  config.distort = parseInt(e.target.value);
+  document.getElementById('valDistort').textContent = config.distort + '%';
+});
+
+const plasmaOpacityInput = document.getElementById('plasmaOpacity');
+plasmaOpacityInput.addEventListener('input', (e) => {
+  config.plasmaOpacity = parseInt(e.target.value);
+  document.getElementById('valPlasma').textContent = config.plasmaOpacity + '%';
+});
+
+const plasmaTurbInput = document.getElementById('plasmaTurb');
+plasmaTurbInput.addEventListener('input', (e) => {
+  config.plasmaTurb = parseInt(e.target.value) / 100;
+  document.getElementById('valPlasmaTurb').textContent = config.plasmaTurb.toFixed(1) + 'x';
+});
+
+const segmentsInput = document.getElementById('segments');
+segmentsInput.addEventListener('input', (e) => {
+  config.segments = parseInt(e.target.value);
+  document.getElementById('valSegments').textContent = config.segments;
+});
+
+document.querySelectorAll('[data-dir]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-dir]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    config.direction = btn.dataset.dir === 'forward' ? 1 : -1;
+  });
+});
+
+document.querySelectorAll('[data-steer]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-steer]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    config.steer = btn.dataset.steer === 'on';
+  });
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  rebuildStarsRings();
+});
+</script>
+</body>
+</html>

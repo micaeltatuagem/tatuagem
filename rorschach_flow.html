@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Rorschach Flow</title>
+<style>
+  html, body {
+    margin: 0; padding: 0; overflow: hidden;
+    width: 100%; height: 100%; background: #000;
+    font-family: 'EB Garamond', Georgia, serif;
+  }
+  canvas {
+    display: block;
+    width: 100vw; height: 100vh;
+    cursor: crosshair;
+  }
+
+  #toggleBtn {
+    position: fixed;
+    top: 18px; right: 18px;
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: rgba(20,20,20,0.75);
+    border: 1px solid rgba(179,18,23,0.6);
+    color: #d8b7a1;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 20;
+    display: flex; align-items: center; justify-content: center;
+    letter-spacing: 1px;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s;
+  }
+  #toggleBtn:hover { background: rgba(179,18,23,0.35); }
+
+  #panel {
+    position: fixed;
+    top: 18px; right: 18px;
+    width: 266px;
+    max-height: calc(100vh - 36px);
+    overflow-y: auto;
+    background: rgba(15,13,13,0.85);
+    border: 1px solid rgba(179,18,23,0.4);
+    border-radius: 10px;
+    padding: 18px 18px 14px;
+    color: #cfc3b8;
+    z-index: 19;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    transform: translateY(-12px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  #panel.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  #panel h1 {
+    font-size: 15px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #b31217;
+    margin: 0 0 14px;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(179,18,23,0.3);
+    padding-bottom: 8px;
+  }
+  #panel h2 {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #7a6d61;
+    margin: 16px 0 8px;
+  }
+  #panel .row {
+    margin-bottom: 13px;
+  }
+  #panel label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+    color: #a89a8c;
+  }
+  #panel label span.val {
+    color: #d8b7a1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  #panel input[type="range"] {
+    width: 100%;
+    accent-color: #b31217;
+    height: 3px;
+  }
+  #panel select {
+    width: 100%;
+    background: rgba(30,26,26,0.9);
+    color: #cfc3b8;
+    border: 1px solid rgba(179,18,23,0.4);
+    border-radius: 5px;
+    padding: 6px 8px;
+    font-size: 13px;
+    font-family: inherit;
+  }
+  #panel .toggles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  #panel .toggle-btn {
+    flex: 1 1 calc(33.333% - 5px);
+    text-align: center;
+    padding: 7px 0;
+    font-size: 11px;
+    border: 1px solid rgba(179,18,23,0.35);
+    border-radius: 5px;
+    background: rgba(30,26,26,0.6);
+    color: #a89a8c;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    user-select: none;
+  }
+  #panel .toggle-btn.active {
+    background: rgba(179,18,23,0.55);
+    color: #f2e6dc;
+    border-color: #b31217;
+  }
+  #panel .toggles.two-col .toggle-btn {
+    flex: 1 1 calc(50% - 4px);
+  }
+  #panel button.reset {
+    width: 100%;
+    margin-top: 6px;
+    padding: 9px 0;
+    background: transparent;
+    border: 1px solid rgba(179,18,23,0.5);
+    color: #d8b7a1;
+    border-radius: 5px;
+    letter-spacing: 1px;
+    font-size: 12px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  #panel button.reset:hover {
+    background: rgba(179,18,23,0.25);
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="toggleBtn">☰</div>
+<div id="panel">
+  <h1>Fluxo</h1>
+
+  <div class="row">
+    <label>Paleta</label>
+    <select id="palette">
+      <option value="blood">Sangue / vinho</option>
+      <option value="red">Vermelho vivo</option>
+      <option value="mono">Preto e branco</option>
+      <option value="ink">Tinta azul</option>
+      <option value="verdigris">Verde óxido</option>
+    </select>
+  </div>
+
+  <div class="row">
+    <label>Quantidade <span class="val" id="valCount">42</span></label>
+    <input type="range" id="count" min="8" max="80" value="42" step="1">
+  </div>
+
+  <div class="row">
+    <label>Formas no mix</label>
+    <div class="toggles" id="shapeToggles">
+      <div class="toggle-btn active" data-shape="circle">Círculo</div>
+      <div class="toggle-btn active" data-shape="diamond">Losango</div>
+      <div class="toggle-btn" data-shape="triangle">Triângulo</div>
+      <div class="toggle-btn" data-shape="square">Quadrado</div>
+      <div class="toggle-btn" data-shape="pentagon">Pentágono</div>
+      <div class="toggle-btn" data-shape="hexagon">Hexágono</div>
+      <div class="toggle-btn" data-shape="star">Estrela</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <label>Fusão (blur) <span class="val" id="valBlur">13</span></label>
+    <input type="range" id="blur" min="4" max="26" value="13" step="1">
+  </div>
+
+  <div class="row">
+    <label>Escuridão <span class="val" id="valBright">95%</span></label>
+    <input type="range" id="brightness" min="60" max="115" value="95" step="1">
+  </div>
+
+  <div class="row">
+    <label>Velocidade <span class="val" id="valSpeed">1.0x</span></label>
+    <input type="range" id="speed" min="20" max="220" value="100" step="5">
+  </div>
+
+  <div class="row">
+    <label>Espaçamento das metades <span class="val" id="valGap">0</span></label>
+    <input type="range" id="gap" min="-100" max="100" value="0" step="2">
+  </div>
+
+  <h2>Relevo e luz</h2>
+
+  <div class="row">
+    <label>Relevo (bevel/emboss)</label>
+    <div class="toggles two-col">
+      <div class="toggle-btn active" data-bevel="on">Ligado</div>
+      <div class="toggle-btn" data-bevel="off">Desligado</div>
+    </div>
+  </div>
+
+  <div class="row">
+    <label>Intensidade do relevo <span class="val" id="valBevel">55%</span></label>
+    <input type="range" id="bevelAmt" min="0" max="100" value="55" step="5">
+  </div>
+
+  <div class="row">
+    <label>Brilho externo (glow) <span class="val" id="valGlow">18</span></label>
+    <input type="range" id="glow" min="0" max="60" value="18" step="2">
+  </div>
+
+  <div class="row">
+    <label>Sombra projetada <span class="val" id="valShadow">10</span></label>
+    <input type="range" id="shadow" min="0" max="40" value="10" step="2">
+  </div>
+
+  <div class="row">
+    <label>Reação ao mouse</label>
+    <div class="toggles two-col">
+      <div class="toggle-btn active" data-react="on">Ligada</div>
+      <div class="toggle-btn" data-react="off">Desligada</div>
+    </div>
+  </div>
+
+  <button class="reset" id="resetBtn">Gerar nova mancha</button>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// --- paletas de cor ---
+const PALETTES = {
+  blood:     ['#b31217', '#8f0e14', '#a3121a', '#c81a1a', '#961014'],
+  red:       ['#ff1f1f', '#e0102a', '#ff3d1f', '#c8081f'],
+  mono:      ['#ffffff', '#e8e8e8', '#f5f5f5', '#dcdcdc'],
+  ink:       ['#1a3fb3', '#122a8f', '#1a4fc8', '#0e2196'],
+  verdigris: ['#1f8f5a', '#146b45', '#22b36e', '#0e5c3a']
+};
+
+// número de lados por forma poligonal regular (as demais têm desenho próprio)
+const SIDES = { triangle: 3, square: 4, pentagon: 5, hexagon: 6 };
+
+// --- configuração / estado ---
+const config = {
+  count: 42,
+  blur: 13,
+  brightness: 95,
+  speed: 100,
+  palette: 'blood',
+  reactive: true,
+  shapes: new Set(['circle', 'diamond']),
+  bevel: true,
+  bevelAmt: 55,
+  glow: 18,
+  shadow: 10,
+  gap: 0
+};
+
+let blobs = [];
+
+function pickShape() {
+  const active = Array.from(config.shapes);
+  if (active.length === 0) return 'circle';
+  return active[Math.floor(Math.random() * active.length)];
+}
+
+function buildBlobs() {
+  blobs = [];
+  const colors = PALETTES[config.palette];
+  for (let i = 0; i < config.count; i++) {
+    const small = Math.random() < 0.55;
+    blobs.push({
+      fx: 0.15 + Math.random() * 0.3,
+      fy: 0.12 + Math.random() * 0.35,
+      px: Math.random() * Math.PI * 2,
+      py: Math.random() * Math.PI * 2,
+      baseX: 0.22 + Math.random() * 0.32,
+      baseY: 0.15 + Math.random() * 0.7,
+      ampX: 0.05 + Math.random() * 0.1,
+      ampY: 0.08 + Math.random() * 0.18,
+      r: small ? (10 + Math.random() * 22) : (40 + Math.random() * 80),
+      rPhase: Math.random() * Math.PI * 2,
+      rFreq: 0.05 + Math.random() * 0.12,
+      rot: Math.random() * Math.PI,
+      rotSpeed: (Math.random() - 0.5) * 0.01,
+      shape: pickShape(),
+      color: colors[Math.floor(Math.random() * colors.length)],
+      ox: 0, oy: 0, vx: 0, vy: 0
+    });
+  }
+}
+
+function applyFilter() {
+  const glowPart = config.glow > 0
+    ? ` drop-shadow(0 0 ${config.glow}px rgba(179,18,23,0.85))`
+    : '';
+  const shadowPart = config.shadow > 0
+    ? ` drop-shadow(${config.shadow * 0.4}px ${config.shadow * 0.6}px ${config.shadow * 0.5}px rgba(0,0,0,0.8))`
+    : '';
+  canvas.style.filter =
+    `blur(${config.blur}px) contrast(30) brightness(${config.brightness / 100})` +
+    glowPart + shadowPart;
+}
+
+// --- utilidades de cor pro relevo (bevel/emboss) ---
+function hexToRgb(hex) {
+  const v = hex.replace('#', '');
+  return {
+    r: parseInt(v.substring(0, 2), 16),
+    g: parseInt(v.substring(2, 4), 16),
+    b: parseInt(v.substring(4, 6), 16)
+  };
+}
+function shade(hex, amt) {
+  const { r, g, b } = hexToRgb(hex);
+  const f = (c) => Math.max(0, Math.min(255, Math.round(c + amt)));
+  return `rgb(${f(r)}, ${f(g)}, ${f(b)})`;
+}
+
+buildBlobs();
+applyFilter();
+
+let t = 0;
+let mouseX = -9999, mouseY = -9999;
+let burst = 0;
+
+canvas.addEventListener('mousemove', (e) => {
+  if (!config.reactive) return;
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+canvas.addEventListener('mouseleave', () => {
+  mouseX = -9999; mouseY = -9999;
+});
+canvas.addEventListener('click', (e) => {
+  if (!config.reactive) return;
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  burst = 1;
+});
+canvas.addEventListener('touchmove', (e) => {
+  if (!config.reactive) return;
+  const touch = e.touches[0];
+  mouseX = touch.clientX;
+  mouseY = touch.clientY;
+}, { passive: true });
+
+function shapePath(r, shape) {
+  if (shape === 'diamond') {
+    ctx.moveTo(0, -r);
+    ctx.lineTo(r * 0.75, 0);
+    ctx.lineTo(0, r);
+    ctx.lineTo(-r * 0.75, 0);
+    ctx.closePath();
+  } else if (shape === 'star') {
+    const spikes = 5;
+    const outerR = r;
+    const innerR = r * 0.48;
+    for (let i = 0; i < spikes * 2; i++) {
+      const rad = i % 2 === 0 ? outerR : innerR;
+      const ang = (Math.PI / spikes) * i - Math.PI / 2;
+      const px = Math.cos(ang) * rad;
+      const py = Math.sin(ang) * rad;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+  } else if (SIDES[shape]) {
+    const sides = SIDES[shape];
+    for (let i = 0; i < sides; i++) {
+      const ang = (Math.PI * 2 / sides) * i - Math.PI / 2;
+      const px = Math.cos(ang) * r;
+      const py = Math.sin(ang) * r;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+  } else {
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+  }
+}
+
+function drawShape(cx, cy, r, shape, rot, color) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(rot);
+  ctx.beginPath();
+  shapePath(r, shape);
+
+  if (config.bevel) {
+    // gradiente radial deslocado pro canto superior-esquerdo = luz "batendo" de cima
+    // o filtro de contraste vai acentuar isso em destaque (brilho) e sombra nas bordas
+    const amt = config.bevelAmt / 100;
+    const light = shade(color, 130 * amt);
+    const dark = shade(color, -70 * amt);
+    const grad = ctx.createRadialGradient(
+      -r * 0.35, -r * 0.35, r * 0.05,
+      0, 0, r * 1.15
+    );
+    grad.addColorStop(0, light);
+    grad.addColorStop(0.55, color);
+    grad.addColorStop(1, dark);
+    ctx.fillStyle = grad;
+  } else {
+    ctx.fillStyle = color;
+  }
+
+  ctx.fill();
+  ctx.restore();
+}
+
+function draw() {
+  const w = canvas.width, h = canvas.height;
+  const midX = w / 2;
+  const speedFactor = config.speed / 100;
+
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, w, h);
+
+  const influence = 220 + burst * 150;
+  const strength = 0.9 + burst * 3.5;
+
+  for (const b of blobs) {
+    const baseX = midX * (b.baseX + b.ampX * Math.sin(t * b.fx + b.px));
+    const baseY = h * (b.baseY + b.ampY * Math.cos(t * b.fy + b.py));
+    const r = b.r + 20 * Math.sin(t * b.rFreq + b.rPhase);
+
+    const mx = mouseX > midX ? (w - mouseX) : mouseX;
+
+    const dx = baseX - mx;
+    const dy = baseY - mouseY;
+    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+
+    if (config.reactive && dist < influence) {
+      const force = ((influence - dist) / influence) * strength;
+      b.vx += (dx / dist) * force;
+      b.vy += (dy / dist) * force;
+    }
+
+    b.vx *= 0.9;
+    b.vy *= 0.9;
+    b.ox = (b.ox + b.vx) * 0.94;
+    b.oy = (b.oy + b.vy) * 0.94;
+
+    const x = baseX + b.ox;
+    const y = baseY + b.oy;
+
+    b.rot += b.rotSpeed * speedFactor;
+
+    // aplica espaçamento/sobreposição das metades em torno da linha central
+    const offsetPx = (config.gap / 100) * (midX);
+    const distFromCenter = midX - x;
+    const newDist = distFromCenter + offsetPx;
+    const leftX = midX - newDist;
+    const rightX = midX + newDist;
+
+    drawShape(leftX, y, Math.max(r, 5), b.shape, b.rot, b.color);
+    drawShape(rightX, y, Math.max(r, 5), b.shape, -b.rot, b.color);
+  }
+
+  burst *= 0.85;
+  t += 0.012 * speedFactor;
+  requestAnimationFrame(draw);
+}
+
+draw();
+
+// --- UI ---
+const toggleBtn = document.getElementById('toggleBtn');
+const panel = document.getElementById('panel');
+toggleBtn.addEventListener('click', () => {
+  panel.classList.toggle('open');
+});
+
+document.getElementById('palette').addEventListener('change', (e) => {
+  config.palette = e.target.value;
+  const colors = PALETTES[config.palette];
+  for (const b of blobs) b.color = colors[Math.floor(Math.random() * colors.length)];
+});
+
+const countInput = document.getElementById('count');
+countInput.addEventListener('input', (e) => {
+  config.count = parseInt(e.target.value);
+  document.getElementById('valCount').textContent = config.count;
+  buildBlobs();
+});
+
+document.querySelectorAll('#shapeToggles .toggle-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const shape = btn.dataset.shape;
+    if (config.shapes.has(shape)) {
+      if (config.shapes.size > 1) {
+        config.shapes.delete(shape);
+        btn.classList.remove('active');
+      }
+    } else {
+      config.shapes.add(shape);
+      btn.classList.add('active');
+    }
+    for (const b of blobs) b.shape = pickShape();
+  });
+});
+
+const blurInput = document.getElementById('blur');
+blurInput.addEventListener('input', (e) => {
+  config.blur = parseInt(e.target.value);
+  document.getElementById('valBlur').textContent = config.blur;
+  applyFilter();
+});
+
+const brightInput = document.getElementById('brightness');
+brightInput.addEventListener('input', (e) => {
+  config.brightness = parseInt(e.target.value);
+  document.getElementById('valBright').textContent = config.brightness + '%';
+  applyFilter();
+});
+
+const speedInput = document.getElementById('speed');
+speedInput.addEventListener('input', (e) => {
+  config.speed = parseInt(e.target.value);
+  document.getElementById('valSpeed').textContent = (config.speed / 100).toFixed(1) + 'x';
+});
+
+const gapInput = document.getElementById('gap');
+gapInput.addEventListener('input', (e) => {
+  config.gap = parseInt(e.target.value);
+  document.getElementById('valGap').textContent = config.gap;
+});
+
+document.querySelectorAll('[data-bevel]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-bevel]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    config.bevel = btn.dataset.bevel === 'on';
+  });
+});
+
+const bevelAmtInput = document.getElementById('bevelAmt');
+bevelAmtInput.addEventListener('input', (e) => {
+  config.bevelAmt = parseInt(e.target.value);
+  document.getElementById('valBevel').textContent = config.bevelAmt + '%';
+});
+
+const glowInput = document.getElementById('glow');
+glowInput.addEventListener('input', (e) => {
+  config.glow = parseInt(e.target.value);
+  document.getElementById('valGlow').textContent = config.glow;
+  applyFilter();
+});
+
+const shadowInput = document.getElementById('shadow');
+shadowInput.addEventListener('input', (e) => {
+  config.shadow = parseInt(e.target.value);
+  document.getElementById('valShadow').textContent = config.shadow;
+  applyFilter();
+});
+
+document.querySelectorAll('[data-react]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-react]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    config.reactive = btn.dataset.react === 'on';
+    if (!config.reactive) { mouseX = -9999; mouseY = -9999; }
+  });
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  buildBlobs();
+});
+</script>
+</body>
+</html>
