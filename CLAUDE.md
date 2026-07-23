@@ -189,13 +189,15 @@ contagem de itens `draft:false` em `flash-data.json` — a diferença mostra o q
   7 páginas internas "padrão" (`galeria.html`, `flash.html`, `aerografia.html`,
   `preview-tatuagem.html`, `reserva.html`, `cadastro.html`, `anamnese.html`) — atualizado
   em 22/07/2026.
-- **Pendente**: as 24 páginas de `/estilo/` e as ~25 páginas "órfãs" na raiz (`animais.html`,
+- As 25 páginas de `/estilo/` e as ~25 páginas "órfãs" na raiz (`animais.html`,
   `blackwork.html` etc. — duplicatas antigas cujo `canonical` já aponta pra versão em
-  `/estilo/`, sem nenhum link ativo apontando pra elas) ainda usam um menu mais antigo e
-  mais curto (sem `hide-sm`, sem `Cuidados`/`Localização`, paths absolutos tipo
-  `/index.html`). Não foram tocadas nessa atualização — avaliar se vale sincronizar
-  também, e nesse caso lembrar que usam paths absolutos (`/index.html`, `/flash.html`
-  etc.) em vez de relativos.
+  `/estilo/`, sem nenhum link ativo apontando pra elas; `organico.html` e
+  `estilo/organico.html` são exceção — são só stubs de redirect pra `organica.html`,
+  sem nav) também foram sincronizadas com o menu do index em 22/07/2026 (commit em lote
+  via Git Data API, 48 arquivos de uma vez). Como essas páginas vivem tanto na raiz
+  quanto em `/estilo/`, o menu delas usa paths absolutos (`/index.html`, `/flash.html`,
+  `/aerografia.html` etc.) em vez de relativos — não copiar o menu relativo das 7
+  páginas padrão pra cá sem adaptar os paths.
 - O sistema de indicação/promoção do `reserva.html` supõe que a tabela `clientes_promo`
   no Supabase só tem as colunas nome/whatsapp/email/codigo_indicacao/indicado_por/canal.
   **Não adicionar campos novos no payload de insert sem confirmar o schema** — inserir
