@@ -79,10 +79,13 @@
 
   .portal{
     position:relative;
+    display:block;
     height:100%;
     min-height:280px;
     overflow:hidden;
     cursor:pointer;
+    text-decoration:none;
+    color:inherit;
     border-right:1px solid rgba(179,18,23,0.12);
     filter:brightness(0.62) saturate(0.75);
     transition:filter 0.6s ease;
@@ -178,95 +181,122 @@
     z-index:50; pointer-events:none;
   }
 
+  /* ---------- módulo de áudio ---------- */
   .audio-module{
-    margin:0 40px 40px;
-    padding:26px 30px 28px;
-    border:1px solid rgba(179,18,23,0.15);
-    background:rgba(20,17,16,0.4);
+    padding:36px 40px 30px;
+    border-top:1px solid rgba(179,18,23,0.12);
+    border-bottom:1px solid rgba(179,18,23,0.12);
   }
-  @media (max-width:700px){
-    .audio-module{ margin:0 20px 32px; padding:22px 20px 24px; }
-  }
-
   .audio-head{
-    display:flex; justify-content:space-between; align-items:center;
-    flex-wrap:wrap; gap:14px;
+    display:flex; align-items:center; justify-content:space-between;
     margin-bottom:10px;
   }
   .audio-title{
-    font-size:19px; color:var(--sand); letter-spacing:0.5px;
+    font-size:24px; color:var(--sand); letter-spacing:0.5px;
   }
-  .audio-title em{
-    font-style:italic; color:var(--stone); font-size:14px;
-  }
-
+  .audio-title em{ font-style:italic; color:var(--stone); font-size:15px; }
   .audio-power{
     font-family:'JetBrains Mono', monospace;
     font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
-    color:var(--sand);
-    background:transparent;
-    border:1px solid var(--red-dim);
-    padding:9px 22px;
-    cursor:pointer;
-    transition:background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    background:transparent; border:1px solid var(--red-dim);
+    color:var(--sand); padding:8px 18px; cursor:pointer;
+    transition:background 0.3s ease, color 0.3s ease;
   }
-  .audio-power:hover{ border-color:var(--red); }
+  .audio-power:hover{ background:rgba(179,18,23,0.12); }
   .audio-power[data-on="1"]{
-    background:var(--red);
-    border-color:var(--red);
-    color:#f2e6dc;
+    background:var(--red); border-color:var(--red); color:#0a0908;
   }
 
   .audio-desc{
-    font-size:11px; line-height:1.8; letter-spacing:0.3px;
-    color:var(--stone); max-width:560px;
-    margin:0 0 22px;
+    max-width:560px; font-size:11.5px; line-height:1.8;
+    color:var(--stone); margin:0 0 6px;
+  }
+  .audio-hint{
+    max-width:560px; font-size:11.5px; line-height:1.8;
+    color:var(--stone); opacity:0.75; margin:0 0 26px; font-style:italic;
+  }
+
+  .presets{
+    display:flex; flex-wrap:wrap; gap:8px; margin-bottom:30px;
+  }
+  .preset-btn{
+    font-family:'JetBrains Mono', monospace;
+    font-size:10.5px; letter-spacing:0.5px;
+    color:var(--stone); background:rgba(255,255,255,0.02);
+    border:1px solid rgba(179,18,23,0.18);
+    padding:8px 12px; cursor:pointer; text-align:left;
+    transition:border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+  }
+  .preset-btn:hover{ border-color:var(--red-dim); color:var(--sand); }
+  .preset-btn.active{
+    border-color:var(--red); color:var(--sand);
+    background:rgba(179,18,23,0.1);
+  }
+  .preset-btn .band{
+    display:block; text-transform:uppercase; opacity:0.6; font-size:9px;
+    letter-spacing:1.5px; margin-bottom:3px;
+  }
+  .preset-btn .name{
+    display:block; font-family:'EB Garamond', serif; font-size:14px;
+    color:var(--paper); font-style:italic;
   }
 
   .audio-controls{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:22px 32px;
+    display:grid; grid-template-columns:1fr 1fr; gap:22px 40px;
   }
   @media (max-width:700px){
-    .audio-controls{ grid-template-columns:1fr; gap:18px; }
+    .audio-controls{ grid-template-columns:1fr; }
+    .audio-head{ flex-direction:column; align-items:flex-start; gap:10px; }
   }
+
+  .a-group-title{
+    grid-column:1 / -1;
+    font-family:'JetBrains Mono', monospace;
+    font-size:10px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--stone); margin:6px 0 -8px;
+    border-top:1px dashed rgba(179,18,23,0.15); padding-top:16px;
+  }
+  .a-group-title:first-child{ border-top:none; padding-top:0; margin-top:0; }
 
   .a-row label{
     display:flex; justify-content:space-between;
-    font-size:12.5px; letter-spacing:0.4px;
-    color:var(--stone); margin-bottom:7px;
+    font-size:13px; color:var(--paper); margin-bottom:6px;
   }
   .a-row .val{ color:var(--sand); font-size:11px; }
-
   .a-row input[type="range"]{
-    width:100%;
-    accent-color:var(--red);
-    height:3px;
+    width:100%; -webkit-appearance:none; appearance:none;
+    height:2px; background:rgba(179,18,23,0.25); outline:none;
   }
-  .a-row input[type="range"]:disabled{
-    opacity:0.4;
+  .a-row input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:12px; height:12px; border-radius:50%;
+    background:var(--sand); cursor:pointer; border:1px solid var(--red);
+  }
+  .a-row input[type="range"]::-moz-range-thumb{
+    width:12px; height:12px; border-radius:50%;
+    background:var(--sand); cursor:pointer; border:1px solid var(--red);
   }
 
-  .wave-toggles{
-    display:flex; gap:8px; margin-top:2px;
+  .wave-toggles, .pulse-shape-toggles{ display:flex; gap:8px; }
+  .wave-btn, .shape-btn{
+    font-family:'JetBrains Mono', monospace; font-size:11px;
+    color:var(--stone); border:1px solid rgba(179,18,23,0.18);
+    padding:7px 14px; cursor:pointer;
+    transition:border-color 0.25s ease, color 0.25s ease;
   }
-  .wave-btn{
-    flex:1;
-    text-align:center;
-    padding:8px 0;
-    font-family:'JetBrains Mono', monospace;
-    font-size:11px; letter-spacing:1px; text-transform:uppercase;
-    color:var(--stone);
-    border:1px solid rgba(179,18,23,0.25);
-    cursor:pointer;
-    user-select:none;
-    transition:background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  .wave-btn.active, .shape-btn.active{
+    border-color:var(--red); color:var(--sand); background:rgba(179,18,23,0.1);
   }
-  .wave-btn.active{
-    background:var(--red-dim);
-    color:var(--sand);
-    border-color:var(--red);
+
+  .pulse-on-row{
+    display:flex; align-items:center; gap:10px; margin-bottom:4px;
+  }
+  .pulse-on-row .mini-toggle{
+    font-family:'JetBrains Mono', monospace; font-size:10px;
+    color:var(--stone); border:1px solid rgba(179,18,23,0.18);
+    padding:5px 10px; cursor:pointer;
+  }
+  .pulse-on-row .mini-toggle.active{
+    border-color:var(--red); color:var(--sand); background:rgba(179,18,23,0.1);
   }
 </style>
 </head>
@@ -289,23 +319,23 @@
 
 <div class="portals">
 
-  <div class="portal" id="p-rorschach">
+  <a class="portal" id="p-rorschach" href="rorschach.html">
     <canvas id="c-rorschach"></canvas>
     <div class="veil"></div>
     <div class="label">
       <span class="name">Rorschach</span>
       <span class="hint">mancha ⋄ olhe até reconhecer algo</span>
     </div>
-  </div>
+  </a>
 
-  <div class="portal" id="p-hyperspace">
+  <a class="portal" id="p-hyperspace" href="hyperspace.html">
     <canvas id="c-hyperspace"></canvas>
     <div class="veil"></div>
     <div class="label">
       <span class="name">Hiperespaço</span>
       <span class="hint">deriva ⋄ sem destino</span>
     </div>
-  </div>
+  </a>
 
   <div class="portal ghost">
     <div class="inner">
@@ -322,18 +352,43 @@
     <button class="audio-power" id="audioPower" data-on="0">ligar</button>
   </div>
   <p class="audio-desc mono">
-    Duas frequências próximas, uma em cada ouvido — use fone.
-    Nenhuma promessa de efeito, só mais uma camada pra quem quiser mexer.
+    Duas frequências puras, uma em cada ouvido. Elas não se tocam no ar, só dentro
+    da sua cabeça, onde o cérebro cria a diferença entre elas como um pulso.
+    Isso só funciona com fone; sem ele, é só dois tons.
+  </p>
+  <p class="audio-desc mono">
+    Os nomes abaixo (Delta, Theta, Alpha, Beta, Gamma) são a nomenclatura que a
+    comunidade de binaural já usa há décadas pra descrever a faixa de frequência
+    do batimento. Mexa, ouça, fique com o que soar bem.
+  </p>
+  <p class="audio-hint mono">
+    Os presets abaixo são só atalhos. Os sliders sempre respondem — dá pra construir
+    sua própria batida do zero.
   </p>
 
+  <div class="presets" id="presets">
+    <div class="preset-btn" data-base="180" data-beat="1"><span class="band">Delta</span><span class="name">Letárgico</span></div>
+    <div class="preset-btn" data-base="180" data-beat="2"><span class="band">Delta</span><span class="name">Sono profundo</span></div>
+    <div class="preset-btn" data-base="180" data-beat="3"><span class="band">Delta</span><span class="name">Sem sonhos</span></div>
+    <div class="preset-btn" data-base="180" data-beat="4"><span class="band">Theta</span><span class="name">Sonolento</span></div>
+    <div class="preset-btn active" data-base="180" data-beat="6"><span class="band">Theta</span><span class="name">Fantasia</span></div>
+    <div class="preset-btn" data-base="180" data-beat="8"><span class="band">Alpha</span><span class="name">Relaxado</span></div>
+    <div class="preset-btn" data-base="180" data-beat="12"><span class="band">Alpha</span><span class="name">Consciente</span></div>
+    <div class="preset-btn" data-base="180" data-beat="16"><span class="band">Beta</span><span class="name">Focado</span></div>
+    <div class="preset-btn" data-base="180" data-beat="24"><span class="band">Beta</span><span class="name">Ativo</span></div>
+    <div class="preset-btn" data-base="180" data-beat="32"><span class="band">Gamma</span><span class="name">Alerta</span></div>
+  </div>
+
   <div class="audio-controls">
+
+    <div class="a-group-title">Binaural</div>
     <div class="a-row">
       <label>Frequência base <span class="val mono" id="valFreq">180 Hz</span></label>
       <input type="range" id="baseFreq" min="80" max="320" value="180" step="1">
     </div>
     <div class="a-row">
       <label>Batimento <span class="val mono" id="valBeat">6.0 Hz</span></label>
-      <input type="range" id="beatFreq" min="1" max="20" value="6" step="0.5">
+      <input type="range" id="beatFreq" min="1" max="32" value="6" step="0.5">
     </div>
     <div class="a-row">
       <label>Volume <span class="val mono" id="valVol">30%</span></label>
@@ -346,6 +401,30 @@
         <div class="wave-btn" data-wave="triangle">triângulo</div>
       </div>
     </div>
+
+    <div class="a-group-title">Pulso isocrônico</div>
+    <div class="a-row" style="grid-column:1 / -1;">
+      <div class="pulse-on-row">
+        <div class="mini-toggle" id="pulseToggle" data-on="0">desligado</div>
+        <span class="mono" style="font-size:10.5px; color:var(--stone);">liga a batida eletrônica por cima do binaural</span>
+      </div>
+    </div>
+    <div class="a-row">
+      <label>Frequência do pulso <span class="val mono" id="valPulseFreq">4.0 Hz</span></label>
+      <input type="range" id="pulseFreq" min="0.5" max="10" value="4" step="0.1">
+    </div>
+    <div class="a-row">
+      <label>Profundidade <span class="val mono" id="valPulseDepth">70%</span></label>
+      <input type="range" id="pulseDepth" min="0" max="100" value="70" step="1">
+    </div>
+    <div class="a-row" style="grid-column:1 / -1;">
+      <label>Formato do pulso</label>
+      <div class="pulse-shape-toggles">
+        <div class="shape-btn active" data-shape="square">seco</div>
+        <div class="shape-btn" data-shape="sine">suave</div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -463,100 +542,194 @@
   frame();
 })();
 
-// ---------- áudio binaural ----------
+// ---------- motor de áudio: binaural + pulso isocrônico ----------
 (function(){
-  const powerBtn = document.getElementById('audioPower');
-  const baseFreqInput = document.getElementById('baseFreq');
-  const beatFreqInput = document.getElementById('beatFreq');
-  const volInput = document.getElementById('vol');
-  const valFreq = document.getElementById('valFreq');
-  const valBeat = document.getElementById('valBeat');
-  const valVol = document.getElementById('valVol');
-  const waveBtns = document.querySelectorAll('.wave-btn');
+  let ctx = null;
+  let oscL, oscR, gainL, gainR, panL, panR, masterGain;
+  let pulseLFO, pulseGain, pulseOffset; // amplitude modulation pra pulso isocrônico
+  let running = false;
 
-  let audioCtx = null;
-  let oscL = null, oscR = null, panL = null, panR = null, masterGain = null;
-  let isOn = false;
-  let waveType = 'sine';
+  const state = {
+    baseFreq: 180,
+    beatFreq: 6,
+    volume: 30,
+    waveform: 'sine',
+    pulseOn: false,
+    pulseFreq: 4,
+    pulseDepth: 70,
+    pulseShape: 'square'
+  };
 
-  function currentVol(){
-    return parseFloat(volInput.value) / 100;
-  }
+  const $ = id => document.getElementById(id);
+  const powerBtn = $('audioPower');
 
-  function applyFrequencies(){
-    if (!audioCtx) return;
-    const base = parseFloat(baseFreqInput.value);
-    const beat = parseFloat(beatFreqInput.value);
-    const now = audioCtx.currentTime;
-    oscL.frequency.setTargetAtTime(base - beat / 2, now, 0.05);
-    oscR.frequency.setTargetAtTime(base + beat / 2, now, 0.05);
-  }
+  function buildGraph(){
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
 
-  function initAudio(){
-    if (audioCtx) return;
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    oscL = ctx.createOscillator();
+    oscR = ctx.createOscillator();
+    panL = ctx.createStereoPanner(); panL.pan.value = -1;
+    panR = ctx.createStereoPanner(); panR.pan.value = 1;
+    masterGain = ctx.createGain();
+    masterGain.gain.value = state.volume / 100 * 0.6;
 
-    oscL = audioCtx.createOscillator();
-    oscR = audioCtx.createOscillator();
-    oscL.type = waveType;
-    oscR.type = waveType;
+    oscL.type = state.waveform;
+    oscR.type = state.waveform;
+    oscL.frequency.value = state.baseFreq;
+    oscR.frequency.value = state.baseFreq + state.beatFreq;
 
-    panL = audioCtx.createStereoPanner();
-    panR = audioCtx.createStereoPanner();
-    panL.pan.value = -1;
-    panR.pan.value = 1;
+    // cadeia de pulso isocrônico: um LFO modula o ganho final (amplitude modulation)
+    pulseGain = ctx.createGain();
+    pulseGain.gain.value = 1; // sem pulso = ganho fixo em 1
 
-    masterGain = audioCtx.createGain();
-    masterGain.gain.value = 0;
+    pulseLFO = ctx.createOscillator();
+    pulseLFO.type = state.pulseShape;
+    pulseLFO.frequency.value = state.pulseFreq;
 
-    oscL.connect(panL).connect(masterGain);
-    oscR.connect(panR).connect(masterGain);
-    masterGain.connect(audioCtx.destination);
+    pulseOffset = ctx.createGain(); // escala o LFO (-1..1) pra profundidade desejada
+    updatePulseDepth();
 
-    applyFrequencies();
+    const pulseCenter = ctx.createConstantSource
+      ? ctx.createConstantSource() : null;
+
+    // LFO (-1..1) * profundidade -> soma em torno de (1 - profundidade/2)
+    // implementado via dois gains: um pro LFO escalado, um constante
+    pulseLFO.connect(pulseOffset);
+    pulseOffset.connect(pulseGain.gain);
+
+    oscL.connect(panL).connect(pulseGain);
+    oscR.connect(panR).connect(pulseGain);
+    pulseGain.connect(masterGain).connect(ctx.destination);
 
     oscL.start();
     oscR.start();
+    pulseLFO.start();
+
+    applyPulseOn(state.pulseOn);
+  }
+
+  function updatePulseDepth(){
+    // profundidade 0 = LFO não afeta nada (offset amplitude 0)
+    // profundidade 100 = LFO varia o ganho de 0 a 1 (corte total)
+    const depth = state.pulseDepth / 100;
+    if (pulseOffset) pulseOffset.gain.value = depth / 2;
+    if (pulseGain) {
+      // ponto central do ganho, ajustado pra a modulação ficar entre (1-depth) e 1
+      const center = 1 - depth / 2;
+      pulseGain.gain.value = center;
+    }
+  }
+
+  function applyPulseOn(on){
+    state.pulseOn = on;
+    if (!pulseOffset) return;
+    pulseOffset.gain.value = on ? state.pulseDepth / 100 / 2 : 0;
+    if (pulseGain) pulseGain.gain.value = on ? (1 - state.pulseDepth / 100 / 2) : 1;
+  }
+
+  function teardown(){
+    if (!ctx) return;
+    try { oscL.stop(); oscR.stop(); pulseLFO.stop(); } catch(e){}
+    ctx.close();
+    ctx = null; running = false;
   }
 
   powerBtn.addEventListener('click', () => {
-    initAudio();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-
-    isOn = !isOn;
-    powerBtn.dataset.on = isOn ? '1' : '0';
-    powerBtn.textContent = isOn ? 'desligar' : 'ligar';
-
-    const now = audioCtx.currentTime;
-    masterGain.gain.cancelScheduledValues(now);
-    masterGain.gain.setTargetAtTime(isOn ? currentVol() : 0, now, 0.4);
-  });
-
-  baseFreqInput.addEventListener('input', () => {
-    valFreq.textContent = baseFreqInput.value + ' Hz';
-    applyFrequencies();
-  });
-
-  beatFreqInput.addEventListener('input', () => {
-    valBeat.textContent = parseFloat(beatFreqInput.value).toFixed(1) + ' Hz';
-    applyFrequencies();
-  });
-
-  volInput.addEventListener('input', () => {
-    valVol.textContent = volInput.value + '%';
-    if (audioCtx && isOn) {
-      masterGain.gain.setTargetAtTime(currentVol(), audioCtx.currentTime, 0.1);
+    if (!running) {
+      buildGraph();
+      running = true;
+      powerBtn.dataset.on = '1';
+      powerBtn.textContent = 'desligar';
+    } else {
+      teardown();
+      powerBtn.dataset.on = '0';
+      powerBtn.textContent = 'ligar';
     }
   });
 
-  waveBtns.forEach(btn => {
+  // ---- sliders binaural ----
+  $('baseFreq').addEventListener('input', e => {
+    state.baseFreq = parseFloat(e.target.value);
+    $('valFreq').textContent = state.baseFreq + ' Hz';
+    if (ctx) {
+      oscL.frequency.setTargetAtTime(state.baseFreq, ctx.currentTime, 0.05);
+      oscR.frequency.setTargetAtTime(state.baseFreq + state.beatFreq, ctx.currentTime, 0.05);
+    }
+    clearPresetActive();
+  });
+
+  $('beatFreq').addEventListener('input', e => {
+    state.beatFreq = parseFloat(e.target.value);
+    $('valBeat').textContent = state.beatFreq.toFixed(1) + ' Hz';
+    if (ctx) oscR.frequency.setTargetAtTime(state.baseFreq + state.beatFreq, ctx.currentTime, 0.05);
+    clearPresetActive();
+  });
+
+  $('vol').addEventListener('input', e => {
+    state.volume = parseFloat(e.target.value);
+    $('valVol').textContent = state.volume + '%';
+    if (ctx) masterGain.gain.setTargetAtTime(state.volume / 100 * 0.6, ctx.currentTime, 0.05);
+  });
+
+  document.querySelectorAll('.wave-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      waveBtns.forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.wave-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      waveType = btn.dataset.wave;
-      if (oscL && oscR) {
-        oscL.type = waveType;
-        oscR.type = waveType;
+      state.waveform = btn.dataset.wave;
+      if (ctx) { oscL.type = state.waveform; oscR.type = state.waveform; }
+    });
+  });
+
+  // ---- pulso isocrônico ----
+  const pulseToggle = $('pulseToggle');
+  pulseToggle.addEventListener('click', () => {
+    const on = pulseToggle.dataset.on !== '1';
+    pulseToggle.dataset.on = on ? '1' : '0';
+    pulseToggle.textContent = on ? 'ligado' : 'desligado';
+    pulseToggle.classList.toggle('active', on);
+    applyPulseOn(on);
+  });
+
+  $('pulseFreq').addEventListener('input', e => {
+    state.pulseFreq = parseFloat(e.target.value);
+    $('valPulseFreq').textContent = state.pulseFreq.toFixed(1) + ' Hz';
+    if (ctx) pulseLFO.frequency.setTargetAtTime(state.pulseFreq, ctx.currentTime, 0.05);
+  });
+
+  $('pulseDepth').addEventListener('input', e => {
+    state.pulseDepth = parseFloat(e.target.value);
+    $('valPulseDepth').textContent = state.pulseDepth + '%';
+    if (state.pulseOn) applyPulseOn(true);
+  });
+
+  document.querySelectorAll('.shape-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.pulseShape = btn.dataset.shape;
+      if (ctx) pulseLFO.type = state.pulseShape;
+    });
+  });
+
+  // ---- presets ----
+  function clearPresetActive(){
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  }
+
+  document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      clearPresetActive();
+      btn.classList.add('active');
+      const base = parseFloat(btn.dataset.base);
+      const beat = parseFloat(btn.dataset.beat);
+
+      state.baseFreq = base; state.beatFreq = beat;
+      $('baseFreq').value = base; $('valFreq').textContent = base + ' Hz';
+      $('beatFreq').value = beat; $('valBeat').textContent = beat.toFixed(1) + ' Hz';
+
+      if (ctx) {
+        oscL.frequency.setTargetAtTime(base, ctx.currentTime, 0.05);
+        oscR.frequency.setTargetAtTime(base + beat, ctx.currentTime, 0.05);
       }
     });
   });
