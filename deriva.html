@@ -4,15 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Deriva — esboço</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
-
   :root{
     --bg:#0a0908;
     --red:#b31217;
     --red-dim:rgba(179,18,23,0.35);
     --sand:#d8b7a1;
-    --stone:#7a6d61;
+    --stone:#8c7d6f;
     --paper:#cfc3b8;
     --ghost:#312a26;
   }
@@ -46,7 +47,7 @@
     color:var(--sand);
   }
   header h1 em{
-    font-style:italic; color:var(--red);
+    font-style:italic; color:var(--sand);
   }
   header .tagline{
     max-width:320px;
@@ -68,30 +69,57 @@
     font-style:italic;
   }
 
+  /* ---------- grid de portais ---------- */
   .portals{
     display:grid;
     grid-template-columns:1fr 1fr 1fr;
-    min-height:64vh;
   }
   @media (max-width:900px){
-    .portals{ grid-template-columns:1fr; min-height:auto; }
+    .portals{ grid-template-columns:1fr 1fr; }
+  }
+  @media (max-width:560px){
+    .portals{ grid-template-columns:1fr; }
   }
 
   .portal{
     position:relative;
     display:block;
     height:100%;
-    min-height:280px;
+    min-height:240px;
     overflow:hidden;
     cursor:pointer;
     text-decoration:none;
     color:inherit;
     border-right:1px solid rgba(179,18,23,0.12);
+    border-bottom:1px solid rgba(179,18,23,0.12);
     filter:brightness(0.62) saturate(0.75);
     transition:filter 0.6s ease;
   }
-  .portal:last-child{ border-right:none; }
+  .portal:focus-visible{
+    outline:1px solid var(--red-dim);
+    outline-offset:-4px;
+  }
   .portal:hover{ filter:brightness(1) saturate(1); }
+
+  /* grade de 3 colunas: sem borda direita na 3ª coluna, sem borda embaixo na última linha */
+  .portal:nth-child(3n){ border-right:none; }
+  .portal:nth-last-child(-n+3):nth-child(3n+1),
+  .portal:nth-last-child(-n+3):nth-child(3n+1) ~ .portal{
+    border-bottom:none;
+  }
+  @media (max-width:900px){
+    .portal:nth-child(3n){ border-right:1px solid rgba(179,18,23,0.12); }
+    .portal:nth-child(2n){ border-right:none; }
+    .portal:nth-last-child(-n+3):nth-child(3n+1),
+    .portal:nth-last-child(-n+3):nth-child(3n+1) ~ .portal{
+      border-bottom:1px solid rgba(179,18,23,0.12);
+    }
+    .portal:nth-last-child(-n+2){ border-bottom:none; }
+  }
+  @media (max-width:560px){
+    .portal{ border-right:none !important; border-bottom:1px solid rgba(179,18,23,0.12) !important; }
+    .portal:last-child{ border-bottom:none !important; }
+  }
 
   .portal canvas{
     position:absolute; inset:0; width:100%; height:100%; display:block;
@@ -104,7 +132,7 @@
   }
 
   .portal .label{
-    position:absolute; left:28px; bottom:26px;
+    position:absolute; left:24px; bottom:22px;
     z-index:2;
     opacity:0.55;
     transition:opacity 0.5s ease, transform 0.5s ease;
@@ -113,7 +141,7 @@
   .portal:hover .label{ opacity:1; transform:translateY(0); }
 
   .portal .label .name{
-    font-size:22px; letter-spacing:1px; color:var(--sand);
+    font-size:20px; letter-spacing:1px; color:var(--sand);
     display:block;
   }
   .portal .label .hint{
@@ -122,7 +150,13 @@
     color:var(--stone); margin-top:4px; display:block;
   }
 
-  /* terceiro portal: vazio ainda não escrito */
+  /* em touch/tablet o :hover não dispara de forma confiável — deixa o
+     label sempre legível, só um pouco mais discreto que o estado hover */
+  @media (hover:none){
+    .portal .label{ opacity:0.85; transform:translateY(0); }
+  }
+
+  /* portal ainda não escrito */
   .portal.ghost{
     display:flex; align-items:center; justify-content:center;
     filter:none;
@@ -206,7 +240,6 @@
   .audio-power[data-on="1"]{
     background:var(--red); border-color:var(--red); color:#0a0908;
   }
-
   .audio-desc{
     max-width:560px; font-size:11.5px; line-height:1.8;
     color:var(--stone); margin:0 0 6px;
@@ -215,7 +248,6 @@
     max-width:560px; font-size:11.5px; line-height:1.8;
     color:var(--stone); opacity:0.75; margin:0 0 26px; font-style:italic;
   }
-
   .presets{
     display:flex; flex-wrap:wrap; gap:8px; margin-bottom:30px;
   }
@@ -240,7 +272,6 @@
     display:block; font-family:'EB Garamond', serif; font-size:14px;
     color:var(--paper); font-style:italic;
   }
-
   .audio-controls{
     display:grid; grid-template-columns:1fr 1fr; gap:22px 40px;
   }
@@ -248,7 +279,6 @@
     .audio-controls{ grid-template-columns:1fr; }
     .audio-head{ flex-direction:column; align-items:flex-start; gap:10px; }
   }
-
   .a-group-title{
     grid-column:1 / -1;
     font-family:'JetBrains Mono', monospace;
@@ -257,7 +287,6 @@
     border-top:1px dashed rgba(179,18,23,0.15); padding-top:16px;
   }
   .a-group-title:first-child{ border-top:none; padding-top:0; margin-top:0; }
-
   .a-row label{
     display:flex; justify-content:space-between;
     font-size:13px; color:var(--paper); margin-bottom:6px;
@@ -275,7 +304,6 @@
     width:12px; height:12px; border-radius:50%;
     background:var(--sand); cursor:pointer; border:1px solid var(--red);
   }
-
   .wave-toggles, .pulse-shape-toggles{ display:flex; gap:8px; }
   .wave-btn, .shape-btn{
     font-family:'JetBrains Mono', monospace; font-size:11px;
@@ -286,7 +314,6 @@
   .wave-btn.active, .shape-btn.active{
     border-color:var(--red); color:var(--sand); background:rgba(179,18,23,0.1);
   }
-
   .pulse-on-row{
     display:flex; align-items:center; gap:10px; margin-bottom:4px;
   }
@@ -319,7 +346,7 @@
 
 <div class="portals">
 
-  <a class="portal" id="p-rorschach" href="rorschach.html">
+  <a class="portal" id="p-rorschach" href="rorschach_flow.html">
     <canvas id="c-rorschach"></canvas>
     <div class="veil"></div>
     <div class="label">
@@ -328,12 +355,39 @@
     </div>
   </a>
 
-  <a class="portal" id="p-hyperspace" href="hyperspace.html">
-    <canvas id="c-hyperspace"></canvas>
+  <a class="portal" id="p-stars" href="hyperspace_flow.html?layer=stars">
+    <canvas id="c-stars"></canvas>
     <div class="veil"></div>
     <div class="label">
-      <span class="name">Hiperespaço</span>
-      <span class="hint">deriva ⋄ sem destino</span>
+      <span class="name">Estrelas</span>
+      <span class="hint">warp ⋄ atravessando o campo</span>
+    </div>
+  </a>
+
+  <a class="portal" id="p-wormhole" href="hyperspace_flow.html?layer=wormhole">
+    <canvas id="c-wormhole"></canvas>
+    <div class="veil"></div>
+    <div class="label">
+      <span class="name">Wormhole</span>
+      <span class="hint">túnel ⋄ anéis que se abrem</span>
+    </div>
+  </a>
+
+  <a class="portal" id="p-plasma" href="hyperspace_flow.html?layer=plasma">
+    <canvas id="c-plasma"></canvas>
+    <div class="veil"></div>
+    <div class="label">
+      <span class="name">Plasma</span>
+      <span class="hint">névoa ⋄ sem forma fixa</span>
+    </div>
+  </a>
+
+  <a class="portal" id="p-mandala" href="hyperspace_flow.html?layer=mandala">
+    <canvas id="c-mandala"></canvas>
+    <div class="veil"></div>
+    <div class="label">
+      <span class="name">Mandala</span>
+      <span class="hint">simetria ⋄ pétalas girando</span>
     </div>
   </a>
 
@@ -380,7 +434,6 @@
   </div>
 
   <div class="audio-controls">
-
     <div class="a-group-title">Binaural</div>
     <div class="a-row">
       <label>Frequência base <span class="val mono" id="valFreq">180 Hz</span></label>
@@ -424,7 +477,6 @@
         <div class="shape-btn" data-shape="sine">suave</div>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -437,18 +489,31 @@
 </footer>
 
 <script>
-// ---------- preview leve do rorschach: mancha simétrica com trilha ----------
-(function(){
-  const canvas = document.getElementById('c-rorschach');
+// ---------- helper: canvas ciente de devicePixelRatio ----------
+// resolve o serrilhado/borrado em telas retina/4K: o canvas interno é
+// desenhado em resolução real de dispositivo, mas cada prévia continua
+// trabalhando em pixels "CSS" (dim.w / dim.h).
+function makeRetinaCanvas(id){
+  const canvas = document.getElementById(id);
   const ctx = canvas.getContext('2d');
-  let w, h;
+  const dim = { w: 0, h: 0 };
   function resize(){
-    w = canvas.width = canvas.offsetWidth;
-    h = canvas.height = canvas.offsetHeight;
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    dim.w = rect.width;
+    dim.h = rect.height;
+    canvas.width = Math.max(1, Math.round(dim.w * dpr));
+    canvas.height = Math.max(1, Math.round(dim.h * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
   resize();
   window.addEventListener('resize', resize);
+  return { canvas, ctx, dim };
+}
 
+// ---------- prévia: Rorschach — mancha simétrica com trilha ----------
+(function(){
+  const { ctx, dim } = makeRetinaCanvas('c-rorschach');
   let t = 0;
   const blobs = Array.from({length: 5}, (_, i) => ({
     a: Math.random() * Math.PI * 2,
@@ -458,6 +523,7 @@
   }));
 
   function frame(){
+    const w = dim.w, h = dim.h;
     ctx.fillStyle = 'rgba(10,9,8,0.06)';
     ctx.fillRect(0, 0, w, h);
 
@@ -477,7 +543,6 @@
       grad.addColorStop(0, `hsla(${b.hue}, 75%, 40%, 0.5)`);
       grad.addColorStop(1, `hsla(${b.hue}, 75%, 20%, 0)`);
 
-      // desenha espelhado (metade esquerda / direita), igual ao rorschach real
       ctx.fillStyle = grad;
       ctx.beginPath(); ctx.arc(x, y, size, 0, Math.PI * 2); ctx.fill();
       ctx.beginPath(); ctx.arc(-x, y, size, 0, Math.PI * 2); ctx.fill();
@@ -490,18 +555,9 @@
   frame();
 })();
 
-// ---------- preview leve do hyperspace: starfield warp simplificado ----------
+// ---------- prévia: Estrelas — starfield warp ----------
 (function(){
-  const canvas = document.getElementById('c-hyperspace');
-  const ctx = canvas.getContext('2d');
-  let w, h;
-  function resize(){
-    w = canvas.width = canvas.offsetWidth;
-    h = canvas.height = canvas.offsetHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
+  const { ctx, dim } = makeRetinaCanvas('c-stars');
   const N = 140;
   const stars = Array.from({length: N}, () => ({
     a: Math.random() * Math.PI * 2,
@@ -510,6 +566,7 @@
   }));
 
   function frame(){
+    const w = dim.w, h = dim.h;
     ctx.fillStyle = 'rgba(10,9,8,0.25)';
     ctx.fillRect(0, 0, w, h);
 
@@ -537,6 +594,183 @@
     }
     ctx.globalCompositeOperation = 'source-over';
 
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+// ---------- prévia: Wormhole — anéis concêntricos com wobble ----------
+// mesma lógica de ringPath() do hyperspace_flow.html, simplificada
+(function(){
+  const { ctx, dim } = makeRetinaCanvas('c-wormhole');
+  const N = 7;
+  let t = 0;
+  const rings = Array.from({length: N}, () => ({
+    z: Math.random(),
+    seed: Math.random() * Math.PI * 2,
+    h1: 2 + Math.floor(Math.random() * 3),
+    h2: 4 + Math.floor(Math.random() * 4),
+    rot: Math.random() * Math.PI * 2,
+    rotSpeed: (Math.random() - 0.5) * 0.01
+  }));
+
+  function ringPath(cx, cy, r, ring){
+    const pts = 40;
+    ctx.beginPath();
+    for (let i = 0; i <= pts; i++) {
+      const ang = (i / pts) * Math.PI * 2 + ring.rot;
+      const wobble = 1
+        + 0.09 * Math.sin(ang * ring.h1 + t * 0.6 + ring.seed)
+        + 0.05 * Math.sin(ang * ring.h2 - t * 0.4 + ring.seed * 1.6);
+      const rr = r * wobble;
+      const px = cx + Math.cos(ang) * rr;
+      const py = cy + Math.sin(ang) * rr;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+  }
+
+  function frame(){
+    const w = dim.w, h = dim.h;
+    ctx.fillStyle = 'rgba(10,9,8,0.22)';
+    ctx.fillRect(0, 0, w, h);
+
+    const cx = w / 2, cy = h / 2;
+    const maxR = Math.min(w, h) * 0.62;
+
+    ctx.globalCompositeOperation = 'lighter';
+    for (const r of rings) {
+      r.z += 0.0035;
+      if (r.z > 1) r.z -= 1;
+      r.rot += r.rotSpeed;
+
+      const displayR = 8 + r.z * maxR;
+      const alpha = Math.min(1, 0.15 + r.z * 0.85);
+
+      ctx.save();
+      ctx.strokeStyle = `rgba(216,183,161,${alpha})`;
+      ctx.lineWidth = 1 + r.z * 2.2;
+      ctx.shadowColor = `rgba(179,18,23,${Math.min(1, alpha + 0.15)})`;
+      ctx.shadowBlur = 4 + r.z * 14;
+      ringPath(cx, cy, displayR, r);
+      ctx.stroke();
+      ctx.restore();
+    }
+    ctx.globalCompositeOperation = 'source-over';
+
+    t += 0.015;
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+// ---------- prévia: Plasma — turbulência em baixa resolução, ampliada ----------
+// mesma técnica do motor real: computa num canvas pequeno e escala com drawImage
+(function(){
+  const { ctx, dim } = makeRetinaCanvas('c-plasma');
+  const off = document.createElement('canvas');
+  const octx = off.getContext('2d');
+  const OW = 48;
+  let OH = 30, img;
+
+  function resizeOff(){
+    OH = Math.max(2, Math.round(OW * (dim.h / Math.max(dim.w, 1))));
+    off.width = OW; off.height = OH;
+    img = octx.createImageData(OW, OH);
+  }
+  resizeOff();
+  window.addEventListener('resize', resizeOff);
+
+  let t = 0;
+  function frame(){
+    const w = dim.w, h = dim.h;
+    const data = img.data;
+    let idx = 0;
+    for (let y = 0; y < OH; y++) {
+      for (let x = 0; x < OW; x++) {
+        const v = Math.sin(x * 0.32 + t) +
+                  Math.sin(y * 0.4 - t * 0.8) +
+                  Math.sin((x + y) * 0.24 + t * 1.3) +
+                  Math.sin(Math.sqrt((x - OW / 2) ** 2 + (y - OH / 2) ** 2) * 0.5 - t * 2);
+        const norm = (v + 4) / 8;
+        const light = Math.round(14 + norm * 130);
+        data[idx++] = light;
+        data[idx++] = Math.round(light * 0.94);
+        data[idx++] = Math.round(light * 0.9);
+        data[idx++] = 255;
+      }
+    }
+    octx.putImageData(img, 0, 0);
+
+    ctx.clearRect(0, 0, w, h);
+    ctx.save();
+    ctx.globalAlpha = 0.85;
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(off, 0, 0, w, h);
+    ctx.restore();
+
+    t += 0.02;
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+// ---------- prévia: Mandala — pétalas girando ----------
+(function(){
+  const { ctx, dim } = makeRetinaCanvas('c-mandala');
+  const segs = 7;
+  let t = 0;
+
+  function frame(){
+    const w = dim.w, h = dim.h;
+    ctx.fillStyle = 'rgba(10,9,8,0.18)';
+    ctx.fillRect(0, 0, w, h);
+
+    const cx = w / 2, cy = h / 2;
+    const maxR = Math.min(w, h) * 0.42;
+    const rotBase = t * 0.2;
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.globalCompositeOperation = 'lighter';
+
+    for (let i = 0; i < segs; i++) {
+      ctx.save();
+      ctx.rotate(rotBase + (i / segs) * Math.PI * 2);
+      if (i % 2 === 1) ctx.scale(1, -1);
+
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      for (let p = 0; p <= 16; p++) {
+        const f = p / 16;
+        const rad = f * maxR;
+        const width = Math.sin(f * Math.PI) * maxR * 0.22 *
+          (1 + 0.4 * Math.sin(t * 1.4 + i + f * 3 * Math.PI));
+        const ang = f * 0.9;
+        ctx.lineTo(Math.sin(ang) * width, rad);
+      }
+      for (let p = 16; p >= 0; p--) {
+        const f = p / 16;
+        const rad = f * maxR;
+        const width = Math.sin(f * Math.PI) * maxR * 0.22 *
+          (1 + 0.4 * Math.sin(t * 1.4 + i + f * 3 * Math.PI));
+        const ang = f * 0.9;
+        ctx.lineTo(-Math.sin(ang) * width, rad);
+      }
+      ctx.closePath();
+
+      const grad = ctx.createLinearGradient(0, 0, 0, maxR);
+      grad.addColorStop(0, 'rgba(179,18,23,0)');
+      grad.addColorStop(0.5, 'rgba(179,18,23,0.5)');
+      grad.addColorStop(1, 'rgba(179,18,23,0)');
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.restore();
+    ctx.globalCompositeOperation = 'source-over';
+
+    t += 0.015;
     requestAnimationFrame(frame);
   }
   frame();
@@ -570,6 +804,7 @@
     oscR = ctx.createOscillator();
     panL = ctx.createStereoPanner(); panL.pan.value = -1;
     panR = ctx.createStereoPanner(); panR.pan.value = 1;
+
     masterGain = ctx.createGain();
     masterGain.gain.value = state.volume / 100 * 0.6;
 
@@ -589,11 +824,6 @@
     pulseOffset = ctx.createGain(); // escala o LFO (-1..1) pra profundidade desejada
     updatePulseDepth();
 
-    const pulseCenter = ctx.createConstantSource
-      ? ctx.createConstantSource() : null;
-
-    // LFO (-1..1) * profundidade -> soma em torno de (1 - profundidade/2)
-    // implementado via dois gains: um pro LFO escalado, um constante
     pulseLFO.connect(pulseOffset);
     pulseOffset.connect(pulseGain.gain);
 
@@ -614,7 +844,6 @@
     const depth = state.pulseDepth / 100;
     if (pulseOffset) pulseOffset.gain.value = depth / 2;
     if (pulseGain) {
-      // ponto central do ganho, ajustado pra a modulação ficar entre (1-depth) e 1
       const center = 1 - depth / 2;
       pulseGain.gain.value = center;
     }
@@ -722,11 +951,9 @@
       btn.classList.add('active');
       const base = parseFloat(btn.dataset.base);
       const beat = parseFloat(btn.dataset.beat);
-
       state.baseFreq = base; state.beatFreq = beat;
       $('baseFreq').value = base; $('valFreq').textContent = base + ' Hz';
       $('beatFreq').value = beat; $('valBeat').textContent = beat.toFixed(1) + ' Hz';
-
       if (ctx) {
         oscL.frequency.setTargetAtTime(base, ctx.currentTime, 0.05);
         oscR.frequency.setTargetAtTime(base + beat, ctx.currentTime, 0.05);

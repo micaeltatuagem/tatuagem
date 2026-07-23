@@ -288,6 +288,16 @@ const config = {
   palette: 'classic'
 };
 
+// lê ?layer=stars|wormhole|plasma|mandala na URL: abre só com aquela camada
+// ligada, mas o painel de combinar continua acessível pra ligar as outras
+// por cima — não é um modo separado, só um estado inicial diferente.
+const VALID_LAYERS = ['stars', 'wormhole', 'plasma', 'mandala'];
+const urlParams = new URLSearchParams(location.search);
+const layerParam = urlParams.get('layer');
+if (VALID_LAYERS.includes(layerParam)) {
+  config.layers = new Set([layerParam]);
+}
+
 let stars = [];
 let rings = [];
 let centerX = 0, centerY = 0;
@@ -650,6 +660,10 @@ const toggleBtn = document.getElementById('toggleBtn');
 const panel = document.getElementById('panel');
 toggleBtn.addEventListener('click', () => {
   panel.classList.toggle('open');
+});
+
+document.querySelectorAll('#layerToggles .toggle-btn').forEach(btn => {
+  btn.classList.toggle('active', config.layers.has(btn.dataset.layer));
 });
 
 document.querySelectorAll('#layerToggles .toggle-btn').forEach(btn => {
