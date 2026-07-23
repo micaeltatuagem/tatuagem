@@ -3,31 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Deriva — Arte Visual e Som Binaural | Micael Tatuagem, Muriaé MG</title>
-<meta name="description" content="Portais visuais hipnóticos e som binaural para relaxar antes de tatuar. Uma experiência sensorial gratuita de Micael Faccio, tatuador em Muriaé-MG.">
-<meta name="keywords" content="som binaural, batida binaural relaxamento, arte visual hipnótica, ansiedade antes da tatuagem, relaxar para tatuar, tatuador Muriaé MG, Micael Faccio">
-<meta name="author" content="Micael Faccio">
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://micaeltatuagem.com.br/deriva.html">
-<link rel="icon" type="image/png" href="favicon.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://micaeltatuagem.com.br/deriva.html">
-<meta property="og:title" content="Deriva — Arte Visual e Som Binaural | Micael Tatuagem">
-<meta property="og:description" content="Portais visuais hipnóticos e som binaural para relaxar antes de tatuar. Uma experiência sensorial gratuita de Micael Faccio, tatuador em Muriaé-MG.">
-<meta property="og:image" content="https://micaeltatuagem.com.br/hero-bg.webp">
-<meta property="og:locale" content="pt_BR">
-<meta property="og:site_name" content="Micael Tatuagem">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Deriva — Arte Visual e Som Binaural | Micael Tatuagem">
-<meta name="twitter:description" content="Portais visuais hipnóticos e som binaural. Experiência sensorial de Micael Faccio, tatuador em Muriaé-MG.">
-<meta name="twitter:image" content="https://micaeltatuagem.com.br/hero-bg.webp">
-
+<title>Deriva</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230a0908'/%3E%3Ccircle cx='32' cy='32' r='30' fill='none' stroke='%23b31217' stroke-width='2'/%3E%3Ctext x='32' y='44' font-family='Georgia, serif' font-style='italic' font-size='36' fill='%23d8b7a1' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -50,6 +27,39 @@
   }
 
   .mono{ font-family:'JetBrains Mono', monospace; }
+
+  /* ---------- nav — mesmo menu do site, na paleta da Deriva ---------- */
+  nav{
+    position:sticky; top:0; z-index:110;
+    background:rgba(10,9,8,0.94);
+    -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(179,18,23,0.2);
+    padding:.9rem 1.5rem;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .nav-logo{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.82rem; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--sand); text-decoration:none;
+  }
+  .nav-links{
+    display:flex; gap:1.6rem; list-style:none; margin:0; padding:0;
+    overflow-x:auto; white-space:nowrap; scrollbar-width:none;
+  }
+  .nav-links::-webkit-scrollbar{ display:none; }
+  .nav-links li{ flex-shrink:0; }
+  .nav-links a{
+    font-family:'JetBrains Mono', monospace;
+    font-size:.76rem; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--stone); text-decoration:none; transition:color .2s;
+  }
+  .nav-links a:hover{ color:var(--sand); }
+  .nav-links a.atual{ color:var(--red); }
+  @media (max-width:560px){
+    .nav-logo{ display:none; }
+    .nav-links{ gap:1rem; justify-content:flex-start; }
+    .nav-links .hide-sm{ display:none; }
+  }
 
   header{
     padding:48px 40px 20px;
@@ -303,21 +313,13 @@
     padding:18px 20px 24px;
     border-top:1px dashed rgba(179,18,23,0.15);
   }
-  .audio-desc{
-    max-width:560px; font-size:11.5px; line-height:1.8;
-    color:var(--stone); margin:0 0 6px;
-  }
-  .audio-hint{
-    max-width:560px; font-size:11.5px; line-height:1.8;
-    color:var(--stone); opacity:0.75; margin:0 0 26px; font-style:italic;
-  }
   .presets{
-    display:flex; flex-wrap:wrap; gap:8px; margin-bottom:30px;
+    display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px;
   }
 
   /* ---------- overlay do portal — visual em tela cheia, sem sair da página ---------- */
   .portal-overlay{
-    position:fixed; inset:0; z-index:90;
+    position:fixed; inset:0; z-index:120;
     background:#000; display:none;
   }
   .portal-overlay.open{ display:block; }
@@ -325,7 +327,7 @@
     width:100%; height:100%; border:0; display:block;
   }
   .portal-back{
-    position:fixed; top:16px; left:16px; z-index:95;
+    position:fixed; top:16px; left:16px; z-index:125;
     font-family:'JetBrains Mono', monospace;
     font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
     background:rgba(10,9,8,0.72); border:1px solid rgba(179,18,23,0.4);
@@ -408,57 +410,19 @@
   .pulse-on-row .mini-toggle.active{
     border-color:var(--red); color:var(--sand); background:rgba(179,18,23,0.1);
   }
-
-  /* ---------- menu do site — reaproveita a navegação do index.html ---------- */
-  .site-nav{
-    position:sticky; top:0; z-index:60;
-    background:rgba(10,9,8,0.92);
-    -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
-    border-bottom:1px solid rgba(179,18,23,0.18);
-    padding:14px 40px;
-    display:flex; align-items:center; justify-content:space-between;
-    gap:20px;
-  }
-  .site-nav .nav-logo{
-    font-family:'JetBrains Mono', monospace;
-    font-size:11px; letter-spacing:2px; text-transform:uppercase;
-    color:var(--stone); text-decoration:none; white-space:nowrap;
-    transition:color 0.2s ease;
-  }
-  .site-nav .nav-logo:hover{ color:var(--sand); }
-  .site-nav .nav-links{
-    display:flex; gap:1.6rem; list-style:none; margin:0; padding:0;
-    overflow-x:auto; white-space:nowrap; scrollbar-width:none;
-  }
-  .site-nav .nav-links::-webkit-scrollbar{ display:none; }
-  .site-nav .nav-links li{ flex-shrink:0; }
-  .site-nav .nav-links a{
-    font-family:'JetBrains Mono', monospace;
-    font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
-    color:var(--stone); text-decoration:none;
-    transition:color 0.2s ease;
-  }
-  .site-nav .nav-links a:hover{ color:var(--sand); }
-  .site-nav .nav-links li.current a{ color:var(--red); }
-  @media (max-width:560px){
-    .site-nav{ padding:12px 18px; }
-    .site-nav .nav-logo{ display:none; }
-    .site-nav .nav-links{ gap:1rem; }
-    .site-nav .hide-sm{ display:none; }
-  }
 </style>
 </head>
 <body>
 
-<nav class="site-nav">
-  <a href="index.html" class="nav-logo">Micael Tatuagem</a>
+<nav>
+  <a href="index.html#hero" class="nav-logo">Micael Tatuagem</a>
   <ul class="nav-links">
     <li class="hide-sm"><a href="index.html#sobre">Sobre</a></li>
     <li><a href="index.html#galeria">Galeria</a></li>
     <li><a href="flash.html">Flash</a></li>
     <li><a href="aerografia.html">Aerografia</a></li>
     <li><a href="preview-tatuagem.html">Criar</a></li>
-    <li class="hide-sm current"><a href="deriva.html" aria-current="page">Deriva</a></li>
+    <li class="hide-sm"><a href="deriva.html" class="atual">Deriva</a></li>
     <li class="hide-sm"><a href="fisiologia-da-tatuagem.html">Cuidados</a></li>
     <li><a href="index.html#promocoes">Promoções</a></li>
     <li class="hide-sm"><a href="index.html#localizacao">Localização</a></li>
@@ -468,7 +432,7 @@
 
 <header>
   <div>
-    <div class="brand"><a href="index.html">micaeltatuagem.com.br</a></div>
+    <div class="brand"><a href="#">micaeltatuagem.com.br</a></div>
     <h1>Der<em>i</em>va</h1>
   </div>
   <div class="tagline">
@@ -551,20 +515,6 @@
   </div>
 
   <div class="audio-panel" id="audioPanel">
-  <p class="audio-desc mono">
-    Duas frequências puras, uma em cada ouvido. Elas não se tocam no ar, só dentro
-    da sua cabeça, onde o cérebro cria a diferença entre elas como um pulso.
-    Isso só funciona com fone; sem ele, é só dois tons.
-  </p>
-  <p class="audio-desc mono">
-    Os nomes abaixo (Delta, Theta, Alpha, Beta, Gamma) são a nomenclatura que a
-    comunidade de binaural já usa há décadas pra descrever a faixa de frequência
-    do batimento. Mexa, ouça, fique com o que soar bem.
-  </p>
-  <p class="audio-hint mono">
-    Os presets abaixo são só atalhos. Os sliders sempre respondem — dá pra construir
-    sua própria batida do zero.
-  </p>
 
   <div class="presets" id="presets">
     <div class="preset-btn" data-base="180" data-beat="1"><span class="band">Delta</span><span class="name">Letárgico</span></div>
@@ -632,7 +582,7 @@
     Estudo visual e sonoro.<br>
     Um lugar pra desconectar da tela que só quer sua atenção, dentro da tela.
   </p>
-  <a class="back" href="index.html">← voltar ao site</a>
+  <a class="back" href="#">← voltar ao site</a>
 </footer>
 
 <script>
@@ -1238,41 +1188,5 @@ function makeRetinaCanvas(id){
   });
 })();
 </script>
-
-<!-- Schema.org WebPage -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  "name": "Deriva — Arte Visual e Som Binaural",
-  "description": "Portais visuais hipnóticos e som binaural para relaxar antes de tatuar. Uma experiência sensorial gratuita de Micael Faccio, tatuador em Muriaé-MG.",
-  "url": "https://micaeltatuagem.com.br/deriva.html",
-  "inLanguage": "pt-BR",
-  "isPartOf": {
-    "@type": "WebSite",
-    "name": "Micael Tatuagem",
-    "url": "https://micaeltatuagem.com.br/"
-  },
-  "about": {
-    "@type": "Thing",
-    "name": "Relaxamento sensorial antes da tatuagem"
-  },
-  "publisher": {
-    "@type": "LocalBusiness",
-    "name": "Micael Tatuagem",
-    "url": "https://micaeltatuagem.com.br/",
-    "telephone": "+55-32-99966-6946",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Rua Astrogildo Figueiredo de Barros, 469",
-      "addressLocality": "Muriaé",
-      "addressRegion": "MG",
-      "postalCode": "36880-000",
-      "addressCountry": "BR"
-    }
-  }
-}
-</script>
-
 </body>
 </html>
