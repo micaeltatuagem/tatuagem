@@ -3,7 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Deriva — esboço</title>
+
+<title>Deriva — Arte Visual e Som Binaural | Micael Tatuagem, Muriaé MG</title>
+<meta name="description" content="Portais visuais hipnóticos e som binaural para relaxar antes de tatuar. Uma experiência sensorial gratuita de Micael Faccio, tatuador em Muriaé-MG.">
+<meta name="keywords" content="som binaural, batida binaural relaxamento, arte visual hipnótica, ansiedade antes da tatuagem, relaxar para tatuar, tatuador Muriaé MG, Micael Faccio">
+<meta name="author" content="Micael Faccio">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://micaeltatuagem.com.br/deriva.html">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://micaeltatuagem.com.br/deriva.html">
+<meta property="og:title" content="Deriva — Arte Visual e Som Binaural | Micael Tatuagem">
+<meta property="og:description" content="Portais visuais hipnóticos e som binaural para relaxar antes de tatuar. Uma experiência sensorial gratuita de Micael Faccio, tatuador em Muriaé-MG.">
+<meta property="og:image" content="https://micaeltatuagem.com.br/hero-bg.webp">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Micael Tatuagem">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Deriva — Arte Visual e Som Binaural | Micael Tatuagem">
+<meta name="twitter:description" content="Portais visuais hipnóticos e som binaural. Experiência sensorial de Micael Faccio, tatuador em Muriaé-MG.">
+<meta name="twitter:image" content="https://micaeltatuagem.com.br/hero-bg.webp">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -384,13 +408,67 @@
   .pulse-on-row .mini-toggle.active{
     border-color:var(--red); color:var(--sand); background:rgba(179,18,23,0.1);
   }
+
+  /* ---------- menu do site — reaproveita a navegação do index.html ---------- */
+  .site-nav{
+    position:sticky; top:0; z-index:60;
+    background:rgba(10,9,8,0.92);
+    -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(179,18,23,0.18);
+    padding:14px 40px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:20px;
+  }
+  .site-nav .nav-logo{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--stone); text-decoration:none; white-space:nowrap;
+    transition:color 0.2s ease;
+  }
+  .site-nav .nav-logo:hover{ color:var(--sand); }
+  .site-nav .nav-links{
+    display:flex; gap:1.6rem; list-style:none; margin:0; padding:0;
+    overflow-x:auto; white-space:nowrap; scrollbar-width:none;
+  }
+  .site-nav .nav-links::-webkit-scrollbar{ display:none; }
+  .site-nav .nav-links li{ flex-shrink:0; }
+  .site-nav .nav-links a{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--stone); text-decoration:none;
+    transition:color 0.2s ease;
+  }
+  .site-nav .nav-links a:hover{ color:var(--sand); }
+  .site-nav .nav-links li.current a{ color:var(--red); }
+  @media (max-width:560px){
+    .site-nav{ padding:12px 18px; }
+    .site-nav .nav-logo{ display:none; }
+    .site-nav .nav-links{ gap:1rem; }
+    .site-nav .hide-sm{ display:none; }
+  }
 </style>
 </head>
 <body>
 
+<nav class="site-nav">
+  <a href="index.html" class="nav-logo">Micael Tatuagem</a>
+  <ul class="nav-links">
+    <li class="hide-sm"><a href="index.html#sobre">Sobre</a></li>
+    <li><a href="index.html#galeria">Galeria</a></li>
+    <li><a href="flash.html">Flash</a></li>
+    <li><a href="aerografia.html">Aerografia</a></li>
+    <li><a href="preview-tatuagem.html">Criar</a></li>
+    <li class="hide-sm current"><a href="deriva.html" aria-current="page">Deriva</a></li>
+    <li class="hide-sm"><a href="fisiologia-da-tatuagem.html">Cuidados</a></li>
+    <li><a href="index.html#promocoes">Promoções</a></li>
+    <li class="hide-sm"><a href="index.html#localizacao">Localização</a></li>
+    <li><a href="index.html#contato">Contato</a></li>
+  </ul>
+</nav>
+
 <header>
   <div>
-    <div class="brand"><a href="#">micaeltatuagem.com.br</a></div>
+    <div class="brand"><a href="index.html">micaeltatuagem.com.br</a></div>
     <h1>Der<em>i</em>va</h1>
   </div>
   <div class="tagline">
@@ -554,7 +632,7 @@
     Estudo visual e sonoro.<br>
     Um lugar pra desconectar da tela que só quer sua atenção, dentro da tela.
   </p>
-  <a class="back" href="#">← voltar ao site</a>
+  <a class="back" href="index.html">← voltar ao site</a>
 </footer>
 
 <script>
@@ -1160,5 +1238,41 @@ function makeRetinaCanvas(id){
   });
 })();
 </script>
+
+<!-- Schema.org WebPage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Deriva — Arte Visual e Som Binaural",
+  "description": "Portais visuais hipnóticos e som binaural para relaxar antes de tatuar. Uma experiência sensorial gratuita de Micael Faccio, tatuador em Muriaé-MG.",
+  "url": "https://micaeltatuagem.com.br/deriva.html",
+  "inLanguage": "pt-BR",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Micael Tatuagem",
+    "url": "https://micaeltatuagem.com.br/"
+  },
+  "about": {
+    "@type": "Thing",
+    "name": "Relaxamento sensorial antes da tatuagem"
+  },
+  "publisher": {
+    "@type": "LocalBusiness",
+    "name": "Micael Tatuagem",
+    "url": "https://micaeltatuagem.com.br/",
+    "telephone": "+55-32-99966-6946",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Rua Astrogildo Figueiredo de Barros, 469",
+      "addressLocality": "Muriaé",
+      "addressRegion": "MG",
+      "postalCode": "36880-000",
+      "addressCountry": "BR"
+    }
+  }
+}
+</script>
+
 </body>
 </html>
