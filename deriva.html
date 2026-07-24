@@ -389,7 +389,7 @@
     width:12px; height:12px; border-radius:50%;
     background:var(--sand); cursor:pointer; border:1px solid var(--red);
   }
-  .wave-toggles, .pulse-shape-toggles{ display:flex; gap:8px; }
+  .wave-toggles, .pulse-shape-toggles, .shape-toggles{ display:flex; gap:8px; }
   .wave-btn, .shape-btn{
     font-family:'JetBrains Mono', monospace; font-size:11px;
     color:var(--stone); border:1px solid rgba(179,18,23,0.18);
@@ -422,7 +422,7 @@
     <li><a href="flash.html">Flash</a></li>
     <li><a href="aerografia.html">Aerografia</a></li>
     <li><a href="preview-tatuagem.html">Criar</a></li>
-    <li class="hide-sm"><a href="deriva.html" class="atual">Deriva</a></li>
+    <li><a href="deriva.html" class="atual">Deriva</a></li>
     <li class="hide-sm"><a href="fisiologia-da-tatuagem.html">Cuidados</a></li>
     <li><a href="index.html#promocoes">Promoções</a></li>
     <li class="hide-sm"><a href="index.html#localizacao">Localização</a></li>
@@ -571,6 +571,25 @@
       <div class="pulse-shape-toggles">
         <div class="shape-btn active" data-shape="square">seco</div>
         <div class="shape-btn" data-shape="sine">suave</div>
+      </div>
+    </div>
+
+    <div class="a-group-title">Contraponto</div>
+    <div class="a-row" style="grid-column:1 / -1;">
+      <div class="pulse-on-row">
+        <div class="mini-toggle" id="textureToggle" data-on="0">desligado</div>
+        <span class="mono" style="font-size:10.5px; color:var(--stone);">textura de ruído por baixo dos tons, respirando devagar</span>
+      </div>
+    </div>
+    <div class="a-row">
+      <label>Volume <span class="val mono" id="valTextureVol">20%</span></label>
+      <input type="range" id="textureVol" min="0" max="100" value="20" step="1">
+    </div>
+    <div class="a-row">
+      <label>Textura</label>
+      <div class="shape-toggles">
+        <div class="shape-btn texture-btn active" data-texture="vento">vento</div>
+        <div class="shape-btn texture-btn" data-texture="oceano">oceano</div>
       </div>
     </div>
   </div>
@@ -938,12 +957,19 @@ function makeRetinaCanvas(id){
   frame();
 })();
 
-// ---------- motor de áudio: binaural + pulso isocrônico ----------
+// ---------- motor de áudio: binaural + pulso isocrônico + textura (contraponto) ----------
 (function(){
   let ctx = null;
   let oscL, oscR, gainL, gainR, panL, panR, masterGain;
   let pulseLFO, pulseGain, pulseOffset; // amplitude modulation pra pulso isocrônico
+  let noiseSource, noiseFilter, filterLFO, filterLFOGain, textureGain; // camada de textura (contraponto)
   let running = false;
+
+  // parâmetros de cada textura: frequência central do filtro, o quanto o LFO varre essa frequência, e a velocidade da respiração
+  const TEXTURES = {
+    vento:  { base: 900, sweep: 550, lfoHz: 0.09, q: 0.8 },
+    oceano: { base: 260, sweep: 160, lfoHz: 0.045, q: 1.1 }
+  };
 
   const state = {
     baseFreq: 180,
@@ -953,7 +979,10 @@ function makeRetinaCanvas(id){
     pulseOn: false,
     pulseFreq: 4,
     pulseDepth: 70,
-    pulseShape: 'square'
+    pulseShape: 'square',
+    textureOn: false,
+    textureVolume: 20,
+    textureType: 'vento'
   };
 
   const $ = id => document.getElementById(id);
@@ -998,6 +1027,55 @@ function makeRetinaCanvas(id){
     pulseLFO.start();
 
     applyPulseOn(state.pulseOn);
+
+    // ---- textura (contraponto): ruído filtrado com "respiração" lenta, independente do volume binaural ----
+    const bufferSize = ctx.sampleRate * 2;
+    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+    noiseSource = ctx.createBufferSource();
+    noiseSource.buffer = noiseBuffer;
+    noiseSource.loop = true;
+
+    noiseFilter = ctx.createBiquadFilter();
+    noiseFilter.type = 'bandpass';
+
+    filterLFO = ctx.createOscillator();
+    filterLFO.type = 'sine';
+
+    filterLFOGain = ctx.createGain();
+
+    textureGain = ctx.createGain();
+    textureGain.gain.value = 0; // aplicado por applyTextureOn logo abaixo
+
+    filterLFO.connect(filterLFOGain);
+    filterLFOGain.connect(noiseFilter.frequency);
+    noiseSource.connect(noiseFilter).connect(textureGain).connect(ctx.destination);
+
+    applyTextureParams(state.textureType);
+
+    noiseSource.start();
+    filterLFO.start();
+
+    applyTextureOn(state.textureOn);
+  }
+
+  function applyTextureParams(type){
+    const p = TEXTURES[type] || TEXTURES.vento;
+    if (noiseFilter) {
+      noiseFilter.frequency.setTargetAtTime(p.base, ctx.currentTime, 0.4);
+      noiseFilter.Q.value = p.q;
+    }
+    if (filterLFO) filterLFO.frequency.setTargetAtTime(p.lfoHz, ctx.currentTime, 0.4);
+    if (filterLFOGain) filterLFOGain.gain.setTargetAtTime(p.sweep, ctx.currentTime, 0.4);
+  }
+
+  function applyTextureOn(on){
+    state.textureOn = on;
+    if (!textureGain) return;
+    const target = on ? (state.textureVolume / 100 * 0.5) : 0;
+    textureGain.gain.setTargetAtTime(target, ctx.currentTime, 0.6);
   }
 
   function updatePulseDepth(){
@@ -1020,7 +1098,7 @@ function makeRetinaCanvas(id){
 
   function teardown(){
     if (!ctx) return;
-    try { oscL.stop(); oscR.stop(); pulseLFO.stop(); } catch(e){}
+    try { oscL.stop(); oscR.stop(); pulseLFO.stop(); noiseSource.stop(); filterLFO.stop(); } catch(e){}
     ctx.close();
     ctx = null; running = false;
   }
@@ -1095,12 +1173,37 @@ function makeRetinaCanvas(id){
     if (state.pulseOn) applyPulseOn(true);
   });
 
-  document.querySelectorAll('.shape-btn').forEach(btn => {
+  document.querySelectorAll('.shape-btn:not(.texture-btn)').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.shape-btn:not(.texture-btn)').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       state.pulseShape = btn.dataset.shape;
       if (ctx) pulseLFO.type = state.pulseShape;
+    });
+  });
+
+  // ---- textura / contraponto ----
+  const textureToggle = $('textureToggle');
+  textureToggle.addEventListener('click', () => {
+    const on = textureToggle.dataset.on !== '1';
+    textureToggle.dataset.on = on ? '1' : '0';
+    textureToggle.textContent = on ? 'ligado' : 'desligado';
+    textureToggle.classList.toggle('active', on);
+    if (ctx) applyTextureOn(on); else state.textureOn = on;
+  });
+
+  $('textureVol').addEventListener('input', e => {
+    state.textureVolume = parseFloat(e.target.value);
+    $('valTextureVol').textContent = state.textureVolume + '%';
+    if (ctx && state.textureOn) applyTextureOn(true);
+  });
+
+  document.querySelectorAll('.texture-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.texture-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.textureType = btn.dataset.texture;
+      if (ctx) applyTextureParams(state.textureType);
     });
   });
 
