@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia de Tatuagem: Significados, Estilos e Termos | Micael Tatuagem</title>
+<meta name="description" content="Guia de tatuagem com significados, estilos, técnicas e termos — pra entender antes de escolher. Por Micael Faccio, em Muriaé-MG.">
+<link rel="canonical" href="https://micaeltatuagem.com.br/guia.html">
+<meta property="og:title" content="Guia de Tatuagem · Micael Tatuagem">
+<meta property="og:description" content="Significados, estilos, técnicas e termos — entenda antes de escolher.">
+<meta property="og:url" content="https://micaeltatuagem.com.br/guia.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Guia de Tatuagem · Micael Tatuagem">
+<meta name="twitter:description" content="Significados, estilos, técnicas e termos — entenda antes de escolher.">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+  :root {
+    --bg:        #0a0a0a;
+    --surface:   #111111;
+    --border:    #1e1e1e;
+    --border-hi: #2e2e2e;
+    --ink:       #e8e8e8;
+    --ink-muted: #777777;
+    --ink-faint: #333333;
+    --accent:    #c8a96e;
+    --accent-dim:#7a6340;
+    --radius:    3px;
+    --font-body: 'Georgia', 'Times New Roman', serif;
+    --font-ui:   system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+    --max:       1080px;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); line-height:1.55; }
+  .inner { max-width: var(--max); margin:0 auto; padding: 0 1.5rem; }
+  a { color: inherit; }
+
+  nav {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:1.1rem 1.5rem; border-bottom:1px solid var(--border);
+    font-family: var(--font-ui); position:sticky; top:0; background:rgba(10,10,10,.92);
+    backdrop-filter: blur(6px); z-index:40;
+  }
+  .nav-logo { font-family: var(--font-body); font-size:1.05rem; text-decoration:none; color:var(--ink); }
+  .nav-links { list-style:none; display:flex; gap:1.4rem; margin:0; padding:0; font-size:.85rem; overflow-x:auto; white-space:nowrap; }
+  .nav-links a { text-decoration:none; color:var(--ink-muted); }
+  .nav-links a:hover, .nav-links a.atual { color: var(--accent); }
+  @media (max-width:700px){ .nav-logo{ display:none; } }
+
+  header.hero { padding: 3.5rem 0 2rem; border-bottom:1px solid var(--border); }
+  .eyebrow { font-family: var(--font-ui); text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; color:var(--accent); margin:0 0 .6rem; }
+  h1 { font-weight:400; font-size:2.2rem; margin:0 0 .8rem; }
+  .lede { color: var(--ink-muted); max-width: 62ch; margin:0; }
+
+  /* controles */
+  .controles {
+    display:flex; flex-wrap:wrap; gap:1.5rem; align-items:center; justify-content:space-between;
+    padding: 1.5rem 0; border-bottom:1px solid var(--border); font-family: var(--font-ui);
+  }
+  .toggle-group, .cat-group { display:flex; gap:.5rem; flex-wrap:wrap; }
+  .toggle-btn, .cat-btn {
+    font-family: var(--font-ui); font-size:.8rem; padding:.5rem 1rem;
+    border:1px solid var(--border-hi); border-radius:999px; background:transparent;
+    color:var(--ink-muted); cursor:pointer; transition: color .15s, border-color .15s;
+  }
+  .toggle-btn:hover, .cat-btn:hover { color:var(--ink); }
+  .toggle-btn.active, .cat-btn.active { color:#0a0a0a; background:var(--accent); border-color:var(--accent); }
+  .busca {
+    font-family: var(--font-ui); font-size:.85rem; background:var(--surface); border:1px solid var(--border-hi);
+    border-radius: var(--radius); padding:.6rem 1rem; color:var(--ink); min-width:220px;
+  }
+  .busca::placeholder { color: var(--ink-faint); }
+
+  /* A-Z index */
+  .az-index { display:flex; flex-wrap:wrap; gap:.4rem; padding: 1.2rem 0; font-family: var(--font-ui); }
+  .az-letter {
+    width:28px; height:28px; display:flex; align-items:center; justify-content:center;
+    font-size:.78rem; color:var(--ink-faint); text-decoration:none; border-radius:var(--radius);
+  }
+  .az-letter.has-entries { color: var(--ink-muted); }
+  .az-letter.has-entries:hover { color: var(--accent); background: var(--surface); }
+
+  /* grid de verbetes */
+  .grupo { padding: 2rem 0 .5rem; }
+  .grupo-titulo { font-family: var(--font-ui); font-size:.85rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); margin: 0 0 1rem; scroll-margin-top: 5rem; }
+  .verbetes-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem; }
+  @media (max-width:860px){ .verbetes-grid{ grid-template-columns: repeat(2,1fr); } }
+  @media (max-width:560px){ .verbetes-grid{ grid-template-columns: 1fr; } }
+
+  .verbete-card {
+    display:block; text-decoration:none; color:var(--ink);
+    border:1px solid var(--border); border-radius:var(--radius);
+    padding:1.1rem 1.2rem; transition: border-color .15s;
+  }
+  .verbete-card:hover { border-color: var(--accent-dim); }
+  .verbete-cat { font-family: var(--font-ui); font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent); margin-bottom:.35rem; }
+  .verbete-titulo { font-size:1.05rem; margin-bottom:.35rem; }
+  .verbete-resumo { font-family: var(--font-ui); font-size:.82rem; color:var(--ink-muted); line-height:1.5; margin:0; }
+
+  .vazio { font-family: var(--font-ui); color: var(--ink-faint); font-size:.9rem; padding: 3rem 0; text-align:center; }
+
+  footer {
+    font-family: var(--font-ui); font-size:.78rem; color: var(--ink-faint);
+    text-align:center; padding: 3rem 1.5rem 2rem; border-top:1px solid var(--border); margin-top:3rem;
+  }
+  footer a { color: var(--ink-faint); text-decoration:none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html#hero" class="nav-logo">Micael Tatuagem</a>
+  <ul class="nav-links">
+    <li><a href="index.html#galeria">Galeria</a></li>
+    <li><a href="flash.html">Flash</a></li>
+    <li><a href="preview-tatuagem.html">Criar</a></li>
+    <li><a href="guia.html" class="atual">Guia</a></li>
+    <li><a href="reserva.html">Reserva</a></li>
+    <li><a href="index.html#contato">Contato</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <div class="inner">
+    <p class="eyebrow">Guia</p>
+    <h1>Significados, estilos e termos</h1>
+    <p class="lede">Antes de decidir, entenda a origem e o significado por trás de cada referência. Navegue por ordem alfabética ou por tema.</p>
+  </div>
+</header>
+
+<div class="inner">
+  <div class="controles">
+    <div class="toggle-group" role="tablist" aria-label="Modo de visualização">
+      <button class="toggle-btn active" data-view="az">A–Z</button>
+      <button class="toggle-btn" data-view="tema">Por tema</button>
+    </div>
+    <div class="cat-group" id="catGroup">
+      <button class="cat-btn active" data-cat="todos">Todos</button>
+      <button class="cat-btn" data-cat="significado">Significados</button>
+      <button class="cat-btn" data-cat="estilo">Estilos</button>
+      <button class="cat-btn" data-cat="tecnica">Técnicas</button>
+      <button class="cat-btn" data-cat="termo">Termos</button>
+    </div>
+    <input type="text" class="busca" id="busca" placeholder="Buscar no guia...">
+  </div>
+
+  <nav class="az-index" id="azIndex" aria-label="Índice alfabético"></nav>
+
+  <main id="conteudo"></main>
+
+  <p class="vazio" id="vazio" style="display:none">Nenhum verbete encontrado.</p>
+</div>
+
+<footer>
+  <span>© Micael Faccio · Tatuador em Muriaé, MG</span>
+</footer>
+
+<script type="application/ld+json" id="schemaData">{}</script>
+
+<script>
+(function(){
+  const CATEGORIAS = {
+    significado: 'Significado',
+    estilo: 'Estilo',
+    tecnica: 'Técnica',
+    termo: 'Termo'
+  };
+  const TEMAS = {
+    significados: 'Significados',
+    estilos: 'Estilos',
+    tecnicas: 'Técnicas',
+    termos: 'Termos',
+    floral: 'Floral'
+  };
+
+  let allEntries = [];
+  let view = 'az';
+  let cat = 'todos';
+
+  const conteudoEl = document.getElementById('conteudo');
+  const azIndexEl = document.getElementById('azIndex');
+  const vazioEl = document.getElementById('vazio');
+  const buscaEl = document.getElementById('busca');
+
+  function normalize(str){
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  function filterEntries(){
+    const q = normalize(buscaEl.value.trim());
+    return allEntries.filter(e => {
+      if (e.draft) return false;
+      if (cat !== 'todos' && e.categoria !== cat) return false;
+      if (q && !normalize(e.titulo + ' ' + (e.resumo||'')).includes(q)) return false;
+      return true;
+    });
+  }
+
+  function renderAZ(entries){
+    const groups = {};
+    entries.forEach(e => {
+      const letter = normalize(e.titulo)[0]?.toUpperCase() || '#';
+      if (!groups[letter]) groups[letter] = [];
+      groups[letter].push(e);
+    });
+    const letters = Object.keys(groups).sort();
+
+    azIndexEl.innerHTML = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(l => {
+      const has = letters.includes(l);
+      return `<a class="az-letter ${has ? 'has-entries' : ''}" href="${has ? '#letra-' + l : '#'}">${l}</a>`;
+    }).join('');
+
+    conteudoEl.innerHTML = letters.map(l => `
+      <section class="grupo" id="letra-${l}">
+        <h2 class="grupo-titulo">${l}</h2>
+        <div class="verbetes-grid">
+          ${groups[l].sort((a,b) => a.titulo.localeCompare(b.titulo, 'pt-BR')).map(cardHtml).join('')}
+        </div>
+      </section>
+    `).join('');
+  }
+
+  function renderTema(entries){
+    azIndexEl.innerHTML = '';
+    const groups = {};
+    entries.forEach(e => {
+      (e.tema && e.tema.length ? e.tema : ['outros']).forEach(t => {
+        if (!groups[t]) groups[t] = [];
+        groups[t].push(e);
+      });
+    });
+    const temas = Object.keys(groups).sort();
+    conteudoEl.innerHTML = temas.map(t => `
+      <section class="grupo">
+        <h2 class="grupo-titulo">${TEMAS[t] || t}</h2>
+        <div class="verbetes-grid">
+          ${groups[t].sort((a,b) => a.titulo.localeCompare(b.titulo, 'pt-BR')).map(cardHtml).join('')}
+        </div>
+      </section>
+    `).join('');
+  }
+
+  function cardHtml(e){
+    const href = e.pagina_externa ? e.pagina_externa : `#verbete-${e.slug}`;
+    return `
+      <a class="verbete-card" href="${href}" data-slug="${e.slug}">
+        <div class="verbete-cat">${CATEGORIAS[e.categoria] || e.categoria}</div>
+        <div class="verbete-titulo">${e.titulo}</div>
+        <p class="verbete-resumo">${e.resumo || ''}</p>
+      </a>
+    `;
+  }
+
+  function updateSchema(entries){
+    const schema = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Guia de Tatuagem — Micael Tatuagem",
+      "itemListElement": entries.slice(0, 50).map((e, i) => ({
+        "@type": "ListItem",
+        "position": i + 1,
+        "name": e.titulo,
+        "url": "https://micaeltatuagem.com.br/" + (e.pagina_externa || ('guia.html#verbete-' + e.slug))
+      }))
+    };
+    document.getElementById('schemaData').textContent = JSON.stringify(schema);
+  }
+
+  function render(){
+    const entries = filterEntries();
+    vazioEl.style.display = entries.length ? 'none' : 'block';
+    if (view === 'az') renderAZ(entries); else renderTema(entries);
+    updateSchema(entries);
+  }
+
+  document.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      view = btn.dataset.view;
+      render();
+    });
+  });
+
+  document.getElementById('catGroup').addEventListener('click', e => {
+    const btn = e.target.closest('.cat-btn');
+    if (!btn) return;
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    cat = btn.dataset.cat;
+    render();
+  });
+
+  let searchTimer;
+  buscaEl.addEventListener('input', () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(render, 150);
+  });
+
+  fetch(`guia-data.json?t=${Date.now()}`, { cache: 'no-store' })
+    .then(r => r.json())
+    .then(data => {
+      allEntries = Array.isArray(data) ? data : [];
+      render();
+    })
+    .catch(() => {
+      conteudoEl.innerHTML = '';
+      vazioEl.textContent = 'Não foi possível carregar o guia agora.';
+      vazioEl.style.display = 'block';
+    });
+})();
+</script>
+</body>
+</html>
