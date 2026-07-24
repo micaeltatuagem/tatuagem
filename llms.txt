@@ -1,16 +1,17 @@
 # Micael Tatuagem
 
-> Estúdio de tatuagem de Micael Faccio, em Muriaé-MG (Zona da Mata, Minas Gerais, Brasil). O trabalho parte das referências do cliente; a leitura autoral está na interpretação dos motivos da tatuagem. Especialidades: blackwork, dark art, colorido/neo-tradicional e ornamental. Atendimento privado, com hora marcada.
+> Tatuador em Muriaé, MG (Zona da Mata mineira), especializado em blackwork, dark art, colorido (neo-tradicional) e ornamental. Quase três décadas de experiência.
 
-## Páginas
+## Sobre
+- Estúdio: Rua Astrogildo Figueiredo de Barros, 469, Muriaé-MG
+- Atendimento: privativo, com hora marcada, exclusivo para maiores de 18 anos
+- Preço: sessões a partir de R$ 200,00
+- Horário: segunda a sábado 07h-22h, domingo 10h-20h
+- Contato: WhatsApp (32) 99966-6946, Instagram @micaeltatuagem
 
-- [Início](https://micaeltatuagem.com.br/): apresentação do estúdio, processo de trabalho, perguntas frequentes e contato.
-- [Galeria](https://micaeltatuagem.com.br/galeria.html): portfólio de trabalhos realizados, com filtro por estilo.
-- [Reserva](https://micaeltatuagem.com.br/reserva.html): formulário para descrever a ideia de tatuagem antes do primeiro contato.
-
-## Contato
-
-- WhatsApp: https://wa.me/5532999666946
-- Instagram: https://instagram.com/micaeltatuagem
-- E-mail: micaeltattoo@gmail.com
-- Endereço: Rua Astrogildo Figueiredo de Barros, 469, Muriaé-MG, Brasil
+## Páginas principais
+- [Home](https://micaeltatuagem.com.br/): visão geral, FAQ, localização
+- [Galeria](https://micaeltatuagem.com.br/galeria.html): portfólio de sessões finalizadas
+- [Flash](https://micaeltatuagem.com.br/flash.html): catálogo de +500 desenhos prontos
+- [Criar](https://micaeltatuagem.com.br/preview-tatuagem.html): simulador de tatuagem no corpo
+- [Reserva](https://micaeltatuagem.com.br/reserva.html): agendamento e cadastro

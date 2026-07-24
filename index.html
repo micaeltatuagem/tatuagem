@@ -10,7 +10,6 @@
   <!-- SEO -->
   <title>Tatuador em Muriaé MG · Micael Faccio · Blackwork, Dark Art e Ornamental</title>
   <meta name="description" content="Tatuador em Muriaé-MG, atendendo a Zona da Mata mineira. Blackwork, dark art e colorido. Monte sua tattoo com o Criar antes de fechar. Agende pelo WhatsApp." />
-  <meta name="keywords" content="tatuador Muriaé, tatuagem Muriaé MG, blackwork Muriaé, dark art tatuagem, tatuagem Zona da Mata MG, tatuador Zona da Mata, ornamental tatuagem, tatuagem colorida MG, Micael Faccio tatuagem" />
   <meta name="author" content="Micael Faccio" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://micaeltatuagem.com.br/" />
@@ -31,10 +30,19 @@
   <meta name="twitter:image"       content="https://micaeltatuagem.com.br/hero-bg.webp" />
 
   <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JB6GZM1DFM"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    // Consent Mode v2 — nega tudo até o usuário aceitar
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied'
+    });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-JB6GZM1DFM"></script>
+  <script>
     gtag('js', new Date());
     gtag('config', 'G-JB6GZM1DFM');
   </script>
@@ -181,6 +189,15 @@
       line-height: 1.08;
       margin-bottom: 1rem;
       color: var(--ink);
+    }
+    .hero-inner h1 .h1-local {
+      display: block;
+      font-family: var(--font-ui);
+      font-size: clamp(1.05rem, 2.1vw, 1.35rem);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--ink-muted);
+      margin-top: .4rem;
     }
     .hero-styles {
       font-family: var(--font-ui);
@@ -976,7 +993,7 @@
     <li><a href="flash.html">Flash</a></li>
     <li><a href="aerografia.html">Aerografia</a></li>
     <li><a href="preview-tatuagem.html">Criar</a></li>
-    <li><a href="deriva.html">Deriva</a></li>
+    <li class="hide-sm"><a href="deriva.html">Deriva</a></li>
     <li class="hide-sm"><a href="fisiologia-da-tatuagem.html">Cuidados</a></li>
     <li><a href="#promocoes">Promoções</a></li>
     <li class="hide-sm"><a href="#localizacao">Localização</a></li>
@@ -1001,7 +1018,7 @@
   <div class="hero-inner">
     <div>
       <p class="hero-tag">Atendimento privativo · Muriaé, MG</p>
-      <h1>Micael<br>Tatuagem</h1>
+      <h1>Micael Tatuagem<br><span class="h1-local">Tatuador em Muriaé, MG</span></h1>
       <p class="hero-styles">Dark art · Blackwork · Colorido · Ornamental</p>
       <p class="hero-quote">Tatuagem não é só decoração. É marca. Permanente, deliberada, feita para durar mais que a razão pela qual você a quis.</p>
       <div class="hero-ctas">
@@ -1323,7 +1340,13 @@
       const item = q.parentElement;
       const wasOpen = item.classList.contains('open');
       document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-      if (!wasOpen) item.classList.add('open');
+      if (!wasOpen) {
+        item.classList.add('open');
+        gtag('event', 'faq_open', {
+          event_category: 'engajamento',
+          event_label: q.textContent.trim()
+        });
+      }
     });
   });
 
@@ -1388,8 +1411,14 @@
         preload.src = imgs[idx].src;
       }
 
-      document.getElementById('car-prev').onclick = () => ir(idx - 1);
-      document.getElementById('car-next').onclick = () => ir(idx + 1);
+      document.getElementById('car-prev').onclick = () => {
+        ir(idx - 1);
+        gtag('event', 'galeria_carousel_nav', { event_category: 'engajamento', event_label: 'anterior' });
+      };
+      document.getElementById('car-next').onclick = () => {
+        ir(idx + 1);
+        gtag('event', 'galeria_carousel_nav', { event_category: 'engajamento', event_label: 'proxima' });
+      };
 
       // Swipe touch
       let tsx = 0;
@@ -1428,7 +1457,7 @@
 </script>
 
 <!-- Schema.org LocalBusiness -->
-<script type="application/ld+json">
+<script type="application/ld+json" id="ld-localbusiness">
 {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
@@ -1486,12 +1515,94 @@
   ],
   "priceRange": "R$ 200+",
   "paymentAccepted": "Dinheiro, Pix, Cartão",
-  "currenciesAccepted": "BRL"
+  "currenciesAccepted": "BRL",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5.0",
+    "reviewCount": "2"
+  },
+  "founder": {
+    "@type": "Person",
+    "name": "Micael Faccio",
+    "jobTitle": "Tatuador",
+    "description": "Tatuador com quase três décadas de experiência, especializado em blackwork, dark art e pesquisa de simbologia religiosa e mitológica."
+  }
 }
 </script>
 
-
-
+<!-- Schema.org FAQPage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Onde fica o estúdio do Micael Faccio?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "O estúdio fica pertinho, no topo do João XXIII, na Rua Astrogildo Figueiredo de Barros, 469, em Muriaé-MG."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quais estilos de tatuagem o Micael Faccio trabalha?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Blackwork, dark art, colorido (neo-tradicional) e ornamental, sempre a partir das referências e ideias trazidas pelo cliente."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quanto custa uma tatuagem?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "As sessões partem de R$ 200,00. O valor final varia de acordo com tamanho, complexidade e estilo do projeto."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Atende menores de idade?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Não. O atendimento é exclusivo para maiores de 18 anos."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Como agendar uma tatuagem?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "O atendimento é com hora marcada, pelo WhatsApp ou Instagram. Ao se cadastrar no site, o cliente recebe um código de desconto e de indicação."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "O atendimento é individual?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sim, o atendimento é privativo, com um cliente por horário marcado."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "É possível levar referências para a tatuagem?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sim: o trabalho parte das referências e ideias do cliente. A leitura original está na interpretação dos motivos e do significado por trás da tatuagem, não em recusar referências."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Onde posso ver o portfólio de trabalhos?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "O portfólio completo está disponível na galeria do site e também no Instagram @micaeltatuagem."
+      }
+    }
+  ]
+}
+</script>
 
 <script src="flash-decor.js" defer></script>
 
@@ -1518,6 +1629,22 @@ async function carregarAvaliacaoGoogle() {
         <a href="${place.googleMapsURI}" target="_blank" rel="noopener" style="color:var(--ink-muted); text-decoration:none;">
           <span style="color:var(--accent);">${estrelas}</span> ${notaFormatada} no Google · ${place.userRatingCount} ${plural}
         </a>`;
+    }
+
+    // ── Atualiza o AggregateRating do schema com os dados reais ──
+    if (place.rating && place.userRatingCount) {
+      const ldScript = document.getElementById('ld-localbusiness');
+      if (ldScript) {
+        try {
+          const data = JSON.parse(ldScript.textContent);
+          data.aggregateRating = {
+            "@type": "AggregateRating",
+            "ratingValue": place.rating.toFixed(1),
+            "reviewCount": String(place.userRatingCount)
+          };
+          ldScript.textContent = JSON.stringify(data);
+        } catch (e) { /* mantém o valor estático como fallback */ }
+      }
     }
 
     // ── Seção de avaliações em texto ──
@@ -1609,6 +1736,44 @@ function initMapaEstudio() {
 </script>
 <script async defer
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDt5ZOD2Su6S7nJlVlUMJ-JNPQ0bzeT2lY&libraries=places&callback=initMapaEstudio">
+</script>
+
+<!-- ── Consentimento de cookies (LGPD) ─────────────────────────── -->
+<div id="cookie-consent" style="position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.97);border-top:1px solid var(--border-hi);padding:1rem 1.5rem;display:none;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-family:var(--font-ui);">
+  <p style="margin:0;font-size:.9rem;color:var(--ink-muted);max-width:560px;">
+    Usamos cookies de análise (Google Analytics) pra entender como o site é usado. Você pode aceitar ou recusar.
+  </p>
+  <div style="display:flex;gap:.6rem;">
+    <button id="consent-decline" style="background:transparent;border:1px solid var(--border-hi);color:var(--ink-muted);padding:.6rem 1.2rem;border-radius:3px;cursor:pointer;font-family:var(--font-ui);">Recusar</button>
+    <button id="consent-accept" style="background:#7a8c3a;border:none;color:#fff;padding:.6rem 1.2rem;border-radius:3px;cursor:pointer;font-family:var(--font-ui);font-weight:700;">Aceitar</button>
+  </div>
+</div>
+<script>
+  (function(){
+    const KEY = 'cookie_consent_v1';
+    const banner = document.getElementById('cookie-consent');
+    const saved = localStorage.getItem(KEY);
+
+    function grant() {
+      gtag('consent', 'update', { 'analytics_storage': 'granted' });
+    }
+
+    if (saved === 'accepted') {
+      grant();
+    } else if (saved !== 'declined') {
+      banner.style.display = 'flex';
+    }
+
+    document.getElementById('consent-accept').addEventListener('click', () => {
+      localStorage.setItem(KEY, 'accepted');
+      grant();
+      banner.style.display = 'none';
+    });
+    document.getElementById('consent-decline').addEventListener('click', () => {
+      localStorage.setItem(KEY, 'declined');
+      banner.style.display = 'none';
+    });
+  })();
 </script>
 </body>
 </html>
