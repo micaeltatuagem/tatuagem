@@ -491,12 +491,68 @@
     </div>
   </a>
 
-  <div class="portal ghost">
-    <div class="inner">
-      <div class="mark"></div>
-      <div class="name">em construção</div>
+  <a class="portal" id="p-vortice" href="aura_flow.html?layer=vortice">
+    <canvas id="c-vortice"></canvas>
+    <div class="veil"></div>
+    <div class="label">
+      <span class="name">Vórtice</span>
+      <span class="hint">espiral ⋄ tinta sendo sugada pro centro</span>
     </div>
-  </div>
+  </a>
+
+  <a class="portal" id="p-cimatica" href="aura_flow.html?layer=cimatica">
+    <canvas id="c-cimatica"></canvas>
+    <div class="veil"></div>
+    <div class="label">
+      <span class="name">Cimática</span>
+      <span class="hint">nó ⋄ o som desenhando a própria figura</span>
+    </div>
+  </a>
+
+  <a class="portal" id="p-fumaca" href="aura_flow.html?layer=fumaca">
+    <canvas id="c-fumaca"></canvas>
+    <div class="veil"></div>
+    <div class="label">
+      <span class="name">Fumaça</span>
+      <span class="hint">incenso ⋄ subindo devagar, sem pressa</span>
+    </div>
+  </a>
+
+  <a class="portal" id="p-geometria" href="aura_flow.html?layer=geometria">
+    <canvas id="c-geometria"></canvas>
+    <div class="veil"></div>
+    <div class="label">
+      <span class="name">Geometria</span>
+      <span class="hint">flor da vida ⋄ círculos dentro de círculos</span>
+    </div>
+  </a>
+
+  <a class="portal" id="p-constelacao" href="aura_flow.html?layer=constelacao">
+    <canvas id="c-constelacao"></canvas>
+    <div class="veil"></div>
+    <div class="label">
+      <span class="name">Constelação</span>
+      <span class="hint">mapa estelar ⋄ triângulos que nascem e somem</span>
+    </div>
+  </a>
+
+  <a class="portal" id="p-olho" href="aura_flow.html?layer=olho">
+    <canvas id="c-olho"></canvas>
+    <div class="veil"></div>
+    <div class="label">
+      <span class="name">Olho</span>
+      <span class="hint">íris ⋄ dilatando devagar, te observando</span>
+    </div>
+  </a>
+
+  <a class="portal" id="p-batimento" href="aura_flow.html?layer=batimento">
+    <canvas id="c-batimento"></canvas>
+    <div class="veil"></div>
+    <div class="label">
+      <span class="name">Batimento</span>
+      <span class="hint">ECG ⋄ o pulso do contraponto, visível</span>
+    </div>
+  </a>
 
 </div>
 
@@ -971,6 +1027,421 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
     ctx.globalCompositeOperation = 'source-over';
 
     t += 0.015;
+    requestAnimationFrame(frame);
+  }
+  frame();
+  previewControls.push({ pause(){ active = false; }, resume(){ if (!active) { active = true; requestAnimationFrame(frame); } } });
+})();
+
+// ---------- prévia: Vórtice — tinta em espiral sendo sugada pro centro ----------
+(function(){
+  let active = true;
+  const { ctx, dim } = makeRetinaCanvas('c-vortice');
+  const off = document.createElement('canvas');
+  const octx = off.getContext('2d');
+  const OW = 64;
+  let OH = 64, img;
+
+  function resizeOff(){
+    OH = Math.max(2, Math.round(OW * (dim.h / Math.max(dim.w, 1))));
+    off.width = OW; off.height = OH;
+    img = octx.createImageData(OW, OH);
+  }
+  resizeOff();
+  window.addEventListener('resize', resizeOff);
+
+  // braços da espiral: cada um é uma corrente de blobs ao longo de r = a - b*theta
+  const ARMS = 3;
+  const PER_ARM = 5;
+  const blobs = [];
+  for (let a = 0; a < ARMS; a++) {
+    for (let s = 0; s < PER_ARM; s++) {
+      const f = s / (PER_ARM - 1);
+      blobs.push({
+        arm: a,
+        f,
+        rr: 0.05 * (1 - f * 0.55) + 0.012
+      });
+    }
+  }
+
+  let t = 0;
+  function frame(){
+    if (!active) return;
+    const w = dim.w, h = dim.h;
+    const data = img.data;
+    const minDim = Math.min(OW, OH);
+    let idx = 0;
+
+    for (let y = 0; y < OH; y++) {
+      const ny = (y / OH - 0.5) * (OH / minDim) * 2;
+      for (let x = 0; x < OW; x++) {
+        const nx = (x / OW - 0.5) * (OW / minDim) * 2;
+
+        let field = 0;
+        for (const b of blobs) {
+          const theta = b.f * 5.2 + (b.arm / ARMS) * Math.PI * 2 - t * 0.6;
+          const r = 0.62 * (1 - b.f) + 0.02;
+          const bx = Math.cos(theta) * r;
+          const by = Math.sin(theta) * r;
+          const r2 = b.rr * b.rr;
+          field += r2 / ((nx - bx) ** 2 + (ny - by) ** 2 + 0.0009);
+        }
+
+        const edge = 1.3;
+        const alpha = Math.max(0, Math.min(1, (field - edge) * 6.5));
+        const shade = Math.min(1, field / (edge * 2.2));
+        data[idx++] = Math.round(80 + shade * 150);
+        data[idx++] = Math.round(4 + shade * 12);
+        data[idx++] = Math.round(4 + shade * 12);
+        data[idx++] = Math.round(alpha * 255);
+      }
+    }
+    octx.putImageData(img, 0, 0);
+
+    ctx.fillStyle = 'rgba(10,9,8,0.3)';
+    ctx.fillRect(0, 0, w, h);
+    ctx.drawImage(off, 0, 0, w, h);
+
+    t += 0.014;
+    requestAnimationFrame(frame);
+  }
+  frame();
+  previewControls.push({ pause(){ active = false; }, resume(){ if (!active) { active = true; requestAnimationFrame(frame); } } });
+})();
+
+// ---------- prévia: Cimática — padrões de nó estacionário (tipo Chladni) ----------
+(function(){
+  let active = true;
+  const { ctx, dim } = makeRetinaCanvas('c-cimatica');
+  const off = document.createElement('canvas');
+  const octx = off.getContext('2d');
+  const OW = 56;
+  let OH = 56, img;
+
+  function resizeOff(){
+    OH = Math.max(2, Math.round(OW * (dim.h / Math.max(dim.w, 1))));
+    off.width = OW; off.height = OH;
+    img = octx.createImageData(OW, OH);
+  }
+  resizeOff();
+  window.addEventListener('resize', resizeOff);
+
+  let t = 0;
+  function frame(){
+    if (!active) return;
+    const w = dim.w, h = dim.h;
+    const data = img.data;
+    let idx = 0;
+
+    // "n" e "m" variam bem devagar — como se a frequência estivesse mudando
+    const n = 3 + Math.sin(t * 0.11) * 2;
+    const m = 5 + Math.cos(t * 0.08) * 2.5;
+
+    for (let y = 0; y < OH; y++) {
+      const ny = (y / OH) * Math.PI;
+      for (let x = 0; x < OW; x++) {
+        const nx = (x / OW) * Math.PI;
+        const v = Math.sin(n * nx) * Math.sin(m * ny) - Math.sin(m * nx) * Math.sin(n * ny);
+        const nodal = 1 - Math.min(1, Math.abs(v) * 3.2); // perto de zero = linha nodal (mais visível)
+        const light = Math.round(nodal * nodal * 200);
+        data[idx++] = Math.round(20 + light * 0.9);
+        data[idx++] = Math.round(6 + light * 0.35);
+        data[idx++] = Math.round(6 + light * 0.35);
+        data[idx++] = 255;
+      }
+    }
+    octx.putImageData(img, 0, 0);
+
+    ctx.clearRect(0, 0, w, h);
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(off, 0, 0, w, h);
+
+    t += 0.02;
+    requestAnimationFrame(frame);
+  }
+  frame();
+  previewControls.push({ pause(){ active = false; }, resume(){ if (!active) { active = true; requestAnimationFrame(frame); } } });
+})();
+
+// ---------- prévia: Fumaça — camadas de ruído subindo devagar ----------
+(function(){
+  let active = true;
+  const { ctx, dim } = makeRetinaCanvas('c-fumaca');
+  const off = document.createElement('canvas');
+  const octx = off.getContext('2d');
+  const OW = 40;
+  let OH = 56, img;
+
+  function resizeOff(){
+    OH = Math.max(2, Math.round(OW * (dim.h / Math.max(dim.w, 1))));
+    off.width = OW; off.height = OH;
+    img = octx.createImageData(OW, OH);
+  }
+  resizeOff();
+  window.addEventListener('resize', resizeOff);
+
+  let t = 0;
+  function frame(){
+    if (!active) return;
+    const w = dim.w, h = dim.h;
+    const data = img.data;
+    let idx = 0;
+
+    for (let y = 0; y < OH; y++) {
+      const fy = y / OH; // 0 no topo, 1 embaixo
+      for (let x = 0; x < OW; x++) {
+        const fx = x / OW;
+        // várias oitavas de seno deslocadas, subindo (y - t) em velocidades diferentes
+        const v = Math.sin(fx * 7 + (fy * 9 - t * 1.1)) * 0.5 +
+                  Math.sin(fx * 13 - (fy * 5 - t * 0.7) + 2.1) * 0.3 +
+                  Math.sin((fx + fy) * 10 - t * 0.9) * 0.2;
+        const norm = (v + 1) / 2;
+        // mais denso embaixo, dissipando pra cima
+        const density = norm * (1 - fy * 0.75);
+        const light = Math.round(density * 190);
+        data[idx++] = Math.round(60 + light * 0.7);
+        data[idx++] = Math.round(30 + light * 0.55);
+        data[idx++] = Math.round(30 + light * 0.5);
+        data[idx++] = Math.round(density * 210);
+      }
+    }
+    octx.putImageData(img, 0, 0);
+
+    ctx.fillStyle = '#0a0908';
+    ctx.fillRect(0, 0, w, h);
+    ctx.save();
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(off, 0, 0, w, h);
+    ctx.restore();
+
+    t += 0.012;
+    requestAnimationFrame(frame);
+  }
+  frame();
+  previewControls.push({ pause(){ active = false; }, resume(){ if (!active) { active = true; requestAnimationFrame(frame); } } });
+})();
+
+// ---------- prévia: Geometria sagrada — círculos entrelaçados girando ----------
+(function(){
+  let active = true;
+  const { ctx, dim } = makeRetinaCanvas('c-geometria');
+  let t = 0;
+
+  function frame(){
+    if (!active) return;
+    const w = dim.w, h = dim.h;
+    ctx.fillStyle = 'rgba(10,9,8,0.22)';
+    ctx.fillRect(0, 0, w, h);
+
+    const cx = w / 2, cy = h / 2;
+    const R = Math.min(w, h) * 0.19;
+    const pulse = 1 + Math.sin(t * 0.5) * 0.05;
+    const rot = t * 0.08;
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineWidth = 1.1;
+
+    // centro + 6 ao redor (flor da vida) + 6 mais externos
+    const centers = [[0, 0]];
+    for (let i = 0; i < 6; i++) {
+      const a = rot + (i / 6) * Math.PI * 2;
+      centers.push([Math.cos(a) * R * pulse, Math.sin(a) * R * pulse]);
+    }
+    for (let i = 0; i < 6; i++) {
+      const a = rot + (i / 6) * Math.PI * 2 + Math.PI / 6;
+      centers.push([Math.cos(a) * R * pulse * 1.73, Math.sin(a) * R * pulse * 1.73]);
+    }
+
+    for (const [x, y] of centers) {
+      const alpha = 0.28 + 0.14 * Math.sin(t * 0.7 + x * 0.01 + y * 0.01);
+      ctx.strokeStyle = `rgba(216,183,161,${alpha})`;
+      ctx.beginPath();
+      ctx.arc(x, y, R * pulse, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.restore();
+    ctx.globalCompositeOperation = 'source-over';
+
+    t += 0.014;
+    requestAnimationFrame(frame);
+  }
+  frame();
+  previewControls.push({ pause(){ active = false; }, resume(){ if (!active) { active = true; requestAnimationFrame(frame); } } });
+})();
+
+// ---------- prévia: Constelação — pontos que se conectam e se soltam ----------
+(function(){
+  let active = true;
+  const { ctx, dim } = makeRetinaCanvas('c-constelacao');
+  const N = 22;
+  const pts = Array.from({length: N}, () => ({
+    x: Math.random(), y: Math.random(),
+    vx: (Math.random() - 0.5) * 0.00035,
+    vy: (Math.random() - 0.5) * 0.00035,
+    tw: Math.random() * Math.PI * 2
+  }));
+
+  function frame(){
+    if (!active) return;
+    const w = dim.w, h = dim.h;
+    ctx.fillStyle = 'rgba(10,9,8,0.3)';
+    ctx.fillRect(0, 0, w, h);
+
+    for (const p of pts) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > 1) p.vx *= -1;
+      if (p.y < 0 || p.y > 1) p.vy *= -1;
+      p.tw += 0.02;
+    }
+
+    const thresh = Math.min(w, h) * 0.22;
+    ctx.strokeStyle = 'rgba(179,18,23,0.35)';
+    ctx.lineWidth = 0.7;
+    for (let i = 0; i < N; i++) {
+      for (let j = i + 1; j < N; j++) {
+        const dx = (pts[i].x - pts[j].x) * w;
+        const dy = (pts[i].y - pts[j].y) * h;
+        const d = Math.hypot(dx, dy);
+        if (d < thresh) {
+          ctx.globalAlpha = 1 - d / thresh;
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x * w, pts[i].y * h);
+          ctx.lineTo(pts[j].x * w, pts[j].y * h);
+          ctx.stroke();
+        }
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    for (const p of pts) {
+      const s = 1 + Math.sin(p.tw) * 0.6;
+      ctx.fillStyle = 'rgba(216,183,161,0.85)';
+      ctx.beginPath();
+      ctx.arc(p.x * w, p.y * h, 1.3 * s, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    requestAnimationFrame(frame);
+  }
+  frame();
+  previewControls.push({ pause(){ active = false; }, resume(){ if (!active) { active = true; requestAnimationFrame(frame); } } });
+})();
+
+// ---------- prévia: Olho — íris dilatando devagar ----------
+(function(){
+  let active = true;
+  const { ctx, dim } = makeRetinaCanvas('c-olho');
+  let t = 0;
+
+  function frame(){
+    if (!active) return;
+    const w = dim.w, h = dim.h;
+    ctx.fillStyle = '#0a0908';
+    ctx.fillRect(0, 0, w, h);
+
+    const cx = w / 2, cy = h / 2;
+    const irisR = Math.min(w, h) * 0.34;
+    const pupilR = irisR * (0.32 + 0.14 * Math.sin(t * 0.25));
+
+    // esclera bem escura
+    ctx.fillStyle = '#14100e';
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, irisR * 1.55, irisR * 1.05, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // íris com gradiente radial e estrias
+    const grad = ctx.createRadialGradient(cx, cy, pupilR, cx, cy, irisR);
+    grad.addColorStop(0, 'rgba(179,18,23,0.55)');
+    grad.addColorStop(0.6, 'rgba(140,125,111,0.5)');
+    grad.addColorStop(1, 'rgba(10,9,8,0.9)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, irisR, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(t * 0.02);
+    ctx.strokeStyle = 'rgba(216,183,161,0.25)';
+    ctx.lineWidth = 1;
+    const striae = 28;
+    for (let i = 0; i < striae; i++) {
+      const a = (i / striae) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(a) * pupilR * 1.1, Math.sin(a) * pupilR * 1.1);
+      ctx.lineTo(Math.cos(a) * irisR * 0.97, Math.sin(a) * irisR * 0.97);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // pupila
+    ctx.fillStyle = '#050403';
+    ctx.beginPath();
+    ctx.arc(cx, cy, pupilR, 0, Math.PI * 2);
+    ctx.fill();
+
+    t += 0.016;
+    requestAnimationFrame(frame);
+  }
+  frame();
+  previewControls.push({ pause(){ active = false; }, resume(){ if (!active) { active = true; requestAnimationFrame(frame); } } });
+})();
+
+// ---------- prévia: Batimento — linha tipo ECG rolando ----------
+(function(){
+  let active = true;
+  const { ctx, dim } = makeRetinaCanvas('c-batimento');
+  let t = 0;
+  const history = [];
+
+  function pulseValue(phase){
+    // um ciclo cardíaco simplificado: linha de base com um pico (QRS) por ciclo
+    const f = phase % 1;
+    if (f > 0.46 && f < 0.58) {
+      const k = (f - 0.46) / 0.12;
+      return Math.sin(k * Math.PI) * (k < 0.5 ? 1 : -0.35) * 1.4;
+    }
+    if (f > 0.6 && f < 0.78) {
+      return Math.sin(((f - 0.6) / 0.18) * Math.PI) * 0.18;
+    }
+    return 0;
+  }
+
+  function frame(){
+    if (!active) return;
+    const w = dim.w, h = dim.h;
+    ctx.fillStyle = 'rgba(10,9,8,0.35)';
+    ctx.fillRect(0, 0, w, h);
+
+    t += 0.016;
+    history.push(pulseValue(t * 0.55));
+    const maxPts = Math.max(20, Math.round(w / 2));
+    while (history.length > maxPts) history.shift();
+
+    ctx.strokeStyle = 'rgba(216,183,161,0.9)';
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    const midY = h * 0.55;
+    for (let i = 0; i < history.length; i++) {
+      const x = (i / (maxPts - 1)) * w;
+      const y = midY - history[i] * h * 0.28;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    // ponto luminoso na ponta, tipo osciloscópio
+    if (history.length) {
+      const lastX = ((history.length - 1) / (maxPts - 1)) * w;
+      const lastY = midY - history[history.length - 1] * h * 0.28;
+      ctx.fillStyle = 'rgba(179,18,23,0.9)';
+      ctx.beginPath();
+      ctx.arc(lastX, lastY, 2.4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
     requestAnimationFrame(frame);
   }
   frame();
