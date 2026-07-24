@@ -446,7 +446,7 @@
 
 <div class="portals">
 
-  <a class="portal" id="p-rorschach" href="rorschach_flow.html">
+  <a class="portal" id="p-rorschach" href="aura_flow.html?layer=rorschach">
     <canvas id="c-rorschach"></canvas>
     <div class="veil"></div>
     <div class="label">
@@ -455,7 +455,7 @@
     </div>
   </a>
 
-  <a class="portal" id="p-stars" href="hyperspace_flow.html?layer=stars">
+  <a class="portal" id="p-stars" href="aura_flow.html?layer=stars">
     <canvas id="c-stars"></canvas>
     <div class="veil"></div>
     <div class="label">
@@ -464,7 +464,7 @@
     </div>
   </a>
 
-  <a class="portal" id="p-wormhole" href="hyperspace_flow.html?layer=wormhole">
+  <a class="portal" id="p-wormhole" href="aura_flow.html?layer=wormhole">
     <canvas id="c-wormhole"></canvas>
     <div class="veil"></div>
     <div class="label">
@@ -473,7 +473,7 @@
     </div>
   </a>
 
-  <a class="portal" id="p-plasma" href="hyperspace_flow.html?layer=plasma">
+  <a class="portal" id="p-plasma" href="aura_flow.html?layer=plasma">
     <canvas id="c-plasma"></canvas>
     <div class="veil"></div>
     <div class="label">
@@ -482,7 +482,7 @@
     </div>
   </a>
 
-  <a class="portal" id="p-mandala" href="hyperspace_flow.html?layer=mandala">
+  <a class="portal" id="p-mandala" href="aura_flow.html?layer=mandala">
     <canvas id="c-mandala"></canvas>
     <div class="veil"></div>
     <div class="label">
@@ -628,6 +628,7 @@
       <div class="pulse-shape-toggles">
         <div class="shape-btn active" data-shape="square">seco</div>
         <div class="shape-btn" data-shape="sine">suave</div>
+        <div class="shape-btn" data-shape="sawtooth">tambor</div>
       </div>
     </div>
 
@@ -649,6 +650,59 @@
         <div class="shape-btn texture-btn" data-texture="oceano">oceano</div>
         <div class="shape-btn texture-btn" data-texture="chuva">chuva</div>
         <div class="shape-btn texture-btn" data-texture="brasa">brasa</div>
+        <div class="shape-btn texture-btn" data-texture="chocalho">chocalho</div>
+        <div class="shape-btn texture-btn" data-texture="tambor">tambor</div>
+        <div class="shape-btn texture-btn" data-texture="riacho">riacho</div>
+      </div>
+    </div>
+
+    <div class="a-group-title">Vocalização</div>
+    <div class="a-row" style="grid-column:1 / -1;">
+      <div class="pulse-on-row">
+        <div class="mini-toggle" id="icaroToggle" data-on="0">desligado</div>
+        <span class="mono" style="font-size:10.5px; color:var(--stone);">um canto sintetizado por trás, tipo ícaro — sem palavras, só a vogal</span>
+      </div>
+    </div>
+    <div class="a-row">
+      <label>Volume <span class="val mono" id="valIcaroVol">22%</span></label>
+      <input type="range" id="icaroVol" min="0" max="100" value="22" step="1">
+    </div>
+    <div class="a-row">
+      <label>Tom <span class="val mono" id="valIcaroTom">grave</span></label>
+      <input type="range" id="icaroTom" min="70" max="220" value="100" step="1">
+    </div>
+    <div class="a-row" style="grid-column:1 / -1;">
+      <label>Vogal</label>
+      <div class="shape-toggles">
+        <div class="shape-btn vowel-btn active" data-vowel="a">"ah"</div>
+        <div class="shape-btn vowel-btn" data-vowel="o">"oh"</div>
+        <div class="shape-btn vowel-btn" data-vowel="u">"um"</div>
+        <div class="shape-btn vowel-btn" data-vowel="e">"eh"</div>
+      </div>
+    </div>
+    <div class="a-row" style="grid-column:1 / -1;">
+      <label>Vozes simultâneas</label>
+      <div class="shape-toggles">
+        <div class="shape-btn voice-count-btn active" data-voices="1">1 voz</div>
+        <div class="shape-btn voice-count-btn" data-voices="2">2 vozes</div>
+        <div class="shape-btn voice-count-btn" data-voices="3">3 vozes</div>
+      </div>
+    </div>
+    <div class="a-row" style="grid-column:1 / -1;">
+      <div class="pulse-on-row">
+        <div class="mini-toggle" id="icaroPulseToggle" data-on="0">desligado</div>
+        <span class="mono" style="font-size:10.5px; color:var(--stone);">faz a vocalização pulsar, tipo um canto respirando em ritmo</span>
+      </div>
+    </div>
+    <div class="a-row">
+      <label>Ritmo do pulso <span class="val mono" id="valIcaroPulseRate">0.35 Hz</span></label>
+      <input type="range" id="icaroPulseRate" min="0.1" max="3" value="0.35" step="0.05">
+    </div>
+    <div class="a-row" style="grid-column:1 / -1;">
+      <label>Formato do pulso</label>
+      <div class="shape-toggles">
+        <div class="shape-btn icaro-pulse-shape-btn active" data-icaropulse="sine">suave</div>
+        <div class="shape-btn icaro-pulse-shape-btn" data-icaropulse="square">seco</div>
       </div>
     </div>
   </div>
@@ -1454,15 +1508,42 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
   let oscL, oscR, gainL, gainR, panL, panR, masterGain;
   let pulseLFO, pulseGain, pulseOffset; // amplitude modulation pra pulso isocrônico
   let noiseSource, noiseFilter, filterLFO, filterLFOGain, textureGain; // camada de textura (contraponto)
+  let tremoloLFO, tremoloOffset, tremoloGain; // "batida" própria de algumas texturas (chocalho, tambor)
+  let icaroVoices = []; // até 3 vozes simultâneas, cada uma com seu par de osciladores + formantes + ganho próprio
+  let icaroVibratoLFO, icaroVibratoGain, icaroMasterMix, icaroPulseLFO, icaroPulseOffset, icaroPulseGain, icaroGain; // vocalização tipo ícaro
   let running = false;
 
-  // parâmetros de cada textura: tipo de filtro, frequência central, o quanto o LFO varre essa frequência, e a velocidade da respiração
-  const TEXTURES = {
-    vento:  { type: 'bandpass', base: 900,  sweep: 550, lfoHz: 0.09,  q: 0.8 },
-    oceano: { type: 'bandpass', base: 260,  sweep: 160, lfoHz: 0.045, q: 1.1 },
-    chuva:  { type: 'highpass', base: 3200, sweep: 900, lfoHz: 0.22,  q: 0.5 },
-    brasa:  { type: 'lowpass',  base: 220,  sweep: 90,  lfoHz: 0.035, q: 3.2 }
+  // formantes aproximados de cada vogal (F1/F2/F3 em Hz, ganho relativo) — dá o timbre de "ah/oh/um/eh" ao sintetizar
+  const VOWELS = {
+    a: { f: [800, 1150, 2900], g: [1, 0.6, 0.25] },
+    o: { f: [500, 900,  2600], g: [1, 0.5, 0.2]  },
+    u: { f: [350, 700,  2400], g: [1, 0.4, 0.15] },
+    e: { f: [500, 1750, 2600], g: [1, 0.55, 0.22] }
   };
+
+  // cada voz é um intervalo relativo ao tom base (1 = uníssono, 1.5 = quinta acima, 0.5 = oitava abaixo) e um nível de mixagem próprio
+  const VOICE_DEFS = [
+    { ratio: 1,    mix: 1.0  },
+    { ratio: 1.5,  mix: 0.65 },
+    { ratio: 0.5,  mix: 0.55 }
+  ];
+
+  // parâmetros de cada textura: tipo de filtro, frequência central, o quanto o LFO varre essa frequência, e a velocidade da respiração
+  // tremolo (opcional): rate = velocidade da pulsação, depth = intensidade, shape = forma de onda, invert = usa o mesmo truque do pulso "tambor" (ataque seco + decaimento)
+  const TEXTURES = {
+    vento:    { type: 'bandpass', base: 900,  sweep: 550, lfoHz: 0.09,  q: 0.8 },
+    oceano:   { type: 'bandpass', base: 260,  sweep: 160, lfoHz: 0.045, q: 1.1 },
+    chuva:    { type: 'highpass', base: 3200, sweep: 900, lfoHz: 0.22,  q: 0.5,
+                tremolo: { rate: 3.2, depth: 0.12, shape: 'sine' } },
+    brasa:    { type: 'lowpass',  base: 220,  sweep: 90,  lfoHz: 0.035, q: 3.2 },
+    chocalho: { type: 'bandpass', base: 4500, sweep: 800, lfoHz: 0.5,   q: 1.2,
+                tremolo: { rate: 7.0, depth: 0.85, shape: 'square' } },
+    tambor:   { type: 'lowpass',  base: 140,  sweep: 40,  lfoHz: 0.02,  q: 2.4,
+                tremolo: { rate: 1.4, depth: 0.9, shape: 'sawtooth', invert: true } },
+    riacho:   { type: 'bandpass', base: 500,  sweep: 250, lfoHz: 0.15,  q: 0.9,
+                tremolo: { rate: 0.45, depth: 0.18, shape: 'sine' } }
+  };
+
 
   const state = {
     baseFreq: 180,
@@ -1475,7 +1556,15 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
     pulseShape: 'square',
     textureOn: false,
     textureVolume: 20,
-    textureType: 'vento'
+    textureType: 'vento',
+    icaroOn: false,
+    icaroVolume: 22,
+    icaroTom: 100,
+    icaroVowel: 'a',
+    icaroVoiceCount: 1,
+    icaroPulseOn: false,
+    icaroPulseRate: 0.35,
+    icaroPulseShape: 'sine'
   };
 
   const $ = id => document.getElementById(id);
@@ -1538,19 +1627,152 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
 
     filterLFOGain = ctx.createGain();
 
+    // tremolo próprio da textura (usado por chocalho/tambor pra dar caráter rítmico; fica "neutro" nas demais)
+    tremoloLFO = ctx.createOscillator();
+    tremoloLFO.type = 'sine';
+    tremoloOffset = ctx.createGain();
+    tremoloOffset.gain.value = 0;
+    tremoloGain = ctx.createGain();
+    tremoloGain.gain.value = 1;
+    tremoloLFO.connect(tremoloOffset);
+    tremoloOffset.connect(tremoloGain.gain);
+
     textureGain = ctx.createGain();
     textureGain.gain.value = 0; // aplicado por applyTextureOn logo abaixo
 
     filterLFO.connect(filterLFOGain);
     filterLFOGain.connect(noiseFilter.frequency);
-    noiseSource.connect(noiseFilter).connect(textureGain).connect(ctx.destination);
+    noiseSource.connect(noiseFilter).connect(tremoloGain).connect(textureGain).connect(ctx.destination);
 
     applyTextureParams(state.textureType);
 
     noiseSource.start();
     filterLFO.start();
+    tremoloLFO.start();
 
     applyTextureOn(state.textureOn);
+
+    // ---- vocalização (ícaro): até 3 vozes simultâneas (uníssono, quinta acima, oitava abaixo), cada uma com par de osciladores + formantes ----
+    icaroVibratoLFO = ctx.createOscillator();
+    icaroVibratoLFO.type = 'sine';
+    icaroVibratoLFO.frequency.value = 4.8;
+    icaroVibratoGain = ctx.createGain();
+    icaroVibratoGain.gain.value = 2.2; // profundidade do vibrato em cents-ish (aplicado ao detune)
+    icaroVibratoLFO.connect(icaroVibratoGain);
+
+    icaroMasterMix = ctx.createGain();
+    icaroMasterMix.gain.value = 0.5;
+
+    icaroVoices = VOICE_DEFS.map((def) => {
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      osc1.type = 'sawtooth'; osc2.type = 'sawtooth';
+      osc1.frequency.value = state.icaroTom * def.ratio;
+      osc2.frequency.value = state.icaroTom * def.ratio;
+      osc2.detune.value = 7; // leve desafinação pra dar corpo, como duas vozes dentro da mesma voz
+      icaroVibratoGain.connect(osc1.detune);
+      icaroVibratoGain.connect(osc2.detune);
+
+      const mix = ctx.createGain();
+      mix.gain.value = 0.5;
+      osc1.connect(mix); osc2.connect(mix);
+
+      // três filtros de formante em paralelo, cada um com seu próprio ganho — dá o timbre de vogal
+      const formants = [0, 1, 2].map(() => {
+        const filt = ctx.createBiquadFilter();
+        filt.type = 'bandpass';
+        const g = ctx.createGain();
+        mix.connect(filt).connect(g);
+        return { filt, g };
+      });
+
+      const voiceGain = ctx.createGain();
+      voiceGain.gain.value = 0; // ligado por applyIcaroVoiceCount
+      for (const f of formants) f.g.connect(voiceGain);
+      voiceGain.connect(icaroMasterMix);
+
+      return { osc1, osc2, formants, voiceGain, ratio: def.ratio, mix: def.mix, driftTimer: null };
+    });
+
+    // pulso próprio da vocalização — respiração rítmica opcional, independente do pulso binaural
+    icaroPulseLFO = ctx.createOscillator();
+    icaroPulseLFO.type = state.icaroPulseShape;
+    icaroPulseLFO.frequency.value = state.icaroPulseRate;
+    icaroPulseOffset = ctx.createGain();
+    icaroPulseOffset.gain.value = 0;
+    icaroPulseGain = ctx.createGain();
+    icaroPulseGain.gain.value = 1;
+    icaroPulseLFO.connect(icaroPulseOffset);
+    icaroPulseOffset.connect(icaroPulseGain.gain);
+
+    icaroGain = ctx.createGain();
+    icaroGain.gain.value = 0; // aplicado por applyIcaroOn logo abaixo
+    icaroMasterMix.connect(icaroPulseGain).connect(icaroGain).connect(ctx.destination);
+
+    applyIcaroVowel(state.icaroVowel);
+    applyIcaroVoiceCount(state.icaroVoiceCount);
+    applyIcaroPulseOn(state.icaroPulseOn);
+
+    icaroVibratoLFO.start();
+    icaroPulseLFO.start();
+    for (const v of icaroVoices) { v.osc1.start(); v.osc2.start(); }
+
+    applyIcaroOn(state.icaroOn);
+    scheduleAllIcaroDrift();
+  }
+
+  function applyIcaroVowel(vowel){
+    const v = VOWELS[vowel] || VOWELS.a;
+    if (!icaroVoices.length) return;
+    for (const voice of icaroVoices) {
+      voice.formants.forEach((layer, i) => {
+        layer.filt.frequency.setTargetAtTime(v.f[i], ctx.currentTime, 0.35);
+        layer.filt.Q.value = 9;
+        layer.g.gain.setTargetAtTime(v.g[i] * voice.mix, ctx.currentTime, 0.35);
+      });
+    }
+  }
+
+  function applyIcaroVoiceCount(count){
+    state.icaroVoiceCount = count;
+    icaroVoices.forEach((voice, i) => {
+      const on = i < count;
+      voice.voiceGain.gain.setTargetAtTime(on ? 1 : 0, ctx.currentTime, 0.6);
+    });
+  }
+
+  function applyIcaroOn(on){
+    state.icaroOn = on;
+    if (!icaroGain) return;
+    const target = on ? (state.icaroVolume / 100 * 0.35) : 0;
+    icaroGain.gain.setTargetAtTime(target, ctx.currentTime, 0.8);
+  }
+
+  function applyIcaroPulseOn(on){
+    state.icaroPulseOn = on;
+    if (!icaroPulseOffset || !icaroPulseGain) return;
+    const depth = 0.7; // profundidade fixa — o suficiente pra sentir a respiração sem cortar demais
+    icaroPulseOffset.gain.setTargetAtTime(on ? depth / 2 : 0, ctx.currentTime, 0.4);
+    icaroPulseGain.gain.setTargetAtTime(on ? (1 - depth / 2) : 1, ctx.currentTime, 0.4);
+  }
+
+  // move a "melodia" de cada voz bem devagar entre alguns graus próximos ao seu tom — como um canto que nunca fica 100% parado.
+  // cada voz tem seu próprio temporizador, com atraso aleatório, pra não se moverem todas juntas.
+  function scheduleVoiceDrift(voice){
+    if (voice.driftTimer) clearTimeout(voice.driftTimer);
+    const ratios = [1, 1.1225, 1.25, 0.9375, 1];
+    const step = () => {
+      if (!ctx) return;
+      const r = ratios[Math.floor(Math.random() * ratios.length)];
+      const freq = state.icaroTom * voice.ratio * r;
+      voice.osc1.frequency.setTargetAtTime(freq, ctx.currentTime, 2.2);
+      voice.osc2.frequency.setTargetAtTime(freq, ctx.currentTime, 2.2);
+      voice.driftTimer = setTimeout(step, 7000 + Math.random() * 9000);
+    };
+    voice.driftTimer = setTimeout(step, 6000 + Math.random() * 6000);
+  }
+  function scheduleAllIcaroDrift(){
+    for (const voice of icaroVoices) scheduleVoiceDrift(voice);
   }
 
   function applyTextureParams(type){
@@ -1562,6 +1784,17 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
     }
     if (filterLFO) filterLFO.frequency.setTargetAtTime(p.lfoHz, ctx.currentTime, 0.4);
     if (filterLFOGain) filterLFOGain.gain.setTargetAtTime(p.sweep, ctx.currentTime, 0.4);
+
+    const trem = p.tremolo || { rate: 0, depth: 0, shape: 'sine' };
+    if (tremoloLFO) {
+      tremoloLFO.type = trem.shape;
+      tremoloLFO.frequency.setTargetAtTime(Math.max(trem.rate, 0.01), ctx.currentTime, 0.3);
+    }
+    if (tremoloOffset && tremoloGain) {
+      const sign = trem.invert ? -1 : 1;
+      tremoloOffset.gain.setTargetAtTime(sign * trem.depth / 2, ctx.currentTime, 0.3);
+      tremoloGain.gain.setTargetAtTime(1 - trem.depth / 2, ctx.currentTime, 0.3);
+    }
   }
 
   function applyTextureOn(on){
@@ -1574,8 +1807,10 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
   function updatePulseDepth(){
     // profundidade 0 = LFO não afeta nada (offset amplitude 0)
     // profundidade 100 = LFO varia o ganho de 0 a 1 (corte total)
+    // "tambor" (sawtooth) usa sinal invertido: transforma a rampa lenta do sawtooth num ataque seco + decaimento, como uma batida
     const depth = state.pulseDepth / 100;
-    if (pulseOffset) pulseOffset.gain.value = depth / 2;
+    const sign = state.pulseShape === 'sawtooth' ? -1 : 1;
+    if (pulseOffset) pulseOffset.gain.value = sign * depth / 2;
     if (pulseGain) {
       const center = 1 - depth / 2;
       pulseGain.gain.value = center;
@@ -1585,13 +1820,22 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
   function applyPulseOn(on){
     state.pulseOn = on;
     if (!pulseOffset) return;
-    pulseOffset.gain.value = on ? state.pulseDepth / 100 / 2 : 0;
+    const sign = state.pulseShape === 'sawtooth' ? -1 : 1;
+    pulseOffset.gain.value = on ? sign * state.pulseDepth / 100 / 2 : 0;
     if (pulseGain) pulseGain.gain.value = on ? (1 - state.pulseDepth / 100 / 2) : 1;
   }
 
   function teardown(){
     if (!ctx) return;
-    try { oscL.stop(); oscR.stop(); pulseLFO.stop(); noiseSource.stop(); filterLFO.stop(); } catch(e){}
+    for (const voice of icaroVoices) {
+      if (voice.driftTimer) clearTimeout(voice.driftTimer);
+    }
+    try {
+      oscL.stop(); oscR.stop(); pulseLFO.stop(); noiseSource.stop(); filterLFO.stop(); tremoloLFO.stop();
+      icaroVibratoLFO.stop(); icaroPulseLFO.stop();
+      for (const voice of icaroVoices) { voice.osc1.stop(); voice.osc2.stop(); }
+    } catch(e){}
+    icaroVoices = [];
     ctx.close();
     ctx = null; running = false;
   }
@@ -1666,12 +1910,15 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
     if (state.pulseOn) applyPulseOn(true);
   });
 
-  document.querySelectorAll('.shape-btn:not(.texture-btn)').forEach(btn => {
+  document.querySelectorAll('.shape-btn:not(.texture-btn):not(.vowel-btn):not(.voice-count-btn):not(.icaro-pulse-shape-btn)').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.shape-btn:not(.texture-btn)').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.shape-btn:not(.texture-btn):not(.vowel-btn):not(.voice-count-btn):not(.icaro-pulse-shape-btn)').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       state.pulseShape = btn.dataset.shape;
-      if (ctx) pulseLFO.type = state.pulseShape;
+      if (ctx) {
+        pulseLFO.type = state.pulseShape;
+        if (state.pulseOn) applyPulseOn(true);
+      }
     });
   });
 
@@ -1697,6 +1944,77 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
       btn.classList.add('active');
       state.textureType = btn.dataset.texture;
       if (ctx) applyTextureParams(state.textureType);
+    });
+  });
+
+  // ---- vocalização (ícaro) ----
+  const icaroToggle = $('icaroToggle');
+  icaroToggle.addEventListener('click', () => {
+    const on = icaroToggle.dataset.on !== '1';
+    icaroToggle.dataset.on = on ? '1' : '0';
+    icaroToggle.textContent = on ? 'ligado' : 'desligado';
+    icaroToggle.classList.toggle('active', on);
+    if (ctx) applyIcaroOn(on); else state.icaroOn = on;
+  });
+
+  $('icaroVol').addEventListener('input', e => {
+    state.icaroVolume = parseFloat(e.target.value);
+    $('valIcaroVol').textContent = state.icaroVolume + '%';
+    if (ctx && state.icaroOn) applyIcaroOn(true);
+  });
+
+  $('icaroTom').addEventListener('input', e => {
+    state.icaroTom = parseFloat(e.target.value);
+    const label = state.icaroTom < 110 ? 'grave' : (state.icaroTom < 165 ? 'médio' : 'agudo');
+    $('valIcaroTom').textContent = label;
+    if (ctx) {
+      for (const voice of icaroVoices) {
+        const freq = state.icaroTom * voice.ratio;
+        voice.osc1.frequency.setTargetAtTime(freq, ctx.currentTime, 0.3);
+        voice.osc2.frequency.setTargetAtTime(freq, ctx.currentTime, 0.3);
+      }
+    }
+  });
+
+  document.querySelectorAll('.vowel-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.vowel-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.icaroVowel = btn.dataset.vowel;
+      if (ctx) applyIcaroVowel(state.icaroVowel);
+    });
+  });
+
+  document.querySelectorAll('.voice-count-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.voice-count-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const count = parseInt(btn.dataset.voices);
+      if (ctx) applyIcaroVoiceCount(count); else state.icaroVoiceCount = count;
+    });
+  });
+
+  const icaroPulseToggle = $('icaroPulseToggle');
+  icaroPulseToggle.addEventListener('click', () => {
+    const on = icaroPulseToggle.dataset.on !== '1';
+    icaroPulseToggle.dataset.on = on ? '1' : '0';
+    icaroPulseToggle.textContent = on ? 'ligado' : 'desligado';
+    icaroPulseToggle.classList.toggle('active', on);
+    if (ctx) applyIcaroPulseOn(on); else state.icaroPulseOn = on;
+  });
+
+  $('icaroPulseRate').addEventListener('input', e => {
+    state.icaroPulseRate = parseFloat(e.target.value);
+    $('valIcaroPulseRate').textContent = state.icaroPulseRate.toFixed(2) + ' Hz';
+    if (ctx) icaroPulseLFO.frequency.setTargetAtTime(state.icaroPulseRate, ctx.currentTime, 0.2);
+  });
+
+  document.querySelectorAll('.icaro-pulse-shape-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.icaro-pulse-shape-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.icaroPulseShape = btn.dataset.icaropulse;
+      if (ctx) icaroPulseLFO.type = state.icaroPulseShape;
     });
   });
 
