@@ -253,7 +253,7 @@
   body{ padding-bottom:54px; }
 
   .audio-bar{
-    position:fixed; left:0; right:0; bottom:0; z-index:100;
+    position:fixed; left:0; right:0; bottom:0; z-index:130;
     background:rgba(10,9,8,0.94);
     -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
     border-top:1px solid rgba(179,18,23,0.3);
@@ -389,7 +389,8 @@
     width:12px; height:12px; border-radius:50%;
     background:var(--sand); cursor:pointer; border:1px solid var(--red);
   }
-  .wave-toggles, .pulse-shape-toggles, .shape-toggles{ display:flex; gap:8px; }
+  .wave-toggles, .pulse-shape-toggles{ display:flex; gap:8px; }
+  .shape-toggles{ display:flex; gap:8px; flex-wrap:wrap; }
   .wave-btn, .shape-btn{
     font-family:'JetBrains Mono', monospace; font-size:11px;
     color:var(--stone); border:1px solid rgba(179,18,23,0.18);
@@ -590,6 +591,8 @@
       <div class="shape-toggles">
         <div class="shape-btn texture-btn active" data-texture="vento">vento</div>
         <div class="shape-btn texture-btn" data-texture="oceano">oceano</div>
+        <div class="shape-btn texture-btn" data-texture="chuva">chuva</div>
+        <div class="shape-btn texture-btn" data-texture="brasa">brasa</div>
       </div>
     </div>
   </div>
@@ -965,10 +968,12 @@ function makeRetinaCanvas(id){
   let noiseSource, noiseFilter, filterLFO, filterLFOGain, textureGain; // camada de textura (contraponto)
   let running = false;
 
-  // parâmetros de cada textura: frequência central do filtro, o quanto o LFO varre essa frequência, e a velocidade da respiração
+  // parâmetros de cada textura: tipo de filtro, frequência central, o quanto o LFO varre essa frequência, e a velocidade da respiração
   const TEXTURES = {
-    vento:  { base: 900, sweep: 550, lfoHz: 0.09, q: 0.8 },
-    oceano: { base: 260, sweep: 160, lfoHz: 0.045, q: 1.1 }
+    vento:  { type: 'bandpass', base: 900,  sweep: 550, lfoHz: 0.09,  q: 0.8 },
+    oceano: { type: 'bandpass', base: 260,  sweep: 160, lfoHz: 0.045, q: 1.1 },
+    chuva:  { type: 'highpass', base: 3200, sweep: 900, lfoHz: 0.22,  q: 0.5 },
+    brasa:  { type: 'lowpass',  base: 220,  sweep: 90,  lfoHz: 0.035, q: 3.2 }
   };
 
   const state = {
@@ -1039,7 +1044,6 @@ function makeRetinaCanvas(id){
     noiseSource.loop = true;
 
     noiseFilter = ctx.createBiquadFilter();
-    noiseFilter.type = 'bandpass';
 
     filterLFO = ctx.createOscillator();
     filterLFO.type = 'sine';
@@ -1064,6 +1068,7 @@ function makeRetinaCanvas(id){
   function applyTextureParams(type){
     const p = TEXTURES[type] || TEXTURES.vento;
     if (noiseFilter) {
+      noiseFilter.type = p.type;
       noiseFilter.frequency.setTargetAtTime(p.base, ctx.currentTime, 0.4);
       noiseFilter.Q.value = p.q;
     }
