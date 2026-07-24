@@ -630,8 +630,11 @@ function makeRetinaCanvas(id){
   return { canvas, ctx, dim };
 }
 
+const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita concorrer com o portal em tela cheia)
+
 // ---------- prévia: Rorschach — metaballs (mancha de tinta sólida, com furos e pingos) ----------
 (function(){
+  let active = true;
   const { ctx, dim } = makeRetinaCanvas('c-rorschach');
   const off = document.createElement('canvas');
   const octx = off.getContext('2d');
@@ -684,6 +687,7 @@ function makeRetinaCanvas(id){
 
   let t = 0;
   function frame(){
+    if (!active) return;
     const w = dim.w, h = dim.h;
     const data = img.data;
     const minDim = Math.min(OW, OH);
@@ -737,10 +741,12 @@ function makeRetinaCanvas(id){
     requestAnimationFrame(frame);
   }
   frame();
+  previewControls.push({ pause(){ active = false; }, resume(){ if (!active) { active = true; requestAnimationFrame(frame); } } });
 })();
 
 // ---------- prévia: Estrelas — starfield warp ----------
 (function(){
+  let active = true;
   const { ctx, dim } = makeRetinaCanvas('c-stars');
   const N = 140;
   const stars = Array.from({length: N}, () => ({
@@ -750,6 +756,7 @@ function makeRetinaCanvas(id){
   }));
 
   function frame(){
+    if (!active) return;
     const w = dim.w, h = dim.h;
     ctx.fillStyle = 'rgba(10,9,8,0.25)';
     ctx.fillRect(0, 0, w, h);
@@ -781,11 +788,13 @@ function makeRetinaCanvas(id){
     requestAnimationFrame(frame);
   }
   frame();
+  previewControls.push({ pause(){ active = false; }, resume(){ if (!active) { active = true; requestAnimationFrame(frame); } } });
 })();
 
 // ---------- prévia: Wormhole — anéis concêntricos com wobble ----------
 // mesma lógica de ringPath() do hyperspace_flow.html, simplificada
 (function(){
+  let active = true;
   const { ctx, dim } = makeRetinaCanvas('c-wormhole');
   const N = 7;
   let t = 0;
@@ -815,6 +824,7 @@ function makeRetinaCanvas(id){
   }
 
   function frame(){
+    if (!active) return;
     const w = dim.w, h = dim.h;
     ctx.fillStyle = 'rgba(10,9,8,0.22)';
     ctx.fillRect(0, 0, w, h);
@@ -846,11 +856,13 @@ function makeRetinaCanvas(id){
     requestAnimationFrame(frame);
   }
   frame();
+  previewControls.push({ pause(){ active = false; }, resume(){ if (!active) { active = true; requestAnimationFrame(frame); } } });
 })();
 
 // ---------- prévia: Plasma — turbulência em baixa resolução, ampliada ----------
 // mesma técnica do motor real: computa num canvas pequeno e escala com drawImage
 (function(){
+  let active = true;
   const { ctx, dim } = makeRetinaCanvas('c-plasma');
   const off = document.createElement('canvas');
   const octx = off.getContext('2d');
@@ -867,6 +879,7 @@ function makeRetinaCanvas(id){
 
   let t = 0;
   function frame(){
+    if (!active) return;
     const w = dim.w, h = dim.h;
     const data = img.data;
     let idx = 0;
@@ -897,15 +910,18 @@ function makeRetinaCanvas(id){
     requestAnimationFrame(frame);
   }
   frame();
+  previewControls.push({ pause(){ active = false; }, resume(){ if (!active) { active = true; requestAnimationFrame(frame); } } });
 })();
 
 // ---------- prévia: Mandala — pétalas girando ----------
 (function(){
+  let active = true;
   const { ctx, dim } = makeRetinaCanvas('c-mandala');
   const segs = 7;
   let t = 0;
 
   function frame(){
+    if (!active) return;
     const w = dim.w, h = dim.h;
     ctx.fillStyle = 'rgba(10,9,8,0.18)';
     ctx.fillRect(0, 0, w, h);
@@ -958,6 +974,7 @@ function makeRetinaCanvas(id){
     requestAnimationFrame(frame);
   }
   frame();
+  previewControls.push({ pause(){ active = false; }, resume(){ if (!active) { active = true; requestAnimationFrame(frame); } } });
 })();
 
 // ---------- motor de áudio: binaural + pulso isocrônico + textura (contraponto) ----------
@@ -1274,12 +1291,23 @@ function makeRetinaCanvas(id){
     frame.src = url;
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
+    previewControls.forEach(p => p.pause()); // libera CPU/GPU pro visual em tela cheia
   }
   function closePortal(){
     overlay.classList.remove('open');
     frame.src = '';
     document.body.style.overflow = '';
+    if (!document.hidden) previewControls.forEach(p => p.resume());
   }
+
+  // pausa tudo quando a aba não está visível (evita gastar bateria/CPU em segundo plano)
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      previewControls.forEach(p => p.pause());
+    } else if (!overlay.classList.contains('open')) {
+      previewControls.forEach(p => p.resume());
+    }
+  });
 
   document.querySelectorAll('.portal:not(.ghost)').forEach(portal => {
     portal.addEventListener('click', e => {
