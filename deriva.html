@@ -391,6 +391,7 @@
   }
   .wave-toggles, .pulse-shape-toggles{ display:flex; gap:8px; }
   .shape-toggles{ display:flex; gap:8px; flex-wrap:wrap; }
+  .vowel-row.disabled{ opacity:0.35; pointer-events:none; }
   .wave-btn, .shape-btn{
     font-family:'JetBrains Mono', monospace; font-size:11px;
     color:var(--stone); border:1px solid rgba(179,18,23,0.18);
@@ -644,6 +645,10 @@
       <input type="range" id="textureVol" min="0" max="100" value="20" step="1">
     </div>
     <div class="a-row">
+      <label>Velocidade <span class="val mono" id="valTextureSpeed">1.0x</span></label>
+      <input type="range" id="textureSpeed" min="15" max="250" value="100" step="5">
+    </div>
+    <div class="a-row">
       <label>Textura</label>
       <div class="shape-toggles">
         <div class="shape-btn texture-btn active" data-texture="vento">vento</div>
@@ -672,12 +677,39 @@
       <input type="range" id="icaroTom" min="70" max="220" value="100" step="1">
     </div>
     <div class="a-row" style="grid-column:1 / -1;">
-      <label>Vogal</label>
-      <div class="shape-toggles">
+      <label>Voz 1 (base) · vogal</label>
+      <div class="shape-toggles vowel-row" data-voice-index="0">
         <div class="shape-btn vowel-btn active" data-vowel="a">"ah"</div>
         <div class="shape-btn vowel-btn" data-vowel="o">"oh"</div>
         <div class="shape-btn vowel-btn" data-vowel="u">"um"</div>
         <div class="shape-btn vowel-btn" data-vowel="e">"eh"</div>
+        <div class="shape-btn vowel-btn" data-vowel="m">"mm"</div>
+      </div>
+    </div>
+    <div class="a-row" style="grid-column:1 / -1;">
+      <label>Voz 2 (quinta acima) · vogal</label>
+      <div class="shape-toggles vowel-row" data-voice-index="1">
+        <div class="shape-btn vowel-btn" data-vowel="a">"ah"</div>
+        <div class="shape-btn vowel-btn active" data-vowel="o">"oh"</div>
+        <div class="shape-btn vowel-btn" data-vowel="u">"um"</div>
+        <div class="shape-btn vowel-btn" data-vowel="e">"eh"</div>
+        <div class="shape-btn vowel-btn" data-vowel="m">"mm"</div>
+      </div>
+    </div>
+    <div class="a-row" style="grid-column:1 / -1;">
+      <label>Voz 3 (oitava abaixo) · vogal</label>
+      <div class="shape-toggles vowel-row" data-voice-index="2">
+        <div class="shape-btn vowel-btn" data-vowel="a">"ah"</div>
+        <div class="shape-btn vowel-btn" data-vowel="o">"oh"</div>
+        <div class="shape-btn vowel-btn active" data-vowel="u">"um"</div>
+        <div class="shape-btn vowel-btn" data-vowel="e">"eh"</div>
+        <div class="shape-btn vowel-btn" data-vowel="m">"mm"</div>
+      </div>
+    </div>
+    <div class="a-row" style="grid-column:1 / -1;">
+      <div class="pulse-on-row">
+        <div class="mini-toggle" id="aumToggle" data-on="0">desligado</div>
+        <span class="mono" style="font-size:10.5px; color:var(--stone);">ciclo Aum automático — desliza sozinho entre "ah" → "um" → "mm"</span>
       </div>
     </div>
     <div class="a-row" style="grid-column:1 / -1;">
@@ -1511,6 +1543,7 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
   let tremoloLFO, tremoloOffset, tremoloGain; // "batida" própria de algumas texturas (chocalho, tambor)
   let icaroVoices = []; // até 3 vozes simultâneas, cada uma com seu par de osciladores + formantes + ganho próprio
   let icaroVibratoLFO, icaroVibratoGain, icaroMasterMix, icaroPulseLFO, icaroPulseOffset, icaroPulseGain, icaroGain; // vocalização tipo ícaro
+  let aumCycleTimers = [null, null, null];
   let running = false;
 
   // formantes aproximados de cada vogal (F1/F2/F3 em Hz, ganho relativo) — dá o timbre de "ah/oh/um/eh" ao sintetizar
@@ -1518,7 +1551,8 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
     a: { f: [800, 1150, 2900], g: [1, 0.6, 0.25] },
     o: { f: [500, 900,  2600], g: [1, 0.5, 0.2]  },
     u: { f: [350, 700,  2400], g: [1, 0.4, 0.15] },
-    e: { f: [500, 1750, 2600], g: [1, 0.55, 0.22] }
+    e: { f: [500, 1750, 2600], g: [1, 0.55, 0.22] },
+    m: { f: [260, 900,  1500], g: [1, 0.15, 0.05] } // boca fechada, som abafado e nasal — o "m" do Aum
   };
 
   // cada voz é um intervalo relativo ao tom base (1 = uníssono, 1.5 = quinta acima, 0.5 = oitava abaixo) e um nível de mixagem próprio
@@ -1536,8 +1570,8 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
     chuva:    { type: 'highpass', base: 3200, sweep: 900, lfoHz: 0.22,  q: 0.5,
                 tremolo: { rate: 3.2, depth: 0.12, shape: 'sine' } },
     brasa:    { type: 'lowpass',  base: 220,  sweep: 90,  lfoHz: 0.035, q: 3.2 },
-    chocalho: { type: 'bandpass', base: 4500, sweep: 800, lfoHz: 0.5,   q: 1.2,
-                tremolo: { rate: 7.0, depth: 0.85, shape: 'square' } },
+    chocalho: { type: 'bandpass', base: 4200, sweep: 200, lfoHz: 0.04,  q: 1.4,
+                tremolo: { rate: 5.5, depth: 0.75, shape: 'triangle' } },
     tambor:   { type: 'lowpass',  base: 140,  sweep: 40,  lfoHz: 0.02,  q: 2.4,
                 tremolo: { rate: 1.4, depth: 0.9, shape: 'sawtooth', invert: true } },
     riacho:   { type: 'bandpass', base: 500,  sweep: 250, lfoHz: 0.15,  q: 0.9,
@@ -1557,14 +1591,16 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
     textureOn: false,
     textureVolume: 20,
     textureType: 'vento',
+    textureSpeed: 100,
     icaroOn: false,
     icaroVolume: 22,
     icaroTom: 100,
-    icaroVowel: 'a',
+    icaroVoiceVowels: ['a', 'o', 'u'],
     icaroVoiceCount: 1,
     icaroPulseOn: false,
     icaroPulseRate: 0.35,
-    icaroPulseShape: 'sine'
+    icaroPulseShape: 'sine',
+    aumCycleOn: false
   };
 
   const $ = id => document.getElementById(id);
@@ -1709,7 +1745,7 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
     icaroGain.gain.value = 0; // aplicado por applyIcaroOn logo abaixo
     icaroMasterMix.connect(icaroPulseGain).connect(icaroGain).connect(ctx.destination);
 
-    applyIcaroVowel(state.icaroVowel);
+    applyAllIcaroVowels();
     applyIcaroVoiceCount(state.icaroVoiceCount);
     applyIcaroPulseOn(state.icaroPulseOn);
 
@@ -1719,18 +1755,23 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
 
     applyIcaroOn(state.icaroOn);
     scheduleAllIcaroDrift();
+    if (state.aumCycleOn) scheduleAumCycle();
   }
 
-  function applyIcaroVowel(vowel){
+  function applyIcaroVowel(voiceIndex, vowel, transition){
+    const voice = icaroVoices[voiceIndex];
+    if (!voice) return;
     const v = VOWELS[vowel] || VOWELS.a;
+    const tc = transition || 0.35;
+    voice.formants.forEach((layer, i) => {
+      layer.filt.frequency.setTargetAtTime(v.f[i], ctx.currentTime, tc);
+      layer.filt.Q.value = 9;
+      layer.g.gain.setTargetAtTime(v.g[i] * voice.mix, ctx.currentTime, tc);
+    });
+  }
+  function applyAllIcaroVowels(){
     if (!icaroVoices.length) return;
-    for (const voice of icaroVoices) {
-      voice.formants.forEach((layer, i) => {
-        layer.filt.frequency.setTargetAtTime(v.f[i], ctx.currentTime, 0.35);
-        layer.filt.Q.value = 9;
-        layer.g.gain.setTargetAtTime(v.g[i] * voice.mix, ctx.currentTime, 0.35);
-      });
-    }
+    state.icaroVoiceVowels.forEach((vowel, i) => applyIcaroVowel(i, vowel));
   }
 
   function applyIcaroVoiceCount(count){
@@ -1775,20 +1816,50 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
     for (const voice of icaroVoices) scheduleVoiceDrift(voice);
   }
 
+  // ciclo Aum: desliza devagar entre "ah" → "um" → "mm" (hum nasal) e repete, como o mantra tradicional.
+  // cada voz roda o mesmo ciclo, mas começando numa defasagem diferente — tipo um cânone, reforça a ideia de vozes distintas juntas.
+  const AUM_SEQUENCE = [
+    { vowel: 'a', hold: 4200 },
+    { vowel: 'u', hold: 3200 },
+    { vowel: 'm', hold: 5800 }
+  ];
+  const AUM_TOTAL = AUM_SEQUENCE.reduce((sum, p) => sum + p.hold, 0);
+  function scheduleAumCycle(){
+    stopAumCycle();
+    icaroVoices.forEach((voice, voiceIndex) => {
+      const offset = (AUM_TOTAL / icaroVoices.length) * voiceIndex;
+      let i = 0;
+      const step = () => {
+        if (!ctx || !state.aumCycleOn) return;
+        const phase = AUM_SEQUENCE[i % AUM_SEQUENCE.length];
+        applyIcaroVowel(voiceIndex, phase.vowel, 1.1);
+        i++;
+        aumCycleTimers[voiceIndex] = setTimeout(step, phase.hold);
+      };
+      aumCycleTimers[voiceIndex] = setTimeout(step, offset);
+    });
+  }
+  function stopAumCycle(){
+    aumCycleTimers.forEach((timer, i) => {
+      if (timer) { clearTimeout(timer); aumCycleTimers[i] = null; }
+    });
+  }
+
   function applyTextureParams(type){
     const p = TEXTURES[type] || TEXTURES.vento;
+    const speed = state.textureSpeed / 100;
     if (noiseFilter) {
       noiseFilter.type = p.type;
       noiseFilter.frequency.setTargetAtTime(p.base, ctx.currentTime, 0.4);
       noiseFilter.Q.value = p.q;
     }
-    if (filterLFO) filterLFO.frequency.setTargetAtTime(p.lfoHz, ctx.currentTime, 0.4);
+    if (filterLFO) filterLFO.frequency.setTargetAtTime(p.lfoHz * speed, ctx.currentTime, 0.4);
     if (filterLFOGain) filterLFOGain.gain.setTargetAtTime(p.sweep, ctx.currentTime, 0.4);
 
     const trem = p.tremolo || { rate: 0, depth: 0, shape: 'sine' };
     if (tremoloLFO) {
       tremoloLFO.type = trem.shape;
-      tremoloLFO.frequency.setTargetAtTime(Math.max(trem.rate, 0.01), ctx.currentTime, 0.3);
+      tremoloLFO.frequency.setTargetAtTime(Math.max(trem.rate * speed, 0.01), ctx.currentTime, 0.3);
     }
     if (tremoloOffset && tremoloGain) {
       const sign = trem.invert ? -1 : 1;
@@ -1830,6 +1901,7 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
     for (const voice of icaroVoices) {
       if (voice.driftTimer) clearTimeout(voice.driftTimer);
     }
+    stopAumCycle();
     try {
       oscL.stop(); oscR.stop(); pulseLFO.stop(); noiseSource.stop(); filterLFO.stop(); tremoloLFO.stop();
       icaroVibratoLFO.stop(); icaroPulseLFO.stop();
@@ -1938,6 +2010,12 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
     if (ctx && state.textureOn) applyTextureOn(true);
   });
 
+  $('textureSpeed').addEventListener('input', e => {
+    state.textureSpeed = parseFloat(e.target.value);
+    $('valTextureSpeed').textContent = (state.textureSpeed / 100).toFixed(2) + 'x';
+    if (ctx) applyTextureParams(state.textureType);
+  });
+
   document.querySelectorAll('.texture-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.texture-btn').forEach(b => b.classList.remove('active'));
@@ -1976,13 +2054,32 @@ const previewControls = []; // pausa/retoma as prévias animadas de fundo (evita
     }
   });
 
-  document.querySelectorAll('.vowel-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.vowel-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      state.icaroVowel = btn.dataset.vowel;
-      if (ctx) applyIcaroVowel(state.icaroVowel);
+  document.querySelectorAll('.vowel-row').forEach(row => {
+    const voiceIndex = parseInt(row.dataset.voiceIndex);
+    row.querySelectorAll('.vowel-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        row.querySelectorAll('.vowel-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.icaroVoiceVowels[voiceIndex] = btn.dataset.vowel;
+        if (ctx && !state.aumCycleOn) applyIcaroVowel(voiceIndex, btn.dataset.vowel);
+      });
     });
+  });
+
+  const aumToggle = $('aumToggle');
+  aumToggle.addEventListener('click', () => {
+    const on = aumToggle.dataset.on !== '1';
+    aumToggle.dataset.on = on ? '1' : '0';
+    aumToggle.textContent = on ? 'ligado' : 'desligado';
+    aumToggle.classList.toggle('active', on);
+    state.aumCycleOn = on;
+    document.querySelectorAll('.vowel-row').forEach(row => row.classList.toggle('disabled', on));
+    if (on) {
+      if (ctx) scheduleAumCycle();
+    } else {
+      stopAumCycle();
+      if (ctx) applyAllIcaroVowels();
+    }
   });
 
   document.querySelectorAll('.voice-count-btn').forEach(btn => {
