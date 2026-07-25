@@ -280,26 +280,6 @@
     "draft": false
   },
   {
-    "id": 15,
-    "slug": "organico",
-    "titulo": "Orgânico",
-    "categoria": "estilo",
-    "tema": [
-      "estilos"
-    ],
-    "resumo": "Variante de grafia da categoria Orgânica — conteúdo a revisar.",
-    "corpo": "",
-    "imagem": "",
-    "alt": "",
-    "seo_title": "Orgânico · Guia de Tatuagem | Micael Tatuagem",
-    "meta_description": "Variante de grafia da categoria Orgânica — conteúdo a revisar.",
-    "pagina_externa": "estilo/organico.html",
-    "tags_relacionadas": [
-      "organico"
-    ],
-    "draft": false
-  },
-  {
     "id": 16,
     "slug": "oriental",
     "titulo": "Oriental",
