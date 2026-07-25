@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Selos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0a0908; --panel:#131110; --panel-2:#1b1815; --hair:#2c2721;
+    --bone:#e8e1d3; --muted:#8f8578; --gold:#c6a15b; --gold-dim:#7a6636;
+    --glow: 0 0 12px rgba(198,161,91,0.5);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--ink);color:var(--bone);font-family:'EB Garamond',serif;}
+  body{background:
+    radial-gradient(ellipse at 25% 0%, rgba(198,161,91,0.06), transparent 55%),
+    radial-gradient(ellipse at 80% 100%, rgba(122,46,46,0.08), transparent 50%),
+    var(--ink);}
+  .wrap{max-width:1240px; margin:0 auto; padding:36px 24px 70px;}
+  header{text-align:center; margin-bottom:34px;}
+  header .eyebrow{font-family:'Cinzel',serif; font-size:11px; letter-spacing:.35em; color:var(--gold-dim); text-transform:uppercase;}
+  h1{font-family:'Cinzel',serif; font-weight:700; font-size:clamp(26px,3.6vw,40px); margin:8px 0 6px;}
+  header p{color:var(--muted); font-style:italic; font-size:16px; max-width:600px; margin:0 auto;}
+  .layout{display:grid; grid-template-columns:340px 1fr; gap:26px; align-items:start;}
+  @media (max-width:900px){.layout{grid-template-columns:1fr;}}
+  .panel{background:linear-gradient(180deg,var(--panel),var(--panel-2)); border:1px solid var(--hair); border-radius:4px; padding:22px;}
+  .field{margin-bottom:18px;}
+  label{display:block; font-family:'Cinzel',serif; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin-bottom:8px;}
+  textarea{width:100%; min-height:66px; background:var(--ink); border:1px solid var(--hair); border-radius:3px; color:var(--bone); font-family:'EB Garamond',serif; font-size:17px; padding:10px 12px; resize:vertical;}
+  textarea:focus, button:focus, input:focus{outline:2px solid var(--gold-dim); outline-offset:1px;}
+  .checks{display:flex; flex-direction:column; gap:9px;}
+  .check-row{display:flex; align-items:center; gap:10px; font-size:15px; cursor:pointer;}
+  .check-row input{accent-color:var(--gold);}
+  .radio-row{display:flex; gap:16px; margin-top:2px; flex-wrap:wrap;}
+  .radio-row label.inline{display:flex; align-items:center; gap:6px; text-transform:none; letter-spacing:0; font-size:15px; color:var(--bone); margin:0; cursor:pointer; font-family:'EB Garamond',serif;}
+  .radio-row input{accent-color:var(--gold);}
+  .slider-row{display:flex; align-items:center; gap:10px;}
+  .slider-row input[type=range]{flex:1; accent-color:var(--gold);}
+  .slider-row span{font-size:13px; color:var(--muted); width:34px; text-align:right;}
+  .btn{width:100%; font-family:'Cinzel',serif; font-size:12.5px; letter-spacing:.1em; text-transform:uppercase; padding:12px 14px; border-radius:3px; border:1px solid var(--gold-dim); background:transparent; color:var(--gold); cursor:pointer; transition:all .2s ease;}
+  .btn:hover{background:rgba(198,161,91,0.1); box-shadow:var(--glow);}
+  .btn.primary{background:var(--gold); color:#1a1508; border-color:var(--gold); font-weight:600;}
+  .btn.primary:hover{box-shadow:0 0 18px rgba(198,161,91,.55);}
+  .btn-row{display:flex; gap:9px; margin-top:9px;}
+  .btn-row .btn{flex:1;}
+  .divider{height:1px; background:var(--hair); margin:20px 0;}
+  .meta{font-size:13px; color:var(--muted); line-height:1.6;}
+  .meta strong{color:var(--gold); font-weight:600;}
+  .stage{background:radial-gradient(ellipse at center,#151210 0%,#0a0908 75%); border:1px solid var(--hair); border-radius:4px; display:flex; align-items:center; justify-content:center; padding:16px; min-height:520px; transition:background .3s ease, border-color .3s ease;}
+  .stage.paper{background:radial-gradient(ellipse at center,#f5ecd6 0%,#e8dab8 100%); border-color:#c8b184;}
+  #sigilSvg{width:100%; max-width:560px; height:auto; display:block;}
+  .caption{text-align:center; margin-top:12px; color:var(--muted); font-style:italic; font-size:14px; min-height:20px;}
+  .caption b{color:var(--gold); font-style:normal;}
+  details{margin-top:18px;}
+  summary{font-family:'Cinzel',serif; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold-dim); cursor:pointer; padding:6px 0;}
+  .note{font-size:14.5px; line-height:1.65; color:var(--muted); margin-top:10px;}
+  .note strong{color:var(--bone);}
+  .note p{margin:0 0 10px;}
+  .stroke-anim{transition: stroke-dashoffset 1s cubic-bezier(.4,.1,.2,1);}
+  .fade-anim{transition: opacity .6s ease, transform .6s ease;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Selos & Símbolos</div>
+    <h1>Gerador de Selos</h1>
+    <p>Transforme uma intenção em símbolo: reduza a frase às suas letras essenciais e veja o desenho ganhar forma, traço por traço.</p>
+  </header>
+
+  <div class="layout">
+    <div class="panel">
+      <div class="field">
+        <label for="intent">Intenção</label>
+        <textarea id="intent">eu tenho coragem para recomeçar</textarea>
+      </div>
+
+      <div class="field">
+        <label>Estilo visual</label>
+        <div class="checks">
+          <label class="check-row"><input type="checkbox" id="pontoRiscado" checked> Ponto riscado (tinta preta, pontas em bolinha)</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Redução das letras</label>
+        <div class="checks">
+          <label class="check-row"><input type="checkbox" id="removeVowels" checked> Remover vogais</label>
+          <label class="check-row"><input type="checkbox" id="removeDup" checked> Remover letras repetidas</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Estrutura</label>
+        <div class="radio-row">
+          <label class="inline"><input type="radio" name="layout" value="grid" checked> Grade quadriculada</label>
+          <label class="inline"><input type="radio" name="layout" value="fusion"> Fusão no círculo</label>
+          <label class="inline"><input type="radio" name="layout" value="stave"> Bastão vertical</label>
+          <label class="inline"><input type="radio" name="layout" value="wheel"> Roda circular</label>
+        </div>
+      </div>
+
+      <div class="field" id="gridField">
+        <label>Tamanho da grade (N × N)</label>
+        <div class="slider-row"><input type="range" id="gridSize" min="3" max="8" step="1" value="5"><span id="gridSizeVal">5</span></div>
+      </div>
+
+      <div class="field" id="anchorField">
+        <label for="anchorLetter">Letra âncora (núcleo)</label>
+        <select id="anchorLetter" style="width:100%; background:var(--ink); border:1px solid var(--hair); color:var(--bone); font-family:'EB Garamond',serif; font-size:16px; padding:9px 10px; border-radius:3px;"></select>
+      </div>
+      <div class="field" id="anchorScaleField">
+        <label>Tamanho da letra âncora</label>
+        <div class="slider-row"><input type="range" id="anchorScale" min="5" max="11" step="0.5" value="8"><span id="anchorScaleVal">8.0</span></div>
+      </div>
+
+      <div class="field">
+        <label>Acabamento</label>
+        <div class="checks">
+          <label class="check-row"><input type="checkbox" id="mirror"> Espelhar ramos (dos dois lados)</label>
+          <label class="check-row"><input type="checkbox" id="smooth" checked> Suavizar juntas</label>
+          <label class="check-row"><input type="checkbox" id="closure" checked> Marcas de fecho (início/fim)</label>
+          <label class="check-row"><input type="checkbox" id="serifs" checked> Serifas nas pontas</label>
+          <label class="check-row"><input type="checkbox" id="ringLetters" checked> Combinar roda com a letra grande</label>
+          <label class="check-row"><input type="checkbox" id="cornerSymbols" checked> Símbolos relacionados à frase</label>
+          <label class="check-row"><input type="checkbox" id="squareCorners" checked> Preencher os cantos do quadrado</label>
+          <label class="check-row"><input type="checkbox" id="gridLines" checked> Mostrar linhas da grade</label>
+          <label class="check-row"><input type="checkbox" id="gridThread" checked> Linha de conexão entre letras</label>
+          <label class="check-row"><input type="checkbox" id="gridCircle" checked> Círculo inscrito na grade</label>
+          <label class="check-row"><input type="checkbox" id="vertexDots" checked> Pontos nas junções</label>
+          <label class="check-row"><input type="checkbox" id="animate" checked> Animar traçado ao gerar</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Quantidade de símbolos</label>
+        <div class="slider-row"><input type="range" id="symbolCount" min="0" max="14" step="1" value="6"><span id="symbolCountVal">6</span></div>
+      </div>
+
+      <div class="field">
+        <label>Espessura do traço</label>
+        <div class="slider-row"><input type="range" id="strokeW" min="2" max="9" step="0.5" value="3"><span id="strokeWVal">3.0</span></div>
+      </div>
+      <div class="field">
+        <label>Tamanho dos ramos</label>
+        <div class="slider-row"><input type="range" id="branchScale" min="0.6" max="1.4" step="0.05" value="1"><span id="branchScaleVal">1.0</span></div>
+      </div>
+      <div class="field">
+        <label>Organicidade (variação de ângulo)</label>
+        <div class="slider-row"><input type="range" id="jitter" min="0" max="18" step="1" value="3"><span id="jitterVal">3</span></div>
+      </div>
+
+      <button class="btn primary" id="genBtn">Gerar Selo</button>
+      <div class="btn-row"><button class="btn" id="rerollBtn">Novo Traçado</button></div>
+      <div class="btn-row">
+        <button class="btn" id="downloadSvg">Baixar SVG</button>
+        <button class="btn" id="downloadPng">Baixar PNG</button>
+      </div>
+
+      <div class="divider"></div>
+      <div class="meta" id="metaInfo">As letras usadas aparecerão aqui após gerar o selo.</div>
+
+      <details>
+        <summary>Como funciona</summary>
+        <div class="note">
+          <p>A frase é reduzida às letras essenciais (sem vogais, sem repetição), e cada letra vira uma marca derivada da sua própria forma — garfo, cunha, barra ou círculo — em vez de virar apenas um ponto ligado por uma linha reta.</p>
+          <p>Há quatro formas de organizar essas marcas: numa <strong>grade</strong> que preenche o quadrado inteiro, fundidas numa <strong>letra grande</strong> no centro, presas a um <strong>bastão</strong> vertical, ou distribuídas numa <strong>roda</strong> circular.</p>
+          <p>Letras como <strong>Y, E, F, K</strong> naturalmente viram garfos e tridentes; <strong>O, B, D, G, Q</strong> viram círculos; <strong>A, V, W, M</strong> viram cunhas e picos; <strong>H, T</strong> viram barras.</p>
+          <p>Para tatuagem: prefira traços mais grossos (6–9), ative "Suavizar" e "Serifas", e teste a versão em preto sólido antes de levar ao tatuador — ele vai adaptar a espessura à pele e ao tamanho final.</p>
+        </div>
+      </details>
+    </div>
+
+    <div>
+      <div class="stage"><svg id="sigilSvg" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg"></svg></div>
+      <div class="caption" id="caption"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const svg = document.getElementById('sigilSvg');
+  const vowels = new Set(["A","E","I","O","U"]);
+  let seed = Math.random()*1000;
+  let currentBeadTips = false;
+  let currentBg = '#0a0908';
+  let currentVertexDots = false;
+
+  const GLYPHS = {
+    A:{lines:[[[0,0],[-8,20]],[[0,0],[8,20]],[[-4,12],[4,12]]]},
+    B:{lines:[[[0,0],[0,24]]], circles:[{u:6,v:7,r:5},{u:6,v:17,r:5}]},
+    C:{arcs:[{s:[6,2],c:[-9,13],e:[6,24]}]},
+    D:{lines:[[[0,0],[0,24]]], arcs:[{s:[0,0],c:[15,12],e:[0,24]}]},
+    E:{lines:[[[0,0],[0,24]],[[0,0],[9,0]],[[0,12],[9,12]],[[0,24],[9,24]]]},
+    F:{lines:[[[0,0],[0,24]],[[0,0],[9,0]],[[0,12],[9,12]]]},
+    G:{circles:[{u:0,v:13,r:11}], lines:[[[11,15],[11,22],[3,22]]]},
+    H:{lines:[[[-6,0],[-6,24]],[[6,0],[6,24]],[[-6,12],[6,12]]]},
+    I:{lines:[[[0,0],[0,24]],[[-4,0],[4,0]],[[-4,24],[4,24]]]},
+    J:{lines:[[[4,0],[4,18]]], arcs:[{s:[4,18],c:[4,26],e:[-4,25]}]},
+    K:{lines:[[[0,0],[0,24]],[[0,12],[9,0]],[[0,12],[9,24]]]},
+    L:{lines:[[[0,0],[0,24]],[[0,24],[9,24]]]},
+    M:{lines:[[[-9,24],[-9,0],[0,14],[9,0],[9,24]]]},
+    N:{lines:[[[-7,24],[-7,0],[7,24],[7,0]]]},
+    O:{circles:[{u:0,v:13,r:12}]},
+    P:{lines:[[[0,0],[0,24]]], circles:[{u:6,v:6,r:6}]},
+    Q:{circles:[{u:0,v:11,r:10}], lines:[[[6,18],[13,26]]]},
+    R:{lines:[[[0,0],[0,24]],[[0,14],[9,24]]], circles:[{u:6,v:6,r:6}]},
+    S:{arcs:[{s:[7,2],c:[-9,7],e:[0,13]},{s:[0,13],c:[9,19],e:[-7,24]}]},
+    T:{lines:[[[-9,0],[9,0]],[[0,0],[0,24]]]},
+    U:{lines:[[[-7,0],[-7,16]],[[7,0],[7,16]]], arcs:[{s:[-7,16],c:[0,26],e:[7,16]}]},
+    V:{lines:[[[-9,0],[0,24]],[[9,0],[0,24]]]},
+    W:{lines:[[[-10,0],[-5,24],[0,6],[5,24],[10,0]]]},
+    X:{lines:[[[-8,0],[8,24]],[[8,0],[-8,24]]]},
+    Y:{lines:[[[-8,0],[0,12]],[[8,0],[0,12]],[[0,12],[0,24]]]},
+    Z:{lines:[[[-8,0],[8,0]],[[8,0],[-8,24]],[[-8,24],[8,24]]]}
+  };
+
+  function raysAround(bx,bv,r,count){
+    const out=[];
+    for(let i=0;i<count;i++){
+      const a = i*(2*Math.PI/count);
+      out.push([[bx,bv],[bx+r*Math.cos(a), bv+r*Math.sin(a)]]);
+    }
+    return out;
+  }
+  function squiggle(turns,amp,steps,vmax){
+    const pts=[];
+    for(let i=0;i<=steps;i++){
+      const t=i/steps, ang=t*turns*Math.PI*2;
+      pts.push([Math.sin(ang)*amp*(0.3+0.7*t), t*vmax]);
+    }
+    return pts;
+  }
+
+  const SYMBOLS = {
+    trident:{lines:[[[0,0],[0,14]],[[0,14],[-7,21]],[[0,14],[0,23]],[[0,14],[7,21]],[[-4,10],[4,10]]]},
+    arrow:{lines:[[[0,0],[0,20]],[[0,20],[-6,13]],[[0,20],[6,13]]]},
+    star:{lines:[[[0,0],[0,8]],[[-6,14],[6,14]],[[0,8],[0,20]],[[-4,9],[4,19]],[[4,9],[-4,19]]]},
+    cross:{lines:[[[0,0],[0,20]],[[-6,12],[6,12]]]},
+    heart:{lines:[[[0,0],[0,6]],[[-8,11],[0,23]],[[8,11],[0,23]]],
+      arcs:[{s:[0,6],c:[-10,2],e:[-8,11]},{s:[0,6],c:[10,2],e:[8,11]}]},
+    key:{lines:[[[0,10],[0,20]],[[0,20],[5,20]],[[0,16],[4,16]]], circles:[{u:0,v:6,r:5}]},
+    shield:{lines:[[[-7,2],[7,2],[7,10],[0,22],[-7,10],[-7,2]]]},
+    sword:{lines:[[[0,0],[0,22]],[[-6,6],[6,6]]]},
+    spiral:{lines:[squiggle(2.2,9,16,24)]},
+    wave:{lines:[squiggle(1.3,7,10,22)]},
+    moon:{arcs:[{s:[3,3],c:[11,13],e:[3,23]},{s:[3,3],c:[-3,13],e:[3,23]}]},
+    sun:{lines:[[[0,0],[0,8]]].concat(raysAround(0,15,7,6))}
+  };
+
+  const KEYWORD_MAP = [
+    [['amor','amar','paixao','romance'],'heart'],
+    [['dinheiro','prosperidade','riqueza','abundancia','financeiro'],'key'],
+    [['protecao','proteger','seguranca','blindagem','blindar'],'shield'],
+    [['coragem','forca','poder','vitoria','vencer'],'sword'],
+    [['caminho','abrir','oportunidade','sorte','portas'],'arrow'],
+    [['cura','saude','equilibrio','curar'],'spiral'],
+    [['paz','calma','tranquilidade','serenidade'],'wave'],
+    [['noite','sonho','intuicao','misterio'],'moon'],
+    [['luz','sol','energia','sucesso','brilho'],'sun'],
+    [['trabalho','emprego','carreira','estudo'],'star'],
+    [['fechar','bloquear','trancar','afastar'],'cross'],
+    [['guerra','luta','combate','poder'],'trident']
+  ];
+  function keywordSymbols(rawText){
+    const norm = rawText.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+    const found = [];
+    KEYWORD_MAP.forEach(([words,sym])=>{
+      if(words.some(w=>norm.includes(w)) && !found.includes(sym)) found.push(sym);
+    });
+    return found;
+  }
+  function pickSymbols(rawText, count){
+    const matched = keywordSymbols(rawText);
+    const fallback = ['trident','arrow','star','cross','sun','moon'];
+    const pool = matched.length ? matched.concat(fallback) : fallback;
+    const out = [];
+    for(let i=0;i<count;i++) out.push(pool[i % pool.length]);
+    return out;
+  }
+
+  function rand(n){ const x = Math.sin(n*12.9898 + seed*78.233)*43758.5453; return x-Math.floor(x); }
+  function normalize(text){
+    return text.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z]/g,'').split('');
+  }
+  function reduceLetters(letters, rv, rd){
+    let out = letters.slice();
+    if(rv) out = out.filter(l=>!vowels.has(l));
+    if(rd){ const seen=new Set(); out = out.filter(l=>{ if(seen.has(l)) return false; seen.add(l); return true; }); }
+    return out;
+  }
+  function svgEl(tag, attrs){
+    const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for(const k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  function rotateAbout(pt, center, deg){
+    const rad = deg*Math.PI/180;
+    const dx = pt.x-center.x, dy = pt.y-center.y;
+    return { x: center.x + dx*Math.cos(rad) - dy*Math.sin(rad), y: center.y + dx*Math.sin(rad) + dy*Math.cos(rad) };
+  }
+  function tp(u,v, attach, O, T, scale){
+    return { x: attach.x + T.x*u*scale + O.x*v*scale, y: attach.y + T.y*u*scale + O.y*v*scale };
+  }
+
+  // Flatten a letter's strokes (lines/arcs/circles) into straight segments
+  // in global space, so we can walk along the letter's own ink like a path.
+  function flattenGlyph(letter, attach, O, T, scale){
+    const g = GLYPHS[letter];
+    const segs = [];
+    if(!g) return segs;
+    (g.lines||[]).forEach(line=>{
+      const pts = line.map(([u,v]) => tp(u,v,attach,O,T,scale));
+      for(let i=0;i<pts.length-1;i++) segs.push([pts[i],pts[i+1]]);
+    });
+    (g.arcs||[]).forEach(a=>{
+      const s=tp(a.s[0],a.s[1],attach,O,T,scale), c=tp(a.c[0],a.c[1],attach,O,T,scale), e=tp(a.e[0],a.e[1],attach,O,T,scale);
+      let prev=s;
+      for(let i=1;i<=8;i++){
+        const t=i/8;
+        const x=(1-t)*(1-t)*s.x+2*(1-t)*t*c.x+t*t*e.x;
+        const y=(1-t)*(1-t)*s.y+2*(1-t)*t*c.y+t*t*e.y;
+        segs.push([prev,{x,y}]); prev={x,y};
+      }
+    });
+    (g.circles||[]).forEach(c=>{
+      const center = tp(c.u,c.v,attach,O,T,scale);
+      const r = c.r*scale;
+      let prev = {x:center.x+r, y:center.y};
+      for(let i=1;i<=24;i++){
+        const t=i/24*Math.PI*2;
+        const x=center.x+r*Math.cos(t), y=center.y+r*Math.sin(t);
+        segs.push([prev,{x,y}]); prev={x,y};
+      }
+    });
+    return segs;
+  }
+  function segCumLengths(segs){
+    const cum=[0];
+    segs.forEach(([p1,p2])=>{ cum.push(cum[cum.length-1] + Math.hypot(p2.x-p1.x,p2.y-p1.y)); });
+    return cum;
+  }
+  function pointAtFraction(segs, cum, frac){
+    const total = cum[cum.length-1] || 1;
+    const target = Math.min(Math.max(frac,0),1) * total;
+    let idx = 0;
+    while(idx < segs.length-1 && cum[idx+1] < target) idx++;
+    const [p1,p2] = segs[idx];
+    const segLen = (cum[idx+1]-cum[idx]) || 1;
+    const t = (target-cum[idx])/segLen;
+    const x = p1.x + (p2.x-p1.x)*t, y = p1.y + (p2.y-p1.y)*t;
+    const dx = p2.x-p1.x, dy = p2.y-p1.y;
+    const len = Math.hypot(dx,dy) || 1;
+    return {x,y,tx:dx/len,ty:dy/len};
+  }
+  function updateAnchorSelect(used){
+    const sel = document.getElementById('anchorLetter');
+    const prev = sel.value;
+    sel.innerHTML = '';
+    used.forEach(l=>{
+      const o = document.createElement('option'); o.value=l; o.textContent=l;
+      sel.appendChild(o);
+    });
+    if(used.includes(prev)) sel.value = prev;
+    else if(used.length) sel.value = used[0];
+  }
+  function buildInterleavedPool(usedLetters, symbolTypes){
+    const pool = [];
+    const maxLen = Math.max(usedLetters.length, symbolTypes.length);
+    for(let i=0;i<maxLen;i++){
+      if(i < usedLetters.length) pool.push({type:'letter', value:usedLetters[i]});
+      if(i < symbolTypes.length) pool.push({type:'symbol', value:symbolTypes[i]});
+    }
+    return pool;
+  }
+  function boustrophedonOrder(N){
+    const order = [];
+    for(let j=0;j<N;j++){
+      if(j%2===0){ for(let i=0;i<N;i++) order.push([i,j]); }
+      else { for(let i=N-1;i>=0;i--) order.push([i,j]); }
+    }
+    return order;
+  }
+
+  // Elements that should animate are collected in draw order, each tagged
+  // with a "step" index so we can stagger their reveal.
+  let animQueue = [];
+
+  function markAnimated(el, step){
+    animQueue.push({el, step});
+    return el;
+  }
+
+  function drawGlyph(container, letter, attach, O, T, scale, jitterDeg, strokeW, smooth, serifs, color, step){
+    const g = GLYPHS[letter] || SYMBOLS[letter];
+    if(!g) return;
+    const jit = (rand(letter.charCodeAt(0)*3 + attach.x + attach.y + O.x*7) - 0.5) * 2 * jitterDeg;
+
+    (g.lines||[]).forEach(line=>{
+      const pts = line.map(([u,v]) => rotateAbout(tp(u,v,attach,O,T,scale), attach, jit));
+      let d = `M ${pts[0].x},${pts[0].y} `;
+      for(let i=1;i<pts.length;i++) d += `L ${pts[i].x},${pts[i].y} `;
+      const p = svgEl('path',{d, fill:'none', stroke:color, 'stroke-width':strokeW,
+        'stroke-linecap': smooth?'round':'square', 'stroke-linejoin': smooth?'round':'miter'});
+      container.appendChild(p);
+      markAnimated(p, step);
+      if(currentVertexDots && pts.length > 2){
+        for(let vi=1; vi<pts.length-1; vi++){
+          const dot = svgEl('circle',{cx:pts[vi].x, cy:pts[vi].y, r:strokeW*0.55, fill:color, stroke:'none'});
+          container.appendChild(dot);
+          markAnimated(dot, step+0.25);
+        }
+      }
+      if(serifs){
+        const lastLocal = line[line.length-1];
+        if(lastLocal[1] >= 19){
+          const tipG = pts[pts.length-1];
+          if(currentBeadTips){
+            const bead = svgEl('circle',{cx:tipG.x, cy:tipG.y, r:strokeW*1.5, fill:'none', stroke:color, 'stroke-width':strokeW*0.65});
+            container.appendChild(bead);
+            markAnimated(bead, step+0.4);
+          } else {
+            const prevG = pts[pts.length-2] || pts[0];
+            let ang = Math.atan2(tipG.y-prevG.y, tipG.x-prevG.x) + Math.PI/2;
+            const tl = strokeW*1.6;
+            const tick = svgEl('line',{
+              x1:tipG.x-Math.cos(ang)*tl, y1:tipG.y-Math.sin(ang)*tl,
+              x2:tipG.x+Math.cos(ang)*tl, y2:tipG.y+Math.sin(ang)*tl,
+              stroke:color, 'stroke-width':strokeW*0.8, 'stroke-linecap':'round'
+            });
+            container.appendChild(tick);
+            markAnimated(tick, step+0.4);
+          }
+        }
+      }
+    });
+
+    (g.circles||[]).forEach(c=>{
+      const center = rotateAbout(tp(c.u,c.v,attach,O,T,scale), attach, jit);
+      const circ = svgEl('circle',{cx:center.x, cy:center.y, r:c.r*scale, fill:'none', stroke:color, 'stroke-width':strokeW*0.85});
+      container.appendChild(circ);
+      markAnimated(circ, step+0.2);
+    });
+
+    (g.arcs||[]).forEach(a=>{
+      const s = rotateAbout(tp(a.s[0],a.s[1],attach,O,T,scale), attach, jit);
+      const c = rotateAbout(tp(a.c[0],a.c[1],attach,O,T,scale), attach, jit);
+      const e = rotateAbout(tp(a.e[0],a.e[1],attach,O,T,scale), attach, jit);
+      const p = svgEl('path',{d:`M ${s.x},${s.y} Q ${c.x},${c.y} ${e.x},${e.y}`, fill:'none', stroke:color, 'stroke-width':strokeW,
+        'stroke-linecap': smooth?'round':'square'});
+      container.appendChild(p);
+      markAnimated(p, step);
+    });
+  }
+
+  function render(){
+    const raw = document.getElementById('intent').value;
+    const rv = document.getElementById('removeVowels').checked;
+    const rd = document.getElementById('removeDup').checked;
+    const layout = document.querySelector('input[name="layout"]:checked').value;
+    const mirror = document.getElementById('mirror').checked;
+    const smooth = document.getElementById('smooth').checked;
+    const closure = document.getElementById('closure').checked;
+    const serifs = document.getElementById('serifs').checked;
+    const ringLetters = document.getElementById('ringLetters').checked;
+    const cornerSymbols = document.getElementById('cornerSymbols').checked;
+    const symbolCount = parseInt(document.getElementById('symbolCount').value, 10);
+    const vertexDots = document.getElementById('vertexDots').checked;
+    currentVertexDots = vertexDots;
+    const gridSize = parseInt(document.getElementById('gridSize').value, 10);
+    const gridLines = document.getElementById('gridLines').checked;
+    const gridThread = document.getElementById('gridThread').checked;
+    const gridCircle = document.getElementById('gridCircle').checked;
+    const pontoRiscado = document.getElementById('pontoRiscado').checked;
+    currentBeadTips = pontoRiscado;
+    const doAnimate = document.getElementById('animate').checked;
+    const strokeW = parseFloat(document.getElementById('strokeW').value);
+    const branchScale = parseFloat(document.getElementById('branchScale').value);
+    const jitterDeg = parseFloat(document.getElementById('jitter').value);
+
+    const anchorScaleVal = parseFloat(document.getElementById('anchorScale').value);
+
+    const letters = normalize(raw);
+    const used = reduceLetters(letters, rv, rd);
+    updateAnchorSelect(used);
+    const anchorLetter = document.getElementById('anchorLetter').value || used[0];
+
+    document.getElementById('anchorField').style.display = layout==='fusion' ? '' : 'none';
+    document.getElementById('anchorScaleField').style.display = layout==='fusion' ? '' : 'none';
+    document.getElementById('gridField').style.display = layout==='grid' ? '' : 'none';
+
+    svg.innerHTML = '';
+    animQueue = [];
+    const defs = svgEl('defs',{});
+    const filter = svgEl('filter',{id:'glow', x:'-50%', y:'-50%', width:'200%', height:'200%'});
+    filter.appendChild(svgEl('feGaussianBlur',{stdDeviation:'3', result:'blur'}));
+    const merge = svgEl('feMerge',{});
+    merge.appendChild(svgEl('feMergeNode',{in:'blur'}));
+    merge.appendChild(svgEl('feMergeNode',{in:'SourceGraphic'}));
+    filter.appendChild(merge);
+    defs.appendChild(filter);
+    svg.appendChild(defs);
+
+    const captionEl = document.getElementById('caption');
+    const metaEl = document.getElementById('metaInfo');
+
+    if(used.length === 0){
+      captionEl.textContent = 'Nenhuma letra restou — tente outra frase ou desmarque uma opção.';
+      return;
+    }
+
+    const cx=300, cy=300;
+    const bgColor = pontoRiscado ? '#f1e7cf' : '#0a0908';
+    currentBg = bgColor;
+    if(pontoRiscado){
+      svg.appendChild(svgEl('rect',{x:0,y:0,width:600,height:600, fill:bgColor}));
+      svg.style.background = bgColor;
+      document.querySelector('.stage').classList.add('paper');
+    } else {
+      svg.style.background = 'transparent';
+      document.querySelector('.stage').classList.remove('paper');
+    }
+    const glow = pontoRiscado ? svgEl('g',{opacity:'1'}) : svgEl('g',{filter:'url(#glow)', opacity:'0.55'});
+    const main = svgEl('g',{});
+    const color = pontoRiscado ? '#1c1712' : '#e6c988';
+    const colorSharp = pontoRiscado ? '#1c1712' : '#f3dfa8';
+
+    if(layout === 'grid'){
+      const N = gridSize;
+      const margin = 68;
+      const span = 600 - margin*2;
+      const cell = span / N;
+      const symTypes = pickSymbols(raw, Math.max(symbolCount,1));
+      const pool = buildInterleavedPool(used, symTypes);
+
+      if(pool.length === 0){
+        captionEl.textContent = 'Nenhuma letra ou símbolo disponível — ajuste a frase ou as opções.';
+        return;
+      }
+
+      // faint grid lines behind everything
+      if(gridLines){
+        for(let i=0;i<=N;i++){
+          const p = margin + i*cell;
+          main.appendChild(svgEl('line',{x1:p,y1:margin,x2:p,y2:600-margin, stroke:colorSharp, 'stroke-width':0.6, opacity:0.25}));
+          main.appendChild(svgEl('line',{x1:margin,y1:p,x2:600-margin,y2:p, stroke:colorSharp, 'stroke-width':0.6, opacity:0.25}));
+        }
+      }
+
+      const order = boustrophedonOrder(N);
+      const scale = branchScale * (cell/46);
+      const threadPts = [];
+
+      order.forEach(([i,j],k)=>{
+        const item = pool[k % pool.length];
+        const rep = Math.floor(k / pool.length);
+        const attach = { x: margin + (i+0.5)*cell, y: margin + (j+0.5)*cell };
+        const orient = (i+j+rep) % 4;
+        let O,T;
+        if(orient===0){ O={x:0,y:-1}; T={x:1,y:0}; }
+        else if(orient===1){ O={x:1,y:0}; T={x:0,y:1}; }
+        else if(orient===2){ O={x:0,y:1}; T={x:-1,y:0}; }
+        else { O={x:-1,y:0}; T={x:0,y:-1}; }
+
+        const step = 1 + k*0.12;
+        [ [glow,color,strokeW], [main,colorSharp,strokeW*0.55] ].forEach(([layer,col,sw])=>{
+          drawGlyph(layer, item.value, attach, O, T, scale, jitterDeg, sw, smooth, serifs, col, step);
+        });
+        if(item.type==='letter') threadPts.push(attach);
+      });
+
+      if(gridThread && threadPts.length>1){
+        let d = `M ${threadPts[0].x},${threadPts[0].y} `;
+        for(let i=1;i<threadPts.length;i++) d += `L ${threadPts[i].x},${threadPts[i].y} `;
+        const thread = svgEl('path',{d, fill:'none', stroke:colorSharp, 'stroke-width':strokeW*0.35, opacity:0.55,
+          'stroke-linecap':'round', 'stroke-linejoin':'round'});
+        main.appendChild(thread);
+        markAnimated(thread, 0.1);
+      }
+
+      if(gridCircle){
+        const rC = span/2 * 0.985;
+        [glow,main].forEach(layer=>{
+          const ring = svgEl('circle',{cx, cy, r:rC, fill:'none',
+            stroke:layer===glow?color:colorSharp, 'stroke-width':(layer===glow?strokeW:strokeW*0.55)*0.65});
+          layer.appendChild(ring);
+          markAnimated(ring, 0);
+        });
+      }
+
+      if(closure){
+        [glow,main].forEach(layer=>{
+          const frame = svgEl('rect',{x:margin, y:margin, width:span, height:span, fill:'none',
+            stroke:layer===glow?color:colorSharp, 'stroke-width':(layer===glow?strokeW:strokeW*0.55)*0.6});
+          layer.appendChild(frame);
+          markAnimated(frame, 0);
+        });
+      }
+
+    } else if(layout === 'stave'){
+      const top=140, bottom=460;
+      const staveLen = bottom-top;
+      const N = used.length;
+      const spacing = staveLen/(N+1);
+      const scale = branchScale * Math.min(1.15, Math.max(0.42, spacing/34));
+
+      const spineD = smooth
+        ? `M ${cx},${top} Q ${cx+10},${(top+bottom)/2} ${cx},${bottom}`
+        : `M ${cx},${top} L ${cx},${bottom}`;
+      [glow, main].forEach(layer=>{
+        const sp = svgEl('path',{d:spineD, fill:'none', stroke: layer===glow?color:colorSharp,
+          'stroke-width': layer===glow?strokeW:strokeW*0.55, 'stroke-linecap':'round'});
+        layer.appendChild(sp);
+        markAnimated(sp, 0);
+      });
+
+      used.forEach((letter,i)=>{
+        const t = (i+1)/(N+1);
+        const ay = top + staveLen*t;
+        const attach = {x:cx, y:ay};
+        const T = {x:0,y:1};
+        const step = 1 + i;
+        if(mirror){
+          [1,-1].forEach(side=>{
+            const O = {x:side,y:0};
+            [ [glow,color,strokeW], [main,colorSharp,strokeW*0.55] ].forEach(([layer,col,sw])=>{
+              drawGlyph(layer, letter, attach, O, T, scale, jitterDeg, sw, smooth, serifs, col, step);
+            });
+          });
+        } else {
+          const side = i%2===0 ? 1 : -1;
+          const O = {x:side,y:0};
+          [ [glow,color,strokeW], [main,colorSharp,strokeW*0.55] ].forEach(([layer,col,sw])=>{
+            drawGlyph(layer, letter, attach, O, T, scale, jitterDeg, sw, smooth, serifs, col, step);
+          });
+        }
+      });
+
+      if(closure){
+        [glow,main].forEach(layer=>{
+          const c1 = svgEl('circle',{cx, cy:top-10, r:6, fill:'none', stroke:layer===glow?color:colorSharp, 'stroke-width':strokeW*0.5});
+          const l1 = svgEl('line',{x1:cx-10,y1:bottom+10,x2:cx+10,y2:bottom+10, stroke:layer===glow?color:colorSharp, 'stroke-width':strokeW*0.5, 'stroke-linecap':'round'});
+          layer.appendChild(c1); layer.appendChild(l1);
+          markAnimated(c1, 0.5); markAnimated(l1, N+1.5);
+        });
+      }
+
+    } else if(layout === 'fusion'){
+      const R0 = 235;
+      const anchorScaleFinal = anchorScaleVal;
+
+      // ring of containment
+      [glow, main].forEach(layer=>{
+        const ring = svgEl('circle',{cx, cy, r:R0, fill:'none', stroke: layer===glow?color:colorSharp,
+          'stroke-width': (layer===glow?strokeW:strokeW*0.55)*0.7, opacity: layer===glow?0.7:0.9});
+        layer.appendChild(ring);
+        markAnimated(ring, 0);
+      });
+
+      // anchor letter, big, centered
+      const attachA = {x:cx, y:cy - 12*anchorScaleFinal};
+      const OA = {x:0,y:1}, TA = {x:1,y:0};
+      [ [glow,color,strokeW*1.25], [main,colorSharp,strokeW*0.7] ].forEach(([layer,col,sw])=>{
+        drawGlyph(layer, anchorLetter, attachA, OA, TA, anchorScaleFinal, jitterDeg*0.4, sw, smooth, false, col, 0);
+      });
+
+      // remaining letters: either fused onto the anchor's own strokes,
+      // or distributed around the ring (roda) while the anchor stays big and central
+      let removedAnchor = false;
+      const remaining = used.filter(l=>{
+        if(l===anchorLetter && !removedAnchor){ removedAnchor = true; return false; }
+        return true;
+      });
+      const k = remaining.length;
+
+      if(k && ringLetters){
+        remaining.forEach((letter,i)=>{
+          const theta = -Math.PI/2 + i*(2*Math.PI/k);
+          const attach = {x:cx+R0*Math.cos(theta), y:cy+R0*Math.sin(theta)};
+          const O = {x:Math.cos(theta), y:Math.sin(theta)};
+          const T = {x:-Math.sin(theta), y:Math.cos(theta)};
+          const scale = branchScale * 1.05;
+          const step = 1 + i;
+          [ [glow,color,strokeW], [main,colorSharp,strokeW*0.55] ].forEach(([layer,col,sw])=>{
+            drawGlyph(layer, letter, attach, O, T, scale, jitterDeg, sw, smooth, serifs, col, step);
+          });
+        });
+      } else if(k){
+        const segs = flattenGlyph(anchorLetter, attachA, OA, TA, anchorScaleFinal);
+        const cum = segCumLengths(segs);
+        remaining.forEach((letter,i)=>{
+          const jitterFrac = (rand(i*31+7) - 0.5) * (0.5/(k+1));
+          const frac = (i+1)/(k+1) + jitterFrac;
+          const pf = pointAtFraction(segs, cum, frac);
+          const attach = {x:pf.x, y:pf.y};
+          const T = {x:pf.tx, y:pf.ty};
+          const sign = (i%2===0) ? 1 : -1;
+          const O = {x:-pf.ty*sign, y:pf.tx*sign};
+          const scale = branchScale * 1.15;
+          const step = 1 + i;
+          [ [glow,color,strokeW], [main,colorSharp,strokeW*0.55] ].forEach(([layer,col,sw])=>{
+            drawGlyph(layer, letter, attach, O, T, scale, jitterDeg, sw, smooth, serifs, col, step);
+          });
+        });
+      }
+
+      if(cornerSymbols && symbolCount > 0){
+        const symTypes = pickSymbols(raw, symbolCount);
+        const offset = (ringLetters && k) ? Math.PI/k : 0; // interleave with ring letters when present
+        symTypes.forEach((sym,i)=>{
+          const theta = -Math.PI/2 + offset + i*(2*Math.PI/symbolCount);
+          const rC = R0 + 14;
+          const attach = {x:cx+rC*Math.cos(theta), y:cy+rC*Math.sin(theta)};
+          const O = {x:Math.cos(theta), y:Math.sin(theta)};
+          const T = {x:-Math.sin(theta), y:Math.cos(theta)};
+          [ [glow,color,strokeW*0.85], [main,colorSharp,strokeW*0.48] ].forEach(([layer,col,sw])=>{
+            drawGlyph(layer, sym, attach, O, T, branchScale*0.95, jitterDeg*0.5, sw, smooth, false, col, 0.3+i*0.05);
+          });
+        });
+      }
+
+      if(closure){
+        const p0 = {x:cx, y:cy-R0};
+        [glow,main].forEach(layer=>{
+          const c1 = svgEl('circle',{cx:p0.x, cy:p0.y, r:6, fill:'none', stroke:layer===glow?color:colorSharp, 'stroke-width':strokeW*0.5});
+          layer.appendChild(c1);
+          markAnimated(c1, 0.5);
+        });
+      }
+
+    } else {
+      const R0 = 130;
+      const N = used.length;
+      const circumference = 2*Math.PI*R0;
+      const spacing = circumference/N;
+      const scale = branchScale * Math.min(1.1, Math.max(0.4, spacing/34));
+
+      [glow, main].forEach(layer=>{
+        const ring = svgEl('circle',{cx, cy, r:R0, fill:'none', stroke: layer===glow?color:colorSharp,
+          'stroke-width': layer===glow?strokeW:strokeW*0.55});
+        layer.appendChild(ring);
+        markAnimated(ring, 0);
+      });
+
+      used.forEach((letter,i)=>{
+        const theta = -Math.PI/2 + i*(2*Math.PI/N);
+        const attach = {x:cx+R0*Math.cos(theta), y:cy+R0*Math.sin(theta)};
+        const O = {x:Math.cos(theta), y:Math.sin(theta)};
+        const T = {x:-Math.sin(theta), y:Math.cos(theta)};
+        const step = 1 + i;
+        const sides = mirror ? [1,-1] : [1];
+        sides.forEach(sgn=>{
+          const Ou = sgn===1 ? O : {x:-O.x,y:-O.y};
+          [ [glow,color,strokeW], [main,colorSharp,strokeW*0.55] ].forEach(([layer,col,sw])=>{
+            drawGlyph(layer, letter, attach, Ou, T, scale, jitterDeg, sw, smooth, serifs, col, step);
+          });
+        });
+      });
+
+      if(cornerSymbols && symbolCount > 0){
+        const symTypes = pickSymbols(raw, symbolCount);
+        const offsetW = N ? Math.PI/N : 0;
+        symTypes.forEach((sym,i)=>{
+          const theta = -Math.PI/2 + offsetW + i*(2*Math.PI/symbolCount);
+          const rC = R0 + 14;
+          const attach = {x:cx+rC*Math.cos(theta), y:cy+rC*Math.sin(theta)};
+          const O = {x:Math.cos(theta), y:Math.sin(theta)};
+          const T = {x:-Math.sin(theta), y:Math.cos(theta)};
+          [ [glow,color,strokeW*0.85], [main,colorSharp,strokeW*0.48] ].forEach(([layer,col,sw])=>{
+            drawGlyph(layer, sym, attach, O, T, branchScale*0.9, jitterDeg*0.5, sw, smooth, false, col, 0.3+i*0.05);
+          });
+        });
+      }
+
+      if(closure){
+        const p0 = {x:cx, y:cy-R0};
+        [glow,main].forEach(layer=>{
+          const c1 = svgEl('circle',{cx:p0.x, cy:p0.y, r:6, fill:'none', stroke:layer===glow?color:colorSharp, 'stroke-width':strokeW*0.5});
+          layer.appendChild(c1);
+          markAnimated(c1, 0.5);
+        });
+      }
+    }
+
+    if(layout !== 'grid' && document.getElementById('squareCorners').checked){
+      const margin = 85;
+      const corners = [
+        {x:margin, y:margin}, {x:600-margin, y:margin},
+        {x:margin, y:600-margin}, {x:600-margin, y:600-margin}
+      ];
+      const cornerSymTypes = pickSymbols(raw, 4 + symbolCount).slice(symbolCount);
+      corners.forEach((pt,i)=>{
+        const dx = pt.x-cx, dy = pt.y-cy;
+        const len = Math.hypot(dx,dy) || 1;
+        const O = {x:dx/len, y:dy/len};
+        const T = {x:-O.y, y:O.x};
+        [ [glow,color,strokeW*0.95], [main,colorSharp,strokeW*0.52] ].forEach(([layer,col,sw])=>{
+          drawGlyph(layer, cornerSymTypes[i], pt, O, T, branchScale*1.55, jitterDeg*0.6, sw, smooth, false, col, 0.6+i*0.05);
+        });
+      });
+    }
+
+    svg.appendChild(glow);
+    svg.appendChild(main);
+
+    if(doAnimate){
+      animQueue.forEach(({el, step})=>{
+        const tag = el.tagName;
+        if(tag === 'path' || tag === 'line'){
+          const len = el.getTotalLength ? el.getTotalLength() : 60;
+          el.style.strokeDasharray = len;
+          el.style.strokeDashoffset = len;
+          el.classList.add('stroke-anim');
+          el.style.transitionDelay = (step*70) + 'ms';
+        } else if(tag === 'circle'){
+          el.style.opacity = 0;
+          el.style.transformOrigin = el.getAttribute('cx')+'px '+el.getAttribute('cy')+'px';
+          el.style.transform = 'scale(0.4)';
+          el.classList.add('fade-anim');
+          el.style.transitionDelay = (step*70) + 'ms';
+        }
+      });
+      requestAnimationFrame(()=>{
+        requestAnimationFrame(()=>{
+          animQueue.forEach(({el})=>{
+            const tag = el.tagName;
+            if(tag==='path'||tag==='line'){ el.style.strokeDashoffset = 0; }
+            else if(tag==='circle'){ el.style.opacity=1; el.style.transform='scale(1)'; }
+          });
+        });
+      });
+    }
+
+    captionEl.innerHTML = `Selo traçado a partir de <b>${used.length}</b> letra${used.length>1?'s':''}.`;
+    metaEl.innerHTML = `<strong>Frase:</strong> "${raw.trim()}"<br><strong>Letras usadas:</strong> ${used.join(' · ')}`;
+  }
+
+  function download(filename, content, mime){
+    const blob = new Blob([content], {type:mime});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href=url; a.download=filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  document.getElementById('genBtn').addEventListener('click', ()=>{ seed = Math.random()*1000; render(); });
+  document.getElementById('rerollBtn').addEventListener('click', ()=>{ seed = Math.random()*1000; render(); });
+  ['strokeW','branchScale','jitter','symbolCount','gridSize'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', e=>{
+      const isInt = (id==='jitter' || id==='symbolCount' || id==='gridSize');
+      document.getElementById(id+'Val').textContent = parseFloat(e.target.value).toFixed(isInt?0:1);
+      render();
+    });
+  });
+  ['removeVowels','removeDup','mirror','smooth','closure','serifs','animate','ringLetters','cornerSymbols','pontoRiscado','vertexDots','squareCorners','gridLines','gridThread','gridCircle'].forEach(id=>{
+    document.getElementById(id).addEventListener('change', render);
+  });
+  document.querySelectorAll('input[name="layout"]').forEach(r=>r.addEventListener('change', render));
+  document.getElementById('anchorLetter').addEventListener('change', render);
+  document.getElementById('anchorScale').addEventListener('input', e=>{
+    document.getElementById('anchorScaleVal').textContent = parseFloat(e.target.value).toFixed(1);
+    render();
+  });
+
+  document.getElementById('downloadSvg').addEventListener('click', ()=>{
+    const serializer = new XMLSerializer();
+    let source = serializer.serializeToString(svg);
+    if(!source.match(/^<svg[^>]+xmlns="http:\/\/www\.w3\.org\/2000\/svg"/)){
+      source = source.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+    }
+    source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+    download('selo.svg', source, 'image/svg+xml;charset=utf-8');
+  });
+  document.getElementById('downloadPng').addEventListener('click', ()=>{
+    const serializer = new XMLSerializer();
+    const source = serializer.serializeToString(svg);
+    const svg64 = btoa(unescape(encodeURIComponent(source)));
+    const image64 = 'data:image/svg+xml;base64,' + svg64;
+    const img = new Image();
+    img.onload = function(){
+      const scale=2;
+      const canvas = document.createElement('canvas');
+      canvas.width=600*scale; canvas.height=600*scale;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle=currentBg; ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.scale(scale,scale); ctx.drawImage(img,0,0);
+      canvas.toBlob(blob=>{
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href=url; a.download='selo.png';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+    };
+    img.src = image64;
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
