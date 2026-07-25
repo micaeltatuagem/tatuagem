@@ -1,0 +1,68 @@
+/* ===========================================================
+   nav-mobile.css — menu hambúrguer para mobile, compartilhado
+   por todas as páginas do site. Convive com o CSS de cada
+   página: só assume o controle do .nav-links abaixo de 760px.
+   =========================================================== */
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: inherit;
+  flex-shrink: 0;
+}
+.nav-toggle svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+.nav-toggle .ico-x { display: none; }
+.nav-toggle[aria-expanded="true"] .ico-bars { display: none; }
+.nav-toggle[aria-expanded="true"] .ico-x { display: block; }
+
+@media (max-width: 760px) {
+  nav {
+    position: sticky;
+    top: 0;
+  }
+  .nav-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+  }
+
+  nav .nav-links, nav .site-nav-links {
+    display: none;
+    flex-direction: column !important;
+    gap: 0 !important;
+    position: fixed !important;
+    top: var(--nav-h, 58px);
+    left: 0;
+    right: 0;
+    max-height: calc(100vh - var(--nav-h, 58px));
+    overflow-y: auto;
+    background: var(--bg, var(--surface, #0a0908));
+    border-top: 1px solid var(--border, var(--hair, rgba(255,255,255,.08)));
+    padding: .4rem 0 !important;
+    white-space: normal !important;
+    z-index: 55;
+    box-shadow: 0 12px 24px rgba(0,0,0,.4);
+  }
+  nav.nav-open .nav-links, nav.nav-open .site-nav-links { display: flex !important; }
+
+  nav .nav-links li, nav .site-nav-links li { width: 100%; flex-shrink: 1 !important; }
+
+  /* dropdown mostra tudo, inclusive itens escondidos na barra horizontal */
+  nav .nav-links li.hide-sm, nav .site-nav-links li.hide-sm { display: list-item !important; }
+
+  nav .nav-links a, nav .site-nav-links a {
+    display: block;
+    padding: 13px 1.5rem !important;
+    border-bottom: 1px solid var(--border, var(--hair, rgba(255,255,255,.06)));
+    font-size: .92rem !important;
+  }
+  nav .nav-links li:last-child a, nav .site-nav-links li:last-child a { border-bottom: none; }
+}

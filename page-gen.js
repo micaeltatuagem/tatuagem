@@ -143,9 +143,13 @@ ${body}
     <li><a href="/flash.html">Flash</a></li>
     <li><a href="/aerografia.html">Aerografia</a></li>
     <li><a href="/preview-tatuagem.html">Criar</a></li>
+    <li><a href="/gerador-de-selos.html">Selos</a></li>
+    <li><a href="/guia.html">Guia</a></li>
+    <li><a href="/deriva.html">Deriva</a></li>
     <li class="hide-sm"><a href="/fisiologia-da-tatuagem.html">Cuidados</a></li>
     <li><a href="/index.html#promocoes" class="destaque">Promoções</a></li>
     <li class="hide-sm"><a href="/index.html#localizacao">Localização</a></li>
+    <li><a href="/reserva.html">Reserva</a></li>
     <li><a href="/index.html#contato">Contato</a></li>
   </ul>
 </nav>`;
@@ -183,6 +187,7 @@ ${body}
 <meta name="twitter:image" content="${cfg.heroImg}">${breadcrumbSchema}${faqSchema}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="/nav-mobile.css">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>${SHARED_STYLE}</style>`;
   }
@@ -278,6 +283,7 @@ ${SITE_FOOTER}
   }
 })();
 <\/script>
+<script src="/nav-mobile.js" defer><\/script>
 </body>
 </html>
 `;
@@ -312,6 +318,7 @@ ${SITE_NAV}
   <a href="${cfg.backLinkUrl}" class="cta">${escapeHtml(cfg.backLinkLabel)}</a>${contentBlock}${faqBlock}
 </main>
 ${SITE_FOOTER}
+<script src="/nav-mobile.js" defer><\/script>
 </body>
 </html>
 `;

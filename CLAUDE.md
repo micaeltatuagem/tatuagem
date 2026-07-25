@@ -230,7 +230,13 @@ como destino provisório. Onde (ou se) elas vão ganhar um hub próprio ainda es
 | `cadastro.html` | Vitrine das promoções (–20% primeira tattoo, indicação 5→1), CTA pro `reserva.html`. Redireciona sozinho se receber `?ref=` de link antigo |
 | `anamnese.html` | Ficha de cadastro/anamnese, formulário longo |
 | `fisiologia-da-tatuagem.html` | "Cuidados" — conteúdo educativo sobre fisiologia da pele e cuidados pós-tatuagem |
-| `adminflash.html` | Painel admin (senha), gerencia catálogo, tags/estilos, backup |
+| `adminflash.html` | Painel admin (senha), gerencia catálogo, tags/estilos, backup. Também gera `/estilo/*.html` via `buildEstiloPageHtml()` — ver seção de navegação acima |
+| `guia.html` | "Guia" — significados, estilos e termos. Toggle A-Z/por tema, lê de `guia-data.json` via `fetch()`, schema.org `ItemList` |
+| `adminguia.html` | Painel do Guia (mesmo login/commit do `adminflash.html`). CRUD de verbetes |
+| `guia-data.json` | Fonte de verdade do Guia — 25 estilos (linkam pra `/estilo/*.html`) + verbetes de significado/técnica/termo (crescendo aos poucos, `draft:true` até serem preenchidos) |
+| `deriva.html` | Ferramenta livre — estímulo binaural + 12 visuais em canvas. Indexável (`index, follow`) desde 25/07/2026 |
+| `gerador-de-selos.html` | Ferramenta livre — gera símbolo/selo a partir de uma frase, download SVG/PNG. Indexável desde 25/07/2026 |
+| `nav-mobile.css` / `nav-mobile.js` | Menu hambúrguer mobile compartilhado por todo o site — ver seção de navegação acima |
 | `flash-decor.js` | Script de decoração de fundo (flash artwork de baixa opacidade), compartilhado por várias páginas |
 | `flash/flash-data.json` | Fonte da verdade do catálogo (508+ itens) |
 | `flash/tags.json` | Lista de estilos/tags |
@@ -243,23 +249,79 @@ como destino provisório. Onde (ou se) elas vão ganhar um hub próprio ainda es
   `galeria.html` receberam até agora. `reserva.html`/`anamnese.html`/`cadastro.html`
   não, porque a maior parte do conteúdo delas já é campo de formulário (protegido por
   fundo próprio) — mas vale reavaliar se crescerem trechos de texto corrido.
-- O menu já não tem mais o item `Processo`: foi substituído por `Cuidados` (linkando pra
-  `fisiologia-da-tatuagem.html`) e ganhou um item `Localização` novo. A seção `#processo`
-  (agora com o texto "por onde começar") continua existindo em `index.html`, só não tem
-  mais link direto no menu. Esse menu atualizado está sincronizado em `index.html` e nas
-  7 páginas internas "padrão" (`galeria.html`, `flash.html`, `aerografia.html`,
-  `preview-tatuagem.html`, `reserva.html`, `cadastro.html`, `anamnese.html`) — atualizado
-  em 22/07/2026.
-- As 25 páginas de `/estilo/` e as ~25 páginas "órfãs" na raiz (`animais.html`,
-  `blackwork.html` etc. — duplicatas antigas cujo `canonical` já aponta pra versão em
-  `/estilo/`, sem nenhum link ativo apontando pra elas; `organico.html` e
-  `estilo/organico.html` são exceção — são só stubs de redirect pra `organica.html`,
-  sem nav) também foram sincronizadas com o menu do index em 22/07/2026 (commit em lote
-  via Git Data API, 48 arquivos de uma vez). Como essas páginas vivem tanto na raiz
-  quanto em `/estilo/`, o menu delas usa paths absolutos (`/index.html`, `/flash.html`,
-  `/aerografia.html` etc.) em vez de relativos — não copiar o menu relativo das 7
-  páginas padrão pra cá sem adaptar os paths.
+## Navegação do site (25/07/2026 — reescrita completa)
+
+O menu passou por duas mudanças grandes nessa sessão. Isso invalida qualquer nota
+anterior sobre "menu sincronizado em N páginas" — a estrutura atual é a descrita aqui.
+
+### 1. Seção "Caminhos" na home (ex-"Por onde começar")
+Renomeada de `Por onde começar` pra `Caminhos` em `index.html` (`#processo`) — o nome
+antigo não fazia mais sentido depois que a seção passou a incluir ferramentas livres
+(Deriva, Selos) que não são etapas de decisão de tatuagem. Cards atuais: Galeria, Flash,
+Criar, Guia, Reserva, Deriva, Aerografia, Selos.
+
+### 2. Menu hambúrguer mobile (novo — `nav-mobile.css` + `nav-mobile.js`)
+Antes, mobile só escondia itens (`.hide-sm`) e deixava o resto scrollar horizontal —
+ficava ruim de usar. Agora existe um sistema compartilhado por **todo o site**:
+
+- **`nav-mobile.js`**: procura todo `<nav>` da página, acha `.nav-links` (ou
+  `.site-nav-links` — variante usada só em `fisiologia-da-tatuagem.html`) dentro dele,
+  injeta um botão hambúrguer logo depois do `<ul>`, e controla abrir/fechar via classe
+  `.nav-open` no `<nav>`. Não depende de nenhuma variável CSS específica de página.
+- **`nav-mobile.css`**: só age abaixo de 760px. Fechado, mostra só logo + ícone.
+  Aberto, o `.nav-links` vira um dropdown fixo full-width, com **todos** os itens
+  visíveis — inclusive os que têm `.hide-sm` (não faz mais sentido esconder nada
+  dentro de um dropdown já colapsado por padrão).
+- **Inclusão**: duas linhas em cada página — `<link rel="stylesheet" href="{prefix}nav-mobile.css">`
+  antes do `</head>` real, e `<script src="{prefix}nav-mobile.js" defer></script>` antes
+  do `</body>` real. `{prefix}` é vazio pra páginas na raiz, `../` pras 24 de `/estilo/`.
+- **Cobertura**: as 61 páginas com `<nav>` no site (raiz + `/estilo/`), **inclusive os
+  dois templates geradores** (`buildEstiloPageHtml()` dentro de `adminflash.html`, e
+  `buildHead()`/`buildCategoryPageHtml()`/`buildItemPageHtml()` dentro de `page-gen.js`)
+  — então páginas novas geradas pelos painéis (estilo, aerografia, galeria, corpos)
+  já nascem com o hambúrguer, sem precisar de fix manual depois.
+- **Exceções corretas** (não têm hambúrguer de propósito, não é bug): `adminflash.html`
+  e `adminanamnese.html` só têm nav de admin (`← Hub` / `Sair`), não o nav do cliente —
+  o único `<nav class="nav-links">` que aparece no código-fonte desses dois arquivos
+  vive dentro de uma *template string* JS (gera página de estilo em runtime), não é
+  renderizado como página em si.
+
+**Armadilha real que já mordeu nessa sessão**: `grep -rl "nav-links" *.html` encontra
+ocorrências de `<nav>` dentro de template strings JS (dentro de `adminflash.html`),
+não só o nav real da página. Editar às cegas por regex de arquivo inteiro corre o risco
+de mexer no lugar errado. **Sempre isolar o bloco `<nav>...</nav>` mais próximo antes de
+editar, e depois validar com Playwright clicando de verdade no `.nav-toggle` — não só
+ler o HTML, porque `.nav-links` (classe) e `.site-nav-links` não são a mesma coisa pro
+CSS/JS mesmo contendo a substring uma da outra.**
+
+### 3. Conteúdo do menu (itens, não só o mecanismo)
+Ordem atual, do jeito que deve estar em toda página nova: Sobre¹ · Galeria · Flash ·
+Aerografia · Criar · **Selos** · **Guia** · Deriva · Cuidados¹ · Promoções · Localização¹ ·
+Reserva · Contato. (¹ = tem `.hide-sm`, só relevante pra layout desktop-scroll antigo —
+no dropdown mobile aparece igual aos outros).
+`index.html`/`deriva.html`/`guia.html` têm pequenas variações de ordem/paths por terem
+sido editados manualmente cada um na hora certa — não é uma regra rígida, só manter
+"Selos" e "Guia" sempre logo depois de "Criar" e "Reserva" sempre logo antes de "Contato".
+
+Se o menu mudar nome/ordem de novo, tem **três lugares** pra atualizar manualmente, sempre:
+1. As páginas HTML existentes (batch regex, cuidado com o que foi dito acima).
+2. `buildEstiloPageHtml()` em `adminflash.html` (gera `/estilo/*.html` futuras).
+3. `SITE_NAV` em `page-gen.js` (gera páginas de aerografia/galeria/corpos futuras).
+
 - O sistema de indicação/promoção do `reserva.html` supõe que a tabela `clientes_promo`
   no Supabase só tem as colunas nome/whatsapp/email/codigo_indicacao/indicado_por/canal.
   **Não adicionar campos novos no payload de insert sem confirmar o schema** — inserir
   uma coluna que não existe quebra o insert inteiro (erro do PostgREST).
+- **Guia** (`guia.html`/`adminguia.html`/`guia-data.json`) tem só os 25 verbetes de estilo
+  preenchidos de verdade (migrados de `/estilo/*.html`) + 4 exemplos-semente com
+  `draft:true` (2 significados, 1 técnica, 1 termo) — praticamente todo o conteúdo de
+  significados/técnicas/termos ainda falta ser escrito, verbete por verbete, no
+  `adminguia.html`. O índice A-Z fica esparso até isso crescer (natural, não é bug).
+- **Cuidados** (`fisiologia-da-tatuagem.html`) foi decidido que **continua existindo como
+  página própria** — não foi fundida no Guia. Quando for distrinchada em verbetes, isso
+  entra no Guia como categoria própria (`termo` ou nova categoria), e a página antiga
+  pode ou virar redirect ou continuar coexistindo — decisão em aberto.
+- `estilo/organico.html` (e a versão espelho na raiz, `organico.html`) **não são conteúdo
+  duplicado** — já são só stubs de redirect (`noindex`, `canonical`, `location.replace()`)
+  pra `estilo/organica.html`. "organica" é o termo oficial. Não apagar esses stubs sem
+  necessidade — eles preservam links antigos que ainda apontem pra grafia errada.

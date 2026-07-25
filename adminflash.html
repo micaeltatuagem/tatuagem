@@ -129,6 +129,7 @@
     .modal-card h3 { font-family: 'Cinzel', serif; font-size: .95rem; color: #c9a84c; margin-bottom: 1.2rem; }
     .modal-actions { display: flex; gap: .8rem; margin-top: 1.2rem; }
   </style>
+<link rel="stylesheet" href="nav-mobile.css">
 </head>
 
 <body>
@@ -1213,6 +1214,7 @@ ${body}
   footer a { color:var(--muted); text-decoration:none; }
   @media (max-width:560px) { .nav-links { gap:.9rem; } h1 { font-size:1.9rem; } }
 </style>
+<link rel="stylesheet" href="/nav-mobile.css">
 </head>
 <body>
 <nav>
@@ -1223,10 +1225,13 @@ ${body}
     <li><a href="/flash.html">Flash</a></li>
     <li><a href="/aerografia.html">Aerografia</a></li>
     <li><a href="/preview-tatuagem.html">Criar</a></li>
+    <li><a href="/gerador-de-selos.html">Selos</a></li>
+    <li><a href="/guia.html">Guia</a></li>
     <li><a href="/deriva.html">Deriva</a></li>
     <li class="hide-sm"><a href="/fisiologia-da-tatuagem.html">Cuidados</a></li>
     <li><a href="/index.html#promocoes">Promoções</a></li>
     <li class="hide-sm"><a href="/index.html#localizacao">Localização</a></li>
+    <li><a href="/reserva.html">Reserva</a></li>
     <li><a href="/index.html#contato">Contato</a></li>
   </ul>
 </nav>
@@ -1297,6 +1302,7 @@ ${body}
     .catch(() => {});
 })();
 <\/script>
+<script src="/nav-mobile.js" defer><\/script>
 </body>
 </html>
 `;
@@ -1952,5 +1958,6 @@ ${body}
     }, 4000);
   }
 </script>
+<script src="nav-mobile.js" defer></script>
 </body>
 </html>
