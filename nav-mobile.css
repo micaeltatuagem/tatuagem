@@ -54,6 +54,22 @@ nav .nav-logo,
 nav .site-nav-logo {
   font-family: var(--menu-font) !important;
   color: var(--menu-ink) !important;
+  text-decoration: none !important;
+  transition: color .2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: .55rem !important;
+}
+nav .nav-logo:hover,
+nav .site-nav-logo:hover {
+  color: var(--menu-hover) !important;
+}
+nav .nav-logo img,
+nav .site-nav-logo img {
+  height: 28px;
+  width: 28px;
+  display: block;
+  flex-shrink: 0;
 }
 
 nav .nav-links a,
