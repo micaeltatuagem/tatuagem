@@ -1,13 +1,88 @@
 /* ===========================================================
    nav-mobile.js — injeta o botão hambúrguer em qualquer <nav>
-   com .nav-links, e controla abrir/fechar o dropdown mobile.
+   com .nav-links, controla abrir/fechar o dropdown mobile, e
+   agrupa itens secundários num dropdown "Mais ▾" no desktop
+   (pra evitar que o menu estoure/sume em telas largas).
    =========================================================== */
 (function () {
+  // Itens que viram "Mais ▾" no desktop — casados por fragmento de href,
+  // não por página, então funciona igual em qualquer lugar do site.
+  var MORE_HREF_FRAGMENTS = [
+    '#sobre',
+    'gerador-de-selos.html',
+    'aerografia.html',
+    'deriva.html',
+    'fisiologia-da-tatuagem.html',
+    '#promocoes',
+    '#localizacao'
+  ];
+
+  function isMoreLink(href) {
+    if (!href) return false;
+    for (var i = 0; i < MORE_HREF_FRAGMENTS.length; i++) {
+      if (href.indexOf(MORE_HREF_FRAGMENTS[i]) !== -1) return true;
+    }
+    return false;
+  }
+
+  function buildDesktopMore(nav, links) {
+    if (nav.dataset.navMoreInit) return;
+    var candidates = Array.prototype.slice.call(links.children).filter(function (li) {
+      var a = li.querySelector('a');
+      return a && isMoreLink(a.getAttribute('href'));
+    });
+    // só vale a pena agrupar se sobrar mais de um item — evita um "Mais ▾"
+    // com um único link dentro em páginas com menu mais enxuto (ex: guia.html)
+    if (candidates.length < 2) return;
+    nav.dataset.navMoreInit = '1';
+
+    var moreLi = document.createElement('li');
+    moreLi.className = 'nav-more';
+
+    var moreBtn = document.createElement('button');
+    moreBtn.type = 'button';
+    moreBtn.className = 'nav-more-btn';
+    moreBtn.textContent = 'Mais ▾';
+    moreBtn.setAttribute('aria-expanded', 'false');
+    moreBtn.setAttribute('aria-haspopup', 'true');
+
+    var panel = document.createElement('ul');
+    panel.className = 'nav-more-panel';
+    candidates.forEach(function (li) { panel.appendChild(li); });
+
+    moreLi.appendChild(moreBtn);
+    moreLi.appendChild(panel);
+    links.appendChild(moreLi);
+
+    function closeMore() {
+      moreLi.classList.remove('open');
+      moreBtn.setAttribute('aria-expanded', 'false');
+    }
+    function toggleMore(e) {
+      e.stopPropagation();
+      var open = moreLi.classList.toggle('open');
+      moreBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+
+    moreBtn.addEventListener('click', toggleMore);
+    panel.addEventListener('click', function (e) {
+      if (e.target.closest('a')) closeMore();
+    });
+    document.addEventListener('click', function (e) {
+      if (moreLi.classList.contains('open') && !moreLi.contains(e.target)) closeMore();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeMore();
+    });
+  }
+
   function initNav(nav) {
     if (nav.dataset.navMobileInit) return;
     var links = nav.querySelector('.nav-links, .site-nav-links');
     if (!links) return;
     nav.dataset.navMobileInit = '1';
+
+    buildDesktopMore(nav, links);
 
     var btn = document.createElement('button');
     btn.type = 'button';
