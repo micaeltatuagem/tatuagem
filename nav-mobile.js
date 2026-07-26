@@ -27,6 +27,10 @@
 
   function buildDesktopMore(nav, links) {
     if (nav.dataset.navMoreInit) return;
+    // só monta o agrupamento em telas largas — no mobile o hambúrguer já
+    // mostra tudo achatado, não precisa de "Mais"
+    if (window.innerWidth <= 760) return;
+
     var candidates = Array.prototype.slice.call(links.children).filter(function (li) {
       var a = li.querySelector('a');
       return a && isMoreLink(a.getAttribute('href'));
@@ -45,23 +49,35 @@
     moreBtn.textContent = 'Mais ▾';
     moreBtn.setAttribute('aria-expanded', 'false');
     moreBtn.setAttribute('aria-haspopup', 'true');
+    moreLi.appendChild(moreBtn);
+    links.appendChild(moreLi);
 
+    // O painel é anexado direto no <body> e posicionado com position:fixed,
+    // calculado via JS. Isso evita depender do contexto de empilhamento das
+    // sections da página (algumas usam position:relative/overflow:hidden
+    // pros elementos decorativos, o que podia esconder um dropdown absoluto
+    // aninhado dentro do <nav>).
     var panel = document.createElement('ul');
     panel.className = 'nav-more-panel';
     candidates.forEach(function (li) { panel.appendChild(li); });
+    document.body.appendChild(panel);
 
-    moreLi.appendChild(moreBtn);
-    moreLi.appendChild(panel);
-    links.appendChild(moreLi);
+    function positionPanel() {
+      var r = moreBtn.getBoundingClientRect();
+      panel.style.top = (r.bottom + 10) + 'px';
+      panel.style.right = (window.innerWidth - r.right) + 'px';
+    }
 
     function closeMore() {
-      moreLi.classList.remove('open');
+      panel.classList.remove('open');
       moreBtn.setAttribute('aria-expanded', 'false');
     }
     function toggleMore(e) {
       e.stopPropagation();
-      var open = moreLi.classList.toggle('open');
-      moreBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      var opening = !panel.classList.contains('open');
+      if (opening) positionPanel();
+      panel.classList.toggle('open', opening);
+      moreBtn.setAttribute('aria-expanded', opening ? 'true' : 'false');
     }
 
     moreBtn.addEventListener('click', toggleMore);
@@ -69,11 +85,15 @@
       if (e.target.closest('a')) closeMore();
     });
     document.addEventListener('click', function (e) {
-      if (moreLi.classList.contains('open') && !moreLi.contains(e.target)) closeMore();
+      if (panel.classList.contains('open') && !panel.contains(e.target) && e.target !== moreBtn) closeMore();
     });
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') closeMore();
     });
+    window.addEventListener('resize', closeMore);
+    window.addEventListener('scroll', function () {
+      if (panel.classList.contains('open')) positionPanel();
+    }, { passive: true });
   }
 
   function initNav(nav) {
