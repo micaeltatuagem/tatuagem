@@ -1,8 +1,95 @@
 /* ===========================================================
-   nav-mobile.css — menu hambúrguer para mobile, compartilhado
-   por todas as páginas do site. Convive com o CSS de cada
-   página: só assume o controle do .nav-links abaixo de 760px.
+   nav-mobile.css — menu do site (hambúrguer + dropdown "Mais ▾"),
+   compartilhado por TODAS as páginas.
+
+   IMPORTANTE: as cores e a fonte aqui são FIXAS (não usam var()
+   das páginas). Cada página define suas próprias variáveis CSS
+   com nomes iguais mas significados diferentes (ex.: --ink é
+   texto claro em algumas páginas e fundo escuro em outras), o
+   que causava bugs visuais (texto invisível, hover sumindo,
+   cor de link roxo/azul do navegador). Pra garantir o MESMO
+   menu, com a mesma paleta e fonte, em qualquer página, tudo
+   aqui é hardcoded com !important.
    =========================================================== */
+
+:root {
+  --menu-bg:     #0a0a0a;
+  --menu-border: #2e2e2e;
+  --menu-ink:    #e8e8e8;
+  --menu-muted:  #9a9a9a;
+  --menu-hover:  #a8c44a; /* verde do hover de "a tatuagem que você ainda não fez..." */
+  --menu-font:   system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ── Estrutura base do nav — serve de baseline pra qualquer página,
+   inclusive as que não tinham CSS de nav nenhum (ex.: Selos) ── */
+nav, .site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--menu-bg) !important;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--menu-border) !important;
+  padding: .9rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+nav .nav-links, nav .site-nav-links {
+  display: flex;
+  gap: 1.8rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+nav .nav-links::-webkit-scrollbar, nav .site-nav-links::-webkit-scrollbar { display: none; }
+nav .nav-links li, nav .site-nav-links li { flex-shrink: 0; }
+
+/* ── Paleta/fonte fixa pro menu inteiro, em qualquer página ── */
+nav .nav-logo,
+nav .site-nav-logo {
+  font-family: var(--menu-font) !important;
+  color: var(--menu-ink) !important;
+}
+
+nav .nav-links a,
+nav .site-nav-links a,
+.nav-more-btn,
+.nav-more-panel a {
+  font-family: var(--menu-font) !important;
+  font-size: .88rem !important;
+  letter-spacing: .06em !important;
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+  color: var(--menu-muted) !important;
+  text-decoration: none !important;
+  transition: color .2s ease !important;
+}
+nav .nav-links a:visited,
+nav .site-nav-links a:visited,
+.nav-more-panel a:visited {
+  color: var(--menu-muted) !important;
+}
+nav .nav-links a:hover,
+nav .site-nav-links a:hover,
+nav .nav-links a.destaque:hover,
+nav .site-nav-links a.destaque:hover,
+.nav-more-btn:hover,
+.nav-more-btn[aria-expanded="true"],
+.nav-more-panel a:hover {
+  color: var(--menu-hover) !important;
+  opacity: 1 !important;
+}
+/* "Promoções" e afins usam .destaque em algumas páginas pra ficar dourado —
+   mantém no estado normal, mas some no hover em favor do verde padrão */
+nav .nav-links a.destaque,
+nav .site-nav-links a.destaque {
+  color: #c8a96e !important;
+}
 
 .nav-toggle {
   display: none;
@@ -10,7 +97,7 @@
   border: none;
   padding: 8px;
   cursor: pointer;
-  color: inherit;
+  color: var(--menu-ink) !important;
   flex-shrink: 0;
 }
 .nav-toggle svg {
@@ -34,20 +121,12 @@ li.nav-more {
   list-style: none;
 }
 .nav-more-btn {
-  font-family: inherit;
-  font-size: .88rem;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  font-weight: 700;
-  color: var(--ink-muted, #777777);
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
   line-height: inherit;
 }
-.nav-more-btn:hover { color: var(--ink, #e8e8e8); }
-.nav-more-btn[aria-expanded="true"] { color: var(--ink, #e8e8e8); }
 
 .nav-more-panel {
   display: none;
@@ -56,8 +135,8 @@ li.nav-more {
   margin: 0;
   padding: .4rem 0;
   list-style: none;
-  background: var(--bg, #0a0a0a);
-  border: 1px solid var(--border-hi, #2e2e2e);
+  background: var(--menu-bg) !important;
+  border: 1px solid var(--menu-border) !important;
   border-radius: 4px;
   box-shadow: 0 12px 24px rgba(0,0,0,.55);
   z-index: 999;
@@ -65,13 +144,13 @@ li.nav-more {
 .nav-more-panel.open { display: block; }
 .nav-more-panel li { width: auto !important; flex-shrink: 0 !important; }
 .nav-more-panel a {
-  display: block;
-  padding: .6rem 1.1rem;
+  display: block !important;
+  padding: .6rem 1.1rem !important;
   white-space: nowrap;
 }
 
 @media (max-width: 760px) {
-  nav {
+  nav, .site-nav {
     position: sticky;
     top: 0;
   }
@@ -92,8 +171,8 @@ li.nav-more {
     right: 0;
     max-height: calc(100vh - var(--nav-h, 58px));
     overflow-y: auto;
-    background: var(--bg, var(--surface, #0a0908));
-    border-top: 1px solid var(--border, var(--hair, rgba(255,255,255,.08)));
+    background: var(--menu-bg) !important;
+    border-top: 1px solid var(--menu-border) !important;
     padding: .4rem 0 !important;
     white-space: normal !important;
     z-index: 55;
@@ -107,10 +186,10 @@ li.nav-more {
   nav .nav-links li.hide-sm, nav .site-nav-links li.hide-sm { display: list-item !important; }
 
   nav .nav-links a, nav .site-nav-links a {
-    display: block;
+    display: block !important;
     padding: 13px 1.5rem !important;
-    border-bottom: 1px solid var(--border, var(--hair, rgba(255,255,255,.06)));
+    border-bottom: 1px solid var(--menu-border) !important;
     font-size: .92rem !important;
   }
-  nav .nav-links li:last-child a, nav .site-nav-links li:last-child a { border-bottom: none; }
+  nav .nav-links li:last-child a, nav .site-nav-links li:last-child a { border-bottom: none !important; }
 }
