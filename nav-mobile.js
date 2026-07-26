@@ -5,6 +5,28 @@
    (pra evitar que o menu estoure/sume em telas largas).
    =========================================================== */
 (function () {
+  // Calcula o caminho do ícone a partir do próprio <script>, pra funcionar
+  // igual em qualquer profundidade de pasta (raiz, /estilo/, /f/ etc.) sem
+  // precisar de configuração por página.
+  var ICON_SRC = 'nav-icon.webp';
+  (function () {
+    var scriptEl = document.currentScript;
+    if (scriptEl && scriptEl.src) {
+      ICON_SRC = scriptEl.src.replace(/nav-mobile\.js(\?.*)?$/, '') + 'nav-icon.webp';
+    }
+  })();
+
+  function injectLogoIcon(nav) {
+    var logo = nav.querySelector('.nav-logo, .site-nav-logo');
+    if (!logo || logo.querySelector('img')) return;
+    var img = document.createElement('img');
+    img.src = ICON_SRC;
+    img.alt = '';
+    img.width = 28;
+    img.height = 28;
+    logo.insertBefore(img, logo.firstChild);
+  }
+
   // Itens que viram "Mais ▾" no desktop — casados por fragmento de href,
   // não por página, então funciona igual em qualquer lugar do site.
   var MORE_HREF_FRAGMENTS = [
@@ -102,6 +124,7 @@
     if (!links) return;
     nav.dataset.navMobileInit = '1';
 
+    injectLogoIcon(nav);
     buildDesktopMore(nav, links);
 
     var btn = document.createElement('button');
