@@ -24,11 +24,13 @@
 
 /* ===========================================================
    Dropdown "Mais ▾" — agrupa itens secundários no desktop pra
-   o menu não estourar/sumir em telas largas. Abaixo de 760px
-   ele é "achatado" de volta pro fluxo normal do hambúrguer.
+   o menu não estourar/sumir em telas largas. O painel é anexado
+   direto no <body> como position:fixed (via JS), pra nunca ficar
+   preso atrás de conteúdo de outras seções da página. No mobile
+   (≤760px) esse dropdown nem é criado — o hambúrguer já mostra
+   tudo achatado.
    =========================================================== */
 li.nav-more {
-  position: relative;
   list-style: none;
 }
 .nav-more-btn {
@@ -45,13 +47,11 @@ li.nav-more {
   line-height: inherit;
 }
 .nav-more-btn:hover { color: var(--ink, #e8e8e8); }
-li.nav-more.open .nav-more-btn { color: var(--ink, #e8e8e8); }
+.nav-more-btn[aria-expanded="true"] { color: var(--ink, #e8e8e8); }
 
 .nav-more-panel {
   display: none;
-  position: absolute;
-  top: calc(100% + 14px);
-  right: 0;
+  position: fixed;
   min-width: 190px;
   margin: 0;
   padding: .4rem 0;
@@ -59,10 +59,10 @@ li.nav-more.open .nav-more-btn { color: var(--ink, #e8e8e8); }
   background: var(--bg, #0a0a0a);
   border: 1px solid var(--border-hi, #2e2e2e);
   border-radius: 4px;
-  box-shadow: 0 12px 24px rgba(0,0,0,.5);
-  z-index: 60;
+  box-shadow: 0 12px 24px rgba(0,0,0,.55);
+  z-index: 999;
 }
-li.nav-more.open .nav-more-panel { display: block; }
+.nav-more-panel.open { display: block; }
 .nav-more-panel li { width: auto !important; flex-shrink: 0 !important; }
 .nav-more-panel a {
   display: block;
@@ -113,18 +113,4 @@ li.nav-more.open .nav-more-panel { display: block; }
     font-size: .92rem !important;
   }
   nav .nav-links li:last-child a, nav .site-nav-links li:last-child a { border-bottom: none; }
-
-  /* dropdown "Mais" achatado: some o botão, o painel vira parte do fluxo normal */
-  .nav-more-btn { display: none !important; }
-  .nav-more-panel {
-    display: block !important;
-    position: static !important;
-    background: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-  li.nav-more { width: 100%; }
-  .nav-more-panel li { width: 100% !important; }
 }
