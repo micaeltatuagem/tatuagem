@@ -53,6 +53,11 @@ nav .nav-links li, nav .site-nav-links li { flex-shrink: 0; }
 nav .nav-logo,
 nav .site-nav-logo {
   font-family: var(--menu-font) !important;
+  font-size: .95rem !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+  line-height: normal !important;
   color: var(--menu-ink) !important;
   text-decoration: none !important;
   transition: color .2s ease !important;
