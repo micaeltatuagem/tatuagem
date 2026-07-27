@@ -97,19 +97,11 @@ nav .nav-links a:visited,
   color: var(--menu-muted) !important;
 }
 nav .nav-links a:hover,
-nav .nav-links a.destaque:hover,
-.nav-more-panel a.destaque:hover,
 .nav-more-btn:hover,
 .nav-more-btn[aria-expanded="true"],
 .nav-more-panel a:hover {
   color: var(--menu-hover) !important;
   opacity: 1 !important;
-}
-/* "Promoções" fica com um toque dourado no estado normal, mas some
-   pro verde padrão no hover, igual todo o resto do menu */
-nav .nav-links a.destaque,
-.nav-more-panel a.destaque {
-  color: #c8a96e !important;
 }
 
 .nav-toggle {
