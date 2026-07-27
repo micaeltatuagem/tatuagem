@@ -2,14 +2,19 @@
    nav-mobile.css — menu do site (hambúrguer + dropdown "Mais ▾"),
    compartilhado por TODAS as páginas.
 
+   ARQUITETURA: o HTML de cada página já nasce com o menu inteiro
+   e final — ícone, todos os itens (os "extra" duplicados dentro
+   do painel .nav-more-panel), sem JS nenhum criando ou movendo
+   elemento. O JS só abre/fecha. Isso evita qualquer "pulo" visual
+   depois que a página carrega.
+
    IMPORTANTE: as cores e a fonte aqui são FIXAS (não usam var()
    das páginas). Cada página define suas próprias variáveis CSS
    com nomes iguais mas significados diferentes (ex.: --ink é
    texto claro em algumas páginas e fundo escuro em outras), o
-   que causava bugs visuais (texto invisível, hover sumindo,
-   cor de link roxo/azul do navegador). Pra garantir o MESMO
-   menu, com a mesma paleta e fonte, em qualquer página, tudo
-   aqui é hardcoded com !important.
+   que causava bugs visuais (texto invisível, hover sumindo, cor
+   de link roxo/azul do navegador). Tudo aqui é hardcoded com
+   !important pra garantir o MESMO menu em qualquer página.
    =========================================================== */
 
 :root {
@@ -21,9 +26,8 @@
   --menu-font:   system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* ── Estrutura base do nav — serve de baseline pra qualquer página,
-   inclusive as que não tinham CSS de nav nenhum (ex.: Selos) ── */
-nav, .site-nav {
+/* ── Estrutura base do nav ──────────────────────────────────── */
+nav {
   position: sticky;
   top: 0;
   z-index: 50;
@@ -36,7 +40,7 @@ nav, .site-nav {
   align-items: center;
   justify-content: space-between;
 }
-nav .nav-links, nav .site-nav-links {
+nav .nav-links {
   display: flex;
   gap: 1.8rem;
   list-style: none;
@@ -46,12 +50,19 @@ nav .nav-links, nav .site-nav-links {
   white-space: nowrap;
   scrollbar-width: none;
 }
-nav .nav-links::-webkit-scrollbar, nav .site-nav-links::-webkit-scrollbar { display: none; }
-nav .nav-links li, nav .site-nav-links li { flex-shrink: 0; }
+nav .nav-links::-webkit-scrollbar { display: none; }
+nav .nav-links li { flex-shrink: 0; }
 
-/* ── Paleta/fonte fixa pro menu inteiro, em qualquer página ── */
-nav .nav-logo,
-nav .site-nav-logo {
+/* itens "extra" (Sobre, Aerografia, Selos, Deriva, Cuidados, Valor,
+   Promoções, Localização) ficam ocultos na linha principal no desktop —
+   eles já existem de novo, prontos, dentro do painel "Mais" */
+nav .nav-links li.nav-extra { display: none; }
+
+/* item "Mais" só existe/aparece no desktop */
+li.nav-more { list-style: none; }
+
+/* ── Paleta/fonte fixa pro logo ──────────────────────────────── */
+nav .nav-logo {
   font-family: var(--menu-font) !important;
   font-size: .95rem !important;
   letter-spacing: .08em !important;
@@ -65,20 +76,11 @@ nav .site-nav-logo {
   align-items: center !important;
   gap: .55rem !important;
 }
-nav .nav-logo:hover,
-nav .site-nav-logo:hover {
-  color: var(--menu-hover) !important;
-}
-nav .nav-logo img,
-nav .site-nav-logo img {
-  height: 28px;
-  width: 28px;
-  display: block;
-  flex-shrink: 0;
-}
+nav .nav-logo:hover { color: var(--menu-hover) !important; }
+nav .nav-logo img { height: 28px; width: 28px; display: block; flex-shrink: 0; }
 
+/* ── Paleta/fonte fixa pros links (linha principal + painel Mais) ── */
 nav .nav-links a,
-nav .site-nav-links a,
 .nav-more-btn,
 .nav-more-panel a {
   font-family: var(--menu-font) !important;
@@ -91,24 +93,22 @@ nav .site-nav-links a,
   transition: color .2s ease !important;
 }
 nav .nav-links a:visited,
-nav .site-nav-links a:visited,
 .nav-more-panel a:visited {
   color: var(--menu-muted) !important;
 }
 nav .nav-links a:hover,
-nav .site-nav-links a:hover,
 nav .nav-links a.destaque:hover,
-nav .site-nav-links a.destaque:hover,
+.nav-more-panel a.destaque:hover,
 .nav-more-btn:hover,
 .nav-more-btn[aria-expanded="true"],
 .nav-more-panel a:hover {
   color: var(--menu-hover) !important;
   opacity: 1 !important;
 }
-/* "Promoções" e afins usam .destaque em algumas páginas pra ficar dourado —
-   mantém no estado normal, mas some no hover em favor do verde padrão */
+/* "Promoções" fica com um toque dourado no estado normal, mas some
+   pro verde padrão no hover, igual todo o resto do menu */
 nav .nav-links a.destaque,
-nav .site-nav-links a.destaque {
+.nav-more-panel a.destaque {
   color: #c8a96e !important;
 }
 
@@ -121,26 +121,19 @@ nav .site-nav-links a.destaque {
   color: var(--menu-ink) !important;
   flex-shrink: 0;
 }
-.nav-toggle svg {
-  width: 22px;
-  height: 22px;
-  display: block;
-}
+.nav-toggle svg { width: 22px; height: 22px; display: block; }
 .nav-toggle .ico-x { display: none; }
 .nav-toggle[aria-expanded="true"] .ico-bars { display: none; }
 .nav-toggle[aria-expanded="true"] .ico-x { display: block; }
 
 /* ===========================================================
-   Dropdown "Mais ▾" — agrupa itens secundários no desktop pra
-   o menu não estourar/sumir em telas largas. O painel é anexado
-   direto no <body> como position:fixed (via JS), pra nunca ficar
-   preso atrás de conteúdo de outras seções da página. No mobile
-   (≤760px) esse dropdown nem é criado — o hambúrguer já mostra
-   tudo achatado.
+   Dropdown "Mais ▾" (desktop) — painel já existe pronto no HTML,
+   como irmão do <nav> (não aninhado), posicionado fixed via JS.
+   Ficar fora do <nav> evita depender do contexto de empilhamento
+   de outras seções da página (algumas usam position:relative /
+   overflow:hidden pra decoração, o que escondia um dropdown
+   absoluto aninhado).
    =========================================================== */
-li.nav-more {
-  list-style: none;
-}
 .nav-more-btn {
   background: none;
   border: none;
@@ -148,7 +141,6 @@ li.nav-more {
   padding: 0;
   line-height: inherit;
 }
-
 .nav-more-panel {
   display: none;
   position: fixed;
@@ -171,10 +163,8 @@ li.nav-more {
 }
 
 @media (max-width: 760px) {
-  nav, .site-nav {
-    position: sticky;
-    top: 0;
-  }
+  nav { position: sticky; top: 0; }
+
   .nav-toggle {
     display: flex;
     align-items: center;
@@ -182,7 +172,12 @@ li.nav-more {
     margin-left: auto;
   }
 
-  nav .nav-links, nav .site-nav-links {
+  /* no mobile, o "Mais" nunca aparece — os itens dele já estão
+     duplicados e visíveis na lista achatada abaixo */
+  li.nav-more { display: none !important; }
+  .nav-more-panel { display: none !important; }
+
+  nav .nav-links {
     display: none;
     flex-direction: column !important;
     gap: 0 !important;
@@ -199,18 +194,18 @@ li.nav-more {
     z-index: 55;
     box-shadow: 0 12px 24px rgba(0,0,0,.4);
   }
-  nav.nav-open .nav-links, nav.nav-open .site-nav-links { display: flex !important; }
+  nav.nav-open .nav-links { display: flex !important; }
 
-  nav .nav-links li, nav .site-nav-links li { width: 100%; flex-shrink: 1 !important; }
+  nav .nav-links li { width: 100%; flex-shrink: 1 !important; }
 
-  /* dropdown mostra tudo, inclusive itens escondidos na barra horizontal */
-  nav .nav-links li.hide-sm, nav .site-nav-links li.hide-sm { display: list-item !important; }
+  /* mostra de volta os itens "extra" (escondidos na linha do desktop) */
+  nav .nav-links li.nav-extra { display: list-item !important; }
 
-  nav .nav-links a, nav .site-nav-links a {
+  nav .nav-links a {
     display: block !important;
     padding: 13px 1.5rem !important;
     border-bottom: 1px solid var(--menu-border) !important;
     font-size: .92rem !important;
   }
-  nav .nav-links li:last-child a, nav .site-nav-links li:last-child a { border-bottom: none !important; }
+  nav .nav-links li:last-child a { border-bottom: none !important; }
 }
