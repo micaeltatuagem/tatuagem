@@ -194,6 +194,7 @@
     if (path.includes('anamnese')) return ['header','section','main','footer'];
     if (path.includes('flash'))    return ['header','section','main','footer'];
     if (path.includes('fisiologia-da-tatuagem')) return ['header','section','main','footer'];
+    if (path.includes('valor')) return ['header','main','footer'];
     // index / default
     return ['#hero','#sobre','#galeria','#processo','#faq','#promocoes','#contato'];
   }
