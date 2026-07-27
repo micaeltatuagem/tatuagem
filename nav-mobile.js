@@ -35,6 +35,7 @@
     'aerografia.html',
     'deriva.html',
     'fisiologia-da-tatuagem.html',
+    'valor.html',
     '#promocoes',
     '#localizacao'
   ];
