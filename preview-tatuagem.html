@@ -997,6 +997,41 @@
   src: url('fonts/the-dreamer.woff2') format('woff2');
   font-display: swap;
 }
+  /* ---- Aviso pra virar o celular na horizontal (só mobile + retrato) ---- */
+  .rotate-prompt{
+    display:none;
+    position:fixed; inset:0; z-index:400;
+    background:rgba(10,9,7,.96);
+    flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:32px 28px; gap:10px;
+    color:var(--paper,#e8e0cf);
+  }
+  .rotate-prompt-icon{ width:72px; height:72px; margin-bottom:8px; color:var(--gold,#c8a96e); }
+  .rotate-prompt-icon svg{ width:100%; height:100%; }
+  .rotate-prompt-icon .phone{
+    transform-origin:50px 44px;
+    animation: rotate-hint 2.2s ease-in-out infinite;
+  }
+  @keyframes rotate-hint{
+    0%, 20%{ transform:rotate(0deg); }
+    50%, 70%{ transform:rotate(-90deg); }
+    100%{ transform:rotate(-90deg); }
+  }
+  .rotate-prompt-title{
+    font-family:'Oswald',sans-serif; letter-spacing:.06em; text-transform:uppercase;
+    font-size:16px; font-weight:500; color:var(--paper,#e8e0cf);
+  }
+  .rotate-prompt-text{ font-size:13.5px; max-width:280px; opacity:.75; line-height:1.5; }
+  .rotate-prompt-dismiss{
+    margin-top:14px; background:none; border:1px solid var(--line,#4a4030);
+    color:var(--text-dim,#a89b7d); font-family:'Inter',sans-serif; font-size:12.5px;
+    padding:9px 18px; border-radius:4px; cursor:pointer;
+  }
+  .rotate-prompt-dismiss:hover{ border-color:var(--gold,#c8a96e); color:var(--paper,#e8e0cf); }
+
+  @media (max-width:979px) and (orientation:portrait){
+    .rotate-prompt:not(.dismissed){ display:flex; }
+  }
 </style>
 <link rel="stylesheet" href="nav-mobile.css">
 </head>
@@ -1039,6 +1074,33 @@
   <li><a href="index.html#promocoes">Promoções</a></li>
   <li><a href="index.html#localizacao">Localização</a></li>
 </ul>
+
+<div id="rotatePrompt" class="rotate-prompt">
+  <div class="rotate-prompt-icon">
+    <svg viewBox="0 0 100 100" fill="none">
+      <rect class="phone" x="32" y="14" width="36" height="60" rx="6" stroke="currentColor" stroke-width="4"/>
+      <line x1="44" y1="66" x2="56" y2="66" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+      <path class="arrow" d="M78 50a28 28 0 1 1-8-19.5" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/>
+      <path class="arrow" d="M70 22l2 11 -11-1" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+  </div>
+  <p class="rotate-prompt-title">Vire seu aparelho</p>
+  <p class="rotate-prompt-text">O Criar funciona melhor na horizontal: a área de desenho aproveita quase a tela toda.</p>
+  <button type="button" id="rotatePromptDismiss" class="rotate-prompt-dismiss">Usar assim mesmo</button>
+</div>
+<script>
+  (function () {
+    var KEY = 'rotate_prompt_dismissed';
+    var el = document.getElementById('rotatePrompt');
+    var btn = document.getElementById('rotatePromptDismiss');
+    if (sessionStorage.getItem(KEY) === '1') el.classList.add('dismissed');
+    btn.addEventListener('click', function () {
+      el.classList.add('dismissed');
+      sessionStorage.setItem(KEY, '1');
+    });
+  })();
+</script>
+
 <div class="app-shell">
   <h1 class="sr-only">Criar — Monte sua tatuagem antes de fechar</h1>
 
