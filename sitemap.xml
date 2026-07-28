@@ -3572,21 +3572,15 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/deriva.html</loc>
-    <lastmod>2026-07-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://micaeltatuagem.com.br/guia.html</loc>
     <lastmod>2026-07-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/gerador-de-selos.html</loc>
-    <lastmod>2026-07-25</lastmod>
+    <loc>https://micaeltatuagem.com.br/valor.html</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.6</priority>
   </url>
 </urlset>

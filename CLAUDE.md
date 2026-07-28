@@ -222,7 +222,7 @@ como destino provisório. Onde (ou se) elas vão ganhar um hub próprio ainda es
 
 | Arquivo | O que é |
 |---|---|
-| `index.html` | Home. Seções: hero, sobre, processo (agora "por onde começar", 4 cards de ferramentas — sem link direto no menu, ver nota do menu abaixo), galeria (carrossel), localização, faq, promoções, contato |
+| `index.html` | Home. Seções: hero, sobre, processo ("Caminhos", cards: Galeria, Flash, Criar, Guia, Reserva, Aerografia), galeria (carrossel), localização, faq, promoções, contato |
 | `flash.html` | Catálogo de flash (500+ itens), filtro por estilo, busca, lightbox |
 | `galeria.html` | Portfólio de sessões finalizadas |
 | `preview-tatuagem.html` | "Criar" — simulador de tatuagem na foto do corpo, app de tela única (sem header/main/section padrão — `flash-decor.js` não decora essa página) |
@@ -234,9 +234,8 @@ como destino provisório. Onde (ou se) elas vão ganhar um hub próprio ainda es
 | `guia.html` | "Guia" — significados, estilos e termos. Toggle A-Z/por tema, lê de `guia-data.json` via `fetch()`, schema.org `ItemList` |
 | `adminguia.html` | Painel do Guia (mesmo login/commit do `adminflash.html`). CRUD de verbetes |
 | `guia-data.json` | Fonte de verdade do Guia — 25 estilos (linkam pra `/estilo/*.html`) + verbetes de significado/técnica/termo (crescendo aos poucos, `draft:true` até serem preenchidos) |
-| `deriva.html` | Ferramenta livre — estímulo binaural + 12 visuais em canvas. Indexável (`index, follow`) desde 25/07/2026 |
-| `gerador-de-selos.html` | Ferramenta livre — gera símbolo/selo a partir de uma frase, download SVG/PNG. Indexável desde 25/07/2026 |
-| `nav-mobile.css` / `nav-mobile.js` | Menu hambúrguer mobile compartilhado por todo o site — ver seção de navegação acima |
+| `valor.html` | "Preço & Valor" — processo (preparo, por que não uso anestesia), pagamento por sessão, fechamento, cobertura, micro/flash, esboço em estúdio |
+| `nav-mobile.css` / `nav-mobile.js` | Menu compartilhado por todo o site — ver seção de navegação acima |
 | `flash-decor.js` | Script de decoração de fundo (flash artwork de baixa opacidade), compartilhado por várias páginas |
 | `flash/flash-data.json` | Fonte da verdade do catálogo (508+ itens) |
 | `flash/tags.json` | Lista de estilos/tags |
@@ -249,65 +248,6 @@ como destino provisório. Onde (ou se) elas vão ganhar um hub próprio ainda es
   `galeria.html` receberam até agora. `reserva.html`/`anamnese.html`/`cadastro.html`
   não, porque a maior parte do conteúdo delas já é campo de formulário (protegido por
   fundo próprio) — mas vale reavaliar se crescerem trechos de texto corrido.
-## Navegação do site (25/07/2026 — reescrita completa)
-
-O menu passou por duas mudanças grandes nessa sessão. Isso invalida qualquer nota
-anterior sobre "menu sincronizado em N páginas" — a estrutura atual é a descrita aqui.
-
-### 1. Seção "Caminhos" na home (ex-"Por onde começar")
-Renomeada de `Por onde começar` pra `Caminhos` em `index.html` (`#processo`) — o nome
-antigo não fazia mais sentido depois que a seção passou a incluir ferramentas livres
-(Deriva, Selos) que não são etapas de decisão de tatuagem. Cards atuais: Galeria, Flash,
-Criar, Guia, Reserva, Deriva, Aerografia, Selos.
-
-### 2. Menu hambúrguer mobile (novo — `nav-mobile.css` + `nav-mobile.js`)
-Antes, mobile só escondia itens (`.hide-sm`) e deixava o resto scrollar horizontal —
-ficava ruim de usar. Agora existe um sistema compartilhado por **todo o site**:
-
-- **`nav-mobile.js`**: procura todo `<nav>` da página, acha `.nav-links` (ou
-  `.site-nav-links` — variante usada só em `fisiologia-da-tatuagem.html`) dentro dele,
-  injeta um botão hambúrguer logo depois do `<ul>`, e controla abrir/fechar via classe
-  `.nav-open` no `<nav>`. Não depende de nenhuma variável CSS específica de página.
-- **`nav-mobile.css`**: só age abaixo de 760px. Fechado, mostra só logo + ícone.
-  Aberto, o `.nav-links` vira um dropdown fixo full-width, com **todos** os itens
-  visíveis — inclusive os que têm `.hide-sm` (não faz mais sentido esconder nada
-  dentro de um dropdown já colapsado por padrão).
-- **Inclusão**: duas linhas em cada página — `<link rel="stylesheet" href="{prefix}nav-mobile.css">`
-  antes do `</head>` real, e `<script src="{prefix}nav-mobile.js" defer></script>` antes
-  do `</body>` real. `{prefix}` é vazio pra páginas na raiz, `../` pras 24 de `/estilo/`.
-- **Cobertura**: as 61 páginas com `<nav>` no site (raiz + `/estilo/`), **inclusive os
-  dois templates geradores** (`buildEstiloPageHtml()` dentro de `adminflash.html`, e
-  `buildHead()`/`buildCategoryPageHtml()`/`buildItemPageHtml()` dentro de `page-gen.js`)
-  — então páginas novas geradas pelos painéis (estilo, aerografia, galeria, corpos)
-  já nascem com o hambúrguer, sem precisar de fix manual depois.
-- **Exceções corretas** (não têm hambúrguer de propósito, não é bug): `adminflash.html`
-  e `adminanamnese.html` só têm nav de admin (`← Hub` / `Sair`), não o nav do cliente —
-  o único `<nav class="nav-links">` que aparece no código-fonte desses dois arquivos
-  vive dentro de uma *template string* JS (gera página de estilo em runtime), não é
-  renderizado como página em si.
-
-**Armadilha real que já mordeu nessa sessão**: `grep -rl "nav-links" *.html` encontra
-ocorrências de `<nav>` dentro de template strings JS (dentro de `adminflash.html`),
-não só o nav real da página. Editar às cegas por regex de arquivo inteiro corre o risco
-de mexer no lugar errado. **Sempre isolar o bloco `<nav>...</nav>` mais próximo antes de
-editar, e depois validar com Playwright clicando de verdade no `.nav-toggle` — não só
-ler o HTML, porque `.nav-links` (classe) e `.site-nav-links` não são a mesma coisa pro
-CSS/JS mesmo contendo a substring uma da outra.**
-
-### 3. Conteúdo do menu (itens, não só o mecanismo)
-Ordem atual, do jeito que deve estar em toda página nova: Sobre¹ · Galeria · Flash ·
-Aerografia · Criar · **Selos** · **Guia** · Deriva · Cuidados¹ · Promoções · Localização¹ ·
-Reserva · Contato. (¹ = tem `.hide-sm`, só relevante pra layout desktop-scroll antigo —
-no dropdown mobile aparece igual aos outros).
-`index.html`/`deriva.html`/`guia.html` têm pequenas variações de ordem/paths por terem
-sido editados manualmente cada um na hora certa — não é uma regra rígida, só manter
-"Selos" e "Guia" sempre logo depois de "Criar" e "Reserva" sempre logo antes de "Contato".
-
-Se o menu mudar nome/ordem de novo, tem **três lugares** pra atualizar manualmente, sempre:
-1. As páginas HTML existentes (batch regex, cuidado com o que foi dito acima).
-2. `buildEstiloPageHtml()` em `adminflash.html` (gera `/estilo/*.html` futuras).
-3. `SITE_NAV` em `page-gen.js` (gera páginas de aerografia/galeria/corpos futuras).
-
 - O sistema de indicação/promoção do `reserva.html` supõe que a tabela `clientes_promo`
   no Supabase só tem as colunas nome/whatsapp/email/codigo_indicacao/indicado_por/canal.
   **Não adicionar campos novos no payload de insert sem confirmar o schema** — inserir
@@ -325,3 +265,105 @@ Se o menu mudar nome/ordem de novo, tem **três lugares** pra atualizar manualme
   duplicado** — já são só stubs de redirect (`noindex`, `canonical`, `location.replace()`)
   pra `estilo/organica.html`. "organica" é o termo oficial. Não apagar esses stubs sem
   necessidade — eles preservam links antigos que ainda apontem pra grafia errada.
+- `hyperspace_flow.html` e `rorschach_flow.html` existem no repo mas não estão linkados
+  de lugar nenhum ativo (nem do Deriva, que já foi removido). Prováveis protótipos órfãos
+  de antes da consolidação em `aura_flow.html`. Não apagados por falta de confirmação —
+  ver nota de remoção do Deriva abaixo.
+## Navegação do site (28/07/2026 — reescrita completa, 2ª vez)
+
+O menu passou por uma reescrita de arquitetura grande nessa sessão. Isso invalida
+qualquer nota anterior sobre "menu montado por JS" — a estrutura atual é 100% HTML
+estático, descrita aqui.
+
+### Por que mudou de novo
+A versão anterior (JS injetando ícone do logo + agrupando itens no dropdown "Mais"
+depois que a página carregava) causava um "pulo" visual visível — o menu aparecia
+cheio por uma fração de segundo e depois se reorganizava. Też causava um bug real de
+z-index (o painel do "Mais", quando `position:absolute` aninhado dentro do `<nav>`,
+ficava atrás do conteúdo de algumas seções da página, dependendo do CSS de
+`position:relative`/`overflow:hidden` usado pra decoração). A solução foi parar de
+montar a estrutura via JS e deixar o HTML de cada página já nascer pronto.
+
+### Arquitetura atual
+- **HTML estático, idêntico em espírito em toda página**: cada página tem, escrito
+  direto no arquivo, um `<nav>` com logo+ícone, os 6 itens sempre visíveis (Galeria,
+  Flash, Criar, Guia, Reserva, Contato) e um `<li class="nav-more">` com o botão
+  "Mais". Logo depois do `</nav>` (como **irmão**, não filho — importante pro
+  z-index), existe um `<ul class="nav-more-panel">` com os itens secundários
+  duplicados: Sobre, Aerografia, Cuidados, Valor, Promoções, Localização.
+- **`nav-mobile.js`** (~80 linhas): só comportamental. Não cria nem move nenhum
+  elemento — só abre/fecha o hambúrguer (mobile) e o painel "Mais" (desktop,
+  `position:fixed`, posição calculada via `getBoundingClientRect()` no clique).
+- **`nav-mobile.css`**: paleta e fonte **hardcoded com `!important`**, não usa
+  nenhuma variável CSS de página (cada página define `--ink`/`--bg`/etc. com
+  significados diferentes — já causou bugs de texto invisível e hover sumindo).
+  Também define a estrutura base do `nav` (sticky, flex, etc.), então uma página
+  sem CSS de nav próprio nenhum (ex.: `gerador-de-selos.html` antes de ser
+  removido) ainda fica com o menu certo, só de incluir o HTML + os 2 arquivos.
+  - Desktop: `.nav-links li.nav-extra { display:none }` (escondidos, já existem
+    de novo dentro do `.nav-more-panel`). `.nav-more-panel` é `position:fixed`,
+    `display:none` até ganhar a classe `.open`.
+  - Mobile (`max-width:760px`): `.nav-more` e `.nav-more-panel` ficam
+    `display:none` sempre (o "Mais" não existe no mobile), e
+    `.nav-links li.nav-extra { display:list-item !important }` mostra de volta
+    os itens escondidos — resultado: lista única achatada com os 12 itens no
+    hambúrguer.
+- **`nav-icon.webp`**: ícone (caveira chaos) que aparece antes do texto do logo,
+  como `<img>` estático dentro do `.nav-logo` — carrega junto com o resto do HTML,
+  sem JS. Tem transparência real (canal alfa variável); a versão anterior em PNG
+  (`favicon.png`) tinha fundo preto sólido opaco e deixava uma borda quadrada visível.
+- **Sem `.hide-sm`, sem `.site-nav-links`**: a variante de classe usada só em
+  `fisiologia-da-tatuagem.html` (`.site-nav`/`.site-nav-links`/`.site-nav-logo`)
+  foi unificada pra `nav`/`.nav-links`/`.nav-logo` igual todo mundo. `.hide-sm`
+  (escondia item em telas <560px, de um sistema anterior ao hambúrguer) foi
+  removido — substituído por `.nav-extra`, que tem lógica clara (desktop:
+  escondido/vai pro "Mais"; mobile: mostrado/lista achatada).
+- **Sem destaque dourado no Promoções**: existia uma classe `.destaque` que
+  deixava o link de Promoções dourado (parecia que "você já tá na página de
+  promoção"). Removida — todos os itens do menu têm exatamente a mesma cor.
+
+### Conteúdo do menu (itens)
+Sempre visíveis: Galeria, Flash, Criar, Guia, Reserva, Contato.
+Dentro do "Mais": Sobre, Aerografia, Cuidados, Valor, Promoções, Localização.
+(Selos e Deriva existiam aqui antes — foram removidos do site em 28/07/2026, ver
+nota "Remoção de Selos e Deriva" abaixo.)
+
+### Gerador local (`generate_nav.py`, não faz parte do site em produção)
+Existe um script Python (`generate_nav.py`, na raiz do repo) que gera o bloco
+`<nav>...</nav><ul class="nav-more-panel">...</ul>` certo pra qualquer página,
+dada uma lista central de itens (`VISIBLE`/`EXTRA` no topo do arquivo) e o nome
+do arquivo atual (decide prefixo `/` pra `/estilo/*`, `#âncora` vs
+`index.html#âncora`, e marca `class="atual"` sozinho). **Se o menu mudar de novo
+(item novo, removido, renomeado), edite `VISIBLE`/`EXTRA` nesse script e rode
+pra regerar todas as páginas** — não edite página por página à mão, e não confie
+em regex solto (`grep -rl "nav-links" *.html` também acha ocorrências dentro de
+template strings JS, ver nota abaixo).
+
+Se o menu mudar, ainda tem **três lugares** que usam a MESMA estrutura mas não
+rodam o script sozinhos (são gerados/mantidos separado, precisam de edição
+manual espelhando o que o script produz):
+1. As páginas HTML existentes (rodar `generate_nav.py` e reaplicar).
+2. `buildEstiloPageHtml()` em `adminflash.html` (gera `/estilo/*.html` futuras).
+3. `SITE_NAV` em `page-gen.js` (gera páginas de aerografia/galeria/corpos futuras).
+
+**Armadilha real que já mordeu nessa sessão**: `grep -rl "nav-links" *.html`
+encontra ocorrências de `<nav>` dentro de template strings JS (dentro de
+`adminflash.html` e `page-gen.js`), não só o nav real de uma página renderizada.
+Editar às cegas por regex de arquivo inteiro corre o risco de mexer no lugar
+errado. **Sempre isolar o bloco `<nav>...</nav>...<ul class="nav-more-panel">...</ul>`
+mais próximo antes de editar, e depois validar com Playwright: (1) com JS
+desligado, confirmar que os 6 itens + botão "Mais" já aparecem certo (prova que
+não depende de JS pra estrutura); (2) com JS ligado, clicar de verdade em cada
+item do "Mais" (`elementFromPoint` no centro do link, não só checar se existe
+no DOM) em pelo menos 3-4 páginas de exemplo antes de considerar pronto.**
+
+### Remoção de Selos e Deriva (28/07/2026)
+`gerador-de-selos.html` e `deriva.html` (+ `aura_flow.html`, sub-experiência
+visual usada só pelos "portais" do Deriva) foram removidos do site — o dono vai
+reaproveitar essas ferramentas em outro projeto separado. Apagados sem deixar
+vestígio: arquivo em si, card em "Caminhos" (`index.html`), item de menu (todas
+as páginas + os 2 templates geradores), entrada no `sitemap.xml`. Os arquivos
+`hyperspace_flow.html` e `rorschach_flow.html` **não foram tocados** — não estão
+linkados de lugar nenhum ativo (nem do Deriva, que só usa `aura_flow.html?layer=X`),
+parecem protótipos órfãos de antes da consolidação em `aura_flow.html`; decisão
+sobre eles fica em aberto.
