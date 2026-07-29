@@ -269,6 +269,20 @@ como destino provisório. Onde (ou se) elas vão ganhar um hub próprio ainda es
   de lugar nenhum ativo (nem do Deriva, que já foi removido). Prováveis protótipos órfãos
   de antes da consolidação em `aura_flow.html`. Não apagados por falta de confirmação —
   ver nota de remoção do Deriva abaixo.
+- **Auditoria SEO/GEO completa (28/07/2026):** encontrei que `old-school.html` era o
+  único, de 24 páginas de `/estilo/`, com bloco `.style-content` editorial rico (história,
+  características, envelhecimento, comparação com outro estilo) — as outras 23 só têm o
+  `style-desc` curto de uma linha. Resolvido nessa auditoria: FAQ + schema `FAQPage` (4
+  perguntas por estilo) foram adicionados às 23 que faltavam, replicando o padrão visual
+  do `old-school.html` (`.style-faq`/`.faq-item`). **Ainda pendente**: o bloco editorial
+  rico (`.style-content` com `<h2>`s de história/características) não foi replicado —
+  seria um projeto de conteúdo à parte, grande (23 × ~4 parágrafos únicos). Também nessa
+  auditoria: schema `LocalBusiness` replicado em 32 páginas que não tinham (antes só
+  `index.html` tinha); título/meta description melhorados em `aerografia.html`,
+  `galeria.html`, `reserva.html` (genéricos demais, sem "Muriaé") e `preview-tatuagem.html`
+  (meta com 188 chars, cortava no Google). `guia.html` tem um bloco `<script
+  type="application/ld+json">{}</script>` vazio, préexistente, inofensivo mas morto —
+  não removido ainda por não fazer parte do escopo pedido.
 ## Navegação do site (28/07/2026 — reescrita completa, 2ª vez)
 
 O menu passou por uma reescrita de arquitetura grande nessa sessão. Isso invalida
