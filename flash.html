@@ -3350,7 +3350,7 @@
   }
   function buildShareUrl(){
     const idPart = currentShare.slug ? `${currentShare.flashId}-${currentShare.slug}` : currentShare.flashId;
-    return `${location.origin}/f/${encodeURIComponent(idPart)}.html`;
+    return `${location.origin}/f/${encodeURIComponent(idPart)}`;
   }
   function buildShareText(){
     return `Olha o desenho "${currentShare.nome}" que encontrei no catálogo do Micael Tatuagem 🖤`;
