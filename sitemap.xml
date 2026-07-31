@@ -8,7 +8,7 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/galeria.html</loc>
+    <loc>https://micaeltatuagem.com.br/galeria</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -274,7 +274,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/flash.html</loc>
+    <loc>https://micaeltatuagem.com.br/flash</loc>
     <lastmod>2026-07-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -3295,7 +3295,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/old-school.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/old-school</loc>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3306,7 +3306,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/dark-art.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/dark-art</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3317,7 +3317,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/religioso.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/religioso</loc>
     <lastmod>2026-07-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3328,7 +3328,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/nautico.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/nautico</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3339,7 +3339,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/animais.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/animais</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3350,7 +3350,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/tribal.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/tribal</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3361,7 +3361,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/oriental.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/oriental</loc>
     <lastmod>2026-07-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3372,13 +3372,13 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/organica.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/organica</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/escrita.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/escrita</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3389,7 +3389,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/cristao.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/cristao</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3400,7 +3400,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/umbanda.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/umbanda</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3411,7 +3411,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/veda.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/veda</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3422,7 +3422,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/budista.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/budista</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3433,7 +3433,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/neotrad.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/neotrad</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3444,7 +3444,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/blackwork.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/blackwork</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3455,7 +3455,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/ultrabold.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/ultrabold</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3466,7 +3466,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/psicodelico.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/psicodelico</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3477,7 +3477,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/gnose.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/gnose</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3488,7 +3488,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/colorido.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/colorido</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3499,7 +3499,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/serie.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/serie</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3510,7 +3510,7 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/comics.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/comics</loc>
     <lastmod>2026-07-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -3521,43 +3521,43 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/reserva.html</loc>
+    <loc>https://micaeltatuagem.com.br/reserva</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/preview-tatuagem.html</loc>
+    <loc>https://micaeltatuagem.com.br/preview-tatuagem</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/cadastro.html</loc>
+    <loc>https://micaeltatuagem.com.br/cadastro</loc>
     <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/pin-up.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/pin-up</loc>
     <lastmod>2026-07-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/micro-flash.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/micro-flash</loc>
     <lastmod>2026-07-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/estilo/pensadores.html</loc>
+    <loc>https://micaeltatuagem.com.br/estilo/pensadores</loc>
     <lastmod>2026-07-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/fisiologia-da-tatuagem.html</loc>
+    <loc>https://micaeltatuagem.com.br/fisiologia-da-tatuagem</loc>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -3566,19 +3566,19 @@
       </image:image>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/aerografia.html</loc>
+    <loc>https://micaeltatuagem.com.br/aerografia</loc>
     <lastmod>2026-07-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/guia.html</loc>
+    <loc>https://micaeltatuagem.com.br/guia</loc>
     <lastmod>2026-07-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://micaeltatuagem.com.br/valor.html</loc>
+    <loc>https://micaeltatuagem.com.br/valor</loc>
     <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

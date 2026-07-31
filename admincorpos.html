@@ -159,8 +159,8 @@
   <div class="admin-header">
     <h1>Admin · Bases de Corpo</h1>
     <div class="admin-header-links">
-      <a href="preview-tatuagem.html" target="_blank">👁 Ver "Criar"</a>
-      <a href="admin-hub.html">⬅ Hub</a>
+      <a href="preview-tatuagem" target="_blank">👁 Ver "Criar"</a>
+      <a href="admin-hub">⬅ Hub</a>
       <a onclick="logout()">🔐 Sair</a>
     </div>
   </div>
@@ -183,7 +183,7 @@
   <!-- Adicionar base de corpo -->
   <div class="form-section">
     <h2>Adicionar Nova Base de Corpo</h2>
-    <p class="hint-text">Essas fotos aparecem na ferramenta "Criar" (preview-tatuagem.html) pra quem não quer subir a própria foto.</p>
+    <p class="hint-text">Essas fotos aparecem na ferramenta "Criar" (preview-tatuagem) pra quem não quer subir a própria foto.</p>
     <div class="form-group">
       <label>Arquivo (WEBP, JPG, PNG)</label>
       <input type="file" id="imageFile" accept="image/*" />
@@ -229,7 +229,7 @@
       Texto sobre posicionamento (dor, cicatrização, visibilidade, tamanho recomendado...) e FAQ
       pra cada região, na página <code>/corpos/categoria-&lt;nome&gt;.html</code>, com schema FAQPage.
       Ainda sem um hub público linkando pra essas páginas — elas existem e entram no sitemap,
-      e o CTA por enquanto aponta pro simulador (<code>preview-tatuagem.html</code>).
+      e o CTA por enquanto aponta pro simulador (<code>preview-tatuagem</code>).
       Ao salvar, a página é (re)gerada automaticamente.
     </p>
     <select id="corpoCategoryContentSelect" onchange="loadCategoryContentIntoForm(this.value)" style="width:100%;margin-bottom:1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--bone);padding:8px 12px;font-size:.85rem;"></select>
@@ -773,7 +773,7 @@
     const sampleGridHtmlInitial = samples.length
       ? samples.map(it => {
           const alt = escapeHtml(it.nome || '');
-          return `<a href="/preview-tatuagem.html" class="sample-item"><img src="/${it.imageUrl}" alt="${alt}" loading="lazy"></a>`;
+          return `<a href="/preview-tatuagem" class="sample-item"><img src="/${it.imageUrl}" alt="${alt}" loading="lazy"></a>`;
         }).join('')
       : '<p class="sample-empty">Novas fotos de referência em breve.</p>';
     const otherItemsHtmlInitial = names.filter(n => n !== name).map(n => {
@@ -798,7 +798,7 @@
       eyebrow: 'Posicionamento', h1: name,
       introText: '',
       ctaLabel: 'Simular tatuagem nessa região →',
-      ctaLink: '/preview-tatuagem.html',
+      ctaLink: '/preview-tatuagem',
       countTextInitial: countText,
       sampleGridHtmlInitial,
       otherItemsLabel: 'Outras partes do corpo',
@@ -807,7 +807,7 @@
       runtime: {
         dataUrl: `/${DATA_PATH}`, tagsUrl: null,
         filterField: 'nome', categoryValue: name,
-        catalogLinkBase: '/preview-tatuagem.html', catalogLinkParam: 'ref',
+        catalogLinkBase: '/preview-tatuagem', catalogLinkParam: 'ref',
         otherPageUrlTemplate: `/${IMAGE_FOLDER}/categoria-{slug}.html`
       }
     });
@@ -871,7 +871,7 @@
       heroAlt: item.nome,
       introText: '',
       backLinkLabel: '← Simular tatuagem nessa região',
-      backLinkUrl: '/preview-tatuagem.html',
+      backLinkUrl: '/preview-tatuagem',
       sections: contentData.sections, faq: contentData.faq
     });
 

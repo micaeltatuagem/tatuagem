@@ -162,8 +162,8 @@
   <div class="admin-header">
     <h1>Admin · Aerografia</h1>
     <div class="admin-header-links">
-      <a href="aerografia.html" target="_blank">👁 Ver galeria</a>
-      <a href="admin-hub.html">⬅ Hub</a>
+      <a href="aerografia" target="_blank">👁 Ver galeria</a>
+      <a href="admin-hub">⬅ Hub</a>
       <a onclick="logout()">🔐 Sair</a>
     </div>
   </div>
@@ -362,7 +362,7 @@
   const DATA_PATH    = `${IMAGE_FOLDER}/aerografia-data.json`;
   const TAGS_PATH     = `${IMAGE_FOLDER}/tags.json`;
   const CONTENT_PATH  = `${IMAGE_FOLDER}/content.json`;
-  const CATALOG_PAGE  = 'aerografia.html';
+  const CATALOG_PAGE  = 'aerografia';
   const DEFAULT_TAGS = ['Quadros', 'Paredes/Murais'];
 
   const SUPABASE_URL  = 'https://rpgcsejfewltricfsdrd.supabase.co';
@@ -610,7 +610,7 @@
   async function saveGallery(gallery) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(gallery));
     await withRetry(() => commitAerografiaData(gallery), 3, 'aerografia-data.json');
-    await withRetry(() => commitCatalogPage(gallery, getTags()), 4, 'aerografia.html');
+    await withRetry(() => commitCatalogPage(gallery, getTags()), 4, 'aerografia');
   }
 
   async function seedFromRepo() {
@@ -632,7 +632,7 @@
   async function saveTags(tags) {
     localStorage.setItem(TAGS_KEY, JSON.stringify(tags));
     await withRetry(() => commitTags(tags), 3, 'tags.json');
-    await withRetry(() => commitCatalogPage(getGallery(), tags), 4, 'aerografia.html');
+    await withRetry(() => commitCatalogPage(getGallery(), tags), 4, 'aerografia');
   }
 
   async function seedTagsFromRepo() {
@@ -802,13 +802,13 @@
       canonical, heroImg, heroImgIsGenerated: false,
       breadcrumbs: [
         { name: 'Início', url: `${SITE_URL}/` },
-        { name: 'Aerografia', url: `${SITE_URL}/aerografia.html` },
+        { name: 'Aerografia', url: `${SITE_URL}/aerografia` },
         { name, url: canonical }
       ],
       eyebrow: 'Aerografia', h1: name,
       introText: '',
       ctaLabel: `Ver todas as peças de ${name} →`,
-      ctaLink: `/aerografia.html?tag=${encodeURIComponent(name)}`,
+      ctaLink: `/aerografia?tag=${encodeURIComponent(name)}`,
       countTextInitial: countText,
       sampleGridHtmlInitial,
       otherItemsLabel: 'Outras categorias',
@@ -892,14 +892,14 @@
       canonical, heroImg, heroImgIsGenerated: false,
       breadcrumbs: [
         { name: 'Início', url: `${SITE_URL}/` },
-        { name: 'Aerografia', url: `${SITE_URL}/aerografia.html` },
+        { name: 'Aerografia', url: `${SITE_URL}/aerografia` },
         { name: item.title, url: canonical }
       ],
       eyebrow: 'Aerografia', h1: item.title,
       heroAlt: item.altText || item.title,
       introText: item.description || '',
       backLinkLabel: '← Ver todas as aerografias',
-      backLinkUrl: '/aerografia.html',
+      backLinkUrl: '/aerografia',
       sections: contentData.sections, faq: contentData.faq
     });
 
@@ -1226,13 +1226,13 @@
     if (!res.ok) { const e=await res.json(); throw new Error(e.message||'Erro ao salvar dados'); }
   }
 
-  // ── COMMIT: regenera grid + filtros do aerografia.html numa unica leitura/escrita ──
+  // ── COMMIT: regenera grid + filtros do aerografia numa unica leitura/escrita ──
   async function commitCatalogPage(gallery, tags) {
     gallery = gallery.filter(i => !i.draft);
 
     const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${CATALOG_PAGE}`;
     const res = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` } });
-    if (!res.ok) throw new Error('Não foi possível ler aerografia.html para atualizar.');
+    if (!res.ok) throw new Error('Não foi possível ler aerografia para atualizar.');
     const fileData = await res.json();
     let html = decodeURIComponent(escape(atob(fileData.content)));
 
@@ -1245,7 +1245,7 @@
     const gEnd    = '<!-- AEROGRAFIA_GRID_END -->';
     const gStartIdx = html.indexOf(gStart);
     const gEndIdx   = html.indexOf(gEnd);
-    if (gStartIdx === -1 || gEndIdx === -1) throw new Error('Marcadores do grid não encontrados em aerografia.html.');
+    if (gStartIdx === -1 || gEndIdx === -1) throw new Error('Marcadores do grid não encontrados em aerografia.');
     html = html.slice(0, gStartIdx + gStart.length) + '\n' + gridHtml + '\n' + html.slice(gEndIdx);
 
     const contar = (tag) => gallery.filter(i => (i.styles || []).includes(tag)).length;
@@ -1262,13 +1262,13 @@
     const fEnd    = '<!-- AEROGRAFIA_FILTERS_END -->';
     const fStartIdx = html.indexOf(fStart);
     const fEndIdx   = html.indexOf(fEnd);
-    if (fStartIdx === -1 || fEndIdx === -1) throw new Error('Marcadores dos filtros não encontrados em aerografia.html.');
+    if (fStartIdx === -1 || fEndIdx === -1) throw new Error('Marcadores dos filtros não encontrados em aerografia.');
     html = html.slice(0, fStartIdx + fStart.length) + '\n' + filtersHtml + '\n' + html.slice(fEndIdx);
 
     const newContent = btoa(unescape(encodeURIComponent(html)));
-    const body = { message: 'Regenera catalogo aerografia.html (grid + filtros)', content: newContent, sha: fileData.sha, branch: BRANCH };
+    const body = { message: 'Regenera catalogo aerografia (grid + filtros)', content: newContent, sha: fileData.sha, branch: BRANCH };
     const putRes = await fetch(url, { method:'PUT', headers:{Authorization:`Bearer ${GH_TOKEN}`,'Content-Type':'application/json'}, body:JSON.stringify(body) });
-    if (!putRes.ok) { const e = await putRes.json(); throw new Error(e.message || 'Erro ao atualizar aerografia.html'); }
+    if (!putRes.ok) { const e = await putRes.json(); throw new Error(e.message || 'Erro ao atualizar aerografia'); }
   }
 
   function escapeHtml(str) {

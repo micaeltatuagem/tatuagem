@@ -13,7 +13,7 @@
     "alt": "",
     "seo_title": "Animais · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Retratos de força, instinto e presença: felinos, aves, répteis e outros animais em traço marcante.",
-    "pagina_externa": "estilo/animais.html",
+    "pagina_externa": "estilo/animais",
     "tags_relacionadas": [
       "animais"
     ],
@@ -33,7 +33,7 @@
     "alt": "",
     "seo_title": "Blackwork · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Preto denso e sólido, sem sombreado gradual — só contraste puro entre tinta e pele.",
-    "pagina_externa": "estilo/blackwork.html",
+    "pagina_externa": "estilo/blackwork",
     "tags_relacionadas": [
       "blackwork"
     ],
@@ -53,7 +53,7 @@
     "alt": "",
     "seo_title": "Budista · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Buda, mandalas e símbolos ligados à filosofia budista, com traço que busca serenidade e equilíbrio.",
-    "pagina_externa": "estilo/budista.html",
+    "pagina_externa": "estilo/budista",
     "tags_relacionadas": [
       "budista"
     ],
@@ -73,7 +73,7 @@
     "alt": "",
     "seo_title": "Colorido · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Peças que usam cor como parte central da composição, não só preenchimento.",
-    "pagina_externa": "estilo/colorido.html",
+    "pagina_externa": "estilo/colorido",
     "tags_relacionadas": [
       "colorido"
     ],
@@ -93,7 +93,7 @@
     "alt": "",
     "seo_title": "Comics · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Traço inspirado em quadrinhos e cartoons, com contornos marcados e composições narrativas.",
-    "pagina_externa": "estilo/comics.html",
+    "pagina_externa": "estilo/comics",
     "tags_relacionadas": [
       "comics"
     ],
@@ -113,7 +113,7 @@
     "alt": "",
     "seo_title": "Cristão · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Cruzes, santos e símbolos da fé cristã, desenhados com o peso que o tema pede.",
-    "pagina_externa": "estilo/cristao.html",
+    "pagina_externa": "estilo/cristao",
     "tags_relacionadas": [
       "cristao"
     ],
@@ -133,7 +133,7 @@
     "alt": "",
     "seo_title": "Dark Art · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Estética sombria e narrativa, inspirada em pintura clássica, gravura e imaginário macabro.",
-    "pagina_externa": "estilo/dark-art.html",
+    "pagina_externa": "estilo/dark-art",
     "tags_relacionadas": [
       "dark-art"
     ],
@@ -153,7 +153,7 @@
     "alt": "",
     "seo_title": "Escrita · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Nomes, frases e lettering em fontes variadas, do gótico ao script fino.",
-    "pagina_externa": "estilo/escrita.html",
+    "pagina_externa": "estilo/escrita",
     "tags_relacionadas": [
       "escrita"
     ],
@@ -173,7 +173,7 @@
     "alt": "",
     "seo_title": "Gnose · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Simbolismo esotérico e místico — olhos, geometria sagrada e figuras do conhecimento oculto.",
-    "pagina_externa": "estilo/gnose.html",
+    "pagina_externa": "estilo/gnose",
     "tags_relacionadas": [
       "gnose"
     ],
@@ -193,7 +193,7 @@
     "alt": "",
     "seo_title": "Micro Flash · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Desenhos pequenos e objetivos, pensados para tatuagens rápidas e de fácil aplicação.",
-    "pagina_externa": "estilo/micro-flash.html",
+    "pagina_externa": "estilo/micro-flash",
     "tags_relacionadas": [
       "micro-flash"
     ],
@@ -213,7 +213,7 @@
     "alt": "",
     "seo_title": "Náutico · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Âncoras, faróis, ondas e tudo que remete ao mar. Old school na raiz.",
-    "pagina_externa": "estilo/nautico.html",
+    "pagina_externa": "estilo/nautico",
     "tags_relacionadas": [
       "nautico"
     ],
@@ -233,7 +233,7 @@
     "alt": "",
     "seo_title": "Neotrad · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Old school levado a outro patamar de detalhe: traço fino, paleta ampliada.",
-    "pagina_externa": "estilo/neotrad.html",
+    "pagina_externa": "estilo/neotrad",
     "tags_relacionadas": [
       "neotrad"
     ],
@@ -253,7 +253,7 @@
     "alt": "",
     "seo_title": "Old School · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Traço grosso, contraste absoluto entre preto e pele, sem meio-termo.",
-    "pagina_externa": "estilo/old-school.html",
+    "pagina_externa": "estilo/old-school",
     "tags_relacionadas": [
       "old-school"
     ],
@@ -273,7 +273,7 @@
     "alt": "",
     "seo_title": "Orgânica · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Formas fluidas que imitam raízes, ondas e crescimento natural.",
-    "pagina_externa": "estilo/organica.html",
+    "pagina_externa": "estilo/organica",
     "tags_relacionadas": [
       "organica"
     ],
@@ -293,7 +293,7 @@
     "alt": "",
     "seo_title": "Oriental · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "A estética oriental reúne séculos de tradição em composições marcantes.",
-    "pagina_externa": "estilo/oriental.html",
+    "pagina_externa": "estilo/oriental",
     "tags_relacionadas": [
       "oriental"
     ],
@@ -313,7 +313,7 @@
     "alt": "",
     "seo_title": "Pensadores · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Rostos de quem deixou uma ideia, uma obra ou uma imagem que atravessou o tempo.",
-    "pagina_externa": "estilo/pensadores.html",
+    "pagina_externa": "estilo/pensadores",
     "tags_relacionadas": [
       "pensadores"
     ],
@@ -333,7 +333,7 @@
     "alt": "",
     "seo_title": "Pin-Up · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Desenhos inspirados na estética pin-up vintage, com figuras marcantes e poses elegantes.",
-    "pagina_externa": "estilo/pin-up.html",
+    "pagina_externa": "estilo/pin-up",
     "tags_relacionadas": [
       "pin-up"
     ],
@@ -353,7 +353,7 @@
     "alt": "",
     "seo_title": "Psicodélico · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Composições que brincam com distorção, padrões hipnóticos e estados alterados.",
-    "pagina_externa": "estilo/psicodelico.html",
+    "pagina_externa": "estilo/psicodelico",
     "tags_relacionadas": [
       "psicodelico"
     ],
@@ -373,7 +373,7 @@
     "alt": "",
     "seo_title": "Religioso · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Símbolos, figuras e elementos ligados à fé e espiritualidade, de diversas tradições.",
-    "pagina_externa": "estilo/religioso.html",
+    "pagina_externa": "estilo/religioso",
     "tags_relacionadas": [
       "religioso"
     ],
@@ -393,7 +393,7 @@
     "alt": "",
     "seo_title": "Série · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Conjuntos de desenhos conectados por um mesmo tema ou narrativa.",
-    "pagina_externa": "estilo/serie.html",
+    "pagina_externa": "estilo/serie",
     "tags_relacionadas": [
       "serie"
     ],
@@ -413,7 +413,7 @@
     "alt": "",
     "seo_title": "Tribal · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Padrões geométricos sólidos em preto, inspirados em tatuagens ancestrais polinésias e indígenas.",
-    "pagina_externa": "estilo/tribal.html",
+    "pagina_externa": "estilo/tribal",
     "tags_relacionadas": [
       "tribal"
     ],
@@ -433,7 +433,7 @@
     "alt": "",
     "seo_title": "UltraBold · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Traço extremamente grosso, levando o contraste do blackwork ao extremo.",
-    "pagina_externa": "estilo/ultrabold.html",
+    "pagina_externa": "estilo/ultrabold",
     "tags_relacionadas": [
       "ultrabold"
     ],
@@ -453,7 +453,7 @@
     "alt": "",
     "seo_title": "Umbanda · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Orixás, entidades e símbolos da umbanda, feitos com respeito à tradição.",
-    "pagina_externa": "estilo/umbanda.html",
+    "pagina_externa": "estilo/umbanda",
     "tags_relacionadas": [
       "umbanda"
     ],
@@ -473,7 +473,7 @@
     "alt": "",
     "seo_title": "Veda · Guia de Tatuagem | Micael Tatuagem",
     "meta_description": "Divindades e simbologia da tradição hindu e védica, com traço fino e ornamentado.",
-    "pagina_externa": "estilo/veda.html",
+    "pagina_externa": "estilo/veda",
     "tags_relacionadas": [
       "veda"
     ],

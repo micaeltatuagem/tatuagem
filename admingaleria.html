@@ -161,8 +161,8 @@
   <div class="admin-header">
     <h1>Admin · Galeria</h1>
     <div class="admin-header-links">
-      <a href="galeria.html" target="_blank">👁 Ver galeria</a>
-      <a href="admin-hub.html">⬅ Hub</a>
+      <a href="galeria" target="_blank">👁 Ver galeria</a>
+      <a href="admin-hub">⬅ Hub</a>
       <a onclick="logout()">🔐 Sair</a>
     </div>
   </div>
@@ -870,7 +870,7 @@
     const heroImg = heroImageForCategory(name, gallery);
     const canonical = `${SITE_URL}/${path}`;
 
-    // Nao ha filtro por ?tag= em galeria.html (so botao de filtro client-side), entao o
+    // Nao ha filtro por ?tag= em galeria (so botao de filtro client-side), entao o
     // CTA aponta pra galeria completa em vez de um link que pre-filtra por categoria.
     const html = PageGen.buildCategoryPageHtml({
       siteUrl: SITE_URL,
@@ -880,7 +880,7 @@
       canonical, heroImg, heroImgIsGenerated: false,
       breadcrumbs: [
         { name: 'Início', url: `${SITE_URL}/` },
-        { name: 'Galeria', url: `${SITE_URL}/galeria.html` },
+        { name: 'Galeria', url: `${SITE_URL}/galeria` },
         { name, url: canonical }
       ],
       eyebrow: 'Galeria', h1: name,
@@ -970,14 +970,14 @@
       canonical, heroImg, heroImgIsGenerated: false,
       breadcrumbs: [
         { name: 'Início', url: `${SITE_URL}/` },
-        { name: 'Galeria', url: `${SITE_URL}/galeria.html` },
+        { name: 'Galeria', url: `${SITE_URL}/galeria` },
         { name: item.title, url: canonical }
       ],
       eyebrow: 'Galeria', h1: item.title,
       heroAlt: item.altText || item.title,
       introText: item.description || '',
       backLinkLabel: '← Ver a galeria completa',
-      backLinkUrl: '/galeria.html',
+      backLinkUrl: '/galeria',
       sections: contentData.sections, faq: contentData.faq
     });
 
@@ -1015,7 +1015,7 @@
     }
   }
 
-  // ── COMMIT: sincroniza as entradas de imagem do galeria.html no sitemap.xml (SEO/Google Imagens) ──
+  // ── COMMIT: sincroniza as entradas de imagem do galeria no sitemap.xml (SEO/Google Imagens) ──
   async function commitSitemap(gallery) {
     const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${SITEMAP_PATH}`;
     const res = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` } });
@@ -1023,9 +1023,9 @@
     const fileData = await res.json();
     let xml = decodeURIComponent(escape(atob(fileData.content)));
 
-    const startMarker = '<loc>https://micaeltatuagem.com.br/galeria.html</loc>';
+    const startMarker = '<loc>https://micaeltatuagem.com.br/galeria</loc>';
     const startIdx = xml.indexOf(startMarker);
-    if (startIdx === -1) throw new Error('Entrada do galeria.html não encontrada no sitemap.');
+    if (startIdx === -1) throw new Error('Entrada do galeria não encontrada no sitemap.');
     const blockEndIdx = xml.indexOf('</url>', startIdx);
     if (blockEndIdx === -1) throw new Error('Fechamento </url> não encontrado no sitemap.');
 

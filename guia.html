@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Guia de Tatuagem: Significados, Estilos e Termos | Micael Tatuagem</title>
 <meta name="description" content="Guia de tatuagem com significados, estilos, técnicas e termos — pra entender antes de escolher. Por Micael Faccio, em Muriaé-MG.">
-<link rel="canonical" href="https://micaeltatuagem.com.br/guia.html">
+<link rel="canonical" href="https://micaeltatuagem.com.br/guia">
 <meta property="og:title" content="Guia de Tatuagem · Micael Tatuagem">
 <meta property="og:description" content="Significados, estilos, técnicas e termos — entenda antes de escolher.">
-<meta property="og:url" content="https://micaeltatuagem.com.br/guia.html">
+<meta property="og:url" content="https://micaeltatuagem.com.br/guia">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Guia de Tatuagem · Micael Tatuagem">
@@ -111,20 +111,20 @@
 <body>
 
 <nav>
-  <a href="index.html" class="nav-logo"><img src="nav-icon.webp" alt="" width="28" height="28">Micael Tatuagem</a>
+  <a href="/" class="nav-logo"><img src="nav-icon.webp" alt="" width="28" height="28">Micael Tatuagem</a>
   <ul class="nav-links">
-    <li class="nav-extra"><a href="index.html#sobre">Sobre</a></li>
-    <li><a href="galeria.html">Galeria</a></li>
-    <li><a href="flash.html">Flash</a></li>
-    <li class="nav-extra"><a href="aerografia.html">Aerografia</a></li>
-    <li><a href="preview-tatuagem.html">Criar</a></li>
-    <li><a href="guia.html" class="atual">Guia</a></li>
-    <li class="nav-extra"><a href="fisiologia-da-tatuagem.html">Cuidados</a></li>
-    <li class="nav-extra"><a href="valor.html">Valor</a></li>
-    <li class="nav-extra"><a href="index.html#promocoes">Promoções</a></li>
-    <li class="nav-extra"><a href="index.html#localizacao">Localização</a></li>
-    <li><a href="reserva.html">Reserva</a></li>
-    <li><a href="index.html#contato">Contato</a></li>
+    <li class="nav-extra"><a href="/#sobre">Sobre</a></li>
+    <li><a href="galeria">Galeria</a></li>
+    <li><a href="flash">Flash</a></li>
+    <li class="nav-extra"><a href="aerografia">Aerografia</a></li>
+    <li><a href="preview-tatuagem">Criar</a></li>
+    <li><a href="guia" class="atual">Guia</a></li>
+    <li class="nav-extra"><a href="fisiologia-da-tatuagem">Cuidados</a></li>
+    <li class="nav-extra"><a href="valor">Valor</a></li>
+    <li class="nav-extra"><a href="/#promocoes">Promoções</a></li>
+    <li class="nav-extra"><a href="/#localizacao">Localização</a></li>
+    <li><a href="reserva">Reserva</a></li>
+    <li><a href="/#contato">Contato</a></li>
     <li class="nav-more">
       <button type="button" class="nav-more-btn" aria-haspopup="true" aria-expanded="false">Mais &#9662;</button>
     </li>
@@ -137,12 +137,12 @@
   </button>
 </nav>
 <ul class="nav-more-panel">
-  <li><a href="index.html#sobre">Sobre</a></li>
-  <li><a href="aerografia.html">Aerografia</a></li>
-  <li><a href="fisiologia-da-tatuagem.html">Cuidados</a></li>
-  <li><a href="valor.html">Valor</a></li>
-  <li><a href="index.html#promocoes">Promoções</a></li>
-  <li><a href="index.html#localizacao">Localização</a></li>
+  <li><a href="/#sobre">Sobre</a></li>
+  <li><a href="aerografia">Aerografia</a></li>
+  <li><a href="fisiologia-da-tatuagem">Cuidados</a></li>
+  <li><a href="valor">Valor</a></li>
+  <li><a href="/#promocoes">Promoções</a></li>
+  <li><a href="/#localizacao">Localização</a></li>
 </ul>
 
 <header class="hero">
@@ -325,7 +325,7 @@
         "@type": "ListItem",
         "position": i + 1,
         "name": e.titulo,
-        "url": "https://micaeltatuagem.com.br/" + (e.pagina_externa || ('guia.html#verbete-' + e.slug))
+        "url": "https://micaeltatuagem.com.br/" + (e.pagina_externa || ('guia#verbete-' + e.slug))
       }))
     };
     document.getElementById('schemaData').textContent = JSON.stringify(schema);

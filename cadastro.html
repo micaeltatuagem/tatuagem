@@ -14,12 +14,12 @@
   </script>
 
   <script>
-    // Links antigos de indicacao (cadastro.html?ref=MT-XXXX) agora sao processados no reserva.html.
+    // Links antigos de indicacao (cadastro?ref=MT-XXXX) agora sao processados no reserva.
     // Redireciona cedo, preservando o codigo, sem afetar quem chega na pagina sem esse parametro.
     (function () {
       var params = new URLSearchParams(window.location.search);
       if (params.has('ref')) {
-        window.location.replace('reserva.html?' + params.toString());
+        window.location.replace('reserva?' + params.toString());
       }
     })();
   </script>
@@ -28,7 +28,7 @@
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <meta name="description" content="Cadastre-se nas promoções da Micael Tatuagem. 20% de desconto na primeira tatuagem e ganhe uma sessão grátis ao indicar 5 amigos." />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://micaeltatuagem.com.br/cadastro.html" />
+  <link rel="canonical" href="https://micaeltatuagem.com.br/cadastro" />
   <meta name="keywords" content="promoção tatuagem Muriaé, desconto tatuagem MG, tatuador Muriaé promoção, Micael Faccio tatuagem" />
 
   <!-- Open Graph -->
@@ -36,7 +36,7 @@
   <meta property="og:title" content="Promoções · Micael Tatuagem" />
   <meta property="og:description" content="20% de desconto na primeira tatuagem e sessão grátis ao indicar 5 amigos. Micael Faccio, tatuador em Muriaé-MG." />
   <meta property="og:image" content="https://micaeltatuagem.com.br/hero-bg.webp" />
-  <meta property="og:url" content="https://micaeltatuagem.com.br/cadastro.html" />
+  <meta property="og:url" content="https://micaeltatuagem.com.br/cadastro" />
   <meta property="og:locale" content="pt_BR" />
   <meta property="og:site_name" content="Micael Tatuagem" />
 
@@ -52,7 +52,7 @@
     "@type": "BreadcrumbList",
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "Início", "item": "https://micaeltatuagem.com.br/" },
-      { "@type": "ListItem", "position": 2, "name": "Promoções", "item": "https://micaeltatuagem.com.br/cadastro.html" }
+      { "@type": "ListItem", "position": 2, "name": "Promoções", "item": "https://micaeltatuagem.com.br/cadastro" }
     ]
   }
   </script>
@@ -722,7 +722,7 @@
     }
 
 
-    /* ── Legibilidade do formulário (padrão reserva.html) ───── */
+    /* ── Legibilidade do formulário (padrão reserva) ───── */
     .form-wrap {
       background: #181616;
       border: 1px solid rgba(212,201,176,0.12);
@@ -843,20 +843,20 @@
 <body>
 
 <nav>
-  <a href="index.html" class="nav-logo"><img src="nav-icon.webp" alt="" width="28" height="28">Micael Tatuagem</a>
+  <a href="/" class="nav-logo"><img src="nav-icon.webp" alt="" width="28" height="28">Micael Tatuagem</a>
   <ul class="nav-links">
-    <li class="nav-extra"><a href="index.html#sobre">Sobre</a></li>
-    <li><a href="galeria.html">Galeria</a></li>
-    <li><a href="flash.html">Flash</a></li>
-    <li class="nav-extra"><a href="aerografia.html">Aerografia</a></li>
-    <li><a href="preview-tatuagem.html">Criar</a></li>
-    <li><a href="guia.html">Guia</a></li>
-    <li class="nav-extra"><a href="fisiologia-da-tatuagem.html">Cuidados</a></li>
-    <li class="nav-extra"><a href="valor.html">Valor</a></li>
-    <li class="nav-extra"><a href="index.html#promocoes">Promoções</a></li>
-    <li class="nav-extra"><a href="index.html#localizacao">Localização</a></li>
-    <li><a href="reserva.html">Reserva</a></li>
-    <li><a href="index.html#contato">Contato</a></li>
+    <li class="nav-extra"><a href="/#sobre">Sobre</a></li>
+    <li><a href="galeria">Galeria</a></li>
+    <li><a href="flash">Flash</a></li>
+    <li class="nav-extra"><a href="aerografia">Aerografia</a></li>
+    <li><a href="preview-tatuagem">Criar</a></li>
+    <li><a href="guia">Guia</a></li>
+    <li class="nav-extra"><a href="fisiologia-da-tatuagem">Cuidados</a></li>
+    <li class="nav-extra"><a href="valor">Valor</a></li>
+    <li class="nav-extra"><a href="/#promocoes">Promoções</a></li>
+    <li class="nav-extra"><a href="/#localizacao">Localização</a></li>
+    <li><a href="reserva">Reserva</a></li>
+    <li><a href="/#contato">Contato</a></li>
     <li class="nav-more">
       <button type="button" class="nav-more-btn" aria-haspopup="true" aria-expanded="false">Mais &#9662;</button>
     </li>
@@ -869,12 +869,12 @@
   </button>
 </nav>
 <ul class="nav-more-panel">
-  <li><a href="index.html#sobre">Sobre</a></li>
-  <li><a href="aerografia.html">Aerografia</a></li>
-  <li><a href="fisiologia-da-tatuagem.html">Cuidados</a></li>
-  <li><a href="valor.html">Valor</a></li>
-  <li><a href="index.html#promocoes">Promoções</a></li>
-  <li><a href="index.html#localizacao">Localização</a></li>
+  <li><a href="/#sobre">Sobre</a></li>
+  <li><a href="aerografia">Aerografia</a></li>
+  <li><a href="fisiologia-da-tatuagem">Cuidados</a></li>
+  <li><a href="valor">Valor</a></li>
+  <li><a href="/#promocoes">Promoções</a></li>
+  <li><a href="/#localizacao">Localização</a></li>
 </ul>
 
 <!-- ── Header ───────────────────────────────────────────────── -->
@@ -916,7 +916,7 @@
       sua ideia de tatuagem. Ao final, você recebe seu código de indicação pessoal e as instruções
       para ativar o desconto de 20%.
     </p>
-    <a class="btn-cta" href="reserva.html" onclick="gtag('event','click_cadastro_cta',{event_category:'conversao',event_label:'cadastro_para_reserva'})">Preencher e participar →</a>
+    <a class="btn-cta" href="reserva" onclick="gtag('event','click_cadastro_cta',{event_category:'conversao',event_label:'cadastro_para_reserva'})">Preencher e participar →</a>
     <p class="cta-note">Um único formulário: sua ideia de tatuagem e seus benefícios.</p>
   </div>
 
