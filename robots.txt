@@ -1,41 +1,32 @@
 User-agent: *
 Allow: /
 
-# ── Crawlers de busca/recuperação em tempo real (usados quando alguém pergunta
-#    a um assistente de IA e ele busca a página naquele momento para responder
-#    e citar a fonte) ──
-User-agent: OAI-SearchBot
+# Bots de IA — liberados explicitamente
+User-agent: GPTBot
 Allow: /
 
 User-agent: ChatGPT-User
 Allow: /
 
-User-agent: Claude-User
+User-agent: ClaudeBot
 Allow: /
 
-User-agent: Claude-SearchBot
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
 Allow: /
 
 User-agent: PerplexityBot
 Allow: /
 
-User-agent: Perplexity-User
-Allow: /
-
-# ── Crawlers de treinamento de modelos de IA ──
-User-agent: GPTBot
-Allow: /
-
-User-agent: ClaudeBot
+User-agent: CCBot
 Allow: /
 
 User-agent: Google-Extended
 Allow: /
 
-User-agent: Applebot-Extended
-Allow: /
-
-User-agent: CCBot
+User-agent: Bingbot
 Allow: /
 
 Sitemap: https://micaeltatuagem.com.br/sitemap.xml
