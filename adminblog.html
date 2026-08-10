@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <title>Admin Blog · Micael Tatuagem</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      #0a0a0a;
+      --surface: #111010;
+      --deep:    #181616;
+      --bone:    #d4c9b0;
+      --blood:   #8b1a1a;
+      --muted:   #6b6560;
+      --border:  rgba(212,201,176,0.12);
+      --success: #4ade80;
+      --radius:  4px;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--bone); font-family: 'Inter', sans-serif; min-height: 100vh; }
+
+    /* LOGIN */
+    #loginScreen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+    .login-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 3rem 2rem; width: 100%; max-width: 380px; text-align: center; }
+    .login-title { font-family: 'Cinzel', serif; font-size: 1.1rem; color: #c9a84c; letter-spacing: .1em; margin-bottom: .3rem; }
+    .login-sub { font-size: .72rem; color: var(--muted); letter-spacing: .15em; text-transform: uppercase; margin-bottom: 2rem; }
+    .login-group { margin-bottom: 1.2rem; text-align: left; }
+    .login-group label { display: block; font-size: .7rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
+    .login-group input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--bone); font-size: .9rem; padding: 10px 14px; outline: none; transition: border-color .2s; }
+    .login-group input:focus { border-color: #c9a84c; }
+    .login-hint { font-size: .7rem; color: var(--muted); margin-top: 5px; }
+    .btn-login { width: 100%; padding: 12px; background: var(--blood); color: #fff; border: none; border-radius: var(--radius); cursor: pointer; font-family: 'Cinzel', serif; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; margin-top: .5rem; transition: background .2s; }
+    .btn-login:hover { background: #a31f1f; }
+    .login-err { color: #e07070; font-size: .8rem; margin-top: 10px; min-height: 1.2em; }
+
+    /* PAINEL */
+    #adminPanel { display: none; max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+    .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 1rem; }
+    .admin-header h1 { font-family: 'Cinzel', serif; font-size: 1.2rem; color: #c9a84c; letter-spacing: .1em; }
+    .admin-header-links { display: flex; gap: 1.5rem; font-size: .82rem; }
+    .admin-header-links a { color: var(--muted); text-decoration: none; cursor: pointer; transition: color .2s; }
+    .admin-header-links a:hover { color: var(--bone); }
+
+    .github-status { display: flex; align-items: center; gap: .6rem; font-size: .78rem; padding: .6rem 1rem; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 1.5rem; }
+    .github-status.connected { border-color: rgba(74,222,128,.3); color: var(--success); }
+    .github-status.disconnected { border-color: rgba(139,26,26,.3); color: #e05555; }
+
+    .stats-bar { display: flex; gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .stat-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: .8rem 1.5rem; text-align: center; }
+    .stat-number { font-size: 1.8rem; font-weight: 300; color: #c9a84c; }
+    .stat-label { font-size: .7rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+
+    .form-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .form-section h2 { font-family: 'Cinzel', serif; font-size: .95rem; color: #c9a84c; letter-spacing: .08em; margin-bottom: 1.2rem; }
+    .form-section p.hint { font-size: .8rem; color: var(--muted); margin-top: -.4rem; margin-bottom: 1rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: .72rem; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 5px; }
+    .form-group input[type=text], .form-group input[type=date], .form-group input[type=email], textarea, select {
+      width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--bone);
+      font-size: .88rem; padding: 9px 12px; outline: none; font-family: 'Inter', sans-serif; transition: border-color .2s;
+    }
+    .form-group input:focus, textarea:focus, select:focus { border-color: #c9a84c; }
+    .form-group textarea { resize: vertical; min-height: 70px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
+    .char-counter { font-size: .7rem; color: var(--muted); text-align: right; margin-top: 3px; }
+    .char-counter.warn { color: #e0a840; }
+    .char-counter.over { color: #e05555; }
+    .slug-preview { font-size: .78rem; color: var(--muted); margin-top: 4px; word-break: break-all; }
+    .slug-preview strong { color: var(--bone); }
+
+    .tags-input-row { display: flex; gap: .5rem; }
+    .tags-input-row input { flex: 1; }
+    .tags-container { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .6rem; }
+    .tag-chip { display: flex; align-items: center; gap: .4rem; background: var(--deep); border: 1px solid var(--border); border-radius: 20px; padding: .3rem .8rem .3rem 1rem; font-size: .8rem; }
+    .tag-chip button { background: none; border: none; color: var(--muted); cursor: pointer; font-size: .85rem; line-height: 1; }
+    .tag-chip button:hover { color: #e05555; }
+
+    .cover-preview { border: 1px dashed var(--border); border-radius: var(--radius); min-height: 140px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--bg); margin-bottom: .6rem; }
+    .cover-preview img { max-width: 100%; max-height: 260px; object-fit: contain; display: none; }
+    .cover-preview-placeholder { color: var(--muted); font-size: .82rem; }
+
+    .upload-progress { display: none; margin-top: .8rem; }
+    .upload-progress.visible { display: block; }
+    .progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--blood); width: 0%; transition: width .3s; }
+    .progress-text { font-size: .75rem; color: var(--muted); margin-top: .4rem; }
+
+    .btn { padding: .6rem 1.2rem; border: none; border-radius: var(--radius); cursor: pointer; font-size: .82rem; font-family: 'Inter', sans-serif; transition: background .2s; }
+    .btn-primary { background: var(--blood); color: #fff; }
+    .btn-primary:hover { background: #a31f1f; }
+    .btn-secondary { background: var(--deep); color: var(--bone); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--bone); }
+    .btn-danger { background: rgba(139,26,26,.2); color: #e05555; border: 1px solid rgba(139,26,26,.3); }
+    .btn-danger:hover { background: rgba(139,26,26,.4); }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-row { display: flex; gap: .7rem; flex-wrap: wrap; margin-top: 1.2rem; }
+
+    .alert { padding: .8rem 1rem; border-radius: var(--radius); font-size: .85rem; display: none; margin-top: 1rem; }
+    .alert.visible { display: block; }
+    .alert.success { background: rgba(74,222,128,.1); border: 1px solid rgba(74,222,128,.3); color: var(--success); }
+    .alert.error { background: rgba(139,26,26,.15); border: 1px solid rgba(139,26,26,.3); color: #e05555; }
+
+    /* QUILL THEME */
+    #editorWrap { background: var(--bg); border-radius: var(--radius); overflow: hidden; }
+    .ql-toolbar.ql-snow { background: var(--deep); border-color: var(--border) !important; }
+    .ql-container.ql-snow { border-color: var(--border) !important; font-size: .92rem; }
+    .ql-editor { min-height: 320px; color: var(--bone); font-family: 'Inter', sans-serif; line-height: 1.75; }
+    .ql-editor.ql-blank::before { color: var(--muted); font-style: normal; }
+    .ql-snow .ql-stroke { stroke: var(--muted); }
+    .ql-snow .ql-fill { fill: var(--muted); }
+    .ql-snow .ql-picker { color: var(--muted); }
+    .ql-toolbar.ql-snow button:hover .ql-stroke, .ql-toolbar.ql-snow .ql-active .ql-stroke { stroke: #c9a84c; }
+    .ql-toolbar.ql-snow button:hover .ql-fill, .ql-toolbar.ql-snow .ql-active .ql-fill { fill: #c9a84c; }
+    .ql-snow .ql-picker-options { background: var(--surface); border-color: var(--border) !important; }
+    .ql-snow .ql-tooltip { background: var(--surface); border-color: var(--border); color: var(--bone); box-shadow: none; }
+    .ql-snow .ql-tooltip input[type=text] { background: var(--bg); color: var(--bone); border-color: var(--border); }
+
+    /* POST LIST */
+    .post-list { display: flex; flex-direction: column; gap: .8rem; margin-top: 1rem; }
+    .post-card { background: var(--deep); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; display: flex; gap: 1rem; align-items: center; }
+    .post-card img { width: 72px; height: 72px; object-fit: cover; border-radius: var(--radius); background: var(--bg); flex-shrink: 0; }
+    .post-card-info { flex: 1; min-width: 0; }
+    .post-card-title { font-size: .92rem; margin-bottom: .25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .post-card-meta { font-size: .74rem; color: var(--muted); display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
+    .badge { font-size: .65rem; text-transform: uppercase; letter-spacing: .06em; padding: .15rem .5rem; border-radius: 10px; }
+    .badge-published { background: rgba(74,222,128,.15); color: var(--success); }
+    .badge-draft { background: rgba(224,168,64,.15); color: #e0a840; }
+    .post-card-actions { display: flex; gap: .4rem; flex-wrap: wrap; flex-shrink: 0; }
+    .post-card-actions button { padding: .4rem .7rem; font-size: .75rem; }
+    .empty-state { color: var(--muted); font-size: .85rem; text-align: center; padding: 2rem 1rem; }
+  </style>
+<link rel="stylesheet" href="nav-mobile.css">
+</head>
+
+<body>
+
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-title">Micael Tatuagem</div>
+    <div class="login-sub">Admin Blog</div>
+    <form id="loginForm">
+      <div class="login-group">
+        <label for="inputEmail">E-mail</label>
+        <input type="email" id="inputEmail" autocomplete="username" required autofocus />
+      </div>
+      <div class="login-group">
+        <label for="inputSenha">Senha</label>
+        <input type="password" id="inputSenha" autocomplete="current-password" required />
+      </div>
+      <div class="login-group">
+        <label for="inputToken">Senha do admin</label>
+        <input type="password" id="inputToken" placeholder="Senha do painel" required />
+        <p class="login-hint">A mesma senha usada nos outros painéis (Flash, Galeria...).</p>
+      </div>
+      <button type="submit" class="btn-login">Acessar</button>
+      <div class="login-err" id="loginErr"></div>
+    </form>
+  </div>
+</div>
+
+<div id="adminPanel">
+  <div class="admin-header">
+    <h1>Admin · Blog</h1>
+    <div class="admin-header-links">
+      <a href="blog" target="_blank">👁 Ver blog</a>
+      <a href="admin-hub">⬅ Hub</a>
+      <a onclick="logout()">🔐 Sair</a>
+    </div>
+  </div>
+
+  <div class="github-status disconnected" id="githubStatus">
+    <span id="githubStatusText">Verificando GitHub...</span>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-number" id="statTotal">0</div><div class="stat-label">posts</div></div>
+    <div class="stat-item"><div class="stat-number" id="statPublished">0</div><div class="stat-label">publicados</div></div>
+    <div class="stat-item"><div class="stat-number" id="statDrafts">0</div><div class="stat-label">rascunhos</div></div>
+  </div>
+
+  <!-- EDITOR -->
+  <div class="form-section">
+    <h2 id="editorHeading">Novo Post</h2>
+    <input type="hidden" id="postId" />
+
+    <div class="form-group">
+      <label>Título *</label>
+      <input type="text" id="postTitle" placeholder="Ex: Como cuidar de uma tatuagem nova" oninput="onTitleInput()" />
+      <div class="slug-preview">URL: <strong id="slugPreview">/blog/</strong></div>
+    </div>
+
+    <div class="form-group">
+      <label>Slug (editável)</label>
+      <input type="text" id="postSlug" placeholder="gerado automaticamente" oninput="onSlugInput()" />
+    </div>
+
+    <div class="form-group">
+      <label>Resumo (aparece na listagem do blog)</label>
+      <textarea id="postExcerpt" placeholder="1-2 frases resumindo o post" maxlength="220"></textarea>
+      <div class="char-counter" id="excerptCounter">0 / 220</div>
+    </div>
+
+    <div class="form-group">
+      <label>Meta description (SEO — o que aparece no Google)</label>
+      <textarea id="postMetaDesc" placeholder="Se deixar em branco, usa o resumo." maxlength="160"></textarea>
+      <div class="char-counter" id="metaDescCounter">0 / 160 (ideal: 120-160)</div>
+    </div>
+
+    <div class="form-group">
+      <label>Imagem de capa</label>
+      <div class="cover-preview">
+        <img id="coverPreviewImg" alt="preview" />
+        <span class="cover-preview-placeholder" id="coverPreviewPlaceholder">Selecione uma imagem</span>
+      </div>
+      <input type="file" id="coverFile" accept="image/*" onchange="onCoverFileChange(event)" />
+      <div class="upload-progress" id="coverProgress">
+        <div class="progress-bar"><div class="progress-fill" id="coverProgressFill"></div></div>
+        <div class="progress-text" id="coverProgressText">Enviando...</div>
+      </div>
+      <input type="hidden" id="coverImageUrl" />
+    </div>
+
+    <div class="form-group">
+      <label>Alt text da capa (SEO)</label>
+      <input type="text" id="coverAlt" placeholder="Descrição da imagem para buscadores" />
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Autor</label>
+        <input type="text" id="postAuthor" value="Micael" />
+      </div>
+      <div class="form-group">
+        <label>Data de publicação</label>
+        <input type="date" id="postDate" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Tags</label>
+      <div class="tags-input-row">
+        <input type="text" id="tagInput" placeholder="Digite uma tag e Enter" onkeydown="onTagKeydown(event)" />
+        <button type="button" class="btn btn-secondary" onclick="addTagFromInput()">+ Adicionar</button>
+      </div>
+      <div class="tags-container" id="tagsContainer"></div>
+    </div>
+
+    <div class="form-group">
+      <label>Conteúdo</label>
+      <div id="editorWrap">
+        <div id="quillEditor"></div>
+      </div>
+      <p class="hint" style="margin-top:.6rem;">Clique no ícone de imagem na barra de ferramentas para inserir fotos direto no texto — elas são enviadas pro Supabase Storage automaticamente.</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btnPublish" onclick="onPublish()">🚀 Publicar</button>
+      <button class="btn btn-secondary" id="btnDraft" onclick="onSaveDraft()">💾 Salvar rascunho</button>
+      <button class="btn btn-secondary" onclick="onClearForm()">✖ Limpar formulário</button>
+    </div>
+    <div class="alert" id="editorAlert"></div>
+  </div>
+
+  <!-- LISTA -->
+  <div class="form-section">
+    <h2>Posts</h2>
+    <div class="post-list" id="postList"></div>
+  </div>
+</div>
+
+<div id="toastContainer" style="position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:.5rem;align-items:center;pointer-events:none;"></div>
+
+<script>
+  // ── CONFIG ──
+  const STORAGE_KEY  = 'micaelBlog_v1';
+  const TOKEN_KEY    = 'ghToken'; // mesma chave usada nos outros painéis admin -> login compartilhado
+  const REPO_OWNER   = 'micaeltatuagem';
+  const REPO_NAME    = 'tatuagem';
+  const BRANCH       = 'main';
+  const WORKER_URL   = 'https://tatuagem-gh-proxy.micaeltattoo.workers.dev';
+  const BLOG_FOLDER  = 'blog';
+  const DATA_PATH    = `${BLOG_FOLDER}/posts-data.json`;
+  const RSS_PATH     = `${BLOG_FOLDER}/rss.xml`;
+  const INDEX_PATH   = 'blog.html';
+  const SITEMAP_PATH = 'sitemap.xml';
+  const SITE_URL     = 'https://micaeltatuagem.com.br';
+  const SITE_NAME    = 'Micael Tatuagem';
+  const FALLBACK_IMG = `${SITE_URL}/img/fotoMicael.webp`;
+
+  const SUPABASE_URL  = 'https://rpgcsejfewltricfsdrd.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwZ2NzZWpmZXdsdHJpY2ZzZHJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4OTU0MzAsImV4cCI6MjA5NzQ3MTQzMH0.BHg2X0MVIokfnBjTK0DPt1NDB1H9sjXeUVZ1lJ3jKo0';
+  const BLOG_BUCKET   = 'blog-images';
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  let GH_TOKEN = '';
+  let quill = null;
+  let currentTags = [];
+  let editingId = null;
+
+  // ── HELPERS (mesmos usados em adminflash.html) ──
+  function escapeHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function escapeXml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function slugify(str) {
+    return String(str).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+  }
+  async function withRetry(fn, tentativas = 3, label = '') {
+    let lastErr;
+    for (let i = 1; i <= tentativas; i++) {
+      try { return await fn(); }
+      catch (err) {
+        lastErr = err;
+        console.warn(`Tentativa ${i}/${tentativas} falhou${label ? ' (' + label + ')' : ''}:`, err.message);
+        if (i < tentativas) await new Promise(r => setTimeout(r, 1000 * i));
+      }
+    }
+    throw lastErr;
+  }
+  function b64EncodeUnicode(str) {
+    return btoa(unescape(encodeURIComponent(str)));
+  }
+  function b64DecodeUnicode(str) {
+    return decodeURIComponent(escape(atob(str)));
+  }
+  function wordsToMinutes(html) {
+    const text = String(html || '').replace(/<[^>]+>/g, ' ');
+    const words = text.trim().split(/\s+/).filter(Boolean).length;
+    return Math.max(1, Math.round(words / 200));
+  }
+  function formatDateBR(iso) {
+    if (!iso) return '';
+    const [y,m,d] = iso.split('-');
+    return `${d}/${m}/${y}`;
+  }
+  function showAlert(elId, type, msg) {
+    const el = document.getElementById(elId);
+    el.textContent = msg;
+    el.className = `alert ${type} visible`;
+    setTimeout(() => { el.className = 'alert'; }, 6000);
+  }
+
+  // ── STORAGE LOCAL (cache) ──
+  function getPosts() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+    catch { return []; }
+  }
+  function savePostsLocal(posts) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+  }
+  async function seedFromRepo() {
+    try {
+      const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${DATA_PATH}?t=${Date.now()}`;
+      const res = await fetch(url, { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) savePostsLocal(data);
+      }
+    } catch {}
+  }
+
+  // ── AUTH (identico ao padrao dos outros paineis) ──
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('loginForm').addEventListener('submit', handleLogin);
+    initQuill();
+    ['postExcerpt','postMetaDesc'].forEach(id => document.getElementById(id).addEventListener('input', updateCounters));
+    document.getElementById('postDate').valueAsDate = new Date();
+    updateCounters();
+
+    (async () => {
+      const { data: { session } } = await sb.auth.getSession();
+      const token = sessionStorage.getItem(TOKEN_KEY);
+      if (session && token) { GH_TOKEN = token; showPanel(); }
+    })();
+  });
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('inputEmail').value.trim();
+    const senha = document.getElementById('inputSenha').value;
+    const token = document.getElementById('inputToken').value.trim();
+    const errEl = document.getElementById('loginErr');
+
+    errEl.textContent = '⏳ Entrando...';
+    const { error: authError } = await sb.auth.signInWithPassword({ email, password: senha });
+    if (authError) { errEl.textContent = '❌ Credenciais inválidas.'; document.getElementById('inputSenha').value=''; return; }
+    if (!token) { errEl.textContent = '❌ Digite a senha do admin.'; return; }
+
+    errEl.textContent = '⏳ Validando senha...';
+    try {
+      const res = await fetch(`${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}`, { headers: { Authorization: `Bearer ${token}` } });
+      if (!res.ok) throw new Error('Senha incorreta ou sem acesso.');
+      GH_TOKEN = token;
+      sessionStorage.setItem(TOKEN_KEY, token);
+      errEl.textContent = '';
+      showPanel();
+    } catch (err) { errEl.textContent = '❌ ' + err.message; }
+  }
+
+  async function logout() {
+    if (confirm('Sair?')) { sessionStorage.clear(); await sb.auth.signOut(); location.reload(); }
+  }
+
+  async function showPanel() {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminPanel').style.display = 'block';
+    await seedFromRepo();
+    renderPostList();
+    updateStats();
+    checkGitHubStatus();
+  }
+
+  async function checkGitHubStatus() {
+    const el = document.getElementById('githubStatus');
+    const txt = document.getElementById('githubStatusText');
+    try {
+      const res = await fetch(`${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}`, { headers: { Authorization: `Bearer ${GH_TOKEN}` } });
+      if (res.ok) { el.className = 'github-status connected'; txt.textContent = '✓ Conectado · micaeltatuagem/tatuagem'; }
+      else throw new Error();
+    } catch { el.className = 'github-status disconnected'; txt.textContent = '✗ Sem conexão com GitHub.'; }
+  }
+
+  // ── QUILL ──
+  function initQuill() {
+    quill = new Quill('#quillEditor', {
+      theme: 'snow',
+      placeholder: 'Escreva o post aqui...',
+      modules: {
+        toolbar: {
+          container: [
+            [{ header: [2, 3, false] }],
+            ['bold', 'italic', 'underline'],
+            ['blockquote'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['link', 'image'],
+            ['clean']
+          ],
+          handlers: { image: quillImageHandler }
+        }
+      }
+    });
+  }
+
+  function quillImageHandler() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = async () => {
+      const file = input.files[0];
+      if (!file) return;
+      const range = quill.getSelection(true);
+      quill.insertText(range.index, 'Enviando imagem...', { italic: true });
+      try {
+        const url = await uploadImageToSupabase(file, 'content');
+        quill.deleteText(range.index, 'Enviando imagem...'.length);
+        quill.insertEmbed(range.index, 'image', url);
+        quill.setSelection(range.index + 1);
+      } catch (err) {
+        quill.deleteText(range.index, 'Enviando imagem...'.length);
+        alert('Falha ao enviar imagem: ' + err.message);
+      }
+    };
+    input.click();
+  }
+
+  // ── UPLOAD DE IMAGEM (Supabase Storage) ──
+  async function uploadImageToSupabase(file, folderHint) {
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g,'') || 'jpg';
+    const path = `${folderHint}/${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+    const { error } = await sb.storage.from(BLOG_BUCKET).upload(path, file, { upsert: true, contentType: file.type || undefined });
+    if (error) throw new Error(error.message || 'Falha no upload para o Supabase Storage.');
+    const { data } = sb.storage.from(BLOG_BUCKET).getPublicUrl(path);
+    return data.publicUrl;
+  }
+
+  async function onCoverFileChange(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const progEl = document.getElementById('coverProgress');
+    const fillEl = document.getElementById('coverProgressFill');
+    const txtEl  = document.getElementById('coverProgressText');
+    progEl.className = 'upload-progress visible';
+    fillEl.style.width = '40%';
+    txtEl.textContent = 'Enviando imagem de capa...';
+    try {
+      const url = await withRetry(() => uploadImageToSupabase(file, 'covers'), 3, 'capa');
+      document.getElementById('coverImageUrl').value = url;
+      const img = document.getElementById('coverPreviewImg');
+      img.src = url; img.style.display = 'block';
+      document.getElementById('coverPreviewPlaceholder').style.display = 'none';
+      fillEl.style.width = '100%';
+      txtEl.textContent = 'Capa enviada.';
+      setTimeout(() => { progEl.className = 'upload-progress'; }, 1500);
+    } catch (err) {
+      progEl.className = 'upload-progress';
+      alert('Falha ao enviar a capa: ' + err.message);
+    }
+  }
+
+  // ── FORM: título/slug/contadores/tags ──
+  function onTitleInput() {
+    const title = document.getElementById('postTitle').value;
+    const slugField = document.getElementById('postSlug');
+    if (!editingId || !slugField.dataset.touched) {
+      slugField.value = slugify(title);
+    }
+    document.getElementById('slugPreview').innerHTML = `<strong>/blog/${escapeHtml(slugField.value)}</strong>`;
+  }
+  function onSlugInput() {
+    const field = document.getElementById('postSlug');
+    field.value = slugify(field.value);
+    field.dataset.touched = '1';
+    document.getElementById('slugPreview').innerHTML = `<strong>/blog/${escapeHtml(field.value)}</strong>`;
+  }
+  function updateCounters() {
+    const exc = document.getElementById('postExcerpt').value.length;
+    const meta = document.getElementById('postMetaDesc').value.length;
+    const excEl = document.getElementById('excerptCounter');
+    excEl.textContent = `${exc} / 220`;
+    const metaEl = document.getElementById('metaDescCounter');
+    metaEl.textContent = `${meta} / 160 (ideal: 120-160)`;
+    metaEl.className = 'char-counter' + (meta > 160 ? ' over' : (meta > 0 && meta < 70 ? ' warn' : ''));
+  }
+  function onTagKeydown(e) {
+    if (e.key === 'Enter') { e.preventDefault(); addTagFromInput(); }
+  }
+  function addTagFromInput() {
+    const input = document.getElementById('tagInput');
+    const val = input.value.trim();
+    if (!val) return;
+    if (!currentTags.includes(val)) currentTags.push(val);
+    input.value = '';
+    renderTagChips();
+  }
+  function removeTag(tag) {
+    currentTags = currentTags.filter(t => t !== tag);
+    renderTagChips();
+  }
+  function renderTagChips() {
+    document.getElementById('tagsContainer').innerHTML = currentTags.map(t => `
+      <div class="tag-chip">${escapeHtml(t)}<button type="button" onclick="removeTag('${t.replace(/'/g,"\\'")}')">✕</button></div>
+    `).join('');
+  }
+
+  function onClearForm() {
+    editingId = null;
+    document.getElementById('postId').value = '';
+    document.getElementById('postTitle').value = '';
+    document.getElementById('postSlug').value = '';
+    document.getElementById('postSlug').dataset.touched = '';
+    document.getElementById('postExcerpt').value = '';
+    document.getElementById('postMetaDesc').value = '';
+    document.getElementById('coverImageUrl').value = '';
+    document.getElementById('coverAlt').value = '';
+    document.getElementById('postAuthor').value = 'Micael';
+    document.getElementById('postDate').valueAsDate = new Date();
+    document.getElementById('coverPreviewImg').style.display = 'none';
+    document.getElementById('coverPreviewPlaceholder').style.display = 'block';
+    currentTags = [];
+    renderTagChips();
+    quill.setContents([]);
+    document.getElementById('editorHeading').textContent = 'Novo Post';
+    updateCounters();
+    onTitleInput();
+  }
+
+  function loadPostIntoForm(post) {
+    editingId = post.id;
+    document.getElementById('postId').value = post.id;
+    document.getElementById('postTitle').value = post.title || '';
+    document.getElementById('postSlug').value = post.slug || '';
+    document.getElementById('postSlug').dataset.touched = '1';
+    document.getElementById('postExcerpt').value = post.excerpt || '';
+    document.getElementById('postMetaDesc').value = post.metaDescription || '';
+    document.getElementById('coverImageUrl').value = post.coverImage || '';
+    document.getElementById('coverAlt').value = post.coverImageAlt || '';
+    document.getElementById('postAuthor').value = post.author || 'Micael';
+    document.getElementById('postDate').value = post.publishDate || new Date().toISOString().split('T')[0];
+    const img = document.getElementById('coverPreviewImg');
+    if (post.coverImage) { img.src = post.coverImage; img.style.display = 'block'; document.getElementById('coverPreviewPlaceholder').style.display = 'none'; }
+    else { img.style.display = 'none'; document.getElementById('coverPreviewPlaceholder').style.display = 'block'; }
+    currentTags = Array.isArray(post.tags) ? [...post.tags] : [];
+    renderTagChips();
+    quill.root.innerHTML = post.contentHtml || '';
+    document.getElementById('editorHeading').textContent = `Editando: ${post.title}`;
+    updateCounters();
+    onTitleInput();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function editPost(id) {
+    const post = getPosts().find(p => p.id === id);
+    if (post) loadPostIntoForm(post);
+  }
+
+  // ── MONTA O OBJETO POST A PARTIR DO FORM ──
+  function collectPostFromForm() {
+    const title = document.getElementById('postTitle').value.trim();
+    if (!title) throw new Error('Título é obrigatório.');
+    let slug = document.getElementById('postSlug').value.trim() || slugify(title);
+    slug = slugify(slug);
+    if (!slug) throw new Error('Slug inválido.');
+
+    const contentHtml = quill.root.innerHTML.trim();
+    const excerpt = document.getElementById('postExcerpt').value.trim();
+    const posts = getPosts();
+    const existing = editingId ? posts.find(p => p.id === editingId) : null;
+
+    // slug precisa ser unico (exceto o proprio post em edicao)
+    const clash = posts.find(p => p.slug === slug && p.id !== editingId);
+    if (clash) throw new Error(`Já existe um post com o slug "${slug}". Escolha outro.`);
+
+    return {
+      id: editingId || `post_${Date.now()}`,
+      slug,
+      title,
+      excerpt: excerpt || stripHtml(contentHtml).slice(0, 160),
+      contentHtml,
+      coverImage: document.getElementById('coverImageUrl').value.trim() || (existing ? existing.coverImage : ''),
+      coverImageAlt: document.getElementById('coverAlt').value.trim() || title,
+      metaDescription: document.getElementById('postMetaDesc').value.trim(),
+      tags: [...currentTags],
+      author: document.getElementById('postAuthor').value.trim() || 'Micael',
+      publishDate: document.getElementById('postDate').value || new Date().toISOString().split('T')[0],
+      updatedDate: new Date().toISOString().split('T')[0],
+      readingMinutes: wordsToMinutes(contentHtml),
+      draft: existing ? existing.draft : true
+    };
+  }
+
+  function stripHtml(html) {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return (div.textContent || '').replace(/\s+/g, ' ').trim();
+  }
+
+  // ── SALVAR RASCUNHO (so grava no posts-data.json, nao gera pagina publica) ──
+  async function onSaveDraft() {
+    const btn = document.getElementById('btnDraft');
+    btn.disabled = true;
+    try {
+      const post = collectPostFromForm();
+      post.draft = true;
+      let posts = getPosts();
+      const idx = posts.findIndex(p => p.id === post.id);
+      if (idx >= 0) posts[idx] = post; else posts.unshift(post);
+      savePostsLocal(posts);
+      await withRetry(() => commitPostsData(posts), 3, 'posts-data.json');
+      editingId = post.id;
+      showAlert('editorAlert', 'success', `💾 Rascunho "${post.title}" salvo. Ele não aparece no blog público até você publicar.`);
+      renderPostList();
+      updateStats();
+    } catch (err) {
+      showAlert('editorAlert', 'error', '❌ ' + err.message);
+    } finally { btn.disabled = false; }
+  }
+
+  // ── PUBLICAR (gera pagina estatica + index + sitemap + rss) ──
+  async function onPublish() {
+    const btn = document.getElementById('btnPublish');
+    btn.disabled = true;
+    showAlert('editorAlert', 'success', '⏳ Publicando...');
+    try {
+      const post = collectPostFromForm();
+      post.draft = false;
+      if (!post.coverImage) throw new Error('Adicione uma imagem de capa antes de publicar (usada no SEO e no compartilhamento).');
+
+      let posts = getPosts();
+      const idx = posts.findIndex(p => p.id === post.id);
+      if (idx >= 0) posts[idx] = post; else posts.unshift(post);
+      savePostsLocal(posts);
+      editingId = post.id;
+
+      await withRetry(() => commitPostsData(posts), 3, 'posts-data.json');
+      await withRetry(() => commitPostPage(post, posts), 3, `blog/${post.slug}.html`);
+      await withRetry(() => commitBlogIndex(posts), 3, 'blog.html (índice)');
+      try { await withRetry(() => updateSitemapForPost(post), 2, 'sitemap.xml'); }
+      catch (e) { console.warn('Sitemap não atualizado (não crítico):', e.message); }
+      try { await withRetry(() => commitRssFeed(posts), 2, 'rss.xml'); }
+      catch (e) { console.warn('RSS não atualizado (não crítico):', e.message); }
+
+      showAlert('editorAlert', 'success', `🚀 Post "${post.title}" publicado em ${SITE_URL}/blog/${post.slug}`);
+      renderPostList();
+      updateStats();
+    } catch (err) {
+      showAlert('editorAlert', 'error', '❌ ' + err.message);
+    } finally { btn.disabled = false; }
+  }
+
+  async function unpublishPost(id) {
+    const posts = getPosts();
+    const post = posts.find(p => p.id === id);
+    if (!post) return;
+    if (!confirm(`Despublicar "${post.title}"? A página sai do ar e do blog, mas o conteúdo continua salvo como rascunho.`)) return;
+    try {
+      post.draft = true;
+      savePostsLocal(posts);
+      await withRetry(() => commitPostsData(posts), 3, 'posts-data.json');
+      await withRetry(() => deletePostPage(post.slug), 2, 'remover página');
+      await withRetry(() => commitBlogIndex(posts), 3, 'blog.html (índice)');
+      try { await withRetry(() => removeSitemapEntryForPost(post), 2, 'sitemap.xml'); } catch {}
+      try { await withRetry(() => commitRssFeed(posts), 2, 'rss.xml'); } catch {}
+      showAlert('editorAlert', 'success', `Post "${post.title}" despublicado.`);
+      renderPostList(); updateStats();
+    } catch (err) { showAlert('editorAlert', 'error', '❌ ' + err.message); }
+  }
+
+  async function deletePostEntirely(id) {
+    const posts = getPosts();
+    const post = posts.find(p => p.id === id);
+    if (!post) return;
+    if (!confirm(`Excluir "${post.title}" permanentemente? Essa ação não pode ser desfeita.`)) return;
+    try {
+      const wasPublished = !post.draft;
+      const remaining = posts.filter(p => p.id !== id);
+      savePostsLocal(remaining);
+      await withRetry(() => commitPostsData(remaining), 3, 'posts-data.json');
+      if (wasPublished) {
+        await withRetry(() => deletePostPage(post.slug), 2, 'remover página');
+        await withRetry(() => commitBlogIndex(remaining), 3, 'blog.html (índice)');
+        try { await withRetry(() => removeSitemapEntryForPost(post), 2, 'sitemap.xml'); } catch {}
+        try { await withRetry(() => commitRssFeed(remaining), 2, 'rss.xml'); } catch {}
+      }
+      if (editingId === id) onClearForm();
+      showAlert('editorAlert', 'success', `Post "${post.title}" excluído.`);
+      renderPostList(); updateStats();
+    } catch (err) { showAlert('editorAlert', 'error', '❌ ' + err.message); }
+  }
+
+  // ── RENDER LISTA ──
+  function renderPostList() {
+    const posts = getPosts();
+    const el = document.getElementById('postList');
+    if (!posts.length) { el.innerHTML = '<div class="empty-state">Nenhum post ainda. Crie o primeiro acima.</div>'; return; }
+    const sorted = [...posts].sort((a,b) => (b.publishDate||'').localeCompare(a.publishDate||''));
+    el.innerHTML = sorted.map(p => `
+      <div class="post-card">
+        <img src="${escapeHtml(p.coverImage || FALLBACK_IMG)}" alt="" loading="lazy" />
+        <div class="post-card-info">
+          <div class="post-card-title">${escapeHtml(p.title)}</div>
+          <div class="post-card-meta">
+            <span class="badge ${p.draft ? 'badge-draft' : 'badge-published'}">${p.draft ? 'Rascunho' : 'Publicado'}</span>
+            <span>${formatDateBR(p.publishDate)}</span>
+            <span>${p.readingMinutes || 1} min de leitura</span>
+          </div>
+        </div>
+        <div class="post-card-actions">
+          <button class="btn btn-secondary" onclick="editPost('${p.id}')">✎ Editar</button>
+          ${p.draft ? '' : `<a class="btn btn-secondary" href="blog/${p.slug}" target="_blank">👁 Ver</a>`}
+          ${p.draft ? '' : `<button class="btn btn-secondary" onclick="unpublishPost('${p.id}')">⤓ Despublicar</button>`}
+          <button class="btn btn-danger" onclick="deletePostEntirely('${p.id}')">🗑 Excluir</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function updateStats() {
+    const posts = getPosts();
+    document.getElementById('statTotal').textContent = posts.length;
+    document.getElementById('statPublished').textContent = posts.filter(p => !p.draft).length;
+    document.getElementById('statDrafts').textContent = posts.filter(p => p.draft).length;
+  }
+
+  // ── COMMITS NO GITHUB (mesmo padrao GET-sha + PUT usado em adminflash.html) ──
+  async function commitFile(path, content, message) {
+    const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
+    let sha = null;
+    try { const r = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` } }); if (r.ok) sha = (await r.json()).sha; } catch {}
+    const body = { message, content: b64EncodeUnicode(content), branch: BRANCH };
+    if (sha) body.sha = sha;
+    const res = await fetch(url, { method: 'PUT', headers: { Authorization: `Bearer ${GH_TOKEN}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.message || `Erro ao salvar ${path}`); }
+    return res.json();
+  }
+
+  async function readFile(path) {
+    const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` } });
+    if (!res.ok) throw new Error(`Não foi possível ler ${path}`);
+    const data = await res.json();
+    return { sha: data.sha, content: b64DecodeUnicode(data.content) };
+  }
+
+  async function commitPostsData(posts) {
+    return commitFile(DATA_PATH, JSON.stringify(posts, null, 2), 'Atualiza blog/posts-data.json');
+  }
+
+  async function commitPostPage(post, allPosts) {
+    const html = buildBlogPostHtml(post, allPosts);
+    return commitFile(`${BLOG_FOLDER}/${post.slug}.html`, html, `Publica post do blog: ${post.title}`);
+  }
+
+  async function deletePostPage(slug) {
+    const path = `${BLOG_FOLDER}/${slug}.html`;
+    const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
+    let sha = null;
+    try { const r = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` } }); if (r.ok) sha = (await r.json()).sha; } catch {}
+    if (!sha) return;
+    const body = { message: `Remove página do blog: ${slug}`, sha, branch: BRANCH };
+    await fetch(url, { method: 'DELETE', headers: { Authorization: `Bearer ${GH_TOKEN}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  }
+
+  async function commitBlogIndex(posts) {
+    const html = buildBlogIndexHtml(posts);
+    return commitFile(INDEX_PATH, html, 'Atualiza índice do blog');
+  }
+
+  async function commitRssFeed(posts) {
+    const xml = buildRssXml(posts);
+    return commitFile(RSS_PATH, xml, 'Atualiza blog/rss.xml');
+  }
+
+  async function updateSitemapForPost(post) {
+    const loc = `${SITE_URL}/blog/${post.slug}`;
+    const today = new Date().toISOString().split('T')[0];
+    const imageBlock = post.coverImage ? `
+      <image:image>
+        <image:loc>${escapeXml(post.coverImage)}</image:loc>
+        <image:title>${escapeXml(post.title)}</image:title>
+      </image:image>` : '';
+    const urlBlock = `  <url>
+    <loc>${loc}</loc>
+    <lastmod>${today}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>${imageBlock}
+  </url>`;
+
+    const { sha, content } = await readFile(SITEMAP_PATH);
+    let xml = content;
+    const escLoc = loc.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const blockRegex = new RegExp(`\\s*<url>\\s*<loc>${escLoc}</loc>[\\s\\S]*?</url>`);
+    xml = blockRegex.test(xml) ? xml.replace(blockRegex, '\n' + urlBlock) : xml.replace('</urlset>', urlBlock + '\n</urlset>');
+
+    // garante que /blog (indice) tambem esta no sitemap
+    const blogLoc = `${SITE_URL}/blog`;
+    if (!xml.includes(`<loc>${blogLoc}</loc>`)) {
+      const blogBlock = `  <url>\n    <loc>${blogLoc}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>`;
+      xml = xml.replace('</urlset>', blogBlock + '\n</urlset>');
+    }
+
+    const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${SITEMAP_PATH}`;
+    const body = { message: `Atualiza sitemap.xml (post: ${post.title})`, content: b64EncodeUnicode(xml), branch: BRANCH, sha };
+    const res = await fetch(url, { method: 'PUT', headers: { Authorization: `Bearer ${GH_TOKEN}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.message || 'Erro ao atualizar sitemap'); }
+  }
+
+  async function removeSitemapEntryForPost(post) {
+    const loc = `${SITE_URL}/blog/${post.slug}`;
+    const { sha, content } = await readFile(SITEMAP_PATH);
+    let xml = content;
+    const escLoc = loc.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const blockRegex = new RegExp(`\\s*<url>\\s*<loc>${escLoc}</loc>[\\s\\S]*?</url>`);
+    if (!blockRegex.test(xml)) return;
+    xml = xml.replace(blockRegex, '');
+    const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${SITEMAP_PATH}`;
+    const body = { message: `Remove entrada de sitemap (post: ${post.title})`, content: b64EncodeUnicode(xml), branch: BRANCH, sha };
+    await fetch(url, { method: 'PUT', headers: { Authorization: `Bearer ${GH_TOKEN}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  }
+
+  // ── NAV/FOOTER PADRAO DO SITE (paginas raiz) ──
+  function siteNavHtml(currentKey) {
+    const cls = k => k === currentKey ? ' class="atual"' : '';
+    return `<nav>
+  <a href="/" class="nav-logo"><img src="/nav-icon.webp" alt="" width="28" height="28">Micael Tatuagem</a>
+  <ul class="nav-links">
+    <li class="nav-extra"><a href="/#sobre">Sobre</a></li>
+    <li><a href="/galeria">Galeria</a></li>
+    <li><a href="/flash">Flash</a></li>
+    <li class="nav-extra"><a href="/aerografia">Aerografia</a></li>
+    <li><a href="/preview-tatuagem">Criar</a></li>
+    <li><a href="/guia">Guia</a></li>
+    <li class="nav-extra"><a href="/fisiologia-da-tatuagem">Cuidados</a></li>
+    <li class="nav-extra"><a href="/valor">Valor</a></li>
+    <li class="nav-extra"><a href="/#promocoes">Promoções</a></li>
+    <li class="nav-extra"><a href="/#localizacao">Localização</a></li>
+    <li><a href="/blog"${cls('blog')}>Blog</a></li>
+    <li><a href="/reserva">Reserva</a></li>
+    <li><a href="/#contato">Contato</a></li>
+    <li class="nav-more">
+      <button type="button" class="nav-more-btn" aria-haspopup="true" aria-expanded="false">Mais &#9662;</button>
+    </li>
+  </ul>
+  <button type="button" class="nav-toggle" aria-label="Abrir menu" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path class="ico-bars" d="M4 7h16M4 12h16M4 17h16"/>
+      <path class="ico-x" d="M6 6l12 12M18 6L6 18"/>
+    </svg>
+  </button>
+</nav>
+<ul class="nav-more-panel">
+  <li><a href="/#sobre">Sobre</a></li>
+  <li><a href="/aerografia">Aerografia</a></li>
+  <li><a href="/fisiologia-da-tatuagem">Cuidados</a></li>
+  <li><a href="/valor">Valor</a></li>
+  <li><a href="/#promocoes">Promoções</a></li>
+  <li><a href="/#localizacao">Localização</a></li>
+</ul>`;
+  }
+
+  function siteFooterHtml() {
+    return `<footer style="padding: 2rem; text-align: center; border-top: 1px solid var(--border); font-size: 0.85rem; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase;">
+  <p>
+    <a href="/" style="color: var(--muted); text-decoration: none;">← Voltar à home</a>
+    &nbsp;·&nbsp;
+    <a href="/blog" style="color: var(--muted); text-decoration: none;">Ver todos os posts</a>
+    &nbsp;·&nbsp;
+    <a href="/reserva" style="color: var(--muted); text-decoration: none;">Reservar horário</a>
+  </p>
+  <p style="margin-top:0.8rem;">© Micael Faccio · Tatuador em Muriaé, MG</p>
+</footer>`;
+  }
+
+  const BLOG_PAGE_STYLES = `
+  :root {
+    --ink: #0a0a0a; --deep: #111010; --surface: #181616;
+    --bone: #d4c9b0; --blood: #8b1a1a; --rust: #c0392b;
+    --muted: #6b6560; --border: rgba(212,201,176,0.12);
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--ink); color:var(--bone); font-family:'Inter',sans-serif; }
+  nav { display:flex; align-items:center; justify-content:space-between; padding:1.2rem 1.5rem; border-bottom:1px solid var(--border); }
+  .nav-logo { display:flex; align-items:center; gap:.5rem; font-family:'Inter',sans-serif; font-size:.95rem; letter-spacing:.08em; text-transform:uppercase; color:var(--bone); text-decoration:none; }
+  .nav-links { display:flex; gap:1.5rem; list-style:none; margin:0; padding:0; flex-wrap:wrap; }
+  .nav-links a { font-size:.85rem; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); text-decoration:none; }
+  .nav-links a:hover, .nav-links a.atual { color:var(--bone); }
+  .content-panel { position: relative; z-index: 1; background: rgba(10,10,10,0.62); backdrop-filter: blur(6px); border: 1px solid rgba(212,201,176,0.08); border-radius: 4px; padding: 1.75rem 2rem; }
+  main.post-main { max-width:720px; margin:0 auto; padding:3rem 1.5rem 4rem; }
+  .eyebrow { font-size:.78rem; letter-spacing:.15em; text-transform:uppercase; color:var(--rust); margin-bottom:.8rem; text-align:center; }
+  h1.post-title { font-family:'Cormorant Garamond', serif; font-size:2.4rem; font-weight:600; margin:0 0 1rem; text-align:center; line-height:1.2; }
+  .post-meta { font-size:.82rem; color:var(--muted); text-align:center; margin-bottom:2rem; letter-spacing:.03em; }
+  .post-cover { width:100%; border-radius:4px; margin-bottom:2.2rem; overflow:hidden; border:1px solid var(--border); }
+  .post-cover img { width:100%; display:block; }
+  .post-body { line-height:1.8; font-size:1rem; color:#c9beac; }
+  .post-body h2 { font-family:'Cormorant Garamond', serif; font-size:1.6rem; font-weight:600; color:var(--bone); margin:2rem 0 1rem; }
+  .post-body h3 { font-family:'Cormorant Garamond', serif; font-size:1.3rem; font-weight:600; color:var(--bone); margin:1.6rem 0 .8rem; }
+  .post-body p { margin:0 0 1.1rem; }
+  .post-body img { max-width:100%; border-radius:4px; margin:1rem 0; }
+  .post-body a { color:#c9a84c; }
+  .post-body blockquote { border-left:3px solid var(--blood); margin:1.4rem 0; padding:.4rem 0 .4rem 1.2rem; color:var(--bone); font-style:italic; }
+  .post-body ul, .post-body ol { margin:0 0 1.1rem 1.4rem; }
+  .post-tags { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:2rem; }
+  .post-tags a { font-size:.75rem; color:var(--muted); border:1px solid var(--border); border-radius:20px; padding:.25rem .8rem; text-decoration:none; }
+  .post-tags a:hover { color:var(--bone); border-color:var(--bone); }
+  .post-cta { display:block; text-align:center; background:var(--blood); color:var(--bone); text-decoration:none; padding:.9rem 1.6rem; border-radius:4px; font-size:.85rem; letter-spacing:.08em; text-transform:uppercase; margin:2.6rem 0; transition:background .2s; }
+  .post-cta:hover { background:var(--rust); }
+  .related-posts { border-top:1px solid var(--border); padding-top:2rem; margin-top:2.6rem; }
+  .related-posts h2 { font-family:'Cormorant Garamond', serif; font-size:1.3rem; font-weight:600; margin-bottom:1.2rem; text-align:center; }
+  .related-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; }
+  .related-item { display:block; text-decoration:none; color:inherit; background:var(--surface); border:1px solid var(--border); border-radius:4px; overflow:hidden; }
+  .related-item img { width:100%; aspect-ratio:16/10; object-fit:cover; display:block; }
+  .related-item span { display:block; padding:.7rem .8rem; font-size:.82rem; color:var(--bone); }
+  @media (max-width:560px) { .nav-links { gap:.9rem; } h1.post-title { font-size:1.9rem; } }
+
+  /* INDICE DO BLOG */
+  main.blog-index { max-width:960px; margin:0 auto; padding:3rem 1.5rem 4rem; }
+  .blog-header { text-align:center; margin-bottom:2.6rem; }
+  .blog-header h1 { font-family:'Cormorant Garamond', serif; font-size:2.4rem; font-weight:600; margin:0 0 .7rem; }
+  .blog-header p { color:#c9beac; font-size:1rem; max-width:560px; margin:0 auto; }
+  .post-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.4rem; }
+  .post-grid-item { display:flex; flex-direction:column; background:var(--surface); border:1px solid var(--border); border-radius:4px; overflow:hidden; text-decoration:none; color:inherit; transition:border-color .2s; }
+  .post-grid-item:hover { border-color:var(--bone); }
+  .post-grid-item img { width:100%; aspect-ratio:16/10; object-fit:cover; display:block; }
+  .post-grid-body { padding:1.1rem 1.2rem 1.3rem; display:flex; flex-direction:column; gap:.5rem; flex:1; }
+  .post-grid-meta { font-size:.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+  .post-grid-title { font-family:'Cormorant Garamond', serif; font-size:1.25rem; font-weight:600; color:var(--bone); line-height:1.3; }
+  .post-grid-excerpt { font-size:.86rem; color:#a89e8e; line-height:1.6; flex:1; }
+  .blog-empty { text-align:center; color:var(--muted); padding:3rem 1rem; }
+  `;
+
+  function relatedPostsHtml(post, allPosts) {
+    const others = allPosts.filter(p => !p.draft && p.id !== post.id);
+    if (!others.length) return '';
+    const picks = others
+      .filter(p => (p.tags||[]).some(t => (post.tags||[]).includes(t)))
+      .concat(others)
+      .filter((p, i, arr) => arr.findIndex(x => x.id === p.id) === i)
+      .slice(0, 3);
+    if (!picks.length) return '';
+    return `<div class="related-posts">
+  <h2>Continue lendo</h2>
+  <div class="related-list">
+    ${picks.map(p => `<a class="related-item" href="/blog/${p.slug}">
+      <img src="${escapeHtml(p.coverImage || FALLBACK_IMG)}" alt="" loading="lazy">
+      <span>${escapeHtml(p.title)}</span>
+    </a>`).join('')}
+  </div>
+</div>`;
+  }
+
+  function buildBlogPostHtml(post, allPosts) {
+    const canonical = `${SITE_URL}/blog/${post.slug}`;
+    const title = `${escapeHtml(post.title)} | Blog · Micael Tatuagem`;
+    const metaDesc = escapeHtml((post.metaDescription || post.excerpt || '').slice(0, 160));
+    const ogImage = post.coverImage || FALLBACK_IMG;
+    const tagsHtml = (post.tags||[]).map(t => `<a href="/blog?tag=${encodeURIComponent(t)}">#${escapeHtml(t)}</a>`).join('');
+
+    const articleSchema = {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": post.title,
+      "description": post.metaDescription || post.excerpt || '',
+      "image": [ogImage],
+      "datePublished": post.publishDate,
+      "dateModified": post.updatedDate || post.publishDate,
+      "author": { "@type": "Person", "name": post.author || "Micael" },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Micael Tatuagem",
+        "logo": { "@type": "ImageObject", "url": `${SITE_URL}/favicon.png` }
+      },
+      "mainEntityOfPage": { "@type": "WebPage", "@id": canonical }
+    };
+    const breadcrumbSchema = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Início", "item": `${SITE_URL}/` },
+        { "@type": "ListItem", "position": 2, "name": "Blog", "item": `${SITE_URL}/blog` },
+        { "@type": "ListItem", "position": 3, "name": post.title, "item": canonical }
+      ]
+    };
+
+    return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${title}</title>
+<meta name="description" content="${metaDesc}">
+<link rel="canonical" href="${canonical}">
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${metaDesc}">
+<meta property="og:image" content="${escapeHtml(ogImage)}">
+<meta property="og:url" content="${canonical}">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Micael Tatuagem">
+<meta property="article:published_time" content="${post.publishDate}">
+<meta property="article:author" content="${escapeHtml(post.author || 'Micael')}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${title}">
+<meta name="twitter:description" content="${metaDesc}">
+<meta name="twitter:image" content="${escapeHtml(ogImage)}">
+<script type="application/ld+json">${JSON.stringify(articleSchema)}<\/script>
+<script type="application/ld+json">${JSON.stringify(breadcrumbSchema)}<\/script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>${BLOG_PAGE_STYLES}</style>
+<link rel="stylesheet" href="/nav-mobile.css">
+</head>
+<body>
+${siteNavHtml('blog')}
+<main class="post-main">
+  <div class="eyebrow">Blog</div>
+  <h1 class="post-title">${escapeHtml(post.title)}</h1>
+  <p class="post-meta">${formatDateBR(post.publishDate)} · ${post.readingMinutes || 1} min de leitura · por ${escapeHtml(post.author || 'Micael')}</p>
+  <div class="post-cover"><img src="${escapeHtml(ogImage)}" alt="${escapeHtml(post.coverImageAlt || post.title)}" loading="eager"></div>
+  <div class="content-panel">
+    <div class="post-body">${post.contentHtml}</div>
+    <div class="post-tags">${tagsHtml}</div>
+  </div>
+  <a class="post-cta" href="/reserva">Reservar horário com o Micael</a>
+  ${relatedPostsHtml(post, allPosts)}
+</main>
+${siteFooterHtml()}
+<script src="/nav-mobile.js" defer><\/script>
+</body>
+</html>
+`;
+  }
+
+  function buildBlogIndexHtml(posts) {
+    const published = posts.filter(p => !p.draft).sort((a,b) => (b.publishDate||'').localeCompare(a.publishDate||''));
+    const canonical = `${SITE_URL}/blog`;
+    const title = 'Blog | Micael Tatuagem — Muriaé-MG';
+    const metaDesc = 'Cuidados com tatuagem, estilos, bastidores do estúdio e dicas do tatuador Micael, em Muriaé-MG.';
+
+    const cardsHtml = published.length
+      ? published.map(p => `<a class="post-grid-item" href="/blog/${p.slug}">
+      <img src="${escapeHtml(p.coverImage || FALLBACK_IMG)}" alt="${escapeHtml(p.coverImageAlt || p.title)}" loading="lazy">
+      <div class="post-grid-body">
+        <div class="post-grid-meta">${formatDateBR(p.publishDate)} · ${p.readingMinutes || 1} min</div>
+        <div class="post-grid-title">${escapeHtml(p.title)}</div>
+        <div class="post-grid-excerpt">${escapeHtml(p.excerpt || '')}</div>
+      </div>
+    </a>`).join('')
+      : '<div class="blog-empty">Nenhum post publicado ainda. Volte em breve.</div>';
+
+    const listSchema = {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "name": "Blog Micael Tatuagem",
+      "url": canonical,
+      "blogPost": published.slice(0, 20).map(p => ({
+        "@type": "BlogPosting",
+        "headline": p.title,
+        "url": `${SITE_URL}/blog/${p.slug}`,
+        "datePublished": p.publishDate
+      }))
+    };
+
+    return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${title}</title>
+<meta name="description" content="${escapeHtml(metaDesc)}">
+<link rel="canonical" href="${canonical}">
+<link rel="icon" type="image/png" href="/favicon.png">
+<meta name="robots" content="index, follow">
+<link rel="alternate" type="application/rss+xml" title="Blog Micael Tatuagem" href="/blog/rss.xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${escapeHtml(metaDesc)}">
+<meta property="og:url" content="${canonical}">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Micael Tatuagem">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="${title}">
+<meta name="twitter:description" content="${escapeHtml(metaDesc)}">
+<script type="application/ld+json">${JSON.stringify(listSchema)}<\/script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>${BLOG_PAGE_STYLES}</style>
+<link rel="stylesheet" href="/nav-mobile.css">
+</head>
+<body>
+${siteNavHtml('blog')}
+<main class="blog-index">
+  <div class="blog-header">
+    <h1>Blog</h1>
+    <p>Cuidados com tatuagem, estilos, bastidores do estúdio e dicas direto do Micael.</p>
+  </div>
+  <div class="post-grid">${cardsHtml}</div>
+</main>
+${siteFooterHtml()}
+<script src="/nav-mobile.js" defer><\/script>
+</body>
+</html>
+`;
+  }
+
+  function buildRssXml(posts) {
+    const published = posts.filter(p => !p.draft).sort((a,b) => (b.publishDate||'').localeCompare(a.publishDate||'')).slice(0, 30);
+    const items = published.map(p => `  <item>
+    <title>${escapeXml(p.title)}</title>
+    <link>${SITE_URL}/blog/${p.slug}</link>
+    <guid>${SITE_URL}/blog/${p.slug}</guid>
+    <pubDate>${new Date(p.publishDate).toUTCString()}</pubDate>
+    <description>${escapeXml(p.excerpt || '')}</description>
+  </item>`).join('\n');
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title>Blog Micael Tatuagem</title>
+  <link>${SITE_URL}/blog</link>
+  <description>Cuidados com tatuagem, estilos e novidades do estúdio em Muriaé-MG.</description>
+  <language>pt-BR</language>
+${items}
+</channel>
+</rss>
+`;
+  }
+</script>
+</body>
+</html>
