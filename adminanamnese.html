@@ -479,6 +479,12 @@ const SUPA_KEY   = 'sb_publishable_7LF70sbQS_es_uco138rqw_YfbqnIsa';
 
 const db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
+// Escapa qualquer texto antes de jogar em innerHTML — evita que um nome/CPF/etc.
+// digitado no formulário público (anamnese.html) vire código executável aqui.
+function escapeHtml(str) {
+  return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
 // ─────────────────────────────────────
 // AUTH — login real via Supabase Auth
 // ─────────────────────────────────────
@@ -603,10 +609,10 @@ function renderTable(list) {
 
     return `
       <tr style="cursor:pointer" onclick="openModal('${r.id}')">
-        <td class="td-name">${r.nome || '—'}</td>
-        <td class="td-doc">${r.cpf || '—'}</td>
-        <td class="td-doc">${r.rg  || '—'}</td>
-        <td>${r.celular || '—'}</td>
+        <td class="td-name">${escapeHtml(r.nome) || '—'}</td>
+        <td class="td-doc">${escapeHtml(r.cpf) || '—'}</td>
+        <td class="td-doc">${escapeHtml(r.rg)  || '—'}</td>
+        <td>${escapeHtml(r.celular) || '—'}</td>
         <td class="td-date">${data}</td>
         <td>${foto}</td>
         <td style="text-align:center;color:var(--muted)">${tatuagens}</td>
@@ -668,9 +674,9 @@ function buildModalHTML(rec) {
         const detail = [val.tipo, val.observacoes].filter(Boolean).join(' · ');
         return `
           <div class="anamnese-row">
-            <span class="cond">${cond}</span>
-            <span class="badge ${badgeClass}">${resp}</span>
-            ${detail ? `<span class="detail">${detail}</span>` : ''}
+            <span class="cond">${escapeHtml(cond)}</span>
+            <span class="badge ${badgeClass}">${escapeHtml(resp)}</span>
+            ${detail ? `<span class="detail">${escapeHtml(detail)}</span>` : ''}
           </div>`;
       }).join('') +
     `</div>`;
@@ -683,8 +689,8 @@ function buildModalHTML(rec) {
   const tatooListHTML = tatoos.length
     ? tatoos.map((t, i) => `
         <div class="tatoo-card">
-          <span class="tatoo-date">${t.data || '—'}</span>
-          <span class="tatoo-desc">${t.descricao || '—'}</span>
+          <span class="tatoo-date">${escapeHtml(t.data) || '—'}</span>
+          <span class="tatoo-desc">${escapeHtml(t.descricao) || '—'}</span>
           <span class="tatoo-value">${t.valor ? 'R$ ' + parseFloat(t.valor).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '—'}</span>
           <button class="tatoo-del" title="Remover" onclick="removeTatoo('${rec.id}', ${i})">✕</button>
         </div>`).join('')
@@ -695,17 +701,17 @@ function buildModalHTML(rec) {
     <div class="modal-section">
       <p class="modal-section-title">Dados Pessoais</p>
       <div class="info-grid">
-        <div class="info-item"><label>CPF</label><span>${rec.cpf || '—'}</span></div>
-        <div class="info-item"><label>RG</label><span>${rec.rg || '—'}</span></div>
-        <div class="info-item"><label>Nascimento</label><span>${rec.nascimento || '—'}</span></div>
-        <div class="info-item"><label>Idade</label><span>${rec.idade || '—'}</span></div>
-        <div class="info-item"><label>Celular</label><span>${rec.celular || '—'}</span></div>
-        <div class="info-item"><label>E-mail</label><span>${rec.email || '—'}</span></div>
-        <div class="info-item"><label>Profissão</label><span>${rec.profissao || '—'}</span></div>
-        <div class="info-item"><label>Indicação</label><span>${rec.indicacao || '—'}</span></div>
-        <div class="info-item col-span-2"><label>Endereço</label><span>${rec.endereco || '—'}</span></div>
-        <div class="info-item"><label>Emergência</label><span>${rec.emergencia_nome || '—'}</span></div>
-        <div class="info-item"><label>Fone emergência</label><span>${rec.emergencia_fone || '—'}</span></div>
+        <div class="info-item"><label>CPF</label><span>${escapeHtml(rec.cpf) || '—'}</span></div>
+        <div class="info-item"><label>RG</label><span>${escapeHtml(rec.rg) || '—'}</span></div>
+        <div class="info-item"><label>Nascimento</label><span>${escapeHtml(rec.nascimento) || '—'}</span></div>
+        <div class="info-item"><label>Idade</label><span>${escapeHtml(rec.idade) || '—'}</span></div>
+        <div class="info-item"><label>Celular</label><span>${escapeHtml(rec.celular) || '—'}</span></div>
+        <div class="info-item"><label>E-mail</label><span>${escapeHtml(rec.email) || '—'}</span></div>
+        <div class="info-item"><label>Profissão</label><span>${escapeHtml(rec.profissao) || '—'}</span></div>
+        <div class="info-item"><label>Indicação</label><span>${escapeHtml(rec.indicacao) || '—'}</span></div>
+        <div class="info-item col-span-2"><label>Endereço</label><span>${escapeHtml(rec.endereco) || '—'}</span></div>
+        <div class="info-item"><label>Emergência</label><span>${escapeHtml(rec.emergencia_nome) || '—'}</span></div>
+        <div class="info-item"><label>Fone emergência</label><span>${escapeHtml(rec.emergencia_fone) || '—'}</span></div>
         <div class="info-item"><label>Autoriza foto</label><span>${rec.autoriza_foto ? '✅ Sim' : '❌ Não'}</span></div>
         <div class="info-item"><label>Cadastrado em</label><span>${dataCad}</span></div>
       </div>
@@ -743,7 +749,7 @@ function buildModalHTML(rec) {
     <div class="modal-section">
       <p class="modal-section-title">Termo de Autorização</p>
       <p style="font-size:.78rem;color:var(--muted);margin-bottom:10px">
-        Assinatura: <strong style="color:var(--text)">${rec.assinatura_nome || '—'}</strong>
+        Assinatura: <strong style="color:var(--text)">${escapeHtml(rec.assinatura_nome) || '—'}</strong>
         &nbsp;·&nbsp; Aceite registrado: ${rec.aceite_termo ? '✅ Sim' : '❌ Não'}
       </p>
     </div>
@@ -798,8 +804,8 @@ async function addTatoo(id) {
   const container = document.getElementById(`tatooList-${id}`);
   container.innerHTML = lista.map((t, i) => `
     <div class="tatoo-card">
-      <span class="tatoo-date">${t.data || '—'}</span>
-      <span class="tatoo-desc">${t.descricao || '—'}</span>
+      <span class="tatoo-date">${escapeHtml(t.data) || '—'}</span>
+      <span class="tatoo-desc">${escapeHtml(t.descricao) || '—'}</span>
       <span class="tatoo-value">${t.valor ? 'R$ ' + parseFloat(t.valor).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '—'}</span>
       <button class="tatoo-del" title="Remover" onclick="removeTatoo('${id}', ${i})">✕</button>
     </div>`).join('');
@@ -829,8 +835,8 @@ async function removeTatoo(id, index) {
   container.innerHTML = lista.length
     ? lista.map((t, i) => `
         <div class="tatoo-card">
-          <span class="tatoo-date">${t.data || '—'}</span>
-          <span class="tatoo-desc">${t.descricao || '—'}</span>
+          <span class="tatoo-date">${escapeHtml(t.data) || '—'}</span>
+          <span class="tatoo-desc">${escapeHtml(t.descricao) || '—'}</span>
           <span class="tatoo-value">${t.valor ? 'R$ ' + parseFloat(t.valor).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '—'}</span>
           <button class="tatoo-del" title="Remover" onclick="removeTatoo('${id}', ${i})">✕</button>
         </div>`).join('')

@@ -441,6 +441,12 @@
   const { createClient } = supabase;
   const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
+  // Escapa qualquer texto antes de jogar em innerHTML — evita que um nome
+  // digitado no formulário público (reserva.html) vire código executável aqui.
+  function escapeHtml(str) {
+    return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
   // ── Estado ──────────────────────────────────────────────────
   let todos = [];
   let filtroAtivo = 'todos';
@@ -540,7 +546,7 @@
     el.innerHTML = pendentes.map(c => `
       <div class="alerta-gratis">
         <div class="a-texto">
-          <strong>✦ ${c.nome} — sessão grátis disponível!</strong>
+          <strong>✦ ${escapeHtml(c.nome)} — sessão grátis disponível!</strong>
           Código ${c.codigo_indicacao} · ${c.indicacoes_confirmadas} amigos tatuaram
         </div>
         <button class="btn-usar-gratis" onclick="usarGratis('${c.id}')">Marcar como usada</button>
@@ -586,8 +592,8 @@
 
       return `
       <tr>
-        <td class="td-nome">${c.nome}${badgeGratis ? ' ' + badgeGratis : ''}</td>
-        <td class="td-whats"><a href="https://wa.me/55${c.whatsapp.replace(/\D/g,'')}" target="_blank">${fmtWhats(c.whatsapp)}</a></td>
+        <td class="td-nome">${escapeHtml(c.nome)}${badgeGratis ? ' ' + badgeGratis : ''}</td>
+        <td class="td-whats"><a href="https://wa.me/55${c.whatsapp.replace(/\D/g,'')}" target="_blank">${escapeHtml(fmtWhats(c.whatsapp))}</a></td>
         <td class="td-codigo">${c.codigo_indicacao}</td>
         <td class="td-canal">${canalLabel(c.canal)}</td>
         <td>${badgeDesc}</td>
@@ -696,18 +702,18 @@
       const badge = tatou
         ? '<span class="badge badge-gratis" style="font-size:.65rem;">✓ tatuou</span>'
         : '<span class="badge badge-pendente" style="font-size:.65rem;">ainda não</span>';
-      return `<li><span class="ind-nome">${ind.nome}</span>${badge}</li>`;
+      return `<li><span class="ind-nome">${escapeHtml(ind.nome)}</span>${badge}</li>`;
     }).join('') || '<li style="color:var(--ink-muted);font-size:.83rem;">Nenhum indicado ainda.</li>';
 
     document.getElementById('modal-body').innerHTML = `
       <div class="modal-section">
         <h3>Dados</h3>
-        <div class="modal-row"><span class="k">Nome</span><span class="v">${c.nome}</span></div>
-        <div class="modal-row"><span class="k">WhatsApp</span><span class="v"><a href="https://wa.me/55${c.whatsapp.replace(/\D/g,'')}" target="_blank" style="color:var(--accent);">${fmtWhats(c.whatsapp)}</a></span></div>
-        ${c.email ? `<div class="modal-row"><span class="k">E-mail</span><span class="v">${c.email}</span></div>` : ''}
-        <div class="modal-row"><span class="k">Código</span><span class="v cod">${c.codigo_indicacao}</span></div>
+        <div class="modal-row"><span class="k">Nome</span><span class="v">${escapeHtml(c.nome)}</span></div>
+        <div class="modal-row"><span class="k">WhatsApp</span><span class="v"><a href="https://wa.me/55${c.whatsapp.replace(/\D/g,'')}" target="_blank" style="color:var(--accent);">${escapeHtml(fmtWhats(c.whatsapp))}</a></span></div>
+        ${c.email ? `<div class="modal-row"><span class="k">E-mail</span><span class="v">${escapeHtml(c.email)}</span></div>` : ''}
+        <div class="modal-row"><span class="k">Código</span><span class="v cod">${escapeHtml(c.codigo_indicacao)}</span></div>
         <div class="modal-row"><span class="k">Canal</span><span class="v">${canalLabel(c.canal)}</span></div>
-        ${c.indicado_por ? `<div class="modal-row"><span class="k">Indicado por</span><span class="v cod">${c.indicado_por}</span></div>` : ''}
+        ${c.indicado_por ? `<div class="modal-row"><span class="k">Indicado por</span><span class="v cod">${escapeHtml(c.indicado_por)}</span></div>` : ''}
         <div class="modal-row"><span class="k">Cadastro</span><span class="v">${fmtData(c.criado_em)}</span></div>
       </div>
 
@@ -742,7 +748,7 @@
           ? `<button class="btn-modal success" onclick="usarGratis('${c.id}')">Marcar sessão grátis como usada</button>`
           : ''}
         <a class="btn-modal" href="https://wa.me/55${c.whatsapp.replace(/\D/g,'')}" target="_blank" style="text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;">Abrir WhatsApp</a>
-        <button class="btn-modal danger" onclick="deletarCliente('${c.id}', '${c.nome}')">Deletar cliente</button>
+        <button class="btn-modal danger" onclick="deletarCliente('${c.id}')">Deletar cliente</button>
       </div>
     `;
 
@@ -761,7 +767,9 @@
   });
 
   // ── Ação: deletar cliente ────────────────────────────────────
-  async function deletarCliente(id, nome) {
+  async function deletarCliente(id) {
+    const cliente = todos.find(c => c.id === id);
+    const nome = cliente ? cliente.nome : 'este cliente';
     const confirm = window.confirm(`Deletar permanentemente o cliente "${nome}"?\n\nEssa ação não pode ser desfeita.`);
     if (!confirm) return;
 
