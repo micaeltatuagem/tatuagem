@@ -380,6 +380,7 @@
     .nav-links { gap: 1rem; justify-content: flex-start; }
     .nav-links .hide-sm { display: none; }
   }
+  .hp-field { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
   </style>
 <link rel="stylesheet" href="nav-mobile.css">
@@ -434,6 +435,11 @@
   <p class="page-sub">Obrigatório apresentar documento original. Preencha todos os campos com atenção.</p>
 
   <form id="formAnamnese" novalidate>
+
+    <div class="hp-field" aria-hidden="true">
+      <label for="site">Deixe em branco</label>
+      <input type="text" id="site" name="site" tabindex="-1" autocomplete="off" />
+    </div>
 
     <!-- CADASTRO -->
     <div class="section">
@@ -586,6 +592,10 @@ const SUPA_KEY = 'sb_publishable_7LF70sbQS_es_uco138rqw_YfbqnIsa';
 
 const db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
+// Momento em que o form ficou disponível — usado pra rejeitar envios
+// rápidos demais pra serem de uma pessoa preenchendo de verdade.
+const formRenderedAt = Date.now();
+
 // ────────────────────────────────────────────
 // EMAILJS CONFIG — crie conta gratuita em emailjs.com
 // Substitua os três valores abaixo
@@ -723,6 +733,14 @@ condicoes.forEach((c, i) => {
 // ────────────────────────────────────────────
 document.getElementById('formAnamnese').addEventListener('submit', async (e) => {
   e.preventDefault();
+
+  // ── Anti-bot: campo-armadilha preenchido, ou envio rápido demais ──
+  const honeypot = document.getElementById('site').value;
+  const tempoDecorrido = Date.now() - formRenderedAt;
+  if (honeypot || tempoDecorrido < 3000) {
+    console.warn('Envio bloqueado (heurística anti-spam).');
+    return;
+  }
 
   const btn = document.getElementById('btnEnviar');
   btn.disabled = true;

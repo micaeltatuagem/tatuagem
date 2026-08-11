@@ -710,6 +710,9 @@
     .nav-links { gap: 1rem; justify-content: flex-start; }
     .nav-links .hide-sm { display: none; }
   }
+  /* Campo-armadilha anti-bot: invisível pra humanos, mas bots simples
+     preenchem tudo que encontram no formulário. */
+  .hp-field { position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
   </style>
 <link rel="stylesheet" href="nav-mobile.css">
@@ -764,6 +767,14 @@
 <div class="form-section-inner" id="tela-form">
   <form id="bookingForm" class="fade-in">
     <div class="msg-error" id="msg-error"></div>
+
+    <!-- Campo-armadilha: fica invisível pra gente, mas bots automatizados
+         costumam preencher todo campo que encontram. Se vier preenchido,
+         tratamos como spam sem avisar o robô (ver checagem no submit). -->
+    <div class="hp-field" aria-hidden="true">
+      <label for="site">Deixe em branco</label>
+      <input type="text" id="site" name="site" tabindex="-1" autocomplete="off" />
+    </div>
 
     <div class="field">
       <label for="nome">Nome <span class="req">*</span></label>
@@ -967,6 +978,10 @@
   const { createClient } = supabase;
   const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
+  // Momento em que o form ficou disponível — usado pra rejeitar envios
+  // rápidos demais pra serem de uma pessoa de verdade (ver checagem no submit).
+  const formRenderedAt = Date.now();
+
   // ── Utilitários ─────────────────────────────────────────────
   function gerarCodigo() {
     const n = Math.floor(1000 + Math.random() * 9000);
@@ -1074,6 +1089,15 @@
   document.getElementById('bookingForm').addEventListener('submit', async function (e) {
     e.preventDefault();
     limparErro();
+
+    // ── Anti-bot: campo-armadilha preenchido, ou envio rápido demais
+    // (menos de 3s entre a página carregar e o envio) ──
+    const honeypot = document.getElementById('site').value;
+    const tempoDecorrido = Date.now() - formRenderedAt;
+    if (honeypot || tempoDecorrido < 3000) {
+      console.warn('Envio bloqueado (heurística anti-spam).');
+      return;
+    }
 
     const nome            = document.getElementById('nome').value.trim();
     const idadeVal         = document.getElementById('idade').value.trim();
