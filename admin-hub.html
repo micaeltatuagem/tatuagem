@@ -277,19 +277,8 @@
 
     <form id="loginForm" onsubmit="handleLogin(event)">
       <div class="login-field">
-        <label for="inputEmail">E-mail</label>
-        <input type="email" id="inputEmail" autocomplete="username" required autofocus />
-      </div>
-
-      <div class="login-field">
-        <label for="inputSenha">Senha</label>
-        <input type="password" id="inputSenha" placeholder="••••••••••" autocomplete="current-password" required />
-      </div>
-
-      <div class="login-field">
         <label for="inputToken">Senha do admin</label>
-        <input type="password" id="inputToken" placeholder="Senha do painel" />
-        <p class="hint">Necessário apenas para o painel da Galeria.</p>
+        <input type="password" id="inputToken" placeholder="Senha do painel" required autofocus autocomplete="current-password" />
       </div>
 
       <button type="submit" class="btn-login">Acessar</button>
@@ -371,64 +360,46 @@
 </div>
 
 <script>
-  const SUPABASE_URL  = 'https://rpgcsejfewltricfsdrd.supabase.co';
-  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwZ2NzZWpmZXdsdHJpY2ZzZHJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4OTU0MzAsImV4cCI6MjA5NzQ3MTQzMH0.BHg2X0MVIokfnBjTK0DPt1NDB1H9sjXeUVZ1lJ3jKo0';
-  const { createClient } = supabase;
-  const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
-
   const TOKEN_KEY = 'ghToken';
 
   // ── INIT (restaura sessão em caso de reload) ──
-  (async () => {
-    const { data: { session } } = await sb.auth.getSession();
-    if (session) {
-      showHub(sessionStorage.getItem(TOKEN_KEY) || '');
-    }
+  (() => {
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    if (token) showHub(token);
   })();
 
   // ── LOGIN ──
   async function handleLogin(e) {
     e.preventDefault();
-    const email = document.getElementById('inputEmail').value.trim();
-    const senha = document.getElementById('inputSenha').value;
     const token = document.getElementById('inputToken').value.trim();
     const errEl = document.getElementById('loginErr');
 
     errEl.style.display = 'none';
 
-    const { error: authError } = await sb.auth.signInWithPassword({ email, password: senha });
-
-    if (authError) {
-      errEl.textContent = '❌ Credenciais inválidas.';
+    if (!token) {
+      errEl.textContent = '❌ Digite a senha do admin.';
       errEl.style.color = '#e07070';
       errEl.style.display = 'block';
-      document.getElementById('inputSenha').value = '';
-      setTimeout(() => errEl.style.display = 'none', 3000);
       return;
     }
 
-    // Validate password if provided
-    if (token) {
-      errEl.textContent = '⏳ Validando senha...';
-      errEl.style.color = '#aaa';
-      errEl.style.display = 'block';
+    errEl.textContent = '⏳ Validando senha...';
+    errEl.style.color = '#aaa';
+    errEl.style.display = 'block';
 
-      try {
-        const res = await fetch('https://tatuagem-gh-proxy.micaeltattoo.workers.dev/gh/repos/micaeltatuagem/tatuagem', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        if (!res.ok) throw new Error('Senha incorreta ou sem acesso.');
-        sessionStorage.setItem(TOKEN_KEY, token);
-      } catch (err) {
-        errEl.textContent = '❌ ' + err.message;
-        errEl.style.color = '#e07070';
-        setTimeout(() => errEl.style.display = 'none', 4000);
-        return;
-      }
+    try {
+      const res = await fetch('https://tatuagem-gh-proxy.micaeltattoo.workers.dev/gh/repos/micaeltatuagem/tatuagem', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Senha incorreta.');
+      sessionStorage.setItem(TOKEN_KEY, token);
+    } catch (err) {
+      errEl.textContent = '❌ ' + err.message;
+      errEl.style.color = '#e07070';
+      setTimeout(() => errEl.style.display = 'none', 4000);
+      return;
     }
 
-    document.getElementById('inputEmail').value = '';
-    document.getElementById('inputSenha').value = '';
     document.getElementById('inputToken').value = '';
     showHub(token);
   }
@@ -437,35 +408,15 @@
   function showHub(token) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('hubScreen').style.display = 'block';
-
-    const card = document.getElementById('card-galeria');
-    const cardFlash = document.getElementById('card-flash');
-    const cardAerografia = document.getElementById('card-aerografia');
-    const cardCorpos = document.getElementById('card-corpos');
-
-    if (!token) {
-      document.getElementById('tokenNotice').style.display = 'block';
-      [card, cardFlash, cardAerografia, cardCorpos].forEach(c => {
-        c.style.opacity = '0.55';
-        c.removeAttribute('href');
-        c.style.cursor = 'pointer';
-        c.addEventListener('click', function(e) {
-          e.preventDefault();
-          alert('Para acessar esse painel é preciso informar a senha do admin no login.\n\nClique em "Sair" e faça login novamente, preenchendo o campo Senha.');
-        });
-      });
-    } else {
-      card.href = 'admingaleria';
-      cardFlash.href = 'adminflash';
-      cardAerografia.href = 'adminaerografia';
-      cardCorpos.href = 'admincorpos';
-    }
+    document.getElementById('card-galeria').href = 'admingaleria';
+    document.getElementById('card-flash').href = 'adminflash';
+    document.getElementById('card-aerografia').href = 'adminaerografia';
+    document.getElementById('card-corpos').href = 'admincorpos';
   }
 
   // ── LOGOUT ──
-  async function logout() {
+  function logout() {
     sessionStorage.clear();
-    await sb.auth.signOut();
     location.reload();
   }
 </script>

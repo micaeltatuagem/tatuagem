@@ -136,17 +136,8 @@
     <div class="login-sub">Admin · Bases de Corpo</div>
     <form id="loginForm">
       <div class="login-group">
-        <label for="inputEmail">E-mail</label>
-        <input type="email" id="inputEmail" autocomplete="username" required autofocus />
-      </div>
-      <div class="login-group">
-        <label for="inputSenha">Senha</label>
-        <input type="password" id="inputSenha" autocomplete="current-password" required />
-      </div>
-      <div class="login-group">
         <label for="inputToken">Senha do admin</label>
-        <input type="password" id="inputToken" placeholder="Senha do painel" required />
-        <p class="login-hint">Necessário para upload de imagens.</p>
+        <input type="password" id="inputToken" placeholder="Senha do painel" required autofocus autocomplete="current-password" />
       </div>
       <button type="submit" class="btn-login">Acessar</button>
       <div class="login-err" id="loginErr"></div>
@@ -315,12 +306,6 @@
   const IMAGE_FOLDER = 'corpos';
   const DATA_PATH    = `${IMAGE_FOLDER}/corpos-data.json`;
   const CONTENT_PATH = `${IMAGE_FOLDER}/content.json`;
-
-  const SUPABASE_URL  = 'https://rpgcsejfewltricfsdrd.supabase.co';
-  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwZ2NzZWpmZXdsdHJpY2ZzZHJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4OTU0MzAsImV4cCI6MjA5NzQ3MTQzMH0.BHg2X0MVIokfnBjTK0DPt1NDB1H9sjXeUVZ1lJ3jKo0';
-  const { createClient } = supabase;
-  const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
-
   let GH_TOKEN = '';
   let currentFilter = 'all';
 
@@ -345,32 +330,18 @@
 
     document.getElementById('loginForm').addEventListener('submit', handleLogin);
 
-    (async () => {
-      const { data: { session } } = await sb.auth.getSession();
-      const token = sessionStorage.getItem(TOKEN_KEY);
-      if (session && token) {
-        GH_TOKEN = token;
-        showPanel();
-      }
-    })();
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    if (token) {
+      GH_TOKEN = token;
+      showPanel();
+    }
   });
 
   // ── LOGIN ──
   async function handleLogin(e) {
     e.preventDefault();
-    const email  = document.getElementById('inputEmail').value.trim();
-    const senha  = document.getElementById('inputSenha').value;
     const token  = document.getElementById('inputToken').value.trim();
     const errEl  = document.getElementById('loginErr');
-
-    errEl.textContent = '⏳ Entrando...';
-
-    const { error: authError } = await sb.auth.signInWithPassword({ email, password: senha });
-    if (authError) {
-      errEl.textContent = '❌ Credenciais inválidas.';
-      document.getElementById('inputSenha').value = '';
-      return;
-    }
 
     if (!token) {
       errEl.textContent = '❌ Digite a senha do admin.';
@@ -382,7 +353,7 @@
       const res = await fetch(`${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      if (!res.ok) throw new Error('Senha incorreta ou sem acesso.');
+      if (!res.ok) throw new Error('Senha incorreta.');
       GH_TOKEN = token;
       sessionStorage.setItem(TOKEN_KEY, token);
       errEl.textContent = '';
@@ -395,7 +366,6 @@
   async function logout() {
     if (confirm('Sair?')) {
       sessionStorage.clear();
-      await sb.auth.signOut();
       location.reload();
     }
   }
