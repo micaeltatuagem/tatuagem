@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia | Micael Tatuagem</title>
+<style>
+  :root{
+    --bg:#0b0b0c;
+    --ink:#efece6;
+    --ink-dim:#a7a29a;
+    --line:#242322;
+    --accent:#8a2e2e;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:Georgia, 'Times New Roman', serif;
+    margin:0;
+    line-height:1.6;
+  }
+  .wrap{
+    max-width:720px;
+    margin:0 auto;
+    padding:48px 24px 96px;
+  }
+  a.voltar{
+    color:var(--ink-dim);
+    text-decoration:none;
+    font-family:Arial, sans-serif;
+    font-size:13px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+  }
+  a.voltar:hover{ color:var(--ink); }
+  .categoria{
+    font-family:Arial, sans-serif;
+    font-size:12px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin:32px 0 8px;
+  }
+  h1{
+    font-size:42px;
+    font-weight:400;
+    margin:0 0 24px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:24px;
+  }
+  .imagem{
+    width:100%;
+    aspect-ratio:4/3;
+    object-fit:cover;
+    background:#151514;
+    border:1px solid var(--line);
+    margin-bottom:32px;
+    display:block;
+  }
+  .descricao{
+    font-size:18px;
+    color:var(--ink);
+  }
+  .estilo-link{
+    display:inline-block;
+    margin-top:32px;
+    padding:12px 20px;
+    border:1px solid var(--accent);
+    color:var(--ink);
+    text-decoration:none;
+    font-family:Arial, sans-serif;
+    font-size:13px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+  }
+  .estilo-link:hover{
+    background:var(--accent);
+  }
+  .estado{
+    font-family:Arial, sans-serif;
+    color:var(--ink-dim);
+    padding:64px 0;
+    text-align:center;
+  }
+  .oculto{ display:none; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="voltar" href="/guia">← Voltar ao guia</a>
+
+    <div id="carregando" class="estado">Carregando verbete...</div>
+
+    <div id="erro" class="estado oculto">
+      Verbete não encontrado.<br>
+      <a class="voltar" href="/guia" style="display:inline-block;margin-top:12px;">Voltar ao guia</a>
+    </div>
+
+    <article id="conteudo" class="oculto">
+      <p class="categoria" id="categoria"></p>
+      <h1 id="termo"></h1>
+      <img id="imagem" class="imagem oculto" alt="">
+      <p class="descricao" id="descricao"></p>
+      <a id="link-estilo" class="estilo-link oculto" href="#">Ver estilo na galeria →</a>
+    </article>
+  </div>
+
+  <script>
+    // ---- config Supabase (mesmas credenciais usadas no resto do site) ----
+    const SUPABASE_URL = 'https://SEU-PROJETO.supabase.co';
+    const SUPABASE_ANON_KEY = 'SUA_ANON_KEY_AQUI';
+
+    // nome do bucket de storage onde as imagens do guia são upadas
+    const BUCKET_IMAGENS = 'guia-imagens';
+
+    const NOMES_CATEGORIA = {
+      significado: 'Significado',
+      estilo: 'Estilo',
+      tecnica: 'Técnica',
+      termo: 'Termo'
+    };
+
+    function pegarSlug() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('slug');
+    }
+
+    function urlImagem(caminho) {
+      if (!caminho) return null;
+      // se já for uma URL completa (http/https), usa direto
+      if (/^https?:\/\//i.test(caminho)) return caminho;
+      // senão, monta a URL pública do Storage a partir do caminho salvo no banco
+      return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_IMAGENS}/${caminho}`;
+    }
+
+    async function carregarVerbete() {
+      const slug = pegarSlug();
+      const elCarregando = document.getElementById('carregando');
+      const elErro = document.getElementById('erro');
+      const elConteudo = document.getElementById('conteudo');
+
+      if (!slug) {
+        elCarregando.classList.add('oculto');
+        elErro.classList.remove('oculto');
+        return;
+      }
+
+      try {
+        const resp = await fetch(
+          `${SUPABASE_URL}/rest/v1/guia_verbetes?slug=eq.${encodeURIComponent(slug)}&select=*`,
+          {
+            headers: {
+              apikey: SUPABASE_ANON_KEY,
+              Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+            }
+          }
+        );
+
+        if (!resp.ok) throw new Error('Falha na requisição');
+
+        const dados = await resp.json();
+
+        if (!dados || dados.length === 0) {
+          elCarregando.classList.add('oculto');
+          elErro.classList.remove('oculto');
+          return;
+        }
+
+        const verbete = dados[0];
+
+        document.title = `${verbete.termo} | Guia | Micael Tatuagem`;
+        document.getElementById('categoria').textContent = NOMES_CATEGORIA[verbete.categoria] || verbete.categoria;
+        document.getElementById('termo').textContent = verbete.termo;
+        document.getElementById('descricao').textContent = verbete.descricao;
+
+        const imgUrl = urlImagem(verbete.imagem_url);
+        if (imgUrl) {
+          const elImagem = document.getElementById('imagem');
+          elImagem.src = imgUrl;
+          elImagem.alt = verbete.termo;
+          elImagem.classList.remove('oculto');
+        }
+
+        if (verbete.link_estilo) {
+          const elLink = document.getElementById('link-estilo');
+          elLink.href = verbete.link_estilo;
+          elLink.classList.remove('oculto');
+        }
+
+        elCarregando.classList.add('oculto');
+        elConteudo.classList.remove('oculto');
+      } catch (e) {
+        console.error('Erro ao carregar verbete:', e);
+        elCarregando.classList.add('oculto');
+        elErro.classList.remove('oculto');
+      }
+    }
+
+    carregarVerbete();
+  </script>
+</body>
+</html>

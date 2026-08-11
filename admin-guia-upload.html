@@ -1,0 +1,152 @@
+<!-- ============================================================
+     Trecho pra colar no seu admin.html: formulário de verbete
+     do Guia, com upload de arquivo (não URL) pro Supabase Storage.
+
+     Pré-requisito no Supabase (fazer uma vez só):
+     Storage → New bucket → nome: guia-imagens → marcar "Public bucket"
+     ============================================================ -->
+
+<form id="form-verbete">
+  <label>
+    Termo
+    <input type="text" id="v-termo" required>
+  </label>
+
+  <label>
+    Slug (URL, sem espaço/acento)
+    <input type="text" id="v-slug" required>
+  </label>
+
+  <label>
+    Categoria
+    <select id="v-categoria" required>
+      <option value="significado">Significado</option>
+      <option value="estilo">Estilo</option>
+      <option value="tecnica">Técnica</option>
+      <option value="termo">Termo</option>
+    </select>
+  </label>
+
+  <label>
+    Descrição
+    <textarea id="v-descricao" rows="6" required></textarea>
+  </label>
+
+  <label>
+    Link do estilo na galeria (opcional)
+    <input type="text" id="v-link-estilo" placeholder="/estilo/dark-art">
+  </label>
+
+  <label>
+    Imagem
+    <input type="file" id="v-imagem" accept="image/*">
+  </label>
+
+  <img id="v-preview" style="max-width:200px; display:none; margin-top:8px;">
+
+  <button type="submit" id="v-salvar">Salvar verbete</button>
+  <p id="v-status"></p>
+</form>
+
+<script>
+  // Reaproveite as mesmas SUPABASE_URL / SUPABASE_ANON_KEY que o resto
+  // do admin já usa. Deixei declaradas aqui só pra o trecho funcionar sozinho.
+  const SUPABASE_URL = 'https://SEU-PROJETO.supabase.co';
+  const SUPABASE_ANON_KEY = 'SUA_ANON_KEY_AQUI';
+  const BUCKET_IMAGENS = 'guia-imagens';
+
+  const inputImagem = document.getElementById('v-imagem');
+  const preview = document.getElementById('v-preview');
+
+  inputImagem.addEventListener('change', () => {
+    const arquivo = inputImagem.files[0];
+    if (!arquivo) {
+      preview.style.display = 'none';
+      return;
+    }
+    preview.src = URL.createObjectURL(arquivo);
+    preview.style.display = 'block';
+  });
+
+  async function subirImagem(arquivo, slug) {
+    const extensao = arquivo.name.split('.').pop();
+    const caminho = `${slug}-${Date.now()}.${extensao}`;
+
+    const resp = await fetch(
+      `${SUPABASE_URL}/storage/v1/object/${BUCKET_IMAGENS}/${caminho}`,
+      {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': arquivo.type
+        },
+        body: arquivo
+      }
+    );
+
+    if (!resp.ok) {
+      const erro = await resp.text();
+      throw new Error(`Falha no upload da imagem: ${erro}`);
+    }
+
+    // caminho salvo no banco; a página de detalhe monta a URL pública a partir dele
+    return caminho;
+  }
+
+  document.getElementById('form-verbete').addEventListener('submit', async (evento) => {
+    evento.preventDefault();
+
+    const elStatus = document.getElementById('v-status');
+    const elBotao = document.getElementById('v-salvar');
+    elBotao.disabled = true;
+    elStatus.textContent = 'Salvando...';
+
+    try {
+      const slug = document.getElementById('v-slug').value.trim();
+      const arquivo = inputImagem.files[0];
+
+      let caminhoImagem = null;
+      if (arquivo) {
+        elStatus.textContent = 'Subindo imagem...';
+        caminhoImagem = await subirImagem(arquivo, slug);
+      }
+
+      const verbete = {
+        termo: document.getElementById('v-termo').value.trim(),
+        slug: slug,
+        categoria: document.getElementById('v-categoria').value,
+        descricao: document.getElementById('v-descricao').value.trim(),
+        link_estilo: document.getElementById('v-link-estilo').value.trim() || null,
+        imagem_url: caminhoImagem
+      };
+
+      elStatus.textContent = 'Salvando verbete...';
+
+      const resp = await fetch(`${SUPABASE_URL}/rest/v1/guia_verbetes`, {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal'
+        },
+        body: JSON.stringify(verbete)
+      });
+
+      if (!resp.ok) {
+        const erro = await resp.text();
+        throw new Error(erro);
+      }
+
+      elStatus.textContent = 'Verbete salvo com sucesso.';
+      document.getElementById('form-verbete').reset();
+      preview.style.display = 'none';
+    } catch (e) {
+      console.error('Erro ao salvar verbete:', e);
+      document.getElementById('v-status').textContent = 'Erro ao salvar. Veja o console (F12) pra detalhes.';
+    } finally {
+      elBotao.disabled = false;
+    }
+  });
+</script>
