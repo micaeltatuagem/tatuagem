@@ -148,6 +148,7 @@ ${body}
     <li class="nav-extra"><a href="/valor.html">Valor</a></li>
     <li class="nav-extra"><a href="/index.html#promocoes">Promoções</a></li>
     <li class="nav-extra"><a href="/index.html#localizacao">Localização</a></li>
+    <li><a href="/blog.html">Blog</a></li>
     <li><a href="/reserva.html">Reserva</a></li>
     <li><a href="/index.html#contato">Contato</a></li>
     <li class="nav-more">

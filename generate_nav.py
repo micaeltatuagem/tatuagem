@@ -1,28 +1,37 @@
 import re
 
+import re
+
+# NOTA (corrigido nesta sessão): o site usa URLs limpas (sem .html, sem
+# "index.html" em âncoras) desde algum momento após este script ter sido
+# escrito originalmente com .html — o script estava desatualizado em relação
+# às páginas reais. Corrigido pra gerar exatamente o que já está no ar.
+
 # (chave, rótulo, tipo, destino)
-# tipo 'page'   -> destino é o nome do arquivo (mesmo em toda página)
+# tipo 'page'   -> destino é a URL limpa (sem .html)
 # tipo 'anchor' -> destino é o id da âncora, que vive só no index.html
 VISIBLE = [
     ('galeria', 'Galeria', 'galeria_special', None),
-    ('flash', 'Flash', 'page', 'flash.html'),
-    ('criar', 'Criar', 'page', 'preview-tatuagem.html'),
-    ('guia', 'Guia', 'page', 'guia.html'),
-    ('reserva', 'Reserva', 'page', 'reserva.html'),
+    ('flash', 'Flash', 'page', 'flash'),
+    ('criar', 'Criar', 'page', 'preview-tatuagem'),
+    ('guia', 'Guia', 'page', 'guia'),
+    ('blog', 'Blog', 'page', 'blog'),
+    ('reserva', 'Reserva', 'page', 'reserva'),
     ('contato', 'Contato', 'anchor', 'contato'),
 ]
 EXTRA = [
     ('sobre', 'Sobre', 'anchor', 'sobre'),
-    ('aerografia', 'Aerografia', 'page', 'aerografia.html'),
-    ('cuidados', 'Cuidados', 'page', 'fisiologia-da-tatuagem.html'),
-    ('valor', 'Valor', 'page', 'valor.html'),
+    ('aerografia', 'Aerografia', 'page', 'aerografia'),
+    ('cuidados', 'Cuidados', 'page', 'fisiologia-da-tatuagem'),
+    ('valor', 'Valor', 'page', 'valor'),
     ('promocoes', 'Promoções', 'anchor', 'promocoes'),
     ('localizacao', 'Localização', 'anchor', 'localizacao'),
 ]
 
-# mapa: chave do item -> nome de arquivo que representa essa página (pra marcar "atual")
+# mapa: chave do item -> nome de arquivo real que representa essa página (pra marcar "atual")
 KEY_TO_SELF_FILE = {
     'flash': 'flash.html', 'criar': 'preview-tatuagem.html', 'guia': 'guia.html',
+    'blog': 'blog.html',
     'reserva': 'reserva.html', 'aerografia': 'aerografia.html',
     'cuidados': 'fisiologia-da-tatuagem.html', 'valor': 'valor.html',
     'galeria': 'galeria.html',
@@ -30,18 +39,18 @@ KEY_TO_SELF_FILE = {
 
 def build_href(kind, dest, current_file, is_index, prefix):
     if kind == 'galeria_special':
-        return '#galeria' if is_index else (prefix + 'galeria.html')
+        return '#galeria' if is_index else (prefix + 'galeria')
     if kind == 'page':
         return prefix + dest
     if kind == 'anchor':
-        return ('#' + dest) if is_index else (prefix + 'index.html#' + dest)
+        return ('#' + dest) if is_index else ('/#' + dest)
     raise ValueError(kind)
 
 def build_nav(current_file):
     is_index = (current_file == 'index.html')
-    is_estilo = current_file.startswith('estilo/')
+    is_estilo = current_file.startswith('estilo/') or current_file.startswith('blog/')
     prefix = '/' if is_estilo else ''
-    logo_href = ('#hero' if is_index else (prefix + 'index.html'))
+    logo_href = '#hero' if is_index else '/'
 
     def li(key, label, kind, dest, extra_class=''):
         href = build_href(kind, dest, current_file, is_index, prefix)
@@ -78,8 +87,9 @@ def build_nav(current_file):
     nav_html.append(extra_by_key['valor'])
     nav_html.append(extra_by_key['promocoes'])
     nav_html.append(extra_by_key['localizacao'])
-    nav_html.append(f'    <li>{li(*VISIBLE[4])}</li>')  # Reserva
-    nav_html.append(f'    <li>{li(*VISIBLE[5])}</li>')  # Contato
+    nav_html.append(f'    <li>{li(*VISIBLE[4])}</li>')  # Blog
+    nav_html.append(f'    <li>{li(*VISIBLE[5])}</li>')  # Reserva
+    nav_html.append(f'    <li>{li(*VISIBLE[6])}</li>')  # Contato
     nav_html.append('    <li class="nav-more">')
     nav_html.append('      <button type="button" class="nav-more-btn" aria-haspopup="true" aria-expanded="false">Mais &#9662;</button>')
     nav_html.append('    </li>')

@@ -337,10 +337,17 @@ montar a estrutura via JS e deixar o HTML de cada página já nascer pronto.
   promoção"). Removida — todos os itens do menu têm exatamente a mesma cor.
 
 ### Conteúdo do menu (itens)
-Sempre visíveis: Galeria, Flash, Criar, Guia, Reserva, Contato.
+Sempre visíveis: Galeria, Flash, Criar, Guia, Blog, Reserva, Contato.
 Dentro do "Mais": Sobre, Aerografia, Cuidados, Valor, Promoções, Localização.
 (Selos e Deriva existiam aqui antes — foram removidos do site em 28/07/2026, ver
-nota "Remoção de Selos e Deriva" abaixo.)
+nota "Remoção de Selos e Deriva" abaixo. Blog adicionado em 10/08/2026.)
+
+**Bug corrigido em 10/08/2026**: `generate_nav.py` estava desatualizado —
+gerava hrefs com `.html` e `index.html#âncora`, mas as páginas ao vivo já
+usavam URLs limpas (`flash`, `/flash`, `/#sobre`, logo `href="/"`) havia um
+tempo. O script foi corrigido pra bater exatamente com o que já estava no ar
+antes de rodar (validado por diff em todas as 35 páginas com nav antes de
+aplicar). Se for usar o script de novo, ele agora reflete a convenção real.
 
 ### Gerador local (`generate_nav.py`, não faz parte do site em produção)
 Existe um script Python (`generate_nav.py`, na raiz do repo) que gera o bloco
