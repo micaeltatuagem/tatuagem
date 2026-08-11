@@ -53,7 +53,6 @@
   h1 { font-weight:400; font-size:2.2rem; margin:0 0 .8rem; }
   .lede { color: var(--ink-muted); max-width: 62ch; margin:0; }
 
-  /* controles */
   .controles {
     display:flex; flex-wrap:wrap; gap:1.5rem; align-items:center; justify-content:space-between;
     padding: 1.5rem 0; border-bottom:1px solid var(--border); font-family: var(--font-ui);
@@ -72,7 +71,6 @@
   }
   .busca::placeholder { color: var(--ink-faint); }
 
-  /* A-Z index */
   .az-index { display:flex; flex-wrap:wrap; gap:.4rem; padding: 1.2rem 0; font-family: var(--font-ui); }
   .az-letter {
     width:28px; height:28px; display:flex; align-items:center; justify-content:center;
@@ -81,7 +79,6 @@
   .az-letter.has-entries { color: var(--ink-muted); }
   .az-letter.has-entries:hover { color: var(--accent); background: var(--surface); }
 
-  /* grid de verbetes */
   .grupo { padding: 2rem 0 .5rem; }
   .grupo-titulo { font-family: var(--font-ui); font-size:.85rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); margin: 0 0 1rem; scroll-margin-top: 5rem; }
   .verbetes-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem; }
@@ -225,6 +222,11 @@
 </script>
 <script>
 (function(){
+  // ==================== SUBSTITUA AQUI ====================
+  const SUPABASE_URL  = 'https://rpgcsejfewltricfsdrd.supabase.co';
+  const SUPABASE_KEY  = 'sb_publishable_7LF70sbQS_es_uco138rqw_YfbqnIsa';
+  // ========================================================
+
   const CATEGORIAS = {
     significado: 'Significado',
     estilo: 'Estilo',
@@ -232,11 +234,10 @@
     termo: 'Termo'
   };
   const TEMAS = {
-    significados: 'Significados',
-    estilos: 'Estilos',
-    tecnicas: 'Técnicas',
-    termos: 'Termos',
-    floral: 'Floral'
+    significado: 'Significados',
+    estilo: 'Estilos',
+    tecnica: 'Técnicas',
+    termo: 'Termos'
   };
 
   let allEntries = [];
@@ -244,18 +245,32 @@
   let cat = 'todos';
 
   const conteudoEl = document.getElementById('conteudo');
-  const azIndexEl = document.getElementById('azIndex');
-  const vazioEl = document.getElementById('vazio');
-  const buscaEl = document.getElementById('busca');
+  const azIndexEl  = document.getElementById('azIndex');
+  const vazioEl    = document.getElementById('vazio');
+  const buscaEl    = document.getElementById('busca');
 
   function normalize(str){
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   }
 
+  function mapRow(row){
+    // Mapeia colunas do Supabase para o formato usado pela UI
+    return {
+      titulo: row.termo || '',
+      slug: row.slug || '',
+      categoria: row.categoria || '',
+      resumo: row.descricao || '',
+      letra: (row.letra || normalize(row.termo || '')[0] || '#').toUpperCase(),
+      ordem: row.ordem || 0,
+      imagem_url: row.imagem_url || '',
+      link_estilo: row.link_estilo || '',
+      tema: [row.categoria] // usado no modo "Por tema"
+    };
+  }
+
   function filterEntries(){
     const q = normalize(buscaEl.value.trim());
     return allEntries.filter(e => {
-      if (e.draft) return false;
       if (cat !== 'todos' && e.categoria !== cat) return false;
       if (q && !normalize(e.titulo + ' ' + (e.resumo||'')).includes(q)) return false;
       return true;
@@ -265,22 +280,26 @@
   function renderAZ(entries){
     const groups = {};
     entries.forEach(e => {
-      const letter = normalize(e.titulo)[0]?.toUpperCase() || '#';
+      const letter = e.letra;
       if (!groups[letter]) groups[letter] = [];
       groups[letter].push(e);
+    });
+    // ordena cada grupo por ordem (se houver) e depois alfabeticamente
+    Object.keys(groups).forEach(k => {
+      groups[k].sort((a,b) => (a.ordem - b.ordem) || a.titulo.localeCompare(b.titulo, 'pt-BR'));
     });
     const letters = Object.keys(groups).sort();
 
     azIndexEl.innerHTML = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(l => {
       const has = letters.includes(l);
-      return `<a class="az-letter ${has ? 'has-entries' : ''}" href="${has ? '#letra-' + l : '#'}">${l}</a>`;
+      return `<a class="az-letter ${has ? 'has-entries' : ''}" href="${has ? '#letra-' + l : '#'}" ${!has ? 'tabindex="-1" aria-disabled="true"' : ''}>${l}</a>`;
     }).join('');
 
     conteudoEl.innerHTML = letters.map(l => `
       <section class="grupo" id="letra-${l}">
         <h2 class="grupo-titulo">${l}</h2>
         <div class="verbetes-grid">
-          ${groups[l].sort((a,b) => a.titulo.localeCompare(b.titulo, 'pt-BR')).map(cardHtml).join('')}
+          ${groups[l].map(cardHtml).join('')}
         </div>
       </section>
     `).join('');
@@ -290,24 +309,31 @@
     azIndexEl.innerHTML = '';
     const groups = {};
     entries.forEach(e => {
-      (e.tema && e.tema.length ? e.tema : ['outros']).forEach(t => {
-        if (!groups[t]) groups[t] = [];
-        groups[t].push(e);
-      });
+      const key = e.categoria || 'outros';
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(e);
     });
-    const temas = Object.keys(groups).sort();
-    conteudoEl.innerHTML = temas.map(t => `
+    Object.keys(groups).forEach(k => {
+      groups[k].sort((a,b) => (a.ordem - b.ordem) || a.titulo.localeCompare(b.titulo, 'pt-BR'));
+    });
+    const cats = Object.keys(groups).sort((a,b) => {
+      const order = {significado:1, estilo:2, tecnica:3, termo:4};
+      return (order[a]||99) - (order[b]||99);
+    });
+
+    conteudoEl.innerHTML = cats.map(t => `
       <section class="grupo">
         <h2 class="grupo-titulo">${TEMAS[t] || t}</h2>
         <div class="verbetes-grid">
-          ${groups[t].sort((a,b) => a.titulo.localeCompare(b.titulo, 'pt-BR')).map(cardHtml).join('')}
+          ${groups[t].map(cardHtml).join('')}
         </div>
       </section>
     `).join('');
   }
 
   function cardHtml(e){
-    const href = e.pagina_externa ? e.pagina_externa : `#verbete-${e.slug}`;
+    // Se houver link_estilo, pode usar como href; senão, ancora local
+    const href = e.link_estilo ? e.link_estilo : '#verbete-' + e.slug;
     return `
       <a class="verbete-card" href="${href}" data-slug="${e.slug}">
         <div class="verbete-cat">${CATEGORIAS[e.categoria] || e.categoria}</div>
@@ -326,7 +352,7 @@
         "@type": "ListItem",
         "position": i + 1,
         "name": e.titulo,
-        "url": "https://micaeltatuagem.com.br/" + (e.pagina_externa || ('guia#verbete-' + e.slug))
+        "url": "https://micaeltatuagem.com.br/" + (e.link_estilo || ('guia#verbete-' + e.slug))
       }))
     };
     document.getElementById('schemaData').textContent = JSON.stringify(schema);
@@ -363,17 +389,29 @@
     searchTimer = setTimeout(render, 150);
   });
 
-  fetch(`guia-data.json?t=${Date.now()}`, { cache: 'no-store' })
-    .then(r => r.json())
-    .then(data => {
-      allEntries = Array.isArray(data) ? data : [];
-      render();
-    })
-    .catch(() => {
-      conteudoEl.innerHTML = '';
-      vazioEl.textContent = 'Não foi possível carregar o guia agora.';
-      vazioEl.style.display = 'block';
-    });
+  // ====== BUSCA NO SUPABASE (REST API) ======
+  fetch(`${SUPABASE_URL}/rest/v1/guia_verbetes?select=*&order=termo.asc`, {
+    method: 'GET',
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(r => {
+    if (!r.ok) throw new Error('Erro ' + r.status);
+    return r.json();
+  })
+  .then(data => {
+    allEntries = Array.isArray(data) ? data.map(mapRow) : [];
+    render();
+  })
+  .catch(err => {
+    console.error(err);
+    conteudoEl.innerHTML = '';
+    vazioEl.textContent = 'Não foi possível carregar o guia agora. Verifique as credenciais do Supabase.';
+    vazioEl.style.display = 'block';
+  });
 })();
 </script>
 <script src="nav-mobile.js" defer></script>
