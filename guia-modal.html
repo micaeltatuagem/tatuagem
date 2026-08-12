@@ -1,0 +1,102 @@
+<!-- ============================================================
+     Cole este bloco no HTML da página /guia, uma vez só,
+     em qualquer lugar dentro do <body> (sugestão: logo antes
+     do </body>, depois do #conteudo).
+     ============================================================ -->
+
+<div id="verbeteModal" class="verbete-modal">
+  <div class="verbete-modal-overlay" data-fechar-modal></div>
+  <div class="verbete-modal-caixa" role="dialog" aria-modal="true">
+    <button class="verbete-modal-fechar" data-fechar-modal aria-label="Fechar">✕</button>
+    <p id="vModalCategoria" class="verbete-modal-cat"></p>
+    <h2 id="vModalTitulo" class="verbete-modal-titulo"></h2>
+    <img id="vModalImagem" class="verbete-modal-imagem" style="display:none;" alt="">
+    <p id="vModalResumo" class="verbete-modal-resumo"></p>
+    <a id="vModalEstilo" class="verbete-modal-link-estilo" href="#" style="display:none;">Ver estilo na galeria →</a>
+  </div>
+</div>
+
+<style>
+  .verbete-modal{
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+  }
+  .verbete-modal.aberto{
+    display: block;
+  }
+  .verbete-modal-overlay{
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.72);
+  }
+  .verbete-modal-caixa{
+    position: relative;
+    max-width: 640px;
+    margin: 6vh auto;
+    max-height: 88vh;
+    overflow-y: auto;
+    background: var(--bg, #0b0b0c);
+    color: var(--ink, #efece6);
+    font-family: var(--font-body, Georgia, serif);
+    border: 1px solid rgba(255,255,255,.08);
+    padding: 40px 32px;
+  }
+  .verbete-modal-fechar{
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    color: var(--ink, #efece6);
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 8px;
+  }
+  .verbete-modal-cat{
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    opacity: .65;
+    margin: 0 0 8px;
+  }
+  .verbete-modal-titulo{
+    font-size: 34px;
+    font-weight: 400;
+    margin: 0 0 20px;
+  }
+  .verbete-modal-imagem{
+    width: 100%;
+    max-height: 360px;
+    object-fit: cover;
+    margin-bottom: 20px;
+  }
+  .verbete-modal-resumo{
+    font-size: 17px;
+    line-height: 1.6;
+    margin: 0;
+  }
+  .verbete-modal-link-estilo{
+    display: inline-block;
+    margin-top: 24px;
+    padding: 10px 18px;
+    border: 1px solid currentColor;
+    color: var(--ink, #efece6);
+    text-decoration: none;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 600px){
+    .verbete-modal-caixa{
+      margin: 0;
+      max-height: 100vh;
+      height: 100vh;
+    }
+  }
+</style>
