@@ -81,7 +81,7 @@
     .btn-excluir { padding:.7rem 1.2rem; background:transparent; color:#e07070; border:1px solid rgba(224,112,112,.3); border-radius:var(--radius); cursor:pointer; }
     .btn-cancelar { padding:.7rem 1.2rem; background:transparent; color:var(--muted); border:1px solid var(--border); border-radius:var(--radius); cursor:pointer; }
     .draft-toggle { display:flex; align-items:center; gap:.6rem; font-size:.82rem; }
-    .preview-imagem { max-width:160px; display:none; margin-top:8px; border-radius:var(--radius); border:1px solid var(--border); }
+    .preview-imagem { max-width:160px; max-height:160px; object-fit:contain; display:none; margin-top:8px; padding:.6rem; background:#e8e0c9; border-radius:var(--radius); border:1px solid var(--border); }
 
     .alert { position:fixed; bottom:1.5rem; right:1.5rem; padding:.9rem 1.4rem; border-radius:var(--radius); font-size:.85rem; opacity:0; transform:translateY(10px); transition:.25s; pointer-events:none; z-index:200; }
     .alert.visible { opacity:1; transform:translateY(0); }
@@ -221,7 +221,7 @@
   const BUCKET_IMAGENS = 'guia-imagens';
 
   // senha simples só pra travar o acesso a essa tela (não é autenticação do Supabase)
-  const ADMIN_SENHA = 'Sofilhadaputa1';
+  const ADMIN_SENHA = 'TROQUE-ESSA-SENHA';
   const SESSAO_KEY = 'guiaAdminOk';
 
   let entries = [];
