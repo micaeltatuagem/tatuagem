@@ -3419,7 +3419,16 @@
     });
   });
 
-  // Deep link: ?tag=slug pré-seleciona o filtro compartilhado
+  // Deep link: ?q=termo pré-preenche a busca por texto (ex: vindo do botão "ver mais" do Guia)
+(function applySearchFromDeepLink() {
+  const params = new URLSearchParams(location.search);
+  const q = params.get('q');
+  if (!q) return;
+  searchInput.value = q;
+  applyFilters();
+})();
+
+// Deep link: ?tag=slug pré-seleciona o filtro compartilhado
   (function applyTagFromDeepLink() {
     const params = new URLSearchParams(location.search);
     const tag = params.get('tag');
