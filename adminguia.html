@@ -9,7 +9,6 @@
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -46,9 +45,6 @@
     .admin-header-links a { color: var(--muted); text-decoration: none; }
     .admin-header-links a:hover { color: var(--bone); }
 
-    .github-status { display: flex; align-items: center; gap: .6rem; font-size: .78rem; padding: .6rem 1rem; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 1.5rem; }
-    .github-status.connected { border-color: rgba(74,222,128,.3); color: var(--success); }
-
     .toolbar { display:flex; gap:1rem; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:1.5rem; }
     .toolbar-filters { display:flex; gap:.5rem; flex-wrap:wrap; }
     .filter-btn { font-size:.75rem; padding:.45rem .9rem; border-radius:999px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; }
@@ -75,14 +71,17 @@
       width:100%; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius);
       color:var(--bone); font-size:.88rem; padding:9px 12px; font-family:'Inter',sans-serif;
     }
+    .form-group input[type="file"] { padding: 9px 0; border: none; }
     .form-group textarea { min-height:90px; resize:vertical; }
     .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
     .form-hint { font-size:.68rem; color:var(--muted); margin-top:4px; }
     .form-actions { display:flex; gap:.8rem; justify-content:space-between; margin-top:1.5rem; }
     .btn-salvar { padding:.7rem 1.4rem; background:var(--gold); color:#0a0a0a; border:none; border-radius:var(--radius); cursor:pointer; font-weight:500; }
+    .btn-salvar:disabled { opacity:.6; cursor:default; }
     .btn-excluir { padding:.7rem 1.2rem; background:transparent; color:#e07070; border:1px solid rgba(224,112,112,.3); border-radius:var(--radius); cursor:pointer; }
     .btn-cancelar { padding:.7rem 1.2rem; background:transparent; color:var(--muted); border:1px solid var(--border); border-radius:var(--radius); cursor:pointer; }
     .draft-toggle { display:flex; align-items:center; gap:.6rem; font-size:.82rem; }
+    .preview-imagem { max-width:160px; display:none; margin-top:8px; border-radius:var(--radius); border:1px solid var(--border); }
 
     .alert { position:fixed; bottom:1.5rem; right:1.5rem; padding:.9rem 1.4rem; border-radius:var(--radius); font-size:.85rem; opacity:0; transform:translateY(10px); transition:.25s; pointer-events:none; z-index:200; }
     .alert.visible { opacity:1; transform:translateY(0); }
@@ -116,8 +115,6 @@
     </div>
   </div>
 
-  <div class="github-status" id="githubStatus">Conectado ao repositório</div>
-
   <div class="toolbar">
     <div class="toolbar-filters" id="filterGroup">
       <button class="filter-btn active" data-cat="todos">Todos</button>
@@ -140,8 +137,8 @@
       <input type="hidden" id="fId">
       <div class="form-row">
         <div class="form-group">
-          <label>Título</label>
-          <input type="text" id="fTitulo" required>
+          <label>Termo</label>
+          <input type="text" id="fTermo" required>
         </div>
         <div class="form-group">
           <label>Categoria</label>
@@ -156,29 +153,29 @@
       <div class="form-group">
         <label>Slug (URL)</label>
         <input type="text" id="fSlug" required>
-        <div class="form-hint">gerado a partir do título, pode editar</div>
+        <div class="form-hint">gerado a partir do termo, pode editar</div>
       </div>
       <div class="form-group">
         <label>Tema/tags (separados por vírgula)</label>
         <input type="text" id="fTema" placeholder="ex: significados, floral">
       </div>
       <div class="form-group">
-        <label>Resumo (aparece no card)</label>
-        <textarea id="fResumo" required></textarea>
+        <label>Descrição (aparece no card e no modal)</label>
+        <textarea id="fDescricao" required></textarea>
       </div>
       <div class="form-group">
-        <label>Corpo do verbete</label>
+        <label>Corpo completo (texto estendido, opcional)</label>
         <textarea id="fCorpo" style="min-height:160px"></textarea>
       </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>URL da imagem</label>
-          <input type="text" id="fImagem" placeholder="img/exemplo.webp">
-        </div>
-        <div class="form-group">
-          <label>Alt text da imagem</label>
-          <input type="text" id="fAlt">
-        </div>
+      <div class="form-group">
+        <label>Imagem</label>
+        <input type="file" id="fImagemArquivo" accept="image/*">
+        <img id="fImagemPreview" class="preview-imagem">
+        <div class="form-hint" id="fImagemAtual"></div>
+      </div>
+      <div class="form-group">
+        <label>Alt text da imagem</label>
+        <input type="text" id="fAlt">
       </div>
       <div class="form-group">
         <label>SEO title</label>
@@ -189,8 +186,8 @@
         <textarea id="fMetaDesc" style="min-height:60px"></textarea>
       </div>
       <div class="form-group">
-        <label>Página externa (se o verbete apontar pra uma página já existente, ex: estilo/old-school)</label>
-        <input type="text" id="fPaginaExterna">
+        <label>Link do estilo na galeria (se o verbete apontar pra um estilo, ex: /estilo/old-school)</label>
+        <input type="text" id="fLinkEstilo">
       </div>
       <div class="form-group">
         <label>Tags relacionadas no catálogo Flash (separadas por vírgula)</label>
@@ -207,7 +204,7 @@
         </div>
         <div style="display:flex; gap:.8rem;">
           <button type="button" class="btn-cancelar" id="btnCancelar">Cancelar</button>
-          <button type="submit" class="btn-salvar">Salvar</button>
+          <button type="submit" class="btn-salvar" id="btnSalvar">Salvar</button>
         </div>
       </div>
     </form>
@@ -218,15 +215,15 @@
 
 <script>
 (function(){
-  const REPO_OWNER = 'micaeltatuagem';
-  const REPO_NAME  = 'tatuagem';
-  const BRANCH     = 'main';
-  const DATA_PATH  = 'guia-data.json';
-  const WORKER_URL = 'https://tatuagem-gh-proxy.micaeltattoo.workers.dev';
-  const TOKEN_KEY  = 'ghToken';
+  // mesmas credenciais usadas no resto do site
+  const SUPABASE_URL   = 'https://rpgcsejfewltricfsdrd.supabase.co';
+  const SUPABASE_KEY   = 'sb_publishable_7LF70sbQS_es_uco138rqw_YfbqnIsa';
+  const BUCKET_IMAGENS = 'guia-imagens';
 
+  // senha simples só pra travar o acesso a essa tela (não é autenticação do Supabase)
+  const ADMIN_SENHA = 'TROQUE-ESSA-SENHA';
+  const SESSAO_KEY = 'guiaAdminOk';
 
-  let GH_TOKEN = '';
   let entries = [];
   let currentFilter = 'todos';
 
@@ -242,34 +239,30 @@
       .toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
   }
 
+  function urlImagem(caminho){
+    if (!caminho) return '';
+    if (/^https?:\/\//i.test(caminho)) return caminho;
+    return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_IMAGENS}/${caminho}`;
+  }
+
   // ── LOGIN ──
   document.getElementById('loginForm').addEventListener('submit', handleLogin);
 
-  async function handleLogin(e){
+  function handleLogin(e){
     e.preventDefault();
-    const token = document.getElementById('inputToken').value.trim();
+    const senha = document.getElementById('inputToken').value.trim();
     const errEl = document.getElementById('loginErr');
-
-    if (!token) { errEl.textContent = '❌ Digite a senha do admin.'; return; }
-
-    errEl.textContent = '⏳ Validando senha...';
-    try {
-      const res = await fetch(`${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error('Senha incorreta.');
-      GH_TOKEN = token;
-      sessionStorage.setItem(TOKEN_KEY, token);
-      errEl.textContent = '';
-      showPanel();
-    } catch (err) {
-      errEl.textContent = '❌ ' + err.message;
+    if (senha !== ADMIN_SENHA) {
+      errEl.textContent = '❌ Senha incorreta.';
+      return;
     }
+    sessionStorage.setItem(SESSAO_KEY, '1');
+    errEl.textContent = '';
+    showPanel();
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    const token = sessionStorage.getItem(TOKEN_KEY);
-    if (token) { GH_TOKEN = token; showPanel(); }
+    if (sessionStorage.getItem(SESSAO_KEY) === '1') showPanel();
   });
 
   async function showPanel(){
@@ -279,31 +272,16 @@
     renderList();
   }
 
-  // ── CARGA / COMMIT ──
+  // ── CARGA / SUPABASE ──
   async function loadEntries(){
     try {
-      const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/${BRANCH}/${DATA_PATH}?t=${Date.now()}`;
-      const res = await fetch(url, { cache: 'no-store' });
-      entries = res.ok ? await res.json() : [];
-    } catch { entries = []; }
-  }
-
-  async function commitEntries(){
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(entries, null, 2))));
-    const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${DATA_PATH}`;
-    let sha = null;
-    try {
-      const r = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` } });
-      if (r.ok) sha = (await r.json()).sha;
-    } catch {}
-    const body = { message: 'Atualiza guia-data.json', content, branch: BRANCH };
-    if (sha) body.sha = sha;
-    const res = await fetch(url, {
-      method: 'PUT',
-      headers: { Authorization: `Bearer ${GH_TOKEN}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    if (!res.ok) throw new Error('Falha ao salvar no GitHub.');
+      const resp = await fetch(`${SUPABASE_URL}/rest/v1/guia_verbetes?select=*&order=termo.asc`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+      });
+      entries = resp.ok ? await resp.json() : [];
+    } catch {
+      entries = [];
+    }
   }
 
   // ── LISTA ──
@@ -313,19 +291,19 @@
       if (currentFilter === 'todos') return true;
       if (currentFilter === 'draft') return e.draft;
       return e.categoria === currentFilter;
-    }).sort((a,b) => a.titulo.localeCompare(b.titulo, 'pt-BR'));
+    }).sort((a,b) => a.termo.localeCompare(b.termo, 'pt-BR'));
 
     list.innerHTML = filtered.map(e => `
       <div class="entry-row" data-id="${e.id}">
         <span class="entry-cat">${e.categoria}</span>
-        <span class="entry-titulo">${e.titulo}</span>
+        <span class="entry-titulo">${e.termo}</span>
         <span class="entry-slug">${e.slug}</span>
         ${e.draft ? '<span class="draft-badge">RASCUNHO</span>' : ''}
       </div>
     `).join('') || '<p style="color:var(--muted); font-size:.85rem; padding:1rem;">Nenhum verbete nessa categoria.</p>';
 
     list.querySelectorAll('.entry-row').forEach(row => {
-      row.addEventListener('click', () => openEdit(parseInt(row.dataset.id)));
+      row.addEventListener('click', () => openEdit(row.dataset.id));
     });
   }
 
@@ -344,80 +322,160 @@
   document.getElementById('btnCancelar').addEventListener('click', closeModal);
   modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 
-  function closeModal(){ modal.classList.remove('open'); }
+  function closeModal(){
+    modal.classList.remove('open');
+    document.getElementById('fImagemArquivo').value = '';
+    document.getElementById('fImagemPreview').style.display = 'none';
+  }
 
   function openEdit(id){
-    const e = id ? entries.find(x => x.id === id) : null;
+    const e = id ? entries.find(x => String(x.id) === String(id)) : null;
     document.getElementById('modalTitulo').textContent = e ? 'Editar verbete' : 'Novo verbete';
     document.getElementById('fId').value = e ? e.id : '';
-    document.getElementById('fTitulo').value = e ? e.titulo : '';
+    document.getElementById('fTermo').value = e ? e.termo : '';
     document.getElementById('fCategoria').value = e ? e.categoria : 'significado';
     document.getElementById('fSlug').value = e ? e.slug : '';
     document.getElementById('fTema').value = e ? (e.tema||[]).join(', ') : '';
-    document.getElementById('fResumo').value = e ? e.resumo : '';
-    document.getElementById('fCorpo').value = e ? e.corpo : '';
-    document.getElementById('fImagem').value = e ? e.imagem : '';
-    document.getElementById('fAlt').value = e ? e.alt : '';
-    document.getElementById('fSeoTitle').value = e ? e.seo_title : '';
-    document.getElementById('fMetaDesc').value = e ? e.meta_description : '';
-    document.getElementById('fPaginaExterna').value = e ? e.pagina_externa : '';
+    document.getElementById('fDescricao').value = e ? e.descricao : '';
+    document.getElementById('fCorpo').value = e ? (e.corpo||'') : '';
+    document.getElementById('fAlt').value = e ? (e.imagem_alt||'') : '';
+    document.getElementById('fSeoTitle').value = e ? (e.seo_title||'') : '';
+    document.getElementById('fMetaDesc').value = e ? (e.meta_description||'') : '';
+    document.getElementById('fLinkEstilo').value = e ? (e.link_estilo||'') : '';
     document.getElementById('fTagsRelacionadas').value = e ? (e.tags_relacionadas||[]).join(', ') : '';
     document.getElementById('fDraft').checked = e ? !!e.draft : true;
     document.getElementById('btnExcluir').style.display = e ? 'inline-block' : 'none';
+
+    const preview = document.getElementById('fImagemPreview');
+    const atual = document.getElementById('fImagemAtual');
+    document.getElementById('fImagemArquivo').value = '';
+    if (e && e.imagem_url) {
+      preview.src = urlImagem(e.imagem_url);
+      preview.style.display = 'block';
+      atual.textContent = 'Imagem atual salva. Escolha outro arquivo pra substituir.';
+    } else {
+      preview.style.display = 'none';
+      atual.textContent = '';
+    }
+
     modal.classList.add('open');
   }
 
-  document.getElementById('fTitulo').addEventListener('input', function(){
+  document.getElementById('fTermo').addEventListener('input', function(){
     if (!document.getElementById('fId').value) {
       document.getElementById('fSlug').value = slugify(this.value);
     }
   });
 
+  document.getElementById('fImagemArquivo').addEventListener('change', function(){
+    const arquivo = this.files[0];
+    const preview = document.getElementById('fImagemPreview');
+    if (!arquivo) return;
+    preview.src = URL.createObjectURL(arquivo);
+    preview.style.display = 'block';
+  });
+
   document.getElementById('btnExcluir').addEventListener('click', async () => {
-    const id = parseInt(document.getElementById('fId').value);
+    const id = document.getElementById('fId').value;
     if (!id) return;
     if (!confirm('Excluir este verbete? Essa ação não pode ser desfeita.')) return;
-    entries = entries.filter(x => x.id !== id);
     try {
-      await commitEntries();
+      const resp = await fetch(`${SUPABASE_URL}/rest/v1/guia_verbetes?id=eq.${id}`, {
+        method: 'DELETE',
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+      });
+      if (!resp.ok) throw new Error(await resp.text());
       showAlert('success', 'Verbete excluído.');
       closeModal();
+      await loadEntries();
       renderList();
-    } catch (err) { showAlert('error', err.message); }
+    } catch (err) { showAlert('error', 'Falha ao excluir: ' + err.message); }
   });
+
+  async function subirImagem(arquivo, slug){
+    const extensao = arquivo.name.split('.').pop();
+    const caminho = `${slug}-${Date.now()}.${extensao}`;
+    const resp = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET_IMAGENS}/${caminho}`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': arquivo.type
+      },
+      body: arquivo
+    });
+    if (!resp.ok) throw new Error('Falha no upload da imagem: ' + await resp.text());
+    return caminho;
+  }
 
   document.getElementById('entryForm').addEventListener('submit', async e => {
     e.preventDefault();
-    const id = document.getElementById('fId').value;
-    const data = {
-      id: id ? parseInt(id) : (Math.max(0, ...entries.map(x => x.id)) + 1),
-      titulo: document.getElementById('fTitulo').value.trim(),
-      categoria: document.getElementById('fCategoria').value,
-      slug: document.getElementById('fSlug').value.trim(),
-      tema: document.getElementById('fTema').value.split(',').map(s => s.trim()).filter(Boolean),
-      resumo: document.getElementById('fResumo').value.trim(),
-      corpo: document.getElementById('fCorpo').value.trim(),
-      imagem: document.getElementById('fImagem').value.trim(),
-      alt: document.getElementById('fAlt').value.trim(),
-      seo_title: document.getElementById('fSeoTitle').value.trim(),
-      meta_description: document.getElementById('fMetaDesc').value.trim(),
-      pagina_externa: document.getElementById('fPaginaExterna').value.trim(),
-      tags_relacionadas: document.getElementById('fTagsRelacionadas').value.split(',').map(s => s.trim()).filter(Boolean),
-      draft: document.getElementById('fDraft').checked
-    };
-
-    if (id) {
-      entries = entries.map(x => x.id === data.id ? data : x);
-    } else {
-      entries.push(data);
-    }
+    const btnSalvar = document.getElementById('btnSalvar');
+    btnSalvar.disabled = true;
+    btnSalvar.textContent = 'Salvando...';
 
     try {
-      await commitEntries();
+      const id = document.getElementById('fId').value;
+      const slug = document.getElementById('fSlug').value.trim();
+      const arquivo = document.getElementById('fImagemArquivo').files[0];
+
+      let imagemUrl = id ? (entries.find(x => String(x.id) === String(id))?.imagem_url || null) : null;
+      if (arquivo) {
+        btnSalvar.textContent = 'Subindo imagem...';
+        imagemUrl = await subirImagem(arquivo, slug);
+      }
+
+      const data = {
+        termo: document.getElementById('fTermo').value.trim(),
+        categoria: document.getElementById('fCategoria').value,
+        slug: slug,
+        tema: document.getElementById('fTema').value.split(',').map(s => s.trim()).filter(Boolean),
+        descricao: document.getElementById('fDescricao').value.trim(),
+        corpo: document.getElementById('fCorpo').value.trim() || null,
+        imagem_url: imagemUrl,
+        imagem_alt: document.getElementById('fAlt').value.trim() || null,
+        seo_title: document.getElementById('fSeoTitle').value.trim() || null,
+        meta_description: document.getElementById('fMetaDesc').value.trim() || null,
+        link_estilo: document.getElementById('fLinkEstilo').value.trim() || null,
+        tags_relacionadas: document.getElementById('fTagsRelacionadas').value.split(',').map(s => s.trim()).filter(Boolean),
+        draft: document.getElementById('fDraft').checked
+      };
+
+      btnSalvar.textContent = 'Salvando verbete...';
+
+      let resp;
+      if (id) {
+        resp = await fetch(`${SUPABASE_URL}/rest/v1/guia_verbetes?id=eq.${id}`, {
+          method: 'PATCH',
+          headers: {
+            apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json', Prefer: 'return=minimal'
+          },
+          body: JSON.stringify(data)
+        });
+      } else {
+        resp = await fetch(`${SUPABASE_URL}/rest/v1/guia_verbetes`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json', Prefer: 'return=minimal'
+          },
+          body: JSON.stringify(data)
+        });
+      }
+
+      if (!resp.ok) throw new Error(await resp.text());
+
       showAlert('success', 'Verbete salvo.');
       closeModal();
+      await loadEntries();
       renderList();
-    } catch (err) { showAlert('error', err.message); }
+    } catch (err) {
+      showAlert('error', 'Falha ao salvar: ' + err.message);
+    } finally {
+      btnSalvar.disabled = false;
+      btnSalvar.textContent = 'Salvar';
+    }
   });
 })();
 </script>

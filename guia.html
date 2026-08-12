@@ -318,7 +318,9 @@
       letra: (row.letra || normalize(row.termo || '')[0] || '#').toUpperCase(),
       ordem: row.ordem || 0,
       imagem_url: row.imagem_url || '',
+      imagem_alt: row.imagem_alt || '',
       link_estilo: row.link_estilo || '',
+      corpo: row.corpo || '',
       tema: [row.categoria] // usado no modo "Por tema"
     };
   }
@@ -462,7 +464,7 @@
     const img = urlImagem(entry.imagem_url);
     if (img) {
       modalImagemEl.src = img;
-      modalImagemEl.alt = entry.titulo;
+      modalImagemEl.alt = entry.imagem_alt || entry.titulo;
       modalImagemEl.style.display = 'block';
     } else {
       modalImagemEl.style.display = 'none';
@@ -512,7 +514,7 @@
   });
 
   // ====== BUSCA NO SUPABASE (REST API) ======
-  fetch(`${SUPABASE_URL}/rest/v1/guia_verbetes?select=*&order=termo.asc`, {
+  fetch(`${SUPABASE_URL}/rest/v1/guia_verbetes?select=*&draft=eq.false&order=termo.asc`, {
     method: 'GET',
     headers: {
       'apikey': SUPABASE_KEY,
