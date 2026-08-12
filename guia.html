@@ -58,6 +58,8 @@
     padding: 1.5rem 0; border-bottom:1px solid var(--border); font-family: var(--font-ui);
   }
   .toggle-group, .cat-group { display:flex; gap:.5rem; flex-wrap:wrap; }
+  .cat-item { display:flex; flex-direction:column; align-items:center; gap:.3rem; }
+  .cat-count { font-family: var(--font-ui); font-size:.68rem; color:var(--ink-faint); }
   .toggle-btn, .cat-btn {
     font-family: var(--font-ui); font-size:.8rem; padding:.5rem 1rem;
     border:1px solid var(--border-hi); border-radius:999px; background:transparent;
@@ -191,11 +193,26 @@
       <button class="toggle-btn" data-view="tema">Por tema</button>
     </div>
     <div class="cat-group" id="catGroup">
-      <button class="cat-btn active" data-cat="todos">Todos</button>
-      <button class="cat-btn" data-cat="significado">Significados</button>
-      <button class="cat-btn" data-cat="estilo">Estilos</button>
-      <button class="cat-btn" data-cat="tecnica">Técnicas</button>
-      <button class="cat-btn" data-cat="termo">Termos</button>
+      <div class="cat-item">
+        <button class="cat-btn active" data-cat="todos">Todos</button>
+        <span class="cat-count" data-count-for="todos">&nbsp;</span>
+      </div>
+      <div class="cat-item">
+        <button class="cat-btn" data-cat="significado">Significados</button>
+        <span class="cat-count" data-count-for="significado">&nbsp;</span>
+      </div>
+      <div class="cat-item">
+        <button class="cat-btn" data-cat="estilo">Estilos</button>
+        <span class="cat-count" data-count-for="estilo">&nbsp;</span>
+      </div>
+      <div class="cat-item">
+        <button class="cat-btn" data-cat="tecnica">Técnicas</button>
+        <span class="cat-count" data-count-for="tecnica">&nbsp;</span>
+      </div>
+      <div class="cat-item">
+        <button class="cat-btn" data-cat="termo">Termos</button>
+        <span class="cat-count" data-count-for="termo">&nbsp;</span>
+      </div>
     </div>
     <input type="text" class="busca" id="busca" placeholder="Buscar no guia...">
   </div>
@@ -510,6 +527,19 @@
     }
   });
 
+  function atualizarContagens(){
+    const total = allEntries.length;
+    const porCategoria = { significado: 0, estilo: 0, tecnica: 0, termo: 0 };
+    allEntries.forEach(e => {
+      if (porCategoria[e.categoria] !== undefined) porCategoria[e.categoria]++;
+    });
+    document.querySelector('[data-count-for="todos"]').textContent = `${total} verbete${total === 1 ? '' : 's'}`;
+    Object.keys(porCategoria).forEach(cat => {
+      const el = document.querySelector(`[data-count-for="${cat}"]`);
+      if (el) el.textContent = `${porCategoria[cat]} verbete${porCategoria[cat] === 1 ? '' : 's'}`;
+    });
+  }
+
   // ====== BUSCA NO SUPABASE (REST API) ======
   fetch(`${SUPABASE_URL}/rest/v1/guia_verbetes?select=*&draft=eq.false&order=termo.asc`, {
     method: 'GET',
@@ -526,6 +556,7 @@
   .then(data => {
     allEntries = Array.isArray(data) ? data.map(mapRow) : [];
     render();
+    atualizarContagens();
     checarHash(); // se a página já abriu com #verbete-slug na URL, abre o modal direto
   })
   .catch(err => {
