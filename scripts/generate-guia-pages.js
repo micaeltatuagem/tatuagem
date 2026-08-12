@@ -189,7 +189,7 @@ function renderPagina(v) {
     font-family: var(--font-ui); font-size:.82rem; text-decoration:none; padding:.75rem 1.3rem;
     border-radius: 999px; letter-spacing:.03em;
   }
-  .cta-btn.primario { background: var(--accent); color:#0a0a0a; }
+  .cta-btn.primario { background: #7a8c3a; color:#fff; }
   .cta-btn.secundario { border:1px solid var(--accent-dim); color:var(--ink); }
 
   .faq { padding: 2.5rem 0; }
