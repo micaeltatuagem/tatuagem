@@ -89,6 +89,7 @@
     display:block; text-decoration:none; color:var(--ink);
     border:1px solid var(--border); border-radius:var(--radius);
     padding:1.1rem 1.2rem; transition: border-color .15s;
+    cursor: pointer;
   }
   .verbete-card:hover { border-color: var(--accent-dim); }
   .verbete-cat { font-family: var(--font-ui); font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent); margin-bottom:.35rem; }
@@ -102,6 +103,38 @@
     text-align:center; padding: 3rem 1.5rem 2rem; border-top:1px solid var(--border); margin-top:3rem;
   }
   footer a { color: var(--ink-faint); text-decoration:none; }
+
+  /* ============ MODAL DE DETALHE DO VERBETE ============ */
+  .verbete-modal { position:fixed; inset:0; z-index:200; display:none; }
+  .verbete-modal.aberto { display:block; }
+  .verbete-modal-overlay { position:absolute; inset:0; background:rgba(0,0,0,.75); }
+  .verbete-modal-caixa {
+    position:relative; max-width:640px; margin:6vh auto; max-height:88vh; overflow-y:auto;
+    background:var(--bg); color:var(--ink); font-family:var(--font-body);
+    border:1px solid var(--border-hi); border-radius:var(--radius); padding:2.5rem 2rem;
+  }
+  .verbete-modal-fechar {
+    position:absolute; top:1rem; right:1rem; background:transparent; border:none;
+    color:var(--ink-muted); font-family:var(--font-ui); font-size:1.1rem; cursor:pointer; line-height:1; padding:.5rem;
+  }
+  .verbete-modal-fechar:hover { color:var(--ink); }
+  .verbete-modal-cat {
+    font-family:var(--font-ui); font-size:.68rem; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); margin:0 0 .5rem;
+  }
+  .verbete-modal-titulo { font-size:1.9rem; font-weight:400; margin:0 0 1.2rem; }
+  .verbete-modal-imagem { width:100%; max-height:340px; object-fit:cover; border-radius:var(--radius); margin-bottom:1.2rem; }
+  .verbete-modal-resumo { font-size:1.02rem; line-height:1.65; margin:0; }
+  .verbete-modal-link-estilo {
+    display:inline-block; margin-top:1.5rem; padding:.6rem 1.1rem;
+    border:1px solid var(--accent-dim); color:var(--accent); text-decoration:none;
+    font-family:var(--font-ui); font-size:.78rem; letter-spacing:.05em; text-transform:uppercase; border-radius:999px;
+    transition: border-color .15s, color .15s;
+  }
+  .verbete-modal-link-estilo:hover { border-color:var(--accent); color:var(--ink); }
+  @media (max-width:600px){
+    .verbete-modal-caixa { margin:0; max-height:100vh; height:100vh; border-radius:0; }
+  }
 </style>
 <link rel="stylesheet" href="nav-mobile.css">
 </head>
@@ -178,6 +211,19 @@
   <span>© Micael Faccio · Tatuador em Muriaé, MG</span>
 </footer>
 
+<!-- ============ MODAL DE DETALHE DO VERBETE ============ -->
+<div id="verbeteModal" class="verbete-modal">
+  <div class="verbete-modal-overlay" data-fechar-modal></div>
+  <div class="verbete-modal-caixa" role="dialog" aria-modal="true">
+    <button class="verbete-modal-fechar" data-fechar-modal aria-label="Fechar">✕</button>
+    <p id="vModalCategoria" class="verbete-modal-cat"></p>
+    <h2 id="vModalTitulo" class="verbete-modal-titulo"></h2>
+    <img id="vModalImagem" class="verbete-modal-imagem" style="display:none;" alt="">
+    <p id="vModalResumo" class="verbete-modal-resumo"></p>
+    <a id="vModalEstilo" class="verbete-modal-link-estilo" href="#" style="display:none;">Ver estilo na galeria →</a>
+  </div>
+</div>
+
 <script type="application/ld+json" id="schemaData">{}</script>
 
 <script type="application/ld+json">
@@ -227,6 +273,9 @@
   const SUPABASE_KEY  = 'sb_publishable_7LF70sbQS_es_uco138rqw_YfbqnIsa';
   // ========================================================
 
+  // nome do bucket do Storage onde as imagens dos verbetes ficam
+  const BUCKET_IMAGENS = 'guia-imagens';
+
   const CATEGORIAS = {
     significado: 'Significado',
     estilo: 'Estilo',
@@ -251,6 +300,12 @@
 
   function normalize(str){
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  function urlImagem(caminho){
+    if (!caminho) return '';
+    if (/^https?:\/\//i.test(caminho)) return caminho;
+    return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_IMAGENS}/${caminho}`;
   }
 
   function mapRow(row){
@@ -284,7 +339,6 @@
       if (!groups[letter]) groups[letter] = [];
       groups[letter].push(e);
     });
-    // ordena cada grupo por ordem (se houver) e depois alfabeticamente
     Object.keys(groups).forEach(k => {
       groups[k].sort((a,b) => (a.ordem - b.ordem) || a.titulo.localeCompare(b.titulo, 'pt-BR'));
     });
@@ -332,10 +386,9 @@
   }
 
   function cardHtml(e){
-    // Se houver link_estilo, pode usar como href; senão, ancora local
-    const href = e.link_estilo ? e.link_estilo : '#verbete-' + e.slug;
+    // Sempre abre o modal de detalhe; o link do estilo fica dentro do modal, não no card.
     return `
-      <a class="verbete-card" href="${href}" data-slug="${e.slug}">
+      <a class="verbete-card" href="#verbete-${e.slug}" data-slug="${e.slug}">
         <div class="verbete-cat">${CATEGORIAS[e.categoria] || e.categoria}</div>
         <div class="verbete-titulo">${e.titulo}</div>
         <p class="verbete-resumo">${e.resumo || ''}</p>
@@ -352,7 +405,7 @@
         "@type": "ListItem",
         "position": i + 1,
         "name": e.titulo,
-        "url": "https://micaeltatuagem.com.br/" + (e.link_estilo || ('guia#verbete-' + e.slug))
+        "url": "https://micaeltatuagem.com.br/guia#verbete-" + e.slug
       }))
     };
     document.getElementById('schemaData').textContent = JSON.stringify(schema);
@@ -389,6 +442,75 @@
     searchTimer = setTimeout(render, 150);
   });
 
+  // ====== MODAL DE DETALHE DO VERBETE ======
+  const modalEl        = document.getElementById('verbeteModal');
+  const modalCatEl      = document.getElementById('vModalCategoria');
+  const modalTituloEl   = document.getElementById('vModalTitulo');
+  const modalImagemEl   = document.getElementById('vModalImagem');
+  const modalResumoEl   = document.getElementById('vModalResumo');
+  const modalEstiloEl   = document.getElementById('vModalEstilo');
+  const modalFecharEls  = document.querySelectorAll('[data-fechar-modal]');
+
+  function abrirVerbete(slug){
+    const entry = allEntries.find(e => e.slug === slug);
+    if (!entry || !modalEl) return;
+
+    modalCatEl.textContent = CATEGORIAS[entry.categoria] || entry.categoria;
+    modalTituloEl.textContent = entry.titulo;
+    modalResumoEl.textContent = entry.resumo || '';
+
+    const img = urlImagem(entry.imagem_url);
+    if (img) {
+      modalImagemEl.src = img;
+      modalImagemEl.alt = entry.titulo;
+      modalImagemEl.style.display = 'block';
+    } else {
+      modalImagemEl.style.display = 'none';
+      modalImagemEl.removeAttribute('src');
+    }
+
+    if (entry.link_estilo) {
+      modalEstiloEl.href = entry.link_estilo;
+      modalEstiloEl.style.display = 'inline-block';
+    } else {
+      modalEstiloEl.style.display = 'none';
+    }
+
+    modalEl.classList.add('aberto');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function fecharVerbete(){
+    if (!modalEl) return;
+    modalEl.classList.remove('aberto');
+    document.body.style.overflow = '';
+    if (location.hash.startsWith('#verbete-')) {
+      history.replaceState(null, '', location.pathname + location.search);
+    }
+  }
+
+  function checarHash(){
+    const hash = location.hash;
+    if (hash.startsWith('#verbete-')) {
+      const slug = hash.replace('#verbete-', '');
+      abrirVerbete(slug);
+    } else {
+      fecharVerbete();
+    }
+  }
+
+  window.addEventListener('hashchange', checarHash);
+  modalFecharEls.forEach(el => el.addEventListener('click', () => {
+    location.hash = '';
+    fecharVerbete();
+  }));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && modalEl && modalEl.classList.contains('aberto')) {
+      location.hash = '';
+      fecharVerbete();
+    }
+  });
+
   // ====== BUSCA NO SUPABASE (REST API) ======
   fetch(`${SUPABASE_URL}/rest/v1/guia_verbetes?select=*&order=termo.asc`, {
     method: 'GET',
@@ -405,6 +527,7 @@
   .then(data => {
     allEntries = Array.isArray(data) ? data.map(mapRow) : [];
     render();
+    checarHash(); // se a página já abriu com #verbete-slug na URL, abre o modal direto
   })
   .catch(err => {
     console.error(err);
