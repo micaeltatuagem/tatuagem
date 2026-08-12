@@ -471,13 +471,9 @@
       modalImagemEl.removeAttribute('src');
     }
 
-    if (entry.link_estilo) {
-      modalEstiloEl.href = entry.link_estilo;
-      modalEstiloEl.textContent = `Ver mais tatuagens de ${entry.titulo.toLowerCase()} →`;
-      modalEstiloEl.style.display = 'inline-block';
-    } else {
-      modalEstiloEl.style.display = 'none';
-    }
+    modalEstiloEl.href = `/flash?q=${encodeURIComponent(entry.titulo)}`;
+    modalEstiloEl.textContent = `Ver mais tatuagens de ${entry.titulo.toLowerCase()} →`;
+    modalEstiloEl.style.display = 'inline-block';
 
     modalEl.classList.add('aberto');
     document.body.style.overflow = 'hidden';
