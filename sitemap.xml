@@ -3589,4 +3589,14 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://micaeltatuagem.com.br/blog/horimono-ou-irezumi-entenda-a-diferenca-entre-esses-dois-termos-da-tatuagem-japonesa</loc>
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+      <image:image>
+        <image:loc>https://rpgcsejfewltricfsdrd.supabase.co/storage/v1/object/public/blog-images/covers/1786536006568-xzx515.png</image:loc>
+        <image:title>Horimono ou Irezumi? Entenda a diferença entre esses dois termos da tatuagem japonesa</image:title>
+      </image:image>
+  </url>
 </urlset>
