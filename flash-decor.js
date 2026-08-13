@@ -196,10 +196,20 @@
     if (path.includes('aerografia')) return ['header','section','main','footer'];
     if (path.includes('fisiologia-da-tatuagem')) return ['header','section','main','footer'];
     if (path.includes('valor')) return ['header','main','footer'];
-    if (path.includes('guia')) return ['header','main','footer'];
+    if (path.includes('guia')) {
+      // pagina de listagem (/guia): dezenas de grupos A-Z/tema dentro de um
+      // unico <main> gigante (300+ verbetes) — decorar por grupo evita
+      // diluir a densidade de icones num container tao alto. Paginas de
+      // verbete individual (/guia/slug) nao tem .grupo, caem no main normal.
+      return document.querySelector('main#conteudo .grupo') ? ['header', 'main#conteudo .grupo', 'footer'] : ['header','main','footer'];
+    }
     if (path.includes('blog')) return ['main','footer'];
     // index / default
     return ['#hero','#sobre','#galeria','#processo','#faq','#promocoes','#contato'];
+  }
+
+  function isGuiaIndex() {
+    return /^\/guia\/?$/.test(window.location.pathname) || window.location.pathname.endsWith('/guia.html');
   }
 
   // ── Init ────────────────────────────────────────────────────
@@ -207,7 +217,22 @@
     const pool = await getPool();
     if (!pool.length) return;
 
-    await new Promise(r => setTimeout(r, 500));
+    if (isGuiaIndex()) {
+      // o #conteudo dessa pagina troca de innerHTML de forma assincrona
+      // (fetch no Supabase); espera o evento disparado depois da troca
+      // final, senao a decoracao colocada antes da hora e apagada junto
+      // com o conteudo estatico de fallback. Timeout de seguranca caso o
+      // evento nunca dispare (ex: erro de rede).
+      await new Promise(resolve => {
+        let done = false;
+        const finish = () => { if (!done) { done = true; resolve(); } };
+        document.addEventListener('guia-conteudo-pronto', finish, { once: true });
+        setTimeout(finish, 4000);
+      });
+    } else {
+      await new Promise(r => setTimeout(r, 500));
+    }
+
     const guards = getGuardRects();
     const sels   = getSelectors();
 

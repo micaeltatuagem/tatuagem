@@ -1009,6 +1009,10 @@
     vazioEl.style.display = entries.length ? 'none' : 'block';
     if (view === 'az') renderAZ(entries); else renderTema(entries);
     updateSchema(entries);
+    // avisa o flash-decor.js que o #conteudo já tem sua versão final —
+    // ele espera esse evento antes de decorar, senão a troca de innerHTML
+    // que acontece aqui apaga qualquer decoração colocada antes da hora
+    document.dispatchEvent(new Event('guia-conteudo-pronto'));
   }
 
   document.querySelectorAll('.toggle-btn').forEach(btn => {
@@ -1071,6 +1075,7 @@
     conteudoEl.innerHTML = '';
     vazioEl.textContent = 'Não foi possível carregar o guia agora. Verifique as credenciais do Supabase.';
     vazioEl.style.display = 'block';
+    document.dispatchEvent(new Event('guia-conteudo-pronto'));
   });
 })();
 </script>
