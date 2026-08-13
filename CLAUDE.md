@@ -86,7 +86,7 @@ outra sem checar se as variáveis usadas existem (e significam a mesma coisa) no
 Ao portar estilos entre páginas, eu tenho traduzido manualmente variável por variável
 (ver commit da fusão reserva+cadastro pro exemplo mais completo disso).
 
-### 3. `flash-decor.js` precisa de duas coisas pra decorar direito
+### 3. `flash-decor.js` precisa de três coisas pra decorar direito
 Esse script espalha desenhos de flash (baixa opacidade) como decoração de fundo. Ele
 escolhe os elementos a decorar via `getSelectors()` (lista de seletores diferente por
 página, olhando `location.pathname`) e mede a `getBoundingClientRect()` de cada um pra
@@ -96,14 +96,41 @@ saber a área onde pode espalhar imagens.
   Solução padrão: separar em dois elementos — um "canvas" full-bleed (sem max-width,
   onde o decor é injetado) e um `.pagina-inner` por dentro dele (com o max-width e o
   conteúdo de verdade). Ver `.flash-section` + `.flash-section-inner` em `flash.html`
-  como referência de padrão.
+  como referência de padrão. Toda página nova que ganhar `flash-decor.js` precisa
+  desse split — já foi esquecido em `guia/*/index.html` (header e `.inner` viviam
+  dentro de um container com max-width) e no blog (`main.post-main`/`main.blog-index`
+  eram eles mesmos o elemento com max-width) até serem corrigidos em 13/08/2026.
 - As imagens de decor são `position:absolute` com `z-index:0`. Qualquer conteúdo real
   que precise ficar visualmente por cima (texto, painéis, grades de imagem) precisa de
   `position:relative; z-index:1` explícito — senão corre risco de ficar atrás,
   dependendo da ordem do DOM.
+- **Conteúdo trocado via `innerHTML` de forma assíncrona (fetch) apaga decor injetado
+  antes da troca.** `init()` roda num timer fixo (500ms após `DOMContentLoaded`) por
+  padrão — se a página faz `algumElemento.innerHTML = ...` depois de um `fetch()` que
+  pode terminar depois desses 500ms (ex.: `guia.html`, que busca os 389 verbetes no
+  Supabase pra montar a lista A-Z), qualquer decor que `flash-decor.js` já tinha
+  colocado como filho desse elemento é destruído junto com o innerHTML antigo. Sintoma
+  visível: decoração só aparece perto do topo (header/footer, que não são tocados pelo
+  fetch), o resto da página fica liso. **Corrigido em `/guia` (13/08/2026)**: a página
+  dispara `document.dispatchEvent(new Event('guia-conteudo-pronto'))` depois que o
+  `render()` final termina (sucesso **e** erro do fetch), e `flash-decor.js` detecta
+  que está em `/guia` (`isGuiaIndex()`) e espera esse evento (com timeout de segurança
+  de 4s) antes de decorar, em vez do timer fixo de 500ms. Qualquer página nova com esse
+  mesmo padrão (conteúdo principal montado via fetch assíncrono) precisa do mesmo
+  tratamento — não confiar no timer fixo.
+- Container único gigante dilui a densidade: a fórmula de quantidade de ícones por
+  seção (`runPass`) escala com a área, mas é limitada a um teto de 2.2x a densidade de
+  referência (960×500px). Numa página com um `<main>` extremamente alto (ex.: `/guia`
+  com 389 verbetes empilhados), isso deixa a decoração visualmente esparsa/ausente na
+  maior parte do scroll. Solução usada em `/guia`: `getSelectors()` decora cada
+  `.grupo` (seção por letra/tema) em vez do `<main>` inteiro — várias seções de
+  tamanho razoável em vez de uma gigante.
 
 ### 4. `.content-panel` — componente padrão pro texto não brigar com o fundo
-Criado nessa sessão, já usado em `index.html`, `flash.html`, `galeria.html`:
+Criado em sessão anterior, hoje usado em `index.html`, `flash.html`, `galeria.html`,
+`aerografia.html` (seção de FAQ) e em toda página que tem `flash-decor.js` decorando
+texto corrido: `guia/*/index.html` (conteúdo + CTA + FAQ + relacionados, um só painel)
+e o blog (`.post-body`/`.post-tags`, via `adminblog.html`):
 ```css
 .content-panel {
   position: relative; z-index: 1;
@@ -116,7 +143,21 @@ Criado nessa sessão, já usado em `index.html`, `flash.html`, `galeria.html`:
 ```
 Usar em qualquer bloco de texto corrido ou lista densa que fique diretamente sobre uma
 seção decorada. Títulos grandes (H1) normalmente não precisam — só ganham o painel
-blocos de texto menor/mais denso (parágrafos, listas de FAQ, filtros).
+blocos de texto menor/mais denso (parágrafos, listas de FAQ, filtros). **Regra prática
+desde 13/08/2026: toda página nova que ganha `flash-decor.js` precisa, no mesmo commit,
+revisar se os blocos de texto dela já têm `.content-panel` — decor sem painel por baixo
+do texto vira ruído visual, não decoração.**
+
+### 5. Cor de botão de CTA: nunca vermelho
+O padrão visual do site pros botões de call-to-action (WhatsApp, "Reservar horário",
+"Iniciar conversa") é o verde `#7a8c3a` (`.btn-primary` em `index.html`, botão de
+WhatsApp nos verbetes do Guia). **Vermelho é reservado pra outros usos** (`--blood`/
+`--rust`, usados em elementos de dark art/old school do catálogo, não em CTA). Já
+aconteceu de um botão de CTA nascer vermelho por engano — `.post-cta` do blog usava
+`var(--blood)` (herdado de um componente de outra página, sem revisar a cor) até ser
+corrigido em 13/08/2026 pra `#7a8c3a`. Ao criar ou portar um botão de CTA pra qualquer
+página nova, checar a cor contra esse padrão antes de commitar, não assumir que a
+variável/cor de outro componente serve.
 
 ## Painel admin (`adminflash.html`) — o que é seguro editar
 
@@ -231,9 +272,13 @@ como destino provisório. Onde (ou se) elas vão ganhar um hub próprio ainda es
 | `anamnese.html` | Ficha de cadastro/anamnese, formulário longo |
 | `fisiologia-da-tatuagem.html` | "Cuidados" — conteúdo educativo sobre fisiologia da pele e cuidados pós-tatuagem |
 | `adminflash.html` | Painel admin (senha), gerencia catálogo, tags/estilos, backup. Também gera `/estilo/*.html` via `buildEstiloPageHtml()` — ver seção de navegação acima |
-| `guia.html` | "Guia" — significados, estilos e termos. Toggle A-Z/por tema, lê de `guia-data.json` via `fetch()`, schema.org `ItemList` |
-| `adminguia.html` | Painel do Guia (mesmo login/commit do `adminflash.html`). CRUD de verbetes |
-| `guia-data.json` | Fonte de verdade do Guia — 25 estilos (linkam pra `/estilo/*.html`) + verbetes de significado/técnica/termo (crescendo aos poucos, `draft:true` até serem preenchidos) |
+| `guia.html` | "Guia" — significados, estilos e termos. Toggle A-Z/por tema, lê de `guia_verbetes` no Supabase via `fetch()` em runtime, schema.org `ItemList`. Tem fallback estático (lista real de `<a href="/guia/slug">` agrupada por letra, gerada por `scripts/generate-guia-pages.js`) pra crawlers que não rodam JS — ver seção de SEO/GEO abaixo |
+| `guia/*/index.html` | 389 páginas individuais de verbete (uma por termo), geradas por `scripts/generate-guia-pages.js` a partir do Supabase, publicadas via GitHub Action (`.github/workflows/generate-guia-pages.yml`) — não editar à mão |
+| `adminguia.html` | Painel do Guia (mesmo login/commit do `adminflash.html`). CRUD de verbetes no Supabase (`guia_verbetes`), inclusive upload de imagem |
+| `scripts/generate-guia-pages.js` | Gerador Node das 389 páginas do Guia + sitemap + fallback estático de `guia.html`, rodado pelo GitHub Action (webhook do Supabase ou `workflow_dispatch` manual) |
+| `blog.html` | Índice do Blog, gerado por `adminblog.html` (mesmo padrão editorial do resto do site) |
+| `blog/*.html` | Posts individuais, gerados por `adminblog.html` a partir de `blog/posts-data.json` |
+| `adminblog.html` | Painel do Blog — CRUD de posts, publica direto via API do GitHub (client-side, com token de sessão) |
 | `valor.html` | "Preço & Valor" — processo (preparo, por que não uso anestesia), pagamento por sessão, fechamento, cobertura, micro/flash, esboço em estúdio |
 | `nav-mobile.css` / `nav-mobile.js` | Menu compartilhado por todo o site — ver seção de navegação acima |
 | `flash-decor.js` | Script de decoração de fundo (flash artwork de baixa opacidade), compartilhado por várias páginas |
@@ -244,19 +289,24 @@ como destino provisório. Onde (ou se) elas vão ganhar um hub próprio ainda es
 
 ## Coisas que eu sei que ainda podem estar pendentes
 
-- Nem toda página tem o tratamento `.content-panel` — só `index.html`, `flash.html`,
-  `galeria.html` receberam até agora. `reserva.html`/`anamnese.html`/`cadastro.html`
+- Nem toda página tem o tratamento `.content-panel` — `index.html`, `flash.html`,
+  `galeria.html`, `aerografia.html` (FAQ), `guia/*/index.html` e o blog (via
+  `adminblog.html`) receberam até agora. `reserva.html`/`anamnese.html`/`cadastro.html`
   não, porque a maior parte do conteúdo delas já é campo de formulário (protegido por
   fundo próprio) — mas vale reavaliar se crescerem trechos de texto corrido.
 - O sistema de indicação/promoção do `reserva.html` supõe que a tabela `clientes_promo`
   no Supabase só tem as colunas nome/whatsapp/email/codigo_indicacao/indicado_por/canal.
   **Não adicionar campos novos no payload de insert sem confirmar o schema** — inserir
   uma coluna que não existe quebra o insert inteiro (erro do PostgREST).
-- **Guia** (`guia.html`/`adminguia.html`/`guia-data.json`) tem só os 25 verbetes de estilo
-  preenchidos de verdade (migrados de `/estilo/*.html`) + 4 exemplos-semente com
-  `draft:true` (2 significados, 1 técnica, 1 termo) — praticamente todo o conteúdo de
-  significados/técnicas/termos ainda falta ser escrito, verbete por verbete, no
-  `adminguia.html`. O índice A-Z fica esparso até isso crescer (natural, não é bug).
+- **Guia** (`guia.html`/`adminguia.html`/`guia_verbetes` no Supabase) migrou de
+  `guia-data.json` estático pra Supabase + geração via `scripts/generate-guia-pages.js`
+  (13/08/2026) — hoje são **389 verbetes publicados**, cada um com sua página própria
+  em `guia/<slug>/index.html`. O que ainda falta, verbete por verbete, é **conteúdo
+  rico**: a maioria tem só ~30-40 palavras de corpo (herdadas da descrição curta) e
+  quase nenhum tem imagem (1 de 389 até 13/08/2026). Enriquecer isso é trabalho
+  editorial contínuo pelo `adminguia.html`, não um bug — 12 verbetes de maior busca já
+  ganharam um segundo parágrafo nessa sessão (águia, caveira, leão, coração, lobo,
+  rosa, dragão, borboleta, âncora, coruja, mandala, fênix).
 - **Cuidados** (`fisiologia-da-tatuagem.html`) foi decidido que **continua existindo como
   página própria** — não foi fundida no Guia. Quando for distrinchada em verbetes, isso
   entra no Guia como categoria própria (`termo` ou nova categoria), e a página antiga
@@ -283,6 +333,59 @@ como destino provisório. Onde (ou se) elas vão ganhar um hub próprio ainda es
   (meta com 188 chars, cortava no Google). `guia.html` tem um bloco `<script
   type="application/ld+json">{}</script>` vazio, préexistente, inofensivo mas morto —
   não removido ainda por não fazer parte do escopo pedido.
+- **Auditoria SEO/GEO do Guia e Blog (13/08/2026):** achados principais — (1) as 389
+  páginas de `/guia/*` não estavam no `sitemap.xml` e `guia.html` só linkava pra elas
+  via JS client-side (`fetch()` no Supabase), invisível pra crawlers que não rodam JS
+  (a maioria dos bots de IA: GPTBot, ClaudeBot, PerplexityBot); (2)
+  `meta_description` cortava no meio da palavra (`.slice(0,160)` sem respeitar espaço);
+  (3) conteúdo raso (~34 palavras/verbete em média) e quase nenhuma imagem; (4) zero
+  link cruzado entre Guia e Blog apesar de terem sobreposição temática (mitologia
+  japonesa etc). **Resolvido**: `scripts/generate-guia-pages.js` passou a gerar o
+  bloco de sitemap (`<!-- GUIA:START/END -->`) e o fallback estático de `guia.html`
+  (`<!-- GUIA-ESTATICO:START/END -->`) a cada execução; truncamento de meta description
+  corrigido (`truncarPalavra()`, corta no último espaço); cross-link automático
+  Guia→Blog por casamento de tags (`tema` do verbete × `tags` do post, ver
+  `postsRelacionados()`); 12 verbetes de maior busca ganharam conteúdo mais rico (ver
+  seção acima). **Ainda pendente**: cross-link Blog→Guia (sentido inverso) não foi
+  feito — dependeria de mexer em `adminblog.html`/`page-gen.js`, que roda no navegador
+  publicando direto via API do GitHub; não testado por falta de acesso a esse fluxo
+  nessa sessão. Enriquecer os ~377 verbetes restantes (conteúdo + imagem) também
+  continua em aberto, é trabalho editorial contínuo.
+- **Webhook do Supabase dispara por linha, não por statement:** um `UPDATE` em massa
+  (ex.: preencher campo vazio em todos os 389 verbetes de uma vez) fez o Database
+  Webhook do Supabase (que dispara `repository_dispatch` pro GitHub Action de
+  `generate-guia-pages.yml`) disparar **uma vez por linha afetada**, gerando ~1300+
+  chamadas em minutos e estourando o limite de jobs concorrentes do GitHub Actions
+  (várias `startup_failure`). O resultado final saiu correto (cada execução regenera
+  tudo do zero a partir do estado atual do Supabase, então a última bem-sucedida
+  "vence"), mas consumiu minutos de Actions à toa. **Ainda não corrigido**: seria
+  necessário trocar o Database Webhook pra statement-level (se o Supabase suportar) ou
+  adicionar `concurrency` no workflow do GitHub Actions pra cancelar execuções
+  redundantes em vez de enfileirar todas. Ao rodar qualquer `UPDATE`/`INSERT` em massa
+  na tabela `guia_verbetes` no futuro, esperar esse comportamento.
+- **`flash-decor.js` + `.content-panel` levados pra Guia/Blog/Aerografia (13/08/2026):**
+  nenhuma dessas páginas tinha decoração de fundo até essa sessão. Detalhes técnicos
+  completos na seção "Armadilhas de CSS" (itens 3 e 4) acima — resumo: precisou
+  separar `main`/`header` full-width do conteúdo com max-width (senão decor ficava
+  preso numa coluna estreita), adicionar `.content-panel` nos blocos de texto (senão
+  ficavam ilegíveis por cima da decoração), e resolver uma race condition específica
+  do `/guia` (conteúdo montado via `fetch()` assíncrono apagava a decoração colocada
+  antes da troca de `innerHTML` — resolvido com um evento customizado
+  `guia-conteudo-pronto`).
+- **Cor de CTA errada (13/08/2026):** o botão "Reservar horário com o Micael" do blog
+  (`.post-cta` em `adminblog.html`) nasceu vermelho (`var(--blood)`), quebrando o
+  padrão do site (CTA é sempre verde `#7a8c3a`, vermelho é só pra elementos de
+  dark art/old school). Corrigido — ver regra nova na seção "Armadilhas de CSS" item 5.
+- **Cuidado ao testar funções isoladas de scripts Node que rodam `main()` no
+  top-level (13/08/2026):** `scripts/generate-guia-pages.js` chama `main()`
+  automaticamente ao ser carregado (não é só um módulo de funções). Um `require()`
+  acidental desse arquivo com um `fetch` mockado retornando lista vazia rodou o
+  pipeline completo contra dados falsos, apagando os 389 arquivos de `guia/`, o
+  sitemap e o fallback de `guia.html` no working directory local. Recuperado a tempo
+  via `git checkout -- guia/ guia.html sitemap.xml` (nada tinha sido commitado/dado
+  push ainda). Pra testar uma função isolada desse arquivo no futuro, **extrair só a
+  função por regex pra um arquivo separado** (não dar `require()`/`eval()` no arquivo
+  inteiro), e nunca rodar esse tipo de teste depois de mudanças não commitadas.
 ## Navegação do site (28/07/2026 — reescrita completa, 2ª vez)
 
 O menu passou por uma reescrita de arquitetura grande nessa sessão. Isso invalida
