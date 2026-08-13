@@ -211,7 +211,9 @@ function renderPagina(v, posts) {
   }
   * { box-sizing: border-box; }
   body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); line-height:1.65; }
-  .inner { max-width: var(--max); margin:0 auto; padding: 0 1.5rem; }
+  /* main fica full-width (alvo do flash-decor.js, decoração até a borda da
+     página, igual ao padrão do site); a largura de leitura fica no .inner */
+  .inner { max-width: var(--max); margin:0 auto; padding: 0 1.5rem; position:relative; z-index:1; }
   a { color: inherit; }
 
   nav {
@@ -230,7 +232,8 @@ function renderPagina(v, posts) {
   .breadcrumb a { color:var(--ink-faint); text-decoration:none; }
   .breadcrumb a:hover { color:var(--accent); }
 
-  header.hero { padding: 1rem 0 2rem; border-bottom:1px solid var(--border); }
+  header.hero { padding: 1rem 1.5rem 2rem; border-bottom:1px solid var(--border); }
+  .hero-inner { max-width: var(--max); margin:0 auto; position:relative; z-index:1; }
   .eyebrow { font-family: var(--font-ui); text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; color:var(--accent); margin:0 0 .6rem; }
   h1 { font-weight:400; font-size:2.4rem; margin:0; }
 
@@ -309,14 +312,16 @@ function renderPagina(v, posts) {
   <li><a href="/#localizacao">Localização</a></li>
 </ul>
 
-<div class="inner">
-  <p class="breadcrumb"><a href="/">Home</a> / <a href="/guia">Guia</a> / ${titulo}</p>
-
-  <header class="hero">
+<header class="hero">
+  <div class="hero-inner">
+    <p class="breadcrumb"><a href="/">Home</a> / <a href="/guia">Guia</a> / ${titulo}</p>
     <p class="eyebrow">${categoriaLabel}</p>
     <h1>${titulo}</h1>
-  </header>
+  </div>
+</header>
 
+<main>
+<div class="inner">
   ${img ? `<img class="verbete-imagem" src="${img}" alt="${imgAlt}">` : ''}
 
   <div class="conteudo">
@@ -325,6 +330,7 @@ function renderPagina(v, posts) {
 
   <div class="cta-box">
     <a class="cta-btn primario" href="https://wa.me/5532999666946?text=${encodeURIComponent(`Oi Micael! Vi o verbete "${v.termo}" no Guia e quero saber mais.`)}" target="_blank" rel="noopener">Chamar no WhatsApp</a>
+
     <a class="cta-btn secundario" href="${linkBusca}">Ver mais tatuagens de ${escapeHtml(v.termo.toLowerCase())} →</a>
     ${v.link_estilo ? `<a class="cta-btn secundario" href="${v.link_estilo}">Ver estilo na galeria →</a>` : ''}
   </div>
@@ -351,12 +357,14 @@ function renderPagina(v, posts) {
 
   <a class="voltar" href="/guia">← Voltar ao Guia completo</a>
 </div>
+</main>
 
 <footer>
   <span>© Micael Faccio · Tatuador em Muriaé, MG</span>
 </footer>
 
 <script src="/nav-mobile.js" defer></script>
+<script src="/flash-decor.js" defer></script>
 </body>
 </html>
 `;

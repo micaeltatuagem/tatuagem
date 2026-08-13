@@ -170,7 +170,7 @@
   function getGuardRects() {
     const guards = [];
     document.querySelectorAll(
-      '#galeria img[src*="galeria/"], .gallery-grid img, figure img, .carousel-frame img, .flash-poster'
+      '#galeria img[src*="galeria/"], .gallery-grid img, figure img, .carousel-frame img, .flash-poster, .verbete-imagem'
     ).forEach(img => {
       const r = img.getBoundingClientRect();
       if (r.width > 80) {
@@ -193,6 +193,7 @@
     if (path.includes('reserva'))  return ['header','section','main','footer'];
     if (path.includes('anamnese')) return ['header','section','main','footer'];
     if (path.includes('flash'))    return ['header','section','main','footer'];
+    if (path.includes('aerografia')) return ['header','section','main','footer'];
     if (path.includes('fisiologia-da-tatuagem')) return ['header','section','main','footer'];
     if (path.includes('valor')) return ['header','main','footer'];
     if (path.includes('guia')) return ['header','main','footer'];

@@ -338,6 +338,16 @@
     const [y,m,d] = iso.split('-');
     return `${d}/${m}/${y}`;
   }
+  // corta no último espaço antes do limite (nunca no meio da palavra),
+  // mesma lógica usada em scripts/generate-guia-pages.js
+  function truncarPalavra(str, max) {
+    const texto = String(str || '').trim();
+    if (texto.length <= max) return texto;
+    const cortado = texto.slice(0, max - 1);
+    const ultimoEspaco = cortado.lastIndexOf(' ');
+    const base = ultimoEspaco > 40 ? cortado.slice(0, ultimoEspaco) : cortado;
+    return base.replace(/[.,;:—-]+$/, '') + '…';
+  }
   function showAlert(elId, type, msg) {
     const el = document.getElementById(elId);
     el.textContent = msg;
@@ -922,7 +932,10 @@
   .nav-links a { font-size:.85rem; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); text-decoration:none; }
   .nav-links a:hover, .nav-links a.atual { color:var(--bone); }
   .content-panel { position: relative; z-index: 1; background: rgba(10,10,10,0.62); backdrop-filter: blur(6px); border: 1px solid rgba(212,201,176,0.08); border-radius: 4px; padding: 1.75rem 2rem; }
-  main.post-main { max-width:720px; margin:0 auto; padding:3rem 1.5rem 4rem; }
+  /* main fica full-width (alvo do flash-decor.js, decoração até a borda da
+     página, igual ao flash.html); a largura de leitura fica no -inner */
+  main.post-main { padding:3rem 0 4rem; }
+  .post-inner { max-width:720px; margin:0 auto; padding:0 1.5rem; position:relative; z-index:1; }
   .eyebrow { font-size:.78rem; letter-spacing:.15em; text-transform:uppercase; color:var(--rust); margin-bottom:.8rem; text-align:center; }
   h1.post-title { font-family:'Cormorant Garamond', serif; font-size:2.4rem; font-weight:600; margin:0 0 1rem; text-align:center; line-height:1.2; }
   .post-meta { font-size:.82rem; color:var(--muted); text-align:center; margin-bottom:2rem; letter-spacing:.03em; }
@@ -950,7 +963,8 @@
   @media (max-width:560px) { .nav-links { gap:.9rem; } h1.post-title { font-size:1.9rem; } }
 
   /* INDICE DO BLOG */
-  main.blog-index { max-width:960px; margin:0 auto; padding:3rem 1.5rem 4rem; }
+  main.blog-index { padding:3rem 0 4rem; }
+  .blog-index-inner { max-width:960px; margin:0 auto; padding:0 1.5rem; position:relative; z-index:1; }
   .blog-header { text-align:center; margin-bottom:2.6rem; }
   .blog-header h1 { font-family:'Cormorant Garamond', serif; font-size:2.4rem; font-weight:600; margin:0 0 .7rem; }
   .blog-header p { color:#c9beac; font-size:1rem; max-width:560px; margin:0 auto; }
@@ -988,7 +1002,7 @@
   function buildBlogPostHtml(post, allPosts) {
     const canonical = `${SITE_URL}/blog/${post.slug}`;
     const title = `${escapeHtml(post.title)} | Blog · Micael Tatuagem`;
-    const metaDesc = escapeHtml((post.metaDescription || post.excerpt || '').slice(0, 160));
+    const metaDesc = escapeHtml(truncarPalavra(post.metaDescription || post.excerpt || '', 157));
     const ogImage = post.coverImage || FALLBACK_IMG;
     const tagsHtml = (post.tags||[]).map(t => `<a href="/blog?tag=${encodeURIComponent(t)}">#${escapeHtml(t)}</a>`).join('');
 
@@ -1052,6 +1066,7 @@
 <body>
 ${siteNavHtml('blog')}
 <main class="post-main">
+<div class="post-inner">
   <div class="eyebrow">Blog</div>
   <h1 class="post-title">${escapeHtml(post.title)}</h1>
   <p class="post-meta">${formatDateBR(post.publishDate)} · ${post.readingMinutes || 1} min de leitura · por ${escapeHtml(post.author || 'Micael')}</p>
@@ -1062,6 +1077,7 @@ ${siteNavHtml('blog')}
   </div>
   <a class="post-cta" href="/reserva">Reservar horário com o Micael</a>
   ${relatedPostsHtml(post, allPosts)}
+</div>
 </main>
 ${siteFooterHtml()}
 <script src="/nav-mobile.js" defer><\/script>
@@ -1131,11 +1147,13 @@ ${siteFooterHtml()}
 <body>
 ${siteNavHtml('blog')}
 <main class="blog-index">
+<div class="blog-index-inner">
   <div class="blog-header">
     <h1>Blog</h1>
     <p>Cuidados com tatuagem, estilos, bastidores do estúdio e dicas direto do Micael.</p>
   </div>
   <div class="post-grid">${cardsHtml}</div>
+</div>
 </main>
 ${siteFooterHtml()}
 <script src="/nav-mobile.js" defer><\/script>

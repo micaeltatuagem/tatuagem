@@ -40,7 +40,10 @@
   .nav-links a { font-size:.85rem; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); text-decoration:none; }
   .nav-links a:hover, .nav-links a.atual { color:var(--bone); }
   .content-panel { position: relative; z-index: 1; background: rgba(10,10,10,0.62); backdrop-filter: blur(6px); border: 1px solid rgba(212,201,176,0.08); border-radius: 4px; padding: 1.75rem 2rem; }
-  main.post-main { max-width:720px; margin:0 auto; padding:3rem 1.5rem 4rem; }
+  /* main fica full-width (alvo do flash-decor.js, decoração até a borda da
+     página, igual ao flash.html); a largura de leitura fica no -inner */
+  main.post-main { padding:3rem 0 4rem; }
+  .post-inner { max-width:720px; margin:0 auto; padding:0 1.5rem; position:relative; z-index:1; }
   .eyebrow { font-size:.78rem; letter-spacing:.15em; text-transform:uppercase; color:var(--rust); margin-bottom:.8rem; text-align:center; }
   h1.post-title { font-family:'Cormorant Garamond', serif; font-size:2.4rem; font-weight:600; margin:0 0 1rem; text-align:center; line-height:1.2; }
   .post-meta { font-size:.82rem; color:var(--muted); text-align:center; margin-bottom:2rem; letter-spacing:.03em; }
@@ -68,7 +71,8 @@
   @media (max-width:560px) { .nav-links { gap:.9rem; } h1.post-title { font-size:1.9rem; } }
 
   /* INDICE DO BLOG */
-  main.blog-index { max-width:960px; margin:0 auto; padding:3rem 1.5rem 4rem; }
+  main.blog-index { padding:3rem 0 4rem; }
+  .blog-index-inner { max-width:960px; margin:0 auto; padding:0 1.5rem; position:relative; z-index:1; }
   .blog-header { text-align:center; margin-bottom:2.6rem; }
   .blog-header h1 { font-family:'Cormorant Garamond', serif; font-size:2.4rem; font-weight:600; margin:0 0 .7rem; }
   .blog-header p { color:#c9beac; font-size:1rem; max-width:560px; margin:0 auto; }
@@ -121,6 +125,7 @@
   <li><a href="/#localizacao">Localização</a></li>
 </ul>
 <main class="post-main">
+<div class="post-inner">
   <div class="eyebrow">Blog</div>
   <h1 class="post-title">Horimono ou Irezumi? Entenda a diferença entre esses dois termos da tatuagem japonesa</h1>
   <p class="post-meta">12/08/2026 · 8 min de leitura · por Micael</p>
@@ -130,7 +135,22 @@
     <div class="post-tags"><a href="/blog?tag=tatuagem">#tatuagem</a><a href="/blog?tag=tattoo">#tattoo</a><a href="/blog?tag=irezumi">#irezumi</a><a href="/blog?tag=horimono">#horimono</a><a href="/blog?tag=wabori">#wabori</a><a href="/blog?tag=tatuagem%20japonesa">#tatuagem japonesa</a><a href="/blog?tag=tatuagem%20tradicional%20japones">#tatuagem tradicional japones</a><a href="/blog?tag=wanpoint">#wanpoint</a><a href="/blog?tag=one%20point">#one point</a><a href="/blog?tag=one%20point%20tattoo">#one point tattoo</a><a href="/blog?tag=tatuagem%20americana%20tradicional">#tatuagem americana tradicional</a><a href="/blog?tag=old%20school">#old school</a><a href="/blog?tag=sailor%20jerry">#sailor jerry</a><a href="/blog?tag=horishi">#horishi</a><a href="/blog?tag=tebori">#tebori</a><a href="/blog?tag=ukio-e">#ukio-e</a><a href="/blog?tag=xilogravura">#xilogravura</a><a href="/blog?tag=Kunioshi">#Kunioshi</a><a href="/blog?tag=Suikoden">#Suikoden</a><a href="/blog?tag=Per%C3%ADodo%20Edo">#Período Edo</a><a href="/blog?tag=hist%C3%B3ria%20da%20tatuagem">#história da tatuagem</a><a href="/blog?tag=cultura%20japonesa">#cultura japonesa</a><a href="/blog?tag=simbolismo%20japones">#simbolismo japones</a><a href="/blog?tag=hanakotoba">#hanakotoba</a><a href="/blog?tag=body%20suit">#body suit</a><a href="/blog?tag=tatuagem%20de%20corpo%20inteiro">#tatuagem de corpo inteiro</a><a href="/blog?tag=fechamento%20oriental">#fechamento oriental</a><a href="/blog?tag=koi">#koi</a><a href="/blog?tag=carpa">#carpa</a><a href="/blog?tag=momiji">#momiji</a><a href="/blog?tag=folha%20de%20bordo">#folha de bordo</a><a href="/blog?tag=sakura">#sakura</a><a href="/blog?tag=flor%20de%20cerejeira">#flor de cerejeira</a></div>
   </div>
   <a class="post-cta" href="/reserva">Reservar horário com o Micael</a>
-  
+  <div class="related-posts">
+  <h2>Continue lendo</h2>
+  <div class="related-list">
+    <a class="related-item" href="/blog/mono-no-aware-a-sensibilidade-que-explica-por-que-a-beleza-japonesa-e-sempre-passageira">
+      <img src="https://rpgcsejfewltricfsdrd.supabase.co/storage/v1/object/public/blog-images/covers/1786563237827-rw7xr3.png" alt="" loading="lazy">
+      <span>Mono no aware: a sensibilidade que explica por que a beleza japonesa é sempre passageira</span>
+    </a><a class="related-item" href="/blog/mikiri-e-os-tipos-de-fundo-na-tatuagem-oriental-entenda-a-estrutura-por-tras-do-horimono">
+      <img src="https://rpgcsejfewltricfsdrd.supabase.co/storage/v1/object/public/blog-images/covers/1786544180454-9umxre.png" alt="" loading="lazy">
+      <span>Mikiri e os tipos de fundo na tatuagem oriental: entenda a estrutura por trás do horimono</span>
+    </a><a class="related-item" href="/blog/hannya-oni-mahakala-fudo-myo-o-e-a-mitologia-por-tras-dos-demonios-da-tatuagem-japonesa">
+      <img src="https://rpgcsejfewltricfsdrd.supabase.co/storage/v1/object/public/blog-images/covers/1786564816742-py0ygz.png" alt="" loading="lazy">
+      <span>Hannya, oni, Mahakala, Fudo Myo-o e a mitologia por trás dos demônios da tatuagem japonesa</span>
+    </a>
+  </div>
+</div>
+</div>
 </main>
 <footer style="padding: 2rem; text-align: center; border-top: 1px solid var(--border); font-size: 0.85rem; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase;">
   <p>

@@ -40,7 +40,10 @@
   .nav-links a { font-size:.85rem; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); text-decoration:none; }
   .nav-links a:hover, .nav-links a.atual { color:var(--bone); }
   .content-panel { position: relative; z-index: 1; background: rgba(10,10,10,0.62); backdrop-filter: blur(6px); border: 1px solid rgba(212,201,176,0.08); border-radius: 4px; padding: 1.75rem 2rem; }
-  main.post-main { max-width:720px; margin:0 auto; padding:3rem 1.5rem 4rem; }
+  /* main fica full-width (alvo do flash-decor.js, decoração até a borda da
+     página, igual ao flash.html); a largura de leitura fica no -inner */
+  main.post-main { padding:3rem 0 4rem; }
+  .post-inner { max-width:720px; margin:0 auto; padding:0 1.5rem; position:relative; z-index:1; }
   .eyebrow { font-size:.78rem; letter-spacing:.15em; text-transform:uppercase; color:var(--rust); margin-bottom:.8rem; text-align:center; }
   h1.post-title { font-family:'Cormorant Garamond', serif; font-size:2.4rem; font-weight:600; margin:0 0 1rem; text-align:center; line-height:1.2; }
   .post-meta { font-size:.82rem; color:var(--muted); text-align:center; margin-bottom:2rem; letter-spacing:.03em; }
@@ -68,7 +71,8 @@
   @media (max-width:560px) { .nav-links { gap:.9rem; } h1.post-title { font-size:1.9rem; } }
 
   /* INDICE DO BLOG */
-  main.blog-index { max-width:960px; margin:0 auto; padding:3rem 1.5rem 4rem; }
+  main.blog-index { padding:3rem 0 4rem; }
+  .blog-index-inner { max-width:960px; margin:0 auto; padding:0 1.5rem; position:relative; z-index:1; }
   .blog-header { text-align:center; margin-bottom:2.6rem; }
   .blog-header h1 { font-family:'Cormorant Garamond', serif; font-size:2.4rem; font-weight:600; margin:0 0 .7rem; }
   .blog-header p { color:#c9beac; font-size:1rem; max-width:560px; margin:0 auto; }
@@ -121,6 +125,7 @@
   <li><a href="/#localizacao">Localização</a></li>
 </ul>
 <main class="post-main">
+<div class="post-inner">
   <div class="eyebrow">Blog</div>
   <h1 class="post-title">Hannya, oni, Mahakala, Fudo Myo-o e a mitologia por trás dos demônios da tatuagem japonesa</h1>
   <p class="post-meta">12/08/2026 · 10 min de leitura · por Micael</p>
@@ -144,6 +149,7 @@
       <span>Mikiri e os tipos de fundo na tatuagem oriental: entenda a estrutura por trás do horimono</span>
     </a>
   </div>
+</div>
 </div>
 </main>
 <footer style="padding: 2rem; text-align: center; border-top: 1px solid var(--border); font-size: 0.85rem; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase;">
