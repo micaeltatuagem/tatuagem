@@ -121,8 +121,16 @@
 
   .verbete-imagem { width:100%; max-height:420px; object-fit:contain; background:#e8e0c9; border-radius:var(--radius); margin: 2rem 0; padding:1.5rem; display:block; }
 
-  .conteudo { font-size:1.08rem; padding: 1rem 0 2rem; }
+  .content-panel {
+    position: relative; z-index: 1;
+    background: rgba(10,10,10,0.62); backdrop-filter: blur(6px);
+    border: 1px solid rgba(212,201,176,0.08); border-radius: 4px;
+    padding: 1.75rem 2rem; margin: 1.5rem 0 2rem;
+  }
+
+  .conteudo { font-size:1.08rem; padding: 0; }
   .conteudo p { margin: 0 0 1.2rem; }
+  .conteudo p:last-child { margin-bottom: 0; }
 
   .cta-box {
     display:flex; flex-wrap:wrap; gap:.8rem; padding: 1.5rem 0 2.5rem; border-bottom: 1px solid var(--border);
@@ -206,6 +214,7 @@
 <div class="inner">
   
 
+  <div class="content-panel">
   <div class="conteudo">
         <p>Ligada à sabedoria desde a Grécia Antiga, onde acompanhava Atena, deusa da estratégia e do conhecimento. Por enxergar no escuro, também simboliza a capacidade de encontrar clareza em momentos de incerteza. Em algumas tradições é vista como guia entre o mundo dos vivos e dos mortos, por seu voo silencioso e hábitos noturnos. É uma escolha comum pra quem quer marcar intuição, discernimento ou uma fase de transição.</p>
         <p>O foco visual quase sempre recai sobre os olhos, o ponto que mais chama atenção na ave e o que costuma receber mais detalhe em realismo, com o resto da plumagem trabalhado em textura mais solta ao redor. Em geométrico, a cabeça da coruja é um dos temas mais populares do estilo, reconstruída em facetas e linhas retas. Também aparece com frequência em blackwork, como silhueta cheia, boa opção pra quem quer um resultado marcante em tamanho reduzido.</p>
@@ -231,6 +240,7 @@
   </div>
 
   
+  </div>
 
   <a class="voltar" href="/guia">← Voltar ao Guia completo</a>
 </div>

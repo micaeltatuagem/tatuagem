@@ -121,8 +121,16 @@
 
   .verbete-imagem { width:100%; max-height:420px; object-fit:contain; background:#e8e0c9; border-radius:var(--radius); margin: 2rem 0; padding:1.5rem; display:block; }
 
-  .conteudo { font-size:1.08rem; padding: 1rem 0 2rem; }
+  .content-panel {
+    position: relative; z-index: 1;
+    background: rgba(10,10,10,0.62); backdrop-filter: blur(6px);
+    border: 1px solid rgba(212,201,176,0.08); border-radius: 4px;
+    padding: 1.75rem 2rem; margin: 1.5rem 0 2rem;
+  }
+
+  .conteudo { font-size:1.08rem; padding: 0; }
   .conteudo p { margin: 0 0 1.2rem; }
+  .conteudo p:last-child { margin-bottom: 0; }
 
   .cta-box {
     display:flex; flex-wrap:wrap; gap:.8rem; padding: 1.5rem 0 2.5rem; border-bottom: 1px solid var(--border);
@@ -206,6 +214,7 @@
 <div class="inner">
   
 
+  <div class="content-panel">
   <div class="conteudo">
         <p>Símbolo de renascimento, a ave que se queima e ressurge das próprias cinzas mais forte do que era antes. Aparece em mitologias distintas (grega, egípcia, chinesa) sempre com essa mesma lógica central: nenhum fim é definitivo. É uma escolha recorrente pra marcar superação de perdas, doenças ou fases muito difíceis da vida, o registro de ter atravessado o fogo e continuado de pé.</p>
         <p>O fogo é o elemento que mais varia entre as composições: pode aparecer só nas pontas das penas, sugerido, ou tomar a tatuagem inteira em tons de vermelho e laranja saturados, mais próximo do old school. Em realismo, o foco costuma ir pro contraste entre a plumagem detalhada e as cinzas ou brasas ao redor. Nas costas e no peito há espaço pra trabalhar as asas abertas por completo, enquanto no antebraço a ave costuma vir mais compacta, com o corpo dobrado sobre si mesma.</p>
@@ -231,6 +240,7 @@
   </div>
 
   
+  </div>
 
   <a class="voltar" href="/guia">← Voltar ao Guia completo</a>
 </div>

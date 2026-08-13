@@ -121,8 +121,16 @@
 
   .verbete-imagem { width:100%; max-height:420px; object-fit:contain; background:#e8e0c9; border-radius:var(--radius); margin: 2rem 0; padding:1.5rem; display:block; }
 
-  .conteudo { font-size:1.08rem; padding: 1rem 0 2rem; }
+  .content-panel {
+    position: relative; z-index: 1;
+    background: rgba(10,10,10,0.62); backdrop-filter: blur(6px);
+    border: 1px solid rgba(212,201,176,0.08); border-radius: 4px;
+    padding: 1.75rem 2rem; margin: 1.5rem 0 2rem;
+  }
+
+  .conteudo { font-size:1.08rem; padding: 0; }
   .conteudo p { margin: 0 0 1.2rem; }
+  .conteudo p:last-child { margin-bottom: 0; }
 
   .cta-box {
     display:flex; flex-wrap:wrap; gap:.8rem; padding: 1.5rem 0 2.5rem; border-bottom: 1px solid var(--border);
@@ -206,6 +214,7 @@
 <div class="inner">
   
 
+  <div class="content-panel">
   <div class="conteudo">
         <p>Símbolo quase universal de transformação, por causa da metamorfose da lagarta em algo completamente novo. Marca com frequência o fim de uma fase difícil e o início de outra, sendo comum em tatuagens de superação. Na cultura japonesa está associada à alma e, em alguns contextos, à alma de quem já partiu. Sua leveza também carrega significado de liberdade e beleza efêmera, o entendimento de que algumas coisas valem a pena mesmo sendo passageiras.</p>
         <p>É um verbete que atravessa praticamente todos os estilos sem perder força: em fineline vira um desenho fino e delicado, quase um contorno só; em old school ganha cor saturada e sombreado marcado nas asas; em aquarela se solta do contorno tradicional e mistura tons como se fosse pintura. Costuma aparecer sozinha em pontos pequenos como pulso, tornozelo e atrás da orelha, ou em grupo formando uma composição maior no ombro ou nas costas.</p>
@@ -231,6 +240,7 @@
   </div>
 
   
+  </div>
 
   <a class="voltar" href="/guia">← Voltar ao Guia completo</a>
 </div>

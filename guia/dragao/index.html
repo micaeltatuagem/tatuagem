@@ -121,8 +121,16 @@
 
   .verbete-imagem { width:100%; max-height:420px; object-fit:contain; background:#e8e0c9; border-radius:var(--radius); margin: 2rem 0; padding:1.5rem; display:block; }
 
-  .conteudo { font-size:1.08rem; padding: 1rem 0 2rem; }
+  .content-panel {
+    position: relative; z-index: 1;
+    background: rgba(10,10,10,0.62); backdrop-filter: blur(6px);
+    border: 1px solid rgba(212,201,176,0.08); border-radius: 4px;
+    padding: 1.75rem 2rem; margin: 1.5rem 0 2rem;
+  }
+
+  .conteudo { font-size:1.08rem; padding: 0; }
   .conteudo p { margin: 0 0 1.2rem; }
+  .conteudo p:last-child { margin-bottom: 0; }
 
   .cta-box {
     display:flex; flex-wrap:wrap; gap:.8rem; padding: 1.5rem 0 2.5rem; border-bottom: 1px solid var(--border);
@@ -206,6 +214,7 @@
 <div class="inner">
   
 
+  <div class="content-panel">
   <div class="conteudo">
         <p>No Oriente, especialmente na cultura chinesa e japonesa, é uma figura benevolente, associada a poder, sabedoria e boa fortuna, muito distante da imagem de monstro do Ocidente. Na tradição ocidental medieval representa força bruta e o caos a ser vencido, motivo pelo qual aparece tanto em composições de confronto quanto isolado, como símbolo de poder que se domina. Um dragão desenhado no estilo japonês costuma carregar essa leitura protetora e sábia, associada aos quatro elementos que ele controla conforme a lenda.</p>
         <p>É um dos temas que mais pedem espaço: o corpo longo e sinuoso do dragão oriental rende bem em fechamentos de braço ou nas costas inteiras, seguindo ondas, nuvens ou flores de cerejeira ao redor. Já o dragão ocidental, mais robusto e com asas abertas, funciona melhor em peito ou panturrilha, onde cabe a postura de ataque. Aparece com frequência em irezumi, old school e realismo, cada estilo mudando bastante o resultado final da mesma figura.</p>
@@ -231,6 +240,7 @@
   </div>
 
   
+  </div>
 
   <a class="voltar" href="/guia">← Voltar ao Guia completo</a>
 </div>

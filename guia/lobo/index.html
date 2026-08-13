@@ -121,8 +121,16 @@
 
   .verbete-imagem { width:100%; max-height:420px; object-fit:contain; background:#e8e0c9; border-radius:var(--radius); margin: 2rem 0; padding:1.5rem; display:block; }
 
-  .conteudo { font-size:1.08rem; padding: 1rem 0 2rem; }
+  .content-panel {
+    position: relative; z-index: 1;
+    background: rgba(10,10,10,0.62); backdrop-filter: blur(6px);
+    border: 1px solid rgba(212,201,176,0.08); border-radius: 4px;
+    padding: 1.75rem 2rem; margin: 1.5rem 0 2rem;
+  }
+
+  .conteudo { font-size:1.08rem; padding: 0; }
   .conteudo p { margin: 0 0 1.2rem; }
+  .conteudo p:last-child { margin-bottom: 0; }
 
   .cta-box {
     display:flex; flex-wrap:wrap; gap:.8rem; padding: 1.5rem 0 2.5rem; border-bottom: 1px solid var(--border);
@@ -206,6 +214,7 @@
 <div class="inner">
   
 
+  <div class="content-panel">
   <div class="conteudo">
         <p>Símbolo de instinto, lealdade e vida em grupo, já que o lobo raramente age sozinho e defende sua matilha acima de tudo. Em mitologias nórdicas aparece como figura ambivalente, tanto companheiro de Odin quanto a fera destrutiva Fenrir, o que dá à tatuagem uma leitura de força que pode ser tanto protetora quanto perigosa. Em culturas indígenas norte-americanas costuma representar o instinto guiado por inteligência, não só força bruta. Um lobo solitário, especificamente, é lido como símbolo de independência e resiliência.</p>
         <p>O lobo uivando pra lua é a composição mais pedida e junta dois símbolos numa imagem só, instinto e introspecção. Rende bem tanto em realismo, com pelagem detalhada e olhar marcante, quanto em geométrico, onde a cabeça do lobo é reconstruída com linhas retas e formas triangulares, um dos temas mais populares desse estilo. Em blackwork mais sólido, funciona como silhueta forte mesmo em tamanho reduzido. Antebraço e costas são os locais mais comuns, dependendo de quanto detalhe a composição pede.</p>
@@ -231,6 +240,7 @@
   </div>
 
   
+  </div>
 
   <a class="voltar" href="/guia">← Voltar ao Guia completo</a>
 </div>

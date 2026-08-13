@@ -121,8 +121,16 @@
 
   .verbete-imagem { width:100%; max-height:420px; object-fit:contain; background:#e8e0c9; border-radius:var(--radius); margin: 2rem 0; padding:1.5rem; display:block; }
 
-  .conteudo { font-size:1.08rem; padding: 1rem 0 2rem; }
+  .content-panel {
+    position: relative; z-index: 1;
+    background: rgba(10,10,10,0.62); backdrop-filter: blur(6px);
+    border: 1px solid rgba(212,201,176,0.08); border-radius: 4px;
+    padding: 1.75rem 2rem; margin: 1.5rem 0 2rem;
+  }
+
+  .conteudo { font-size:1.08rem; padding: 0; }
   .conteudo p { margin: 0 0 1.2rem; }
+  .conteudo p:last-child { margin-bottom: 0; }
 
   .cta-box {
     display:flex; flex-wrap:wrap; gap:.8rem; padding: 1.5rem 0 2.5rem; border-bottom: 1px solid var(--border);
@@ -206,6 +214,7 @@
 <div class="inner">
   <img class="verbete-imagem" src="https://rpgcsejfewltricfsdrd.supabase.co/storage/v1/object/public/guia-imagens/caveira-1786496553631.webp" alt="Tatuagem de caveira — Micael Tatuagem, Muriaé MG">
 
+  <div class="content-panel">
   <div class="conteudo">
         <p>Simboliza a transitoriedade da vida e o enfrentamento da morte como parte natural da existência. Em contextos de dark art, costuma representar coragem diante do inevitável, não fascínio pela morte em si.</p>
         <p>É um dos temas mais antigos da tatuagem ocidental, presente desde os primeiros flash de marinheiro como memento mori, o lembrete de que a vida é curta. A vertente mexicana, com a caveira decorada de flores no estilo de La Catrina, tem um significado bem diferente: celebra quem já morreu em vez de temer a morte, ligada ao Dia dos Mortos. Já a caveira com rosa ou punhal é clássica do chicano e do old school, e junta essa dualidade entre delicadeza e enfrentamento. Funciona bem em realismo puro, em traço mais gráfico de blackwork, ou colorida no estilo mexicano.</p>
@@ -231,6 +240,7 @@
   </div>
 
   
+  </div>
 
   <a class="voltar" href="/guia">← Voltar ao Guia completo</a>
 </div>

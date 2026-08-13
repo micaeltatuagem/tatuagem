@@ -121,8 +121,16 @@
 
   .verbete-imagem { width:100%; max-height:420px; object-fit:contain; background:#e8e0c9; border-radius:var(--radius); margin: 2rem 0; padding:1.5rem; display:block; }
 
-  .conteudo { font-size:1.08rem; padding: 1rem 0 2rem; }
+  .content-panel {
+    position: relative; z-index: 1;
+    background: rgba(10,10,10,0.62); backdrop-filter: blur(6px);
+    border: 1px solid rgba(212,201,176,0.08); border-radius: 4px;
+    padding: 1.75rem 2rem; margin: 1.5rem 0 2rem;
+  }
+
+  .conteudo { font-size:1.08rem; padding: 0; }
   .conteudo p { margin: 0 0 1.2rem; }
+  .conteudo p:last-child { margin-bottom: 0; }
 
   .cta-box {
     display:flex; flex-wrap:wrap; gap:.8rem; padding: 1.5rem 0 2.5rem; border-bottom: 1px solid var(--border);
@@ -206,6 +214,7 @@
 <div class="inner">
   
 
+  <div class="content-panel">
   <div class="conteudo">
         <p>O símbolo mais universal de amor, seja romântico, familiar ou próprio, mas seu significado muda bastante conforme a composição. O Sagrado Coração, envolto em espinhos e com uma chama no topo, é um símbolo cristão que representa o amor divino e o sacrifício de Cristo. Um coração partido ou com rachaduras fala de perda e luto. Já a versão old school, com faixa e nome, remete à tradição marítima de homenagear quem ficou esperando em terra.</p>
         <p>O coração anatômico, mais realista e sem estilização, tem crescido como opção pra quem quer fugir do símbolo tradicional sem perder o tema, geralmente ligado à ideia de vida e saúde mais do que amor romântico. É um verbete que combina fácil com outros: junto de fita ou faixa recebe nome e data, junto de flores suaviza o traço, junto de espinhos ou correntes pesa mais pro lado da dor e da luta. Cabe em praticamente qualquer tamanho e lugar do corpo, do punho ao peito inteiro.</p>
@@ -231,6 +240,7 @@
   </div>
 
   
+  </div>
 
   <a class="voltar" href="/guia">← Voltar ao Guia completo</a>
 </div>

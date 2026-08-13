@@ -121,8 +121,16 @@
 
   .verbete-imagem { width:100%; max-height:420px; object-fit:contain; background:#e8e0c9; border-radius:var(--radius); margin: 2rem 0; padding:1.5rem; display:block; }
 
-  .conteudo { font-size:1.08rem; padding: 1rem 0 2rem; }
+  .content-panel {
+    position: relative; z-index: 1;
+    background: rgba(10,10,10,0.62); backdrop-filter: blur(6px);
+    border: 1px solid rgba(212,201,176,0.08); border-radius: 4px;
+    padding: 1.75rem 2rem; margin: 1.5rem 0 2rem;
+  }
+
+  .conteudo { font-size:1.08rem; padding: 0; }
   .conteudo p { margin: 0 0 1.2rem; }
+  .conteudo p:last-child { margin-bottom: 0; }
 
   .cta-box {
     display:flex; flex-wrap:wrap; gap:.8rem; padding: 1.5rem 0 2.5rem; border-bottom: 1px solid var(--border);
@@ -206,6 +214,7 @@
 <div class="inner">
   
 
+  <div class="content-panel">
   <div class="conteudo">
         <p>Representa realeza, coragem e liderança, associado historicamente ao papel de &quot;rei dos animais&quot;. Na tradição judaico-cristã aparece como símbolo da tribo de Judá e, em muitas leituras, de força espiritual e proteção divina. Na heráldica europeia é o símbolo mais recorrente de nobreza e bravura em batalha. De forma pessoal, costuma marcar quem passou por uma provação e saiu dela mais forte.</p>
         <p>Vale separar duas leituras que às vezes se confundem: o leão como símbolo do signo de Leão, geralmente mais estilizado e ligado à astrologia, e o leão como figura de força e realeza, mais realista e imponente, sem nenhuma relação com o zodíaco. Combinações com coroa reforçam a ideia de realeza; com floresta ou savana ao fundo, a de território e instinto selvagem. É um tema clássico do realismo em peito e costas, onde há espaço pra trabalhar a juba em detalhe, mas também rende bem em blackwork mais gráfico.</p>
@@ -231,6 +240,7 @@
   </div>
 
   
+  </div>
 
   <a class="voltar" href="/guia">← Voltar ao Guia completo</a>
 </div>

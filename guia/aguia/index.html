@@ -121,8 +121,16 @@
 
   .verbete-imagem { width:100%; max-height:420px; object-fit:contain; background:#e8e0c9; border-radius:var(--radius); margin: 2rem 0; padding:1.5rem; display:block; }
 
-  .conteudo { font-size:1.08rem; padding: 1rem 0 2rem; }
+  .content-panel {
+    position: relative; z-index: 1;
+    background: rgba(10,10,10,0.62); backdrop-filter: blur(6px);
+    border: 1px solid rgba(212,201,176,0.08); border-radius: 4px;
+    padding: 1.75rem 2rem; margin: 1.5rem 0 2rem;
+  }
+
+  .conteudo { font-size:1.08rem; padding: 0; }
   .conteudo p { margin: 0 0 1.2rem; }
+  .conteudo p:last-child { margin-bottom: 0; }
 
   .cta-box {
     display:flex; flex-wrap:wrap; gap:.8rem; padding: 1.5rem 0 2.5rem; border-bottom: 1px solid var(--border);
@@ -206,6 +214,7 @@
 <div class="inner">
   
 
+  <div class="content-panel">
   <div class="conteudo">
         <p>Representa força, visão aguçada e domínio, associada à capacidade de enxergar longe e agir com precisão. Na tradição cristã é ligada à ressurreição e à proximidade com o divino, por voar mais alto que qualquer outra ave. Em culturas indígenas norte-americanas é vista como mensageira entre o mundo humano e o espiritual, símbolo de conexão e proteção. De forma mais ampla, carrega o significado de liberdade e independência, o de não se deixar aprisionar.</p>
         <p>A pose muda a leitura: águia com as asas abertas em envergadura total puxa mais pro lado da conquista e do poder, enquanto a águia em repouso ou olhando de perfil costuma ler como vigilância e sabedoria. É um dos temas mais versáteis do realismo, mas também aparece com frequência em blackwork e no traço mais carregado do tribal. Nas costas e no peito ganha espaço pra detalhar penas uma a uma; no antebraço e na panturrilha costuma vir mais fechada, só com a cabeça e parte da asa.</p>
@@ -231,6 +240,7 @@
   </div>
 
   
+  </div>
 
   <a class="voltar" href="/guia">← Voltar ao Guia completo</a>
 </div>

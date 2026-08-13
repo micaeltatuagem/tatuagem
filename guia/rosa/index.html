@@ -121,8 +121,16 @@
 
   .verbete-imagem { width:100%; max-height:420px; object-fit:contain; background:#e8e0c9; border-radius:var(--radius); margin: 2rem 0; padding:1.5rem; display:block; }
 
-  .conteudo { font-size:1.08rem; padding: 1rem 0 2rem; }
+  .content-panel {
+    position: relative; z-index: 1;
+    background: rgba(10,10,10,0.62); backdrop-filter: blur(6px);
+    border: 1px solid rgba(212,201,176,0.08); border-radius: 4px;
+    padding: 1.75rem 2rem; margin: 1.5rem 0 2rem;
+  }
+
+  .conteudo { font-size:1.08rem; padding: 0; }
   .conteudo p { margin: 0 0 1.2rem; }
+  .conteudo p:last-child { margin-bottom: 0; }
 
   .cta-box {
     display:flex; flex-wrap:wrap; gap:.8rem; padding: 1.5rem 0 2.5rem; border-bottom: 1px solid var(--border);
@@ -206,6 +214,7 @@
 <div class="inner">
   
 
+  <div class="content-panel">
   <div class="conteudo">
         <p>Combina beleza e dor numa imagem só, por causa dos espinhos, e por isso é lida como símbolo de que nada bonito vem sem custo. O vermelho remete a paixão e amor; o branco, a pureza e memória; o preto, a luto ou o fim de algo. Uma rosa com adaga ou caveira reforça essa dualidade entre delicadeza e enfrentamento, tema recorrente na tatuagem old school e na dark art.</p>
         <p>É um dos verbetes mais versáteis do guia justamente por combinar bem com quase tudo: nome e data pra homenagens, relógio pra marcar um momento específico, espinhos e correntes pra reforçar o lado mais pesado. No fineline aparece em traço fino e delicado, quase um desenho de botânica; no old school e chicano vem mais carregada, com sombreado denso e cor saturada. Funciona tanto como peça única pequena no pulso ou atrás da orelha quanto como parte de uma composição maior no fechamento de braço.</p>
@@ -231,6 +240,7 @@
   </div>
 
   
+  </div>
 
   <a class="voltar" href="/guia">← Voltar ao Guia completo</a>
 </div>
