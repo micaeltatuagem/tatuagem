@@ -93,7 +93,9 @@
   }
   * { box-sizing: border-box; }
   body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body); line-height:1.65; }
-  .inner { max-width: var(--max); margin:0 auto; padding: 0 1.5rem; }
+  /* main fica full-width (alvo do flash-decor.js, decoração até a borda da
+     página, igual ao padrão do site); a largura de leitura fica no .inner */
+  .inner { max-width: var(--max); margin:0 auto; padding: 0 1.5rem; position:relative; z-index:1; }
   a { color: inherit; }
 
   nav {
@@ -112,7 +114,8 @@
   .breadcrumb a { color:var(--ink-faint); text-decoration:none; }
   .breadcrumb a:hover { color:var(--accent); }
 
-  header.hero { padding: 1rem 0 2rem; border-bottom:1px solid var(--border); }
+  header.hero { padding: 1rem 1.5rem 2rem; border-bottom:1px solid var(--border); }
+  .hero-inner { max-width: var(--max); margin:0 auto; position:relative; z-index:1; }
   .eyebrow { font-family: var(--font-ui); text-transform:uppercase; letter-spacing:.12em; font-size:.72rem; color:var(--accent); margin:0 0 .6rem; }
   h1 { font-weight:400; font-size:2.4rem; margin:0; }
 
@@ -191,14 +194,16 @@
   <li><a href="/#localizacao">Localização</a></li>
 </ul>
 
-<div class="inner">
-  <p class="breadcrumb"><a href="/">Home</a> / <a href="/guia">Guia</a> / Coração</p>
-
-  <header class="hero">
+<header class="hero">
+  <div class="hero-inner">
+    <p class="breadcrumb"><a href="/">Home</a> / <a href="/guia">Guia</a> / Coração</p>
     <p class="eyebrow">Significado</p>
     <h1>Coração</h1>
-  </header>
+  </div>
+</header>
 
+<main>
+<div class="inner">
   
 
   <div class="conteudo">
@@ -208,6 +213,7 @@
 
   <div class="cta-box">
     <a class="cta-btn primario" href="https://wa.me/5532999666946?text=Oi%20Micael!%20Vi%20o%20verbete%20%22Cora%C3%A7%C3%A3o%22%20no%20Guia%20e%20quero%20saber%20mais." target="_blank" rel="noopener">Chamar no WhatsApp</a>
+
     <a class="cta-btn secundario" href="/flash?q=Cora%C3%A7%C3%A3o">Ver mais tatuagens de coração →</a>
     
   </div>
@@ -228,11 +234,13 @@
 
   <a class="voltar" href="/guia">← Voltar ao Guia completo</a>
 </div>
+</main>
 
 <footer>
   <span>© Micael Faccio · Tatuador em Muriaé, MG</span>
 </footer>
 
 <script src="/nav-mobile.js" defer></script>
+<script src="/flash-decor.js" defer></script>
 </body>
 </html>
