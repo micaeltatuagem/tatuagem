@@ -161,6 +161,13 @@
     cursor: pointer;
   }
   .verbete-card:hover { border-color: var(--accent-dim); }
+
+  /* fallback estático (pré-JS): lista simples de links, some assim que o JS renderiza */
+  #conteudo ul { list-style:none; margin:0; padding:0; display:grid; grid-template-columns: repeat(3, 1fr); gap:.4rem 1rem; }
+  @media (max-width:860px){ #conteudo ul{ grid-template-columns: repeat(2,1fr); } }
+  @media (max-width:560px){ #conteudo ul{ grid-template-columns: 1fr; } }
+  #conteudo ul a { font-size:.88rem; color: var(--ink-muted); text-decoration:none; }
+  #conteudo ul a:hover { color: var(--accent); }
   .verbete-cat { font-family: var(--font-ui); font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; color:var(--accent); margin-bottom:.35rem; }
   .verbete-titulo { font-size:1.05rem; margin-bottom:.35rem; }
   .verbete-resumo { font-family: var(--font-ui); font-size:.82rem; color:var(--ink-muted); line-height:1.5; margin:0; }
@@ -255,7 +262,8 @@
 
   <nav class="az-index" id="azIndex" aria-label="Índice alfabético"></nav>
 
-  <main id="conteudo"></main>
+  <main id="conteudo"><!-- GUIA-ESTATICO:START (gerado automaticamente por scripts/generate-guia-pages.js — fallback pra bots sem JS; o script inline logo abaixo substitui isso em runtime) -->
+  <!-- GUIA-ESTATICO:END --></main>
 
   <p class="vazio" id="vazio" style="display:none">Nenhum verbete encontrado.</p>
 </div>

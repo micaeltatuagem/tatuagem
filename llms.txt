@@ -15,3 +15,5 @@
 - [Flash](https://micaeltatuagem.com.br/flash.html): catálogo de +500 desenhos prontos
 - [Criar](https://micaeltatuagem.com.br/preview-tatuagem.html): simulador de tatuagem no corpo
 - [Reserva](https://micaeltatuagem.com.br/reserva.html): agendamento e cadastro
+- [Guia](https://micaeltatuagem.com.br/guia): dicionário com significados, estilos, técnicas e termos de tatuagem (centenas de verbetes, cada um em sua própria URL /guia/<termo>)
+- [Blog](https://micaeltatuagem.com.br/blog): artigos aprofundados sobre simbolismo, mitologia e história por trás de estilos e motivos de tatuagem
