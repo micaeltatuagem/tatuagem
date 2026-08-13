@@ -6109,4 +6109,14 @@
     <priority>0.6</priority>
   </url>
   <!-- GUIA:END -->
+  <url>
+    <loc>https://micaeltatuagem.com.br/blog/por-que-a-gen-z-esta-pedindo-aguia-rosa-e-adaga-de-novo</loc>
+    <lastmod>2026-08-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+      <image:image>
+        <image:loc>https://rpgcsejfewltricfsdrd.supabase.co/storage/v1/object/public/blog-images/covers/1786624332348-q1vijs.png</image:loc>
+        <image:title>Por que a Gen Z está pedindo águia, rosa e adaga de novo</image:title>
+      </image:image>
+  </url>
 </urlset>
