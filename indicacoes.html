@@ -249,7 +249,7 @@
       <button type="submit" class="btn-consultar" id="btn-consultar">Consultar progresso</button>
     </form>
 
-    <p class="erro-msg" id="erro-msg">Código não encontrado. Confira se digitou certo — ele foi enviado no momento do seu cadastro em /reserva.</p>
+    <p class="erro-msg" id="erro-msg">Código não encontrado. Confira se digitou certo, ele foi enviado no momento do seu cadastro em /reserva.</p>
 
     <div class="resultado" id="resultado">
       <p class="resultado-nome" id="resultado-nome"></p>
@@ -328,7 +328,7 @@
     nomeEl.textContent = data.nome || '';
 
     if (data.sessao_gratis_usada) {
-      statusEl.textContent = 'Sessão grátis já resgatada — obrigado por indicar!';
+      statusEl.textContent = 'Sessão grátis já resgatada. Obrigado por indicar!';
       blocoProg.style.display = 'none';
       avisoGratis.style.display = 'none';
     } else if (confirmadas >= 5) {

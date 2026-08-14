@@ -418,8 +418,10 @@
     .btn-whats:hover { opacity: 0.88; }
 
     .aviso-anamnese {
-      background: var(--surface);
-      border: 1px solid var(--gold-dim);
+      position: relative; z-index: 1;
+      background: rgba(10,10,10,0.62);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(212,201,176,0.08);
       border-radius: var(--radius);
       padding: 1.2rem 1.3rem;
       margin: 1.5rem 0;
@@ -919,7 +921,7 @@
   </a>
 
   <div class="aviso-anamnese">
-    <p><strong>Antes da sua sessão:</strong> a ficha de anamnese é obrigatória por exigência da vigilância sanitária — nela você declara alergias, condições de saúde e assina o termo de consentimento. Preencha com calma antes de vir pro estúdio, agiliza o dia da sessão.</p>
+    <p><strong>Antes da sua sessão:</strong> a ficha de anamnese é obrigatória por exigência da vigilância sanitária. Nela você declara alergias, condições de saúde e assina o termo de consentimento. Preencha com calma antes de vir pro estúdio, agiliza o dia da sessão.</p>
     <a href="/anamnese" id="link-anamnese" class="btn-anamnese">Preencher ficha de anamnese →</a>
   </div>
 
