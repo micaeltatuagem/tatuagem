@@ -196,6 +196,7 @@
     if (path.includes('aerografia')) return ['header','section','main','footer'];
     if (path.includes('fisiologia-da-tatuagem')) return ['header','section','main','footer'];
     if (path.includes('valor')) return ['header','main','footer'];
+    if (path.includes('indicacoes')) return ['header','main','footer'];
     if (path.includes('guia')) {
       // pagina de listagem (/guia): dezenas de grupos A-Z/tema dentro de um
       // unico <main> gigante (300+ verbetes) — decorar por grupo evita

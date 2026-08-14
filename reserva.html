@@ -917,6 +917,9 @@
       Cada amigo que <strong style="color:var(--bone);">efetivamente tatuar</strong> conta +1.
       O Micael confirma manualmente e te avisa quando chegar a 5.
     </p>
+    <p class="share-hint" style="margin-top:.5rem;">
+      <a href="#" id="link-progresso" style="color:var(--gold);text-decoration:underline;text-underline-offset:3px;">Acompanhar meu progresso de indicações →</a>
+    </p>
   </div>
 
   <div class="share-section" style="text-align:left;">
@@ -1216,6 +1219,8 @@
     );
 
     document.getElementById('share-link-txt').textContent = shareUrl;
+
+    document.getElementById('link-progresso').href = `/indicacoes?cod=${encodeURIComponent(codigo)}`;
 
     document.getElementById('btn-copiar-link').addEventListener('click', function () {
       navigator.clipboard.writeText(shareUrl).then(() => {
