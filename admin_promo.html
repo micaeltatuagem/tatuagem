@@ -165,17 +165,19 @@
     tbody tr:hover { background: var(--surface); }
     tbody td { padding: .75rem .9rem; vertical-align: middle; }
 
-    .td-nome { font-weight: 600; color: var(--ink); }
+    .td-nome { font-weight: 600; color: var(--ink); white-space: nowrap; }
+    .td-whats { white-space: nowrap; }
     .td-whats a { color: var(--ink-muted); text-decoration: none; font-size: .82rem; }
     .td-whats a:hover { color: var(--accent); }
-    .td-codigo { font-family: monospace; color: var(--accent); font-size: .9rem; }
-    .td-canal { color: var(--ink-muted); font-size: .78rem; }
+    .td-codigo { font-family: monospace; color: var(--accent); font-size: .9rem; white-space: nowrap; }
+    .td-canal { color: var(--ink-muted); font-size: .78rem; white-space: nowrap; }
     .td-data { color: var(--ink-muted); font-size: .78rem; white-space: nowrap; }
 
     /* badges */
     .badge {
       display: inline-block; border-radius: 2px; font-size: .68rem; font-weight: 600;
       letter-spacing: .06em; text-transform: uppercase; padding: .2rem .5rem;
+      white-space: nowrap;
     }
     .badge-disponivel { background: #0d1a0f; color: var(--success); }
     .badge-usado      { background: #1a1408; color: var(--accent-dim); }
