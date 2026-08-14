@@ -920,7 +920,7 @@
 
   <div class="aviso-anamnese">
     <p><strong>Antes da sua sessão:</strong> a ficha de anamnese é obrigatória por exigência da vigilância sanitária — nela você declara alergias, condições de saúde e assina o termo de consentimento. Preencha com calma antes de vir pro estúdio, agiliza o dia da sessão.</p>
-    <a href="/anamnese" class="btn-anamnese">Preencher ficha de anamnese →</a>
+    <a href="/anamnese" id="link-anamnese" class="btn-anamnese">Preencher ficha de anamnese →</a>
   </div>
 
   <div class="codigo-gerado">
@@ -1257,6 +1257,7 @@
     document.getElementById('share-link-txt').textContent = shareUrl;
 
     document.getElementById('link-progresso').href = `/indicacoes?cod=${encodeURIComponent(codigo)}`;
+    document.getElementById('link-anamnese').href = `/anamnese?cod=${encodeURIComponent(codigo)}`;
 
     document.getElementById('btn-copiar-link').addEventListener('click', function () {
       navigator.clipboard.writeText(shareUrl).then(() => {

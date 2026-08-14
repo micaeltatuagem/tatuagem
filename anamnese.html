@@ -596,6 +596,12 @@ const db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 // rápidos demais pra serem de uma pessoa preenchendo de verdade.
 const formRenderedAt = Date.now();
 
+// Se a pessoa chegou aqui pelo link do painel de sucesso do /reserva
+// (?cod=MT-1234), guarda o código de indicação dela pra vincular essa
+// ficha ao cadastro em clientes_promo — é o que permite o admin_promo.html
+// cruzar "preencheu anamnese / foi tatuado" com quem indicou quem.
+const codigoIndicacaoURL = (new URLSearchParams(window.location.search).get('cod') || '').trim().toUpperCase() || null;
+
 // ────────────────────────────────────────────
 // EMAILJS CONFIG — crie conta gratuita em emailjs.com
 // Substitua os três valores abaixo
@@ -787,6 +793,7 @@ document.getElementById('formAnamnese').addEventListener('submit', async (e) => 
     emergencia_fone: get('emergencia_fone'),
     profissao: get('profissao'),
     indicacao: get('indicacao'),
+    codigo_indicacao: codigoIndicacaoURL || null,
     autoriza_foto: get('autoriza_foto') === 'sim',
     anamnese: anamneseData,
     aceite_termo: true,

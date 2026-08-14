@@ -199,6 +199,8 @@
     /* indicações contador */
     .td-ind { text-align: center; }
     .ind-bar-wrap { display: flex; align-items: center; gap: .5rem; }
+    .ind-divergente { font-size: .72rem; color: var(--warning); margin-top: .3rem; }
+    .ind-divergente a { color: var(--accent); text-decoration: underline; }
     .ind-bar {
       flex: 1; height: 4px; background: var(--ink-faint); border-radius: 2px; min-width: 60px;
       overflow: hidden;
@@ -367,6 +369,7 @@
             <th>Canal</th>
             <th>Desconto</th>
             <th>Tatuagens</th>
+            <th>Anamnese</th>
             <th>Indicações (confirmadas)</th>
             <th>Cadastro</th>
             <th>Ações</th>
@@ -509,18 +512,34 @@
   });
 
   // ── Carregar clientes ────────────────────────────────────────
+  let anamnesesPorCodigo = {}; // codigo_indicacao -> registro de anamneses (ou null)
+
   async function carregarClientes() {
     const tbody = document.getElementById('tbody');
-    tbody.innerHTML = '<tr class="loading-row"><td colspan="9">Carregando…</td></tr>';
+    tbody.innerHTML = '<tr class="loading-row"><td colspan="10">Carregando…</td></tr>';
 
-    const { data, error } = await sb
-      .from('clientes_promo')
-      .select('*')
-      .order('criado_em', { ascending: false });
+    const [{ data, error }, { data: anamneses, error: errAnam }] = await Promise.all([
+      sb.from('clientes_promo').select('*').order('criado_em', { ascending: false }),
+      sb.from('anamneses').select('codigo_indicacao, tatuagens').not('codigo_indicacao', 'is', null)
+    ]);
 
     if (error) {
-      tbody.innerHTML = `<tr class="loading-row"><td colspan="9">Erro ao carregar: ${error.message}</td></tr>`;
+      tbody.innerHTML = `<tr class="loading-row"><td colspan="10">Erro ao carregar: ${error.message}</td></tr>`;
       return;
+    }
+
+    // Se a query de anamneses falhar (ex: coluna codigo_indicacao ainda não
+    // existe porque o SQL de vínculo não rodou), não trava o resto do painel
+    // — só a coluna "Anamnese" fica vazia.
+    anamnesesPorCodigo = {};
+    if (!errAnam && anamneses) {
+      anamneses.forEach(a => {
+        // um código pode ter mais de uma ficha (raro); fica com a que tem tatuagem
+        const atual = anamnesesPorCodigo[a.codigo_indicacao];
+        if (!atual || (a.tatuagens || []).length > (atual.tatuagens || []).length) {
+          anamnesesPorCodigo[a.codigo_indicacao] = a;
+        }
+      });
     }
 
     todos = data || [];
@@ -554,6 +573,32 @@
     `).join('');
   }
 
+  // ── Comparar indicações confirmadas com o que a anamnese mostra ──
+  // Calcula quantas indicações desse código já têm anamnese com pelo menos
+  // uma tatuagem registrada — a contagem "de verdade", puxada da anamnese,
+  // pra comparar com o indicacoes_confirmadas guardado (que hoje só muda
+  // quando alguém clica em "+ Tattoo" manualmente).
+  function indicacoesConfirmadasReal(codigo) {
+    return todos.filter(c => {
+      if (c.indicado_por !== codigo) return false;
+      const anamnese = anamnesesPorCodigo[c.codigo_indicacao];
+      return anamnese && (anamnese.tatuagens || []).length > 0;
+    }).length;
+  }
+
+  async function sincronizarIndicacoes(id) {
+    const cliente = todos.find(c => c.id === id);
+    if (!cliente) return;
+    const real = indicacoesConfirmadasReal(cliente.codigo_indicacao);
+    const { error } = await sb.from('clientes_promo')
+      .update({ indicacoes_confirmadas: real })
+      .eq('id', id);
+    if (error) return toast('Erro ao sincronizar: ' + error.message, 'err');
+    toast(`Indicações de ${cliente.nome} sincronizadas com a anamnese (${real}/5)`, 'ok');
+    carregarClientes();
+  }
+  window.sincronizarIndicacoes = sincronizarIndicacoes;
+
   // ── Render tabela ────────────────────────────────────────────
   function renderTabela() {
     const busca = document.getElementById('busca').value.toLowerCase();
@@ -575,7 +620,7 @@
     }
 
     if (!lista.length) {
-      tbody.innerHTML = '<tr class="loading-row"><td colspan="9">Nenhum cliente encontrado.</td></tr>';
+      tbody.innerHTML = '<tr class="loading-row"><td colspan="10">Nenhum cliente encontrado.</td></tr>';
       return;
     }
 
@@ -590,6 +635,20 @@
           ? '<span class="badge badge-gratis">✦ Liberada</span>'
           : '';
 
+      const anamnese = anamnesesPorCodigo[c.codigo_indicacao];
+      const numTatoosAnamnese = anamnese ? (anamnese.tatuagens || []).length : 0;
+      let badgeAnamnese;
+      if (!anamnese) {
+        badgeAnamnese = '<span class="badge badge-pendente" title="Sem ficha de anamnese vinculada a este código">✗ Não preenchida</span>';
+      } else if (numTatoosAnamnese > 0) {
+        badgeAnamnese = `<span class="badge badge-gratis" title="Tem ${numTatoosAnamnese} tatuagem(ns) registrada(s) na anamnese">✓ Tatuado (${numTatoosAnamnese})</span>`;
+      } else {
+        badgeAnamnese = '<span class="badge badge-disponivel" title="Ficha preenchida, mas ainda sem tatuagem registrada em adminanamnese.html">○ Preenchida</span>';
+      }
+
+      const indReal = indicacoesConfirmadasReal(c.codigo_indicacao);
+      const divergente = indReal !== (c.indicacoes_confirmadas || 0);
+
       return `
       <tr>
         <td class="td-nome">${escapeHtml(c.nome)}${badgeGratis ? ' ' + badgeGratis : ''}</td>
@@ -598,11 +657,13 @@
         <td class="td-canal">${canalLabel(c.canal)}</td>
         <td>${badgeDesc}</td>
         <td style="text-align:center;">${c.tatuagens_feitas}</td>
+        <td style="text-align:center;">${badgeAnamnese}</td>
         <td class="td-ind">
           <div class="ind-bar-wrap">
             <div class="ind-bar"><div class="ind-bar-fill" style="width:${indPct}%"></div></div>
             <span class="ind-num">${c.indicacoes_confirmadas}/5</span>
           </div>
+          ${divergente ? `<div class="ind-divergente" title="Segundo a anamnese dos indicados, o valor real é ${indReal}">⚠ anamnese indica ${indReal} · <a href="#" onclick="sincronizarIndicacoes('${c.id}');return false;">sincronizar</a></div>` : ''}
         </td>
         <td class="td-data">${fmtData(c.criado_em)}</td>
         <td class="td-acoes">
