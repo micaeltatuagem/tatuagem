@@ -195,6 +195,17 @@
       position: relative;
       z-index: 1;
     }
+    .content-panel {
+      position: relative; z-index: 1;
+      background: rgba(10,10,10,0.62);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(212,201,176,0.08);
+      border-radius: var(--radius);
+      padding: 1.75rem 2rem;
+    }
+    @media (max-width: 560px) {
+      .content-panel { padding: 1.5rem 1.25rem; }
+    }
     .field { margin-bottom: 1.8rem; }
     .field label {
       display: block;
@@ -798,7 +809,7 @@
 
 <section class="form-section">
 <div class="form-section-inner" id="tela-form">
-  <form id="bookingForm" class="fade-in">
+  <form id="bookingForm" class="fade-in content-panel">
     <div class="msg-error" id="msg-error"></div>
 
     <!-- Campo-armadilha: fica invisível pra gente, mas bots automatizados
@@ -910,7 +921,7 @@
   <a href="/" class="back-link">← Voltar para o início</a>
 </div>
 
-<div id="tela-sucesso">
+<div id="tela-sucesso" class="content-panel">
   <div class="sucesso-icon">✦</div>
   <h2>Cadastro confirmado</h2>
   <p>Sua ideia foi registrada e os dois benefícios já estão garantidos.</p>
