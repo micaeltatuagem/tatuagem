@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Layaway · Micael Tatuagem</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --bg:        #0a0a0a;
+      --surface:   #111111;
+      --surface2:  #161616;
+      --border:    #222222;
+      --border-hi: #333333;
+      --ink:       #e8e8e8;
+      --ink-muted: #777777;
+      --ink-faint: #333333;
+      --accent:    #c8a96e;
+      --accent-dim:#7a6340;
+      --success:   #4caf7d;
+      --warning:   #e0a020;
+      --error:     #e05555;
+      --info:      #5599e0;
+      --radius:    4px;
+      --font-body: 'Georgia', serif;
+      --font-ui:   system-ui, -apple-system, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); min-height: 100vh; }
+
+    /* ── Auth ──────────────────────────────────────────────── */
+    #tela-login {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 2rem;
+    }
+    .login-box {
+      width: 100%; max-width: 380px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 2.5rem 2rem;
+    }
+    .login-box h1 {
+      font-family: var(--font-body); font-size: 1.4rem; font-weight: normal;
+      margin-bottom: 0.4rem; color: var(--ink);
+    }
+    .login-box p { font-size: 0.82rem; color: var(--ink-muted); margin-bottom: 2rem; }
+    .login-box label {
+      display: block; font-size: 0.72rem; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--ink-muted); margin-bottom: .4rem;
+    }
+    .login-box input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--ink); font-family: var(--font-ui);
+      font-size: 0.95rem; padding: .7rem 1rem; outline: none; margin-bottom: 1rem;
+      transition: border-color .2s;
+    }
+    .login-box input:focus { border-color: var(--border-hi); }
+    .btn-login {
+      width: 100%; background: var(--accent); color: #0a0a0a; border: none;
+      border-radius: var(--radius); font-family: var(--font-ui); font-size: .9rem;
+      font-weight: 600; padding: .85rem; cursor: pointer; transition: opacity .2s;
+    }
+    .btn-login:hover { opacity: .88; }
+    .btn-login:disabled { opacity: .4; cursor: not-allowed; }
+    .login-err { font-size: .8rem; color: var(--error); margin-top: .6rem; min-height: 1.2em; }
+
+    /* ── Layout admin ──────────────────────────────────────── */
+    #tela-admin { display: none; }
+
+    .topbar {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: .9rem 1.5rem; display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .topbar-left { display: flex; align-items: baseline; gap: 1rem; }
+    .topbar h1 { font-family: var(--font-body); font-size: 1rem; font-weight: normal; color: var(--ink); }
+    .topbar-sep { color: var(--ink-faint); }
+    .topbar-section { font-size: .8rem; color: var(--ink-muted); }
+    .btn-logout {
+      background: none; border: 1px solid var(--border); color: var(--ink-muted);
+      border-radius: var(--radius); font-family: var(--font-ui); font-size: .75rem;
+      padding: .35rem .9rem; cursor: pointer; transition: border-color .2s, color .2s;
+    }
+    .btn-logout:hover { border-color: var(--border-hi); color: var(--ink); }
+
+    .main-wrap { max-width: none; margin: 0 auto; padding: 2rem 2rem 4rem; }
+
+    /* ── Stats ──────────────────────────────────────────────── */
+    .stats {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1px; background: var(--border); border: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+    }
+    .stat {
+      background: var(--surface); padding: 1.2rem 1.4rem;
+    }
+    .stat .s-label {
+      font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--ink-muted); margin-bottom: .4rem;
+    }
+    .stat .s-value {
+      font-size: 2rem; font-weight: bold; color: var(--ink); letter-spacing: -.02em;
+    }
+    .stat .s-value.accent { color: var(--accent); }
+    .stat .s-value.success { color: var(--success); }
+    .stat .s-value.warning { color: var(--warning); }
+
+    /* ── Alertas quitados aguardando agendamento ────────────── */
+    #alertas { margin-bottom: 2rem; }
+    .alerta-gratis {
+      background: #0d1a0f; border: 1px solid var(--success);
+      border-radius: var(--radius); padding: 1rem 1.2rem; margin-bottom: .8rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .alerta-gratis .a-texto { font-size: .88rem; color: var(--success); }
+    .alerta-gratis .a-texto strong { display: block; font-size: 1rem; margin-bottom: .2rem; }
+    .btn-usar-gratis {
+      background: var(--success); color: #fff; border: none;
+      border-radius: var(--radius); font-family: var(--font-ui); font-size: .8rem;
+      font-weight: 600; padding: .5rem 1rem; cursor: pointer; white-space: nowrap;
+      transition: opacity .2s;
+    }
+    .btn-usar-gratis:hover { opacity: .85; }
+
+    /* ── Filtros ────────────────────────────────────────────── */
+    .filtros {
+      display: flex; gap: .6rem; flex-wrap: wrap; margin-bottom: 1.5rem;
+      align-items: center;
+    }
+    .filtros input[type="text"] {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      color: var(--ink); font-family: var(--font-ui); font-size: .88rem;
+      padding: .55rem .9rem; outline: none; transition: border-color .2s; flex: 1; min-width: 180px;
+    }
+    .filtros input:focus { border-color: var(--border-hi); }
+    .filtro-btn {
+      background: var(--surface); border: 1px solid var(--border); color: var(--ink-muted);
+      border-radius: var(--radius); font-family: var(--font-ui); font-size: .78rem;
+      padding: .5rem 1rem; cursor: pointer; transition: border-color .2s, color .2s, background .2s;
+      white-space: nowrap;
+    }
+    .filtro-btn:hover, .filtro-btn.ativo {
+      border-color: var(--accent); color: var(--accent); background: #1a1408;
+    }
+    .btn-reload {
+      background: none; border: 1px solid var(--border); color: var(--ink-muted);
+      border-radius: var(--radius); font-family: var(--font-ui); font-size: .78rem;
+      padding: .5rem .9rem; cursor: pointer; transition: border-color .2s, color .2s;
+    }
+    .btn-reload:hover { border-color: var(--border-hi); color: var(--ink); }
+
+    /* ── Tabela ─────────────────────────────────────────────── */
+    .tabela-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+    thead th {
+      font-size: .68rem; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--ink-muted); font-weight: normal; text-align: left;
+      padding: .6rem .9rem; border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid var(--ink-faint); transition: background .15s; }
+    tbody tr:hover { background: var(--surface); }
+    tbody td { padding: .75rem .9rem; vertical-align: middle; }
+
+    .td-nome { font-weight: 600; color: var(--ink); white-space: nowrap; }
+    .td-whats { white-space: nowrap; }
+    .td-whats a { color: var(--ink-muted); text-decoration: none; font-size: .82rem; }
+    .td-whats a:hover { color: var(--accent); }
+    .td-codigo { font-family: monospace; color: var(--accent); font-size: .9rem; white-space: nowrap; }
+    .td-valor { color: var(--ink); font-size: .86rem; white-space: nowrap; }
+    .td-data { color: var(--ink-muted); font-size: .78rem; white-space: nowrap; }
+
+    /* badges */
+    .badge {
+      display: inline-block; border-radius: 2px; font-size: .68rem; font-weight: 600;
+      letter-spacing: .06em; text-transform: uppercase; padding: .2rem .5rem;
+      white-space: nowrap;
+    }
+    .badge-disponivel { background: #0d1a0f; color: var(--success); }
+    .badge-usado      { background: #1a1408; color: var(--accent-dim); }
+    .badge-gratis     { background: #0d1a14; color: var(--success); }
+    .badge-pendente   { background: #1a130d; color: var(--warning); }
+    .badge-cancelado  { background: #1a0e0e; color: var(--error); }
+
+    /* ações */
+    .td-acoes { white-space: nowrap; }
+    .btn-acao {
+      background: none; border: 1px solid var(--border); color: var(--ink-muted);
+      border-radius: var(--radius); font-family: var(--font-ui); font-size: .72rem;
+      padding: .3rem .7rem; cursor: pointer; margin-right: .3rem; margin-bottom: .2rem;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-acao:hover { border-color: var(--border-hi); color: var(--ink); }
+    .btn-acao.destaque { border-color: var(--accent-dim); color: var(--accent); }
+    .btn-acao.destaque:hover { background: #1a1408; }
+    .btn-acao.danger { border-color: #4a1a1a; color: var(--error); }
+    .btn-acao.danger:hover { background: #1a0e0e; }
+
+    /* barra de progresso de parcelas */
+    .td-parc { text-align: center; }
+    .parc-bar-wrap { display: flex; align-items: center; gap: .5rem; }
+    .parc-bar {
+      flex: 1; height: 4px; background: var(--ink-faint); border-radius: 2px; min-width: 60px;
+      overflow: hidden;
+    }
+    .parc-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .3s; }
+    .parc-num { font-size: .78rem; color: var(--ink-muted); white-space: nowrap; }
+
+    /* ── Modal detalhes ─────────────────────────────────────── */
+    .modal-bg {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.8);
+      z-index: 100; align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal-bg.open { display: flex; }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); width: 100%; max-width: 560px;
+      max-height: 90vh; overflow-y: auto; padding: 2rem;
+    }
+    .modal-header {
+      display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.5rem;
+    }
+    .modal-header h2 { font-family: var(--font-body); font-size: 1.2rem; font-weight: normal; }
+    .btn-fechar {
+      background: none; border: none; color: var(--ink-muted); cursor: pointer;
+      font-size: 1.2rem; line-height: 1; padding: .2rem;
+    }
+    .modal-section { margin-bottom: 1.5rem; }
+    .modal-section h3 {
+      font-size: .7rem; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--ink-muted); margin-bottom: .8rem; padding-bottom: .4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: .4rem 0; border-bottom: 1px solid var(--ink-faint); font-size: .86rem;
+    }
+    .modal-row:last-child { border-bottom: none; }
+    .modal-row .k { color: var(--ink-muted); }
+    .modal-row .v { color: var(--ink); font-weight: 500; }
+    .modal-row .v.cod { font-family: monospace; color: var(--accent); }
+
+    .modal-acoes { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
+    .btn-modal {
+      flex: 1; min-width: 120px; background: var(--surface2);
+      border: 1px solid var(--border); color: var(--ink-muted); border-radius: var(--radius);
+      font-family: var(--font-ui); font-size: .8rem; padding: .65rem 1rem;
+      cursor: pointer; transition: border-color .2s, color .2s;
+    }
+    .btn-modal:hover { border-color: var(--border-hi); color: var(--ink); }
+    .btn-modal.primary { border-color: var(--accent-dim); color: var(--accent); }
+    .btn-modal.primary:hover { background: #1a1408; }
+    .btn-modal.success { border-color: #1a4a28; color: var(--success); }
+    .btn-modal.success:hover { background: #0d1a0f; }
+    .btn-modal.danger { border-color: #4a1a1a; color: var(--error); }
+    .btn-modal.danger:hover { background: #1a0e0e; }
+
+    /* ── campos novo layaway ────────────────────────────────── */
+    .campo-label {
+      display: block; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--ink-muted); margin-bottom: .4rem;
+    }
+    .campo-input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius); color: var(--ink); font-family: var(--font-ui);
+      font-size: .93rem; padding: .65rem 1rem; outline: none; transition: border-color .2s;
+    }
+    .campo-input:focus { border-color: var(--border-hi); }
+    select.campo-input { cursor: pointer; }
+    .campo-hint { font-size: .76rem; color: var(--ink-muted); margin-top: .35rem; }
+    .campo-hint.ok { color: var(--success); }
+    .campo-hint.err { color: var(--error); }
+
+    /* ── Empty / loading ────────────────────────────────────── */
+    .empty {
+      text-align: center; padding: 4rem 2rem; color: var(--ink-muted); font-size: .9rem;
+    }
+    .loading-row td { text-align: center; padding: 3rem; color: var(--ink-muted); }
+
+    /* ── Toast ──────────────────────────────────────────────── */
+    #toast {
+      position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: .75rem 1.4rem; font-size: .84rem;
+      color: var(--ink); z-index: 200; opacity: 0; transition: opacity .3s;
+      pointer-events: none; white-space: nowrap;
+    }
+    #toast.show { opacity: 1; }
+    #toast.ok   { border-color: var(--success); color: var(--success); }
+    #toast.err  { border-color: var(--error); color: var(--error); }
+
+    @media (max-width: 600px) {
+      .topbar h1 { font-size: .88rem; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      table { font-size: .78rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Login ─────────────────────────────────────────────────── -->
+<div id="tela-login">
+  <div class="login-box">
+    <h1>Micael Tatuagem</h1>
+    <p>Painel de Layaway · Acesso restrito</p>
+    <label for="l-email">E-mail</label>
+    <input type="email" id="l-email" autocomplete="username" />
+    <label for="l-senha">Senha</label>
+    <input type="password" id="l-senha" autocomplete="current-password" />
+    <button class="btn-login" id="btn-entrar">Entrar</button>
+    <p class="login-err" id="login-err"></p>
+  </div>
+</div>
+
+<!-- ── Admin ─────────────────────────────────────────────────── -->
+<div id="tela-admin">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>Micael Tatuagem</h1>
+      <span class="topbar-sep">/</span>
+      <span class="topbar-section">Layaway</span>
+    </div>
+    <button class="btn-logout" id="btn-logout">Sair</button>
+  </div>
+
+  <div class="main-wrap">
+
+    <!-- Stats -->
+    <div class="stats" id="stats">
+      <div class="stat"><div class="s-label">Em andamento</div><div class="s-value accent" id="st-andamento">—</div></div>
+      <div class="stat"><div class="s-label">Valor em aberto</div><div class="s-value" id="st-valor-aberto">—</div></div>
+      <div class="stat"><div class="s-label">Quitados p/ agendar</div><div class="s-value warning" id="st-quitados">—</div></div>
+      <div class="stat"><div class="s-label">Agendados</div><div class="s-value" id="st-agendados">—</div></div>
+      <div class="stat"><div class="s-label">Concluídos</div><div class="s-value success" id="st-concluidos">—</div></div>
+      <div class="stat"><div class="s-label">Cancelados</div><div class="s-value" id="st-cancelados">—</div></div>
+    </div>
+
+    <!-- Alertas: quitados aguardando agendamento -->
+    <div id="alertas"></div>
+
+    <!-- Filtros -->
+    <div class="filtros">
+      <input type="text" id="busca" placeholder="Buscar por nome ou código do cliente…" />
+      <button class="filtro-btn ativo" data-filtro="todos">Todos</button>
+      <button class="filtro-btn" data-filtro="em_andamento">Em andamento</button>
+      <button class="filtro-btn" data-filtro="quitado">Quitado</button>
+      <button class="filtro-btn" data-filtro="agendado">Agendado</button>
+      <button class="filtro-btn" data-filtro="concluido">Concluído</button>
+      <button class="filtro-btn" data-filtro="cancelado">Cancelado</button>
+      <button class="btn-reload" id="btn-reload">↺ Atualizar</button>
+      <button class="btn-reload" id="btn-novo" style="border-color:var(--accent-dim);color:var(--accent);">+ Novo layaway</button>
+    </div>
+
+    <!-- Tabela -->
+    <div class="tabela-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Código</th>
+            <th>Peça</th>
+            <th>Valor total</th>
+            <th>Parcelas</th>
+            <th>Status</th>
+            <th>Criado em</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Modal detalhes ─────────────────────────────────────────── -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-nome">Layaway</h2>
+      <button class="btn-fechar" id="btn-fechar">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ── Modal novo layaway ──────────────────────────────────────── -->
+<div class="modal-bg" id="modal-novo-bg">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Novo layaway</h2>
+      <button class="btn-fechar" id="btn-fechar-novo">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.9rem;">
+      <div>
+        <label class="campo-label">Código do cliente *</label>
+        <input class="campo-input" id="nl-codigo" type="text" placeholder="ex: MT-1234" style="text-transform:uppercase;" />
+        <p class="campo-hint" id="nl-codigo-hint">O cliente precisa estar cadastrado (painel de Promoções).</p>
+      </div>
+      <div>
+        <label class="campo-label">Descrição da peça *</label>
+        <input class="campo-input" id="nl-descricao" type="text" placeholder="ex: Flash coração pequeno, braço" />
+      </div>
+      <div>
+        <label class="campo-label">Valor total (até R$600,00) *</label>
+        <input class="campo-input" id="nl-valor" type="number" step="0.01" min="1" max="600" placeholder="400.00" />
+      </div>
+      <div>
+        <label class="campo-label">Número de parcelas *</label>
+        <select class="campo-input" id="nl-parcelas">
+          <option value="2">2x</option>
+          <option value="3">3x</option>
+          <option value="4">4x</option>
+        </select>
+        <p class="campo-hint" id="nl-parcela-valor"></p>
+      </div>
+      <div>
+        <label class="campo-label">Observações</label>
+        <input class="campo-input" id="nl-obs" type="text" placeholder="opcional" />
+      </div>
+      <p id="nl-err" style="font-size:.8rem;color:var(--error);min-height:1.2em;"></p>
+      <button class="btn-login" id="btn-salvar-novo">Criar layaway</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- ── Scripts ───────────────────────────────────────────────── -->
+<script>
+  // ── Config ──────────────────────────────────────────────────
+  const SUPABASE_URL  = 'https://rpgcsejfewltricfsdrd.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwZ2NzZWpmZXdsdHJpY2ZzZHJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4OTU0MzAsImV4cCI6MjA5NzQ3MTQzMH0.BHg2X0MVIokfnBjTK0DPt1NDB1H9sjXeUVZ1lJ3jKo0';
+
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  const TETO_LAYAWAY = 600;
+
+  // Escapa qualquer texto antes de jogar em innerHTML.
+  function escapeHtml(str) {
+    return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  // ── Estado ──────────────────────────────────────────────────
+  let todos = [];           // registros de layaway, já com o cliente embutido (join)
+  let clientesPorId = {};   // id -> registro de clientes_promo
+  let filtroAtivo = 'todos';
+  let layawayModal = null;
+
+  // ── Utilitários ─────────────────────────────────────────────
+  function toast(msg, tipo = '') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'show' + (tipo ? ' ' + tipo : '');
+    clearTimeout(el._t);
+    el._t = setTimeout(() => { el.className = ''; }, 3000);
+  }
+
+  function fmtData(iso) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('pt-BR');
+  }
+
+  function fmtMoeda(v) {
+    return (v ?? 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  function fmtWhats(w) {
+    if (!w) return '';
+    const d = w.replace(/\D/g, '');
+    if (d.length === 11) return `(${d.slice(0,2)}) ${d.slice(2,7)}-${d.slice(7)}`;
+    if (d.length === 10) return `(${d.slice(0,2)}) ${d.slice(2,6)}-${d.slice(6)}`;
+    return w;
+  }
+
+  const STATUS_LABEL = {
+    em_andamento: 'Em andamento',
+    quitado: 'Quitado',
+    agendado: 'Agendado',
+    concluido: 'Concluído',
+    cancelado: 'Cancelado'
+  };
+  const STATUS_BADGE = {
+    em_andamento: 'badge-pendente',
+    quitado: 'badge-gratis',
+    agendado: 'badge-disponivel',
+    concluido: 'badge-usado',
+    cancelado: 'badge-cancelado'
+  };
+
+  // ── Auth ─────────────────────────────────────────────────────
+  sb.auth.onAuthStateChange((event, session) => {
+    if (session) {
+      document.getElementById('tela-login').style.display = 'none';
+      document.getElementById('tela-admin').style.display = 'block';
+      carregarLayaways();
+    } else {
+      document.getElementById('tela-login').style.display = 'flex';
+      document.getElementById('tela-admin').style.display = 'none';
+    }
+  });
+
+  document.getElementById('btn-entrar').addEventListener('click', async () => {
+    const email = document.getElementById('l-email').value.trim();
+    const senha = document.getElementById('l-senha').value;
+    const btn = document.getElementById('btn-entrar');
+    const err = document.getElementById('login-err');
+    btn.disabled = true; btn.textContent = 'Entrando...'; err.textContent = '';
+    const { error } = await sb.auth.signInWithPassword({ email, password: senha });
+    btn.disabled = false; btn.textContent = 'Entrar';
+    if (error) err.textContent = 'Credenciais inválidas.';
+  });
+
+  document.getElementById('btn-logout').addEventListener('click', async () => {
+    await sb.auth.signOut();
+  });
+
+  document.getElementById('l-senha').addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('btn-entrar').click();
+  });
+
+  // ── Carregar layaways ────────────────────────────────────────
+  async function carregarLayaways() {
+    const tbody = document.getElementById('tbody');
+    tbody.innerHTML = '<tr class="loading-row"><td colspan="8">Carregando…</td></tr>';
+
+    const [{ data, error }, { data: clientes, error: errCli }] = await Promise.all([
+      sb.from('layaway').select('*').order('criado_em', { ascending: false }),
+      sb.from('clientes_promo').select('id, nome, whatsapp, codigo_indicacao')
+    ]);
+
+    if (error) {
+      tbody.innerHTML = `<tr class="loading-row"><td colspan="8">Erro ao carregar: ${error.message}</td></tr>`;
+      return;
+    }
+    if (errCli) {
+      tbody.innerHTML = `<tr class="loading-row"><td colspan="8">Erro ao carregar clientes: ${errCli.message}</td></tr>`;
+      return;
+    }
+
+    clientesPorId = {};
+    (clientes || []).forEach(c => { clientesPorId[c.id] = c; });
+
+    todos = data || [];
+    atualizarStats();
+    atualizarAlertas();
+    renderTabela();
+  }
+
+  // ── Stats ────────────────────────────────────────────────────
+  function valorRestante(l) {
+    const restanteParcelas = Math.max(0, l.num_parcelas - l.parcelas_pagas);
+    return restanteParcelas * l.valor_parcela;
+  }
+
+  function atualizarStats() {
+    const emAndamento = todos.filter(l => l.status === 'em_andamento');
+    document.getElementById('st-andamento').textContent   = emAndamento.length;
+    document.getElementById('st-valor-aberto').textContent = fmtMoeda(emAndamento.reduce((s, l) => s + valorRestante(l), 0));
+    document.getElementById('st-quitados').textContent    = todos.filter(l => l.status === 'quitado').length;
+    document.getElementById('st-agendados').textContent   = todos.filter(l => l.status === 'agendado').length;
+    document.getElementById('st-concluidos').textContent  = todos.filter(l => l.status === 'concluido').length;
+    document.getElementById('st-cancelados').textContent  = todos.filter(l => l.status === 'cancelado').length;
+  }
+
+  // ── Alertas: quitados aguardando agendamento ──────────────────
+  function atualizarAlertas() {
+    const el = document.getElementById('alertas');
+    const pendentes = todos.filter(l => l.status === 'quitado');
+    el.innerHTML = pendentes.map(l => {
+      const cli = clientesPorId[l.cliente_id];
+      const nome = cli ? cli.nome : 'Cliente';
+      return `
+      <div class="alerta-gratis">
+        <div class="a-texto">
+          <strong>✦ ${escapeHtml(nome)} — layaway quitado, pronto pra agendar!</strong>
+          ${escapeHtml(l.descricao)} · ${fmtMoeda(l.valor_total)}
+        </div>
+        <button class="btn-usar-gratis" onclick="agendar('${l.id}')">Agendar sessão</button>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Render tabela ────────────────────────────────────────────
+  function renderTabela() {
+    const busca = document.getElementById('busca').value.toLowerCase();
+    const tbody = document.getElementById('tbody');
+
+    let lista = todos.filter(l => filtroAtivo === 'todos' || l.status === filtroAtivo);
+
+    if (busca) {
+      lista = lista.filter(l => {
+        const cli = clientesPorId[l.cliente_id];
+        if (!cli) return false;
+        return cli.nome.toLowerCase().includes(busca) || cli.codigo_indicacao.toLowerCase().includes(busca);
+      });
+    }
+
+    if (!lista.length) {
+      tbody.innerHTML = '<tr class="loading-row"><td colspan="8">Nenhum layaway encontrado.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = lista.map(l => {
+      const cli = clientesPorId[l.cliente_id];
+      const nome = cli ? cli.nome : '(cliente não encontrado)';
+      const codigo = cli ? cli.codigo_indicacao : '—';
+      const pct = Math.min(100, (l.parcelas_pagas / l.num_parcelas) * 100);
+      const badgeStatus = `<span class="badge ${STATUS_BADGE[l.status]}">${STATUS_LABEL[l.status]}</span>`;
+
+      let acoes = `<button class="btn-acao" onclick="abrirModal('${l.id}')">Detalhes</button>`;
+      if (l.status === 'em_andamento') {
+        acoes += `<button class="btn-acao destaque" onclick="registrarParcela('${l.id}')">+ Parcela</button>`;
+      } else if (l.status === 'quitado') {
+        acoes += `<button class="btn-acao destaque" onclick="agendar('${l.id}')">Agendar</button>`;
+      } else if (l.status === 'agendado') {
+        acoes += `<button class="btn-acao destaque" onclick="concluir('${l.id}')">Concluir</button>`;
+      }
+
+      return `
+      <tr>
+        <td class="td-nome">${escapeHtml(nome)}</td>
+        <td class="td-codigo">${escapeHtml(codigo)}</td>
+        <td>${escapeHtml(l.descricao)}</td>
+        <td class="td-valor">${fmtMoeda(l.valor_total)}</td>
+        <td class="td-parc">
+          <div class="parc-bar-wrap">
+            <div class="parc-bar"><div class="parc-bar-fill" style="width:${pct}%"></div></div>
+            <span class="parc-num">${l.parcelas_pagas}/${l.num_parcelas}</span>
+          </div>
+        </td>
+        <td>${badgeStatus}</td>
+        <td class="td-data">${fmtData(l.criado_em)}</td>
+        <td class="td-acoes">${acoes}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Filtros
+  document.querySelectorAll('.filtro-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('ativo'));
+      this.classList.add('ativo');
+      filtroAtivo = this.dataset.filtro;
+      renderTabela();
+    });
+  });
+
+  document.getElementById('busca').addEventListener('input', renderTabela);
+  document.getElementById('btn-reload').addEventListener('click', carregarLayaways);
+
+  // ── Ação: registrar pagamento de parcela ──────────────────────
+  async function registrarParcela(id) {
+    const l = todos.find(x => x.id === id);
+    if (!l) return;
+    const cli = clientesPorId[l.cliente_id];
+    const nome = cli ? cli.nome : 'cliente';
+
+    const novasPagas = l.parcelas_pagas + 1;
+    const confirmar = window.confirm(`Registrar parcela ${novasPagas}/${l.num_parcelas} de ${nome}?`);
+    if (!confirmar) return;
+
+    const updates = { parcelas_pagas: novasPagas };
+    if (novasPagas >= l.num_parcelas) {
+      updates.status = 'quitado';
+      updates.data_quitacao = new Date().toISOString();
+    }
+
+    const { error } = await sb.from('layaway').update(updates).eq('id', id);
+    if (error) return toast('Erro ao atualizar: ' + error.message, 'err');
+
+    toast(novasPagas >= l.num_parcelas
+      ? `Layaway de ${nome} quitado ✓ Já pode agendar a sessão.`
+      : `Parcela ${novasPagas}/${l.num_parcelas} registrada ✓`, 'ok');
+
+    await carregarLayaways();
+    if (layawayModal) abrirModal(id);
+  }
+
+  // ── Ação: agendar sessão ───────────────────────────────────────
+  async function agendar(id) {
+    const l = todos.find(x => x.id === id);
+    if (!l) return;
+    const cli = clientesPorId[l.cliente_id];
+    const nome = cli ? cli.nome : 'cliente';
+    const confirmar = window.confirm(`Marcar sessão de ${nome} como agendada?`);
+    if (!confirmar) return;
+
+    const { error } = await sb.from('layaway').update({
+      status: 'agendado',
+      data_agendamento: new Date().toISOString()
+    }).eq('id', id);
+
+    if (error) return toast('Erro: ' + error.message, 'err');
+    toast(`Sessão de ${nome} agendada ✓`, 'ok');
+    await carregarLayaways();
+    if (layawayModal) abrirModal(id);
+  }
+
+  // ── Ação: concluir (tatuagem feita) ────────────────────────────
+  async function concluir(id) {
+    const l = todos.find(x => x.id === id);
+    if (!l) return;
+    const cli = clientesPorId[l.cliente_id];
+    const nome = cli ? cli.nome : 'cliente';
+    const confirmar = window.confirm(`Marcar layaway de ${nome} como concluído (tatuagem feita)?`);
+    if (!confirmar) return;
+
+    const { error } = await sb.from('layaway').update({
+      status: 'concluido',
+      data_conclusao: new Date().toISOString()
+    }).eq('id', id);
+
+    if (error) return toast('Erro: ' + error.message, 'err');
+    toast(`Layaway de ${nome} concluído ✓`, 'ok');
+    await carregarLayaways();
+    if (layawayModal) abrirModal(id);
+  }
+
+  // ── Ação: cancelar ──────────────────────────────────────────────
+  async function cancelar(id) {
+    const l = todos.find(x => x.id === id);
+    if (!l) return;
+    const cli = clientesPorId[l.cliente_id];
+    const nome = cli ? cli.nome : 'cliente';
+    const confirmar = window.confirm(`Cancelar o layaway de ${nome}?\n\nIsso não apaga o registro, só marca como cancelado.`);
+    if (!confirmar) return;
+
+    const { error } = await sb.from('layaway').update({ status: 'cancelado' }).eq('id', id);
+    if (error) return toast('Erro: ' + error.message, 'err');
+    toast(`Layaway de ${nome} cancelado`, 'ok');
+    await carregarLayaways();
+    if (layawayModal) abrirModal(id);
+  }
+
+  // ── Modal detalhes ───────────────────────────────────────────
+  function abrirModal(id) {
+    layawayModal = id;
+    const l = todos.find(x => x.id === id);
+    if (!l) return;
+    const cli = clientesPorId[l.cliente_id];
+
+    document.getElementById('modal-nome').textContent = cli ? cli.nome : 'Layaway';
+
+    let acoesExtra = '';
+    if (l.status === 'em_andamento') {
+      acoesExtra += `<button class="btn-modal primary" onclick="registrarParcela('${l.id}')">+ Registrar parcela</button>`;
+    }
+    if (l.status === 'quitado') {
+      acoesExtra += `<button class="btn-modal success" onclick="agendar('${l.id}')">Agendar sessão</button>`;
+    }
+    if (l.status === 'agendado') {
+      acoesExtra += `<button class="btn-modal success" onclick="concluir('${l.id}')">Marcar como concluído</button>`;
+    }
+    if (l.status !== 'cancelado' && l.status !== 'concluido') {
+      acoesExtra += `<button class="btn-modal danger" onclick="cancelar('${l.id}')">Cancelar layaway</button>`;
+    }
+
+    document.getElementById('modal-body').innerHTML = `
+      <div class="modal-section">
+        <h3>Cliente</h3>
+        <div class="modal-row"><span class="k">Nome</span><span class="v">${cli ? escapeHtml(cli.nome) : '—'}</span></div>
+        ${cli ? `<div class="modal-row"><span class="k">WhatsApp</span><span class="v"><a href="https://wa.me/55${cli.whatsapp.replace(/\D/g,'')}" target="_blank" style="color:var(--accent);">${escapeHtml(fmtWhats(cli.whatsapp))}</a></span></div>` : ''}
+        <div class="modal-row"><span class="k">Código</span><span class="v cod">${cli ? escapeHtml(cli.codigo_indicacao) : '—'}</span></div>
+      </div>
+
+      <div class="modal-section">
+        <h3>Layaway</h3>
+        <div class="modal-row"><span class="k">Peça</span><span class="v">${escapeHtml(l.descricao)}</span></div>
+        <div class="modal-row"><span class="k">Valor total</span><span class="v">${fmtMoeda(l.valor_total)}</span></div>
+        <div class="modal-row"><span class="k">Parcelas</span><span class="v">${l.parcelas_pagas}/${l.num_parcelas} · ${fmtMoeda(l.valor_parcela)} cada</span></div>
+        <div class="modal-row"><span class="k">Restante</span><span class="v">${fmtMoeda(valorRestante(l))}</span></div>
+        <div class="modal-row"><span class="k">Status</span><span class="v">${STATUS_LABEL[l.status]}</span></div>
+        <div class="modal-row"><span class="k">Criado em</span><span class="v">${fmtData(l.criado_em)}</span></div>
+        ${l.data_quitacao ? `<div class="modal-row"><span class="k">Quitado em</span><span class="v">${fmtData(l.data_quitacao)}</span></div>` : ''}
+        ${l.data_agendamento ? `<div class="modal-row"><span class="k">Agendado em</span><span class="v">${fmtData(l.data_agendamento)}</span></div>` : ''}
+        ${l.data_conclusao ? `<div class="modal-row"><span class="k">Concluído em</span><span class="v">${fmtData(l.data_conclusao)}</span></div>` : ''}
+        ${l.observacoes ? `<div class="modal-row"><span class="k">Obs.</span><span class="v">${escapeHtml(l.observacoes)}</span></div>` : ''}
+      </div>
+
+      <div class="modal-acoes">
+        ${acoesExtra}
+        ${cli ? `<a class="btn-modal" href="https://wa.me/55${cli.whatsapp.replace(/\D/g,'')}" target="_blank" style="text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;">Abrir WhatsApp</a>` : ''}
+      </div>
+    `;
+
+    document.getElementById('modal-bg').classList.add('open');
+  }
+
+  document.getElementById('btn-fechar').addEventListener('click', () => {
+    document.getElementById('modal-bg').classList.remove('open');
+    layawayModal = null;
+  });
+  document.getElementById('modal-bg').addEventListener('click', function (e) {
+    if (e.target === this) {
+      this.classList.remove('open');
+      layawayModal = null;
+    }
+  });
+
+  // Expor funções ao escopo global (chamadas nos onclick)
+  window.registrarParcela = registrarParcela;
+  window.agendar = agendar;
+  window.concluir = concluir;
+  window.cancelar = cancelar;
+  window.abrirModal = abrirModal;
+
+  // ── Modal novo layaway ───────────────────────────────────────
+  let clienteEncontrado = null;
+
+  function atualizarValorParcela() {
+    const valor = parseFloat(document.getElementById('nl-valor').value) || 0;
+    const parcelas = parseInt(document.getElementById('nl-parcelas').value, 10);
+    const hint = document.getElementById('nl-parcela-valor');
+    if (valor > 0 && parcelas > 0) {
+      const porParcela = valor / parcelas;
+      hint.textContent = `${parcelas}x de ${fmtMoeda(porParcela)}, sem juros`;
+      hint.className = 'campo-hint ok';
+    } else {
+      hint.textContent = '';
+    }
+  }
+
+  document.getElementById('nl-valor').addEventListener('input', atualizarValorParcela);
+  document.getElementById('nl-parcelas').addEventListener('change', atualizarValorParcela);
+
+  let buscaCodigoTimeout;
+  document.getElementById('nl-codigo').addEventListener('input', function () {
+    const codigo = this.value.trim().toUpperCase();
+    this.value = codigo;
+    const hint = document.getElementById('nl-codigo-hint');
+    clienteEncontrado = null;
+    clearTimeout(buscaCodigoTimeout);
+    if (!codigo) {
+      hint.textContent = 'O cliente precisa estar cadastrado (painel de Promoções).';
+      hint.className = 'campo-hint';
+      return;
+    }
+    buscaCodigoTimeout = setTimeout(async () => {
+      const { data, error } = await sb.from('clientes_promo').select('id, nome, codigo_indicacao').eq('codigo_indicacao', codigo).maybeSingle();
+      if (error || !data) {
+        hint.textContent = 'Cliente não encontrado com esse código.';
+        hint.className = 'campo-hint err';
+        return;
+      }
+      clienteEncontrado = data;
+      hint.textContent = `✓ ${data.nome}`;
+      hint.className = 'campo-hint ok';
+    }, 400);
+  });
+
+  document.getElementById('btn-novo').addEventListener('click', () => {
+    document.getElementById('nl-codigo').value = '';
+    document.getElementById('nl-descricao').value = '';
+    document.getElementById('nl-valor').value = '';
+    document.getElementById('nl-parcelas').value = '2';
+    document.getElementById('nl-obs').value = '';
+    document.getElementById('nl-err').textContent = '';
+    document.getElementById('nl-codigo-hint').textContent = 'O cliente precisa estar cadastrado (painel de Promoções).';
+    document.getElementById('nl-codigo-hint').className = 'campo-hint';
+    document.getElementById('nl-parcela-valor').textContent = '';
+    clienteEncontrado = null;
+    document.getElementById('modal-novo-bg').classList.add('open');
+  });
+
+  document.getElementById('btn-fechar-novo').addEventListener('click', () => {
+    document.getElementById('modal-novo-bg').classList.remove('open');
+  });
+  document.getElementById('modal-novo-bg').addEventListener('click', function (e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+
+  document.getElementById('btn-salvar-novo').addEventListener('click', async () => {
+    const descricao = document.getElementById('nl-descricao').value.trim();
+    const valor = parseFloat(document.getElementById('nl-valor').value);
+    const parcelas = parseInt(document.getElementById('nl-parcelas').value, 10);
+    const obs = document.getElementById('nl-obs').value.trim() || null;
+    const err = document.getElementById('nl-err');
+
+    if (!clienteEncontrado) return (err.textContent = 'Informe um código de cliente válido.');
+    if (!descricao) return (err.textContent = 'Descrição da peça obrigatória.');
+    if (!valor || valor <= 0) return (err.textContent = 'Valor inválido.');
+    if (valor > TETO_LAYAWAY) return (err.textContent = `Layaway só é permitido até ${fmtMoeda(TETO_LAYAWAY)}.`);
+
+    const valorParcela = Math.round((valor / parcelas) * 100) / 100;
+
+    const btn = document.getElementById('btn-salvar-novo');
+    btn.disabled = true; btn.textContent = 'Criando…';
+
+    const { error } = await sb.from('layaway').insert({
+      cliente_id: clienteEncontrado.id,
+      descricao,
+      valor_total: valor,
+      num_parcelas: parcelas,
+      valor_parcela: valorParcela,
+      parcelas_pagas: 0,
+      status: 'em_andamento',
+      observacoes: obs
+    });
+
+    btn.disabled = false; btn.textContent = 'Criar layaway';
+
+    if (error) return (err.textContent = 'Erro: ' + error.message);
+
+    document.getElementById('modal-novo-bg').classList.remove('open');
+    toast(`Layaway de ${clienteEncontrado.nome} criado ✓`, 'ok');
+    await carregarLayaways();
+  });
+</script>
+
+</body>
+</html>
