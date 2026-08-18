@@ -735,11 +735,27 @@
     } catch (err) { showAlert('editorAlert', 'error', '❌ ' + err.message); }
   }
 
+  // ── VISUALIZAÇÕES (Supabase: blog_post_views) ──
+  async function fetchViewCounts() {
+    if (!sb) return {};
+    try {
+      const { data, error } = await sb.from('blog_post_views').select('slug,views');
+      if (error) throw error;
+      const map = {};
+      (data || []).forEach(r => { map[r.slug] = r.views; });
+      return map;
+    } catch (e) {
+      console.warn('Não foi possível carregar visualizações:', e);
+      return {};
+    }
+  }
+
   // ── RENDER LISTA ──
-  function renderPostList() {
+  async function renderPostList() {
     const posts = getPosts();
     const el = document.getElementById('postList');
     if (!posts.length) { el.innerHTML = '<div class="empty-state">Nenhum post ainda. Crie o primeiro acima.</div>'; return; }
+    const views = await fetchViewCounts();
     const sorted = [...posts].sort((a,b) => (b.publishDate||'').localeCompare(a.publishDate||''));
     el.innerHTML = sorted.map(p => `
       <div class="post-card">
@@ -750,6 +766,7 @@
             <span class="badge ${p.draft ? 'badge-draft' : 'badge-published'}">${p.draft ? 'Rascunho' : 'Publicado'}</span>
             <span>${formatDateBR(p.publishDate)}</span>
             <span>${p.readingMinutes || 1} min de leitura</span>
+            ${p.draft ? '' : `<span>👁 ${views[p.slug] || 0} views</span>`}
           </div>
         </div>
         <div class="post-card-actions">
@@ -1082,6 +1099,28 @@ ${siteNavHtml('blog')}
 ${siteFooterHtml()}
 <script src="/nav-mobile.js" defer><\/script>
 <script src="/flash-decor.js" defer><\/script>
+<script>
+(function(){
+  try {
+    var slug = ${JSON.stringify(post.slug)};
+    var key = 'viewed_' + slug;
+    var last = localStorage.getItem(key);
+    var now = Date.now();
+    if (!last || (now - parseInt(last, 10)) > 24 * 60 * 60 * 1000) {
+      fetch('${SUPABASE_URL}/rest/v1/rpc/increment_post_view', {
+        method: 'POST',
+        headers: {
+          'apikey': '${SUPABASE_ANON}',
+          'Authorization': 'Bearer ${SUPABASE_ANON}',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ post_slug: slug })
+      });
+      localStorage.setItem(key, String(now));
+    }
+  } catch (e) {}
+})();
+<\/script>
 </body>
 </html>
 `;
