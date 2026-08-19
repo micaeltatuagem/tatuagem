@@ -88,22 +88,35 @@
 <nav>
   <a href="/" class="nav-logo"><img src="/nav-icon.webp" alt="" width="28" height="28">Micael Tatuagem</a>
   <ul class="nav-links">
-    <li class="nav-extra"><a href="/#sobre">Sobre</a></li>
-    <li><a href="/galeria">Galeria</a></li>
-    <li><a href="/flash">Flash</a></li>
-    <li class="nav-extra"><a href="/aerografia">Aerografia</a></li>
-    <li><a href="/preview-tatuagem">Criar</a></li>
-    <li><a href="/guia">Guia</a></li>
-    <li class="nav-extra"><a href="/fisiologia-da-tatuagem">Cuidados</a></li>
-    <li class="nav-extra"><a href="/valor">Valor</a></li>
-    <li class="nav-extra"><a href="/#promocoes">Promoções</a></li>
-    <li class="nav-extra"><a href="/#localizacao">Localização</a></li>
-    <li><a href="/blog" class="atual">Blog</a></li>
-    <li><a href="/reserva">Reserva</a></li>
-    <li><a href="/#contato">Contato</a></li>
-    <li class="nav-more">
-      <button type="button" class="nav-more-btn" aria-haspopup="true" aria-expanded="false">Mais &#9662;</button>
+    <li class="nav-group">
+      <button type="button" class="nav-group-btn" data-group="tatuagens" aria-haspopup="true" aria-expanded="false">Tatuagens &#9662;</button>
     </li>
+    <li class="nav-group">
+      <button type="button" class="nav-group-btn" data-group="conheca" aria-haspopup="true" aria-expanded="false">Conheça &#9662;</button>
+    </li>
+    <li class="nav-group">
+      <button type="button" class="nav-group-btn" data-group="planeje" aria-haspopup="true" aria-expanded="false">Planeje &#9662;</button>
+    </li>
+    <li class="nav-group">
+      <button type="button" class="nav-group-btn" data-group="agende" aria-haspopup="true" aria-expanded="false">Agende &#9662;</button>
+    </li>
+    <li class="nav-group">
+      <button type="button" class="nav-group-btn" data-group="estudio" aria-haspopup="true" aria-expanded="false">Estúdio &#9662;</button>
+    </li>
+    <li class="nav-mobile-item"><a href="/galeria">Galeria</a></li>
+    <li class="nav-mobile-item"><a href="/flash">Flash</a></li>
+    <li class="nav-mobile-item"><a href="/estilo/">Estilos</a></li>
+    <li class="nav-mobile-item"><a href="/#sobre">Sobre</a></li>
+    <li class="nav-mobile-item"><a href="/guia">Guia</a></li>
+    <li class="nav-mobile-item"><a href="/blog" class="atual">Blog</a></li>
+    <li class="nav-mobile-item"><a href="/fisiologia-da-tatuagem">Cuidados</a></li>
+    <li class="nav-mobile-item"><a href="/preview-tatuagem">Criar</a></li>
+    <li class="nav-mobile-item"><a href="/valor">Valor</a></li>
+    <li class="nav-mobile-item"><a href="/valor#layaway">Layaway</a></li>
+    <li class="nav-mobile-item"><a href="https://wa.me/5532999666946" target="_blank" rel="noopener">WhatsApp</a></li>
+    <li class="nav-mobile-item"><a href="/#localizacao">Localização</a></li>
+    <li class="nav-mobile-item"><a href="/#contato">Contato</a></li>
+    <li class="nav-cta"><a href="/reserva" class="nav-reserva-btn">Reserva</a></li>
   </ul>
   <button type="button" class="nav-toggle" aria-label="Abrir menu" aria-expanded="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
@@ -112,13 +125,28 @@
     </svg>
   </button>
 </nav>
-<ul class="nav-more-panel">
+<ul class="nav-group-panel" data-panel="tatuagens">
+  <li><a href="/galeria">Galeria</a></li>
+  <li><a href="/flash">Flash</a></li>
+  <li><a href="/estilo/">Estilos</a></li>
+</ul>
+<ul class="nav-group-panel" data-panel="conheca">
   <li><a href="/#sobre">Sobre</a></li>
-  <li><a href="/aerografia">Aerografia</a></li>
+  <li><a href="/guia">Guia</a></li>
+  <li><a href="/blog">Blog</a></li>
   <li><a href="/fisiologia-da-tatuagem">Cuidados</a></li>
+</ul>
+<ul class="nav-group-panel" data-panel="planeje">
+  <li><a href="/preview-tatuagem">Criar</a></li>
   <li><a href="/valor">Valor</a></li>
-  <li><a href="/#promocoes">Promoções</a></li>
+  <li><a href="/valor#layaway">Layaway</a></li>
+</ul>
+<ul class="nav-group-panel" data-panel="agende">
+  <li><a href="https://wa.me/5532999666946" target="_blank" rel="noopener">WhatsApp</a></li>
+</ul>
+<ul class="nav-group-panel" data-panel="estudio">
   <li><a href="/#localizacao">Localização</a></li>
+  <li><a href="/#contato">Contato</a></li>
 </ul>
 <main class="blog-index">
 <div class="blog-index-inner">
