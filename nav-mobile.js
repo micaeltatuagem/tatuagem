@@ -1,9 +1,10 @@
 /* ===========================================================
    nav-mobile.js — controla abrir/fechar o menu (hambúrguer no
-   mobile, dropdown "Mais ▾" no desktop). NÃO cria nem move
-   elemento nenhum: o HTML de cada página já nasce com o menu
-   inteiro e final (ícone, itens, painel do "Mais"), pra nunca
-   ter nenhum "pulo" visual depois que a página carrega.
+   mobile, dropdowns de grupo "Tatuagens ▾", "Conheça ▾" etc no
+   desktop). NÃO cria nem move elemento nenhum: o HTML de cada
+   página já nasce com o menu inteiro e final (ícone, itens,
+   painéis de cada grupo), pra nunca ter nenhum "pulo" visual
+   depois que a página carrega.
    =========================================================== */
 (function () {
   function initNav(nav) {
@@ -12,8 +13,6 @@
 
     var links = nav.querySelector('.nav-links');
     var toggleBtn = nav.querySelector('.nav-toggle');
-    var moreBtn = nav.querySelector('.nav-more-btn');
-    var panel = document.querySelector('.nav-more-panel');
 
     function setHeight() {
       nav.style.setProperty('--nav-h', nav.offsetHeight + 'px');
@@ -44,37 +43,52 @@
       });
     }
 
-    // ── Dropdown "Mais ▾" (desktop) ──────────────────────────
-    if (moreBtn && panel) {
-      var positionPanel = function () {
-        var r = moreBtn.getBoundingClientRect();
+    // ── Dropdowns de grupo (desktop): "Tatuagens ▾", "Conheça ▾" etc ──
+    var groupBtns = nav.querySelectorAll('.nav-group-btn');
+    if (groupBtns.length) {
+      var closeAllGroups = function () {
+        document.querySelectorAll('.nav-group-panel.open').forEach(function (p) {
+          p.classList.remove('open');
+        });
+        groupBtns.forEach(function (b) { b.setAttribute('aria-expanded', 'false'); });
+      };
+      var positionPanel = function (btn, panel) {
+        var r = btn.getBoundingClientRect();
         panel.style.top = (r.bottom + 10) + 'px';
         panel.style.right = (window.innerWidth - r.right) + 'px';
       };
-      var closeMore = function () {
-        panel.classList.remove('open');
-        moreBtn.setAttribute('aria-expanded', 'false');
-      };
-      var toggleMore = function (e) {
-        e.stopPropagation();
-        var opening = !panel.classList.contains('open');
-        if (opening) positionPanel();
-        panel.classList.toggle('open', opening);
-        moreBtn.setAttribute('aria-expanded', opening ? 'true' : 'false');
-      };
-      moreBtn.addEventListener('click', toggleMore);
-      panel.addEventListener('click', function (e) {
-        if (e.target.closest('a')) closeMore();
+      groupBtns.forEach(function (btn) {
+        var panel = document.querySelector('.nav-group-panel[data-panel="' + btn.dataset.group + '"]');
+        if (!panel) return;
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var opening = !panel.classList.contains('open');
+          closeAllGroups();
+          if (opening) {
+            positionPanel(btn, panel);
+            panel.classList.add('open');
+            btn.setAttribute('aria-expanded', 'true');
+          }
+        });
+        panel.addEventListener('click', function (e) {
+          if (e.target.closest('a')) closeAllGroups();
+        });
       });
       document.addEventListener('click', function (e) {
-        if (panel.classList.contains('open') && !panel.contains(e.target) && e.target !== moreBtn) closeMore();
+        var openPanel = document.querySelector('.nav-group-panel.open');
+        if (!openPanel) return;
+        var clickedBtn = e.target.closest('.nav-group-btn');
+        if (!openPanel.contains(e.target) && !clickedBtn) closeAllGroups();
       });
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeMore();
+        if (e.key === 'Escape') closeAllGroups();
       });
-      window.addEventListener('resize', closeMore);
+      window.addEventListener('resize', closeAllGroups);
       window.addEventListener('scroll', function () {
-        if (panel.classList.contains('open')) positionPanel();
+        var openPanel = document.querySelector('.nav-group-panel.open');
+        if (!openPanel) return;
+        var btn = document.querySelector('.nav-group-btn[data-group="' + openPanel.dataset.panel + '"]');
+        if (btn) positionPanel(btn, openPanel);
       }, { passive: true });
     }
   }

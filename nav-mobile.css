@@ -53,13 +53,13 @@ nav .nav-links {
 nav .nav-links::-webkit-scrollbar { display: none; }
 nav .nav-links li { flex-shrink: 0; }
 
-/* itens "extra" (Sobre, Aerografia, Selos, Deriva, Cuidados, Valor,
-   Promoções, Localização) ficam ocultos na linha principal no desktop —
-   eles já existem de novo, prontos, dentro do painel "Mais" */
-nav .nav-links li.nav-extra { display: none; }
+/* itens duplicados só pro mobile (Sobre, Estilos, Cuidados, Layaway, etc)
+   ficam ocultos na linha principal no desktop — no desktop eles vivem
+   dentro dos painéis dos 5 grupos (Tatuagens/Conheça/Planeje/Agende/Estúdio) */
+nav .nav-links li.nav-mobile-item { display: none; }
 
-/* item "Mais" só existe/aparece no desktop */
-li.nav-more { list-style: none; }
+/* grupo do dropdown (desktop) */
+li.nav-group { list-style: none; }
 
 /* ── Paleta/fonte fixa pro logo ──────────────────────────────── */
 nav .nav-logo {
@@ -79,10 +79,10 @@ nav .nav-logo {
 nav .nav-logo:hover { color: var(--menu-hover) !important; }
 nav .nav-logo img { height: 28px; width: 28px; display: block; flex-shrink: 0; }
 
-/* ── Paleta/fonte fixa pros links (linha principal + painel Mais) ── */
+/* ── Paleta/fonte fixa pros links (linha principal + painéis de grupo) ── */
 nav .nav-links a,
-.nav-more-btn,
-.nav-more-panel a {
+.nav-group-btn,
+.nav-group-panel a {
   font-family: var(--menu-font) !important;
   font-size: .88rem !important;
   letter-spacing: .06em !important;
@@ -93,15 +93,28 @@ nav .nav-links a,
   transition: color .2s ease !important;
 }
 nav .nav-links a:visited,
-.nav-more-panel a:visited {
+.nav-group-panel a:visited {
   color: var(--menu-muted) !important;
 }
 nav .nav-links a:hover,
-.nav-more-btn:hover,
-.nav-more-btn[aria-expanded="true"],
-.nav-more-panel a:hover {
+.nav-group-btn:hover,
+.nav-group-btn[aria-expanded="true"],
+.nav-group-panel a:hover {
   color: var(--menu-hover) !important;
   opacity: 1 !important;
+}
+
+/* botão de Reserva: destaque visual, nunca escondido em dropdown */
+.nav-reserva-btn {
+  color: var(--menu-bg) !important;
+  background: var(--menu-hover) !important;
+  padding: .5rem 1rem !important;
+  border-radius: 4px !important;
+  transition: opacity .2s ease !important;
+}
+.nav-reserva-btn:hover {
+  color: var(--menu-bg) !important;
+  opacity: .85 !important;
 }
 
 .nav-toggle {
@@ -119,21 +132,21 @@ nav .nav-links a:hover,
 .nav-toggle[aria-expanded="true"] .ico-x { display: block; }
 
 /* ===========================================================
-   Dropdown "Mais ▾" (desktop) — painel já existe pronto no HTML,
-   como irmão do <nav> (não aninhado), posicionado fixed via JS.
-   Ficar fora do <nav> evita depender do contexto de empilhamento
-   de outras seções da página (algumas usam position:relative /
-   overflow:hidden pra decoração, o que escondia um dropdown
-   absoluto aninhado).
+   Dropdowns de grupo (desktop) — "Tatuagens ▾", "Conheça ▾" etc.
+   Painéis já existem prontos no HTML, como irmãos do <nav> (não
+   aninhados), posicionados fixed via JS. Ficar fora do <nav> evita
+   depender do contexto de empilhamento de outras seções da página
+   (algumas usam position:relative / overflow:hidden pra decoração,
+   o que escondia um dropdown absoluto aninhado).
    =========================================================== */
-.nav-more-btn {
+.nav-group-btn {
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
   line-height: inherit;
 }
-.nav-more-panel {
+.nav-group-panel {
   display: none;
   position: fixed;
   min-width: 190px;
@@ -146,9 +159,9 @@ nav .nav-links a:hover,
   box-shadow: 0 12px 24px rgba(0,0,0,.55);
   z-index: 999;
 }
-.nav-more-panel.open { display: block; }
-.nav-more-panel li { width: auto !important; flex-shrink: 0 !important; }
-.nav-more-panel a {
+.nav-group-panel.open { display: block; }
+.nav-group-panel li { width: auto !important; flex-shrink: 0 !important; }
+.nav-group-panel a {
   display: block !important;
   padding: .6rem 1.1rem !important;
   white-space: nowrap;
@@ -164,10 +177,11 @@ nav .nav-links a:hover,
     margin-left: auto;
   }
 
-  /* no mobile, o "Mais" nunca aparece — os itens dele já estão
-     duplicados e visíveis na lista achatada abaixo */
-  li.nav-more { display: none !important; }
-  .nav-more-panel { display: none !important; }
+  /* no mobile, os dropdowns de grupo nunca aparecem como botão — os
+     itens de cada grupo já estão duplicados e visíveis na lista
+     achatada abaixo (.nav-mobile-item) */
+  li.nav-group { display: none !important; }
+  .nav-group-panel { display: none !important; }
 
   nav .nav-links {
     display: none;
@@ -190,8 +204,8 @@ nav .nav-links a:hover,
 
   nav .nav-links li { width: 100%; flex-shrink: 1 !important; }
 
-  /* mostra de volta os itens "extra" (escondidos na linha do desktop) */
-  nav .nav-links li.nav-extra { display: list-item !important; }
+  /* mostra de volta os itens duplicados (escondidos na linha do desktop) */
+  nav .nav-links li.nav-mobile-item { display: list-item !important; }
 
   nav .nav-links a {
     display: block !important;
