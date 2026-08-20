@@ -76,7 +76,12 @@ def build_nav(current_file):
         if extra_class:
             classes.append(extra_class)
         self_file = KEY_TO_SELF_FILE.get(key)
-        if self_file and self_file == current_file:
+        is_self = bool(self_file and self_file == current_file)
+        # verbetes individuais do guia (guia/<slug>/index.html) também
+        # marcam "Guia" como atual, não só a página-índice guia.html
+        if key == 'guia' and current_file.startswith('guia/'):
+            is_self = True
+        if is_self:
             classes.append('atual')
         cls_attr = f' class="{" ".join(classes)}"' if classes else ''
         target = ' target="_blank" rel="noopener"' if kind == 'external' else ''
