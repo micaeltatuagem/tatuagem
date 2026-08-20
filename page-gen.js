@@ -163,11 +163,9 @@ ${body}
     <li class="nav-mobile-item"><a href="/preview-tatuagem">Criar</a></li>
     <li class="nav-mobile-item"><a href="/valor">Valor</a></li>
     <li class="nav-mobile-item"><a href="/valor#layaway">Layaway</a></li>
-    <li class="nav-mobile-item"><a href="/#promocoes">Promoções</a></li>
     <li class="nav-mobile-item"><a href="https://wa.me/5532999666946" target="_blank" rel="noopener">WhatsApp</a></li>
     <li class="nav-mobile-item"><a href="/#localizacao">Localização</a></li>
     <li class="nav-mobile-item"><a href="/#contato">Contato</a></li>
-    <li class="nav-mobile-item"><a href="/aerografia">Aerografia</a></li>
     <li class="nav-cta"><a href="/reserva" class="nav-reserva-btn">Reserva</a></li>
   </ul>
   <button type="button" class="nav-toggle" aria-label="Abrir menu" aria-expanded="false">
@@ -192,7 +190,6 @@ ${body}
   <li><a href="/preview-tatuagem">Criar</a></li>
   <li><a href="/valor">Valor</a></li>
   <li><a href="/valor#layaway">Layaway</a></li>
-  <li><a href="/#promocoes">Promoções</a></li>
 </ul>
 <ul class="nav-group-panel" data-panel="agende">
   <li><a href="https://wa.me/5532999666946" target="_blank" rel="noopener">WhatsApp</a></li>
@@ -200,7 +197,6 @@ ${body}
 <ul class="nav-group-panel" data-panel="estudio">
   <li><a href="/#localizacao">Localização</a></li>
   <li><a href="/#contato">Contato</a></li>
-  <li><a href="/aerografia">Aerografia</a></li>
 </ul>`;
 
   const SITE_FOOTER = `<footer>
