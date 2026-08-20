@@ -34,9 +34,9 @@ ITEMS = {
 GROUPS = [
     ('Tatuagens', ['galeria', 'flash', 'estilos']),
     ('Conheça',   ['sobre', 'guia', 'blog', 'cuidados']),
-    ('Planeje',   ['criar', 'valor', 'layaway']),
+    ('Planeje',   ['criar', 'valor', 'layaway', 'promocoes']),
     ('Agende',    ['whatsapp']),  # Reserva fica fora, como botão de destaque
-    ('Estúdio',   ['localizacao', 'contato']),
+    ('Estúdio',   ['localizacao', 'contato', 'aerografia']),
 ]
 
 # mapa: chave do item -> nome de arquivo real que representa essa página (pra marcar "atual")
