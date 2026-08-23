@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/media-upload.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -178,7 +179,7 @@
     <h2>Adicionar Nova Imagem</h2>
     <div class="form-group">
       <label>Arquivo (WEBP, JPG, PNG)</label>
-      <input type="file" id="imageFile" accept="image/*" />
+      <input type="file" id="imageFile" accept="image/*,video/*" />
     </div>
     <div class="preview-box">
       <img id="previewImage" alt="preview" />
@@ -514,7 +515,9 @@
     }
     container.innerHTML = gallery.map(img => `
       <div class="gallery-item">
-        <img src="${img.imageUrl || ''}" class="gallery-item-image" alt="${img.title}" loading="lazy" />
+        ${img.isVideo
+          ? `<video src="${img.imageUrl || ''}" class="gallery-item-image" poster="${img.posterUrl || ''}" muted playsinline loop preload="metadata"></video><span style="position:absolute;top:.4rem;left:.4rem;background:rgba(0,0,0,.65);color:#fff;font-size:.62rem;padding:.15rem .4rem;border-radius:3px;z-index:2;">▶ vídeo</span>`
+          : `<img src="${img.imageUrl || ''}" class="gallery-item-image" alt="${img.title}" loading="lazy" />`}
         <div class="gallery-item-info">
           <div class="gallery-item-title">${img.title}</div>
           <div class="gallery-item-filename">${img.filename || ''}</div>
@@ -569,30 +572,9 @@
   }
 
   // ── UPLOAD ──
+  // Upload de mídia (imagem OU vídeo) via módulo compartilhado (Supabase Storage).
   async function uploadToGitHub(file, filename) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = async e => {
-        const base64 = e.target.result.split(',')[1];
-        const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${IMAGE_FOLDER}/${filename}`;
-        let sha = null;
-        try {
-          const check = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` } });
-          if (check.ok) sha = (await check.json()).sha;
-        } catch {}
-        const body = { message: `Adiciona imagem: ${filename}`, content: base64, branch: BRANCH };
-        if (sha) body.sha = sha;
-        const res = await fetch(url, {
-          method: 'PUT',
-          headers: { Authorization: `Bearer ${GH_TOKEN}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-        if (!res.ok) { const err = await res.json(); reject(new Error(err.message || 'Erro no upload')); return; }
-        resolve(`${IMAGE_FOLDER}/${filename}`);
-      };
-      reader.onerror = () => reject(new Error('Erro ao ler arquivo'));
-      reader.readAsDataURL(file);
-    });
+    return MediaUpload.uploadMedia(file, 'galeria');
   }
 
   // ── ADD IMAGE ──
@@ -616,13 +598,13 @@
     setProgress(true, 'Enviando imagem...');
 
     try {
-      setProgress(true, 'Enviando para GitHub...', 40);
-      const imageUrl = await withRetry(() => uploadToGitHub(file, filename), 3, filename);
+      setProgress(true, 'Enviando para o armazenamento...', 40);
+      const { url: imageUrl, isVideo, posterUrl } = await withRetry(() => uploadToGitHub(file, filename), 3, filename);
 
       setProgress(true, 'Salvando metadados...', 80);
       const gallery = getGallery();
       const newId   = gallery.length ? Math.max(...gallery.map(i=>i.id)) + 1 : 1;
-      gallery.unshift({ id: newId, filename, imageUrl, title, altText: altText || `${title} — tatuagem por Micael Faccio, Muriaé MG`, description: desc, styles, date: new Date().toISOString().split('T')[0] });
+      gallery.unshift({ id: newId, filename, imageUrl, title, isVideo, posterUrl, altText: altText || `${title} — tatuagem por Micael Faccio, Muriaé MG`, description: desc, styles, date: new Date().toISOString().split('T')[0] });
       await saveGallery(gallery);
 
       setProgress(true, 'Concluído!', 100);
@@ -666,7 +648,10 @@
     const img     = gallery.find(i => i.id === id);
     if (!img) return;
 
-    if (img.filename) {
+    if (img.imageUrl && /^https?:\/\//i.test(img.imageUrl)) {
+      await MediaUpload.deleteMedia(img.imageUrl);
+      if (img.posterUrl) await MediaUpload.deleteMedia(img.posterUrl);
+    } else if (img.filename) {
       try {
         const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${IMAGE_FOLDER}/${img.filename}`;
         const check = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` } });
@@ -811,7 +796,10 @@
 
   function heroImageForCategory(name, gallery) {
     const item = gallery.find(it => (it.styles || []).includes(name));
-    return item ? `${SITE_URL}/${item.imageUrl}` : `${SITE_URL}/favicon.png`;
+    if (!item) return `${SITE_URL}/favicon.png`;
+    // OG:image/meta precisa ser sempre uma imagem estática — se o item
+    // escolhido for vídeo, usa a capa gerada automaticamente no upload
+    return item.isVideo ? (item.posterUrl || `${SITE_URL}/favicon.png`) : MediaUpload.resolveUrl(item.imageUrl, SITE_URL);
   }
 
   async function commitCategoryPage(name) {
@@ -829,7 +817,9 @@
     const sampleGridHtmlInitial = samples.length
       ? samples.map(it => {
           const alt = (it.altText || it.title || '').replace(/"/g, '&quot;');
-          return `<a href="/${IMAGE_FOLDER}.html" class="sample-item"><img src="/${it.imageUrl}" alt="${alt}" loading="lazy"></a>`;
+          const thumb = it.isVideo ? (it.posterUrl || it.imageUrl) : it.imageUrl;
+          const thumbResolved = MediaUpload.resolveUrl(thumb, SITE_URL);
+          return `<a href="/${IMAGE_FOLDER}.html" class="sample-item"><img src="${thumbResolved}" alt="${alt}" loading="lazy"></a>`;
         }).join('')
       : '<p class="sample-empty">Novas peças em breve. Fale com o tatuador pra encomendar algo personalizado.</p>';
     const otherItemsHtmlInitial = tags.filter(t => t !== name).map(t => {
@@ -929,7 +919,10 @@
     const contentData = getContent().pecas[id] || { sections: [], faq: [] };
     const slug = PageGen.slugify(item.title);
     const path = `${IMAGE_FOLDER}/peca-${item.id}-${slug}.html`;
-    const heroImg = `${SITE_URL}/${item.imageUrl}`;
+    // heroImg = sempre estático, usado só no og:image/meta/sitemap.
+    // heroMediaUrl = a mídia real exibida na página (pode ser vídeo).
+    const heroImg = item.isVideo ? (item.posterUrl || `${SITE_URL}/favicon.png`) : MediaUpload.resolveUrl(item.imageUrl, SITE_URL);
+    const heroMediaUrl = MediaUpload.resolveUrl(item.imageUrl, SITE_URL);
     const canonical = `${SITE_URL}/${path}`;
 
     const html = PageGen.buildItemPageHtml({
@@ -938,6 +931,7 @@
       metaDesc: (item.description || `Tatuagem "${item.title}", feita por Micael Faccio em Muriaé-MG.`).slice(0, 158),
       shareDesc: `Curtiu essa peça? Chama no WhatsApp e vê se encaixa na agenda.`,
       canonical, heroImg, heroImgIsGenerated: false,
+      heroMediaUrl, heroIsVideo: !!item.isVideo, heroPosterUrl: item.posterUrl || null,
       breadcrumbs: [
         { name: 'Início', url: `${SITE_URL}/` },
         { name: 'Galeria', url: `${SITE_URL}/galeria` },

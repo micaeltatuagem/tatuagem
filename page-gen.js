@@ -305,7 +305,11 @@ ${SITE_FOOTER}
         if (samples.length) {
           gridEl.innerHTML = samples.map(it => {
             const alt = (it.altText || it.title || '').replace(/"/g,'&quot;');
-            return '<a href="' + CATALOG_LINK + '" class="sample-item"><img src="/' + it.imageUrl + '" alt="' + alt + '" loading="lazy"></a>';
+            // amostra é sempre uma imagem estática (thumbnail) — se o item for
+            // vídeo, mostra a capa gerada automaticamente no upload
+            const thumbRaw = it.isVideo ? (it.posterUrl || it.imageUrl) : it.imageUrl;
+            const thumb = /^https?:\/\//i.test(thumbRaw) ? thumbRaw : '/' + thumbRaw;
+            return '<a href="' + CATALOG_LINK + '" class="sample-item"><img src="' + thumb + '" alt="' + alt + '" loading="lazy"></a>';
           }).join('');
         } else {
           gridEl.innerHTML = '<p class="sample-empty">Novas peças em breve. Fale com o tatuador pra encomendar algo personalizado.</p>';
@@ -351,6 +355,10 @@ ${SITE_FOOTER}
   function buildItemPageHtml(cfg) {
     const contentBlock = buildContentBlockHtml(cfg.sections);
     const faqBlock = buildFaqBlockHtml(cfg.faq);
+    const heroMediaSrc = cfg.heroMediaUrl || cfg.heroImg;
+    const heroHtml = cfg.heroIsVideo
+      ? `<video src="${heroMediaSrc}" poster="${cfg.heroPosterUrl || ''}" controls muted playsinline loop preload="metadata"></video>`
+      : `<img src="${heroMediaSrc}" alt="${escapeHtml(cfg.heroAlt || cfg.h1)}" loading="lazy">`;
 
     return `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -362,7 +370,7 @@ ${SITE_NAV}
 <main>
   <p class="eyebrow">${escapeHtml(cfg.eyebrow)}</p>
   <h1>${escapeHtml(cfg.h1)}</h1>
-  <div class="hero-image"><img src="${cfg.heroImg}" alt="${escapeHtml(cfg.heroAlt || cfg.h1)}" loading="lazy"></div>
+  <div class="hero-image">${heroHtml}</div>
   <p class="intro-text">${escapeHtml(cfg.introText || '')}</p>
   <a href="${cfg.backLinkUrl}" class="cta">${escapeHtml(cfg.backLinkLabel)}</a>${contentBlock}${faqBlock}
 </main>

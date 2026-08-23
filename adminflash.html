@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/media-upload.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -180,7 +181,7 @@
     </p>
     <div class="form-group">
       <label>Arquivos (múltiplos)</label>
-      <input type="file" id="bulkFiles" accept="image/*" multiple />
+      <input type="file" id="bulkFiles" accept="image/*,video/*" multiple />
     </div>
     <div class="upload-progress" id="bulkProgress">
       <div class="progress-bar"><div class="progress-fill" id="bulkProgressFill"></div></div>
@@ -195,7 +196,7 @@
     <h2>Adicionar Novo Flash</h2>
     <div class="form-group">
       <label>Arquivo (WEBP, JPG, PNG)</label>
-      <input type="file" id="imageFile" accept="image/*" />
+      <input type="file" id="imageFile" accept="image/*,video/*" />
     </div>
     <div class="preview-box">
       <img id="previewImage" alt="preview" />
@@ -290,7 +291,7 @@
     <div class="form-group">
       <label>Imagem atual</label>
       <img id="editCurrentImg" src="" alt="" style="max-width:100%;max-height:160px;object-fit:contain;background:#f2ede2;border-radius:6px;padding:.5rem;display:block;margin-bottom:.5rem;" />
-      <input type="file" id="editImageFile" accept="image/*" />
+      <input type="file" id="editImageFile" accept="image/*,video/*" />
       <p style="font-size:.72rem;color:var(--muted);margin-top:.3rem;">Deixe em branco para manter a imagem atual.</p>
     </div>
     <div class="form-group">
@@ -388,10 +389,11 @@
         const slug  = title.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
         const filename = `${slug}-${Date.now()}-${i}.${ext}`;
 
-        const imageUrl = await withRetry(() => uploadToGitHub(file, filename), 3, file.name);
+        const { url: imageUrl, isVideo, posterUrl } = await withRetry(() => uploadToGitHub(file, filename), 3, file.name);
 
         newItems.push({
           id: nextId++, filename, imageUrl, title,
+          isVideo, posterUrl,
           altText: `Tatuagem flash de ${title.toLowerCase()}. Disponível no Micael Tatuagem, Muriaé MG.`,
           description: '', styles: [], showInDecor: true,
           date: new Date().toISOString().split('T')[0],
@@ -914,7 +916,7 @@
   function heroImageForStyle(style, gallery) {
     const published = gallery.filter(it => !it.draft);
     const items = published.filter(it => (it.styles||[]).includes(style));
-    return items.length ? `${SITE_URL}/${items[0].imageUrl}` : `${SITE_URL}/skull.webp`;
+    return items.length ? MediaUpload.resolveUrl(items[0].imageUrl, SITE_URL) : `${SITE_URL}/skull.webp`;
   }
 
   // ── Card social (og:image): mesma moldura gravura/flash-decor gerada em Python
@@ -1383,7 +1385,7 @@ ${body}
     if (hero) {
       imageBlock = `
       <image:image>
-        <image:loc>${SITE_URL}/${escapeXml(hero.imageUrl)}</image:loc>
+        <image:loc>${escapeXml(MediaUpload.resolveUrl(hero.imageUrl, SITE_URL))}</image:loc>
         <image:title>Tatuagem ${escapeXml(style)}</image:title>
         <image:caption>${escapeXml(desc.slice(0,150))}</image:caption>
       </image:image>`;
@@ -1446,7 +1448,9 @@ ${body}
         <label style="position:absolute;margin:.4rem;background:rgba(0,0,0,.6);border-radius:4px;padding:2px 4px;z-index:2;">
           <input type="checkbox" class="select-item-check" data-id="${img.id}" ${selectedIds.has(img.id)?'checked':''} onchange="toggleSelectItem(${img.id}, this.checked)" />
         </label>
-        <img src="${img.imageUrl || ''}" class="gallery-item-image" alt="${img.title}" loading="lazy" />
+        ${img.isVideo
+          ? `<video src="${img.imageUrl || ''}" class="gallery-item-image" poster="${img.posterUrl || ''}" muted playsinline loop preload="metadata"></video><span style="position:absolute;top:.4rem;left:.4rem;background:rgba(0,0,0,.65);color:#fff;font-size:.62rem;padding:.15rem .4rem;border-radius:3px;z-index:2;">▶ vídeo</span>`
+          : `<img src="${img.imageUrl || ''}" class="gallery-item-image" alt="${img.title}" loading="lazy" />`}
         ${img.draft ? '<span style="position:absolute;top:.4rem;right:.4rem;background:#a11d2b;color:#fff;font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:.2rem .5rem;border-radius:4px;z-index:2;">Rascunho</span>' : ''}
         <div class="gallery-item-info">
           <div class="gallery-item-title">${img.title}</div>
@@ -1524,30 +1528,12 @@ ${body}
   }
 
   // ── UPLOAD ──
+  // Upload de mídia (imagem OU vídeo) via módulo compartilhado (Supabase Storage).
+  // Retorna {url, isVideo, posterUrl}. O segundo argumento (filename) só é
+  // mantido pra não quebrar quem já chama essa função — o nome real do
+  // arquivo no Storage é gerado automaticamente pelo módulo.
   async function uploadToGitHub(file, filename) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = async e => {
-        const base64 = e.target.result.split(',')[1];
-        const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${IMAGE_FOLDER}/${filename}`;
-        let sha = null;
-        try {
-          const check = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` } });
-          if (check.ok) sha = (await check.json()).sha;
-        } catch {}
-        const body = { message: `Adiciona flash: ${filename}`, content: base64, branch: BRANCH };
-        if (sha) body.sha = sha;
-        const res = await fetch(url, {
-          method: 'PUT',
-          headers: { Authorization: `Bearer ${GH_TOKEN}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-        if (!res.ok) { const err = await res.json(); reject(new Error(err.message || 'Erro no upload')); return; }
-        resolve(`${IMAGE_FOLDER}/${filename}`);
-      };
-      reader.onerror = () => reject(new Error('Erro ao ler arquivo'));
-      reader.readAsDataURL(file);
-    });
+    return MediaUpload.uploadMedia(file, 'flash');
   }
 
   // ── ADD IMAGE ──
@@ -1571,8 +1557,8 @@ ${body}
     setProgress(true, 'Enviando imagem...');
 
     try {
-      setProgress(true, 'Enviando para GitHub...', 40);
-      const imageUrl = await uploadToGitHub(file, filename);
+      setProgress(true, 'Enviando para o armazenamento...', 40);
+      const { url: imageUrl, isVideo, posterUrl } = await uploadToGitHub(file, filename);
 
       setProgress(true, 'Salvando metadados...', 80);
       const gallery = getGallery();
@@ -1580,12 +1566,13 @@ ${body}
       const finalAltText = altText || `Tatuagem flash de ${title.toLowerCase()}. Disponível no Micael Tatuagem, Muriaé MG.`;
       gallery.unshift({
         id: newId, filename, imageUrl, title,
+        isVideo, posterUrl,
         altText: finalAltText,
         description: desc, styles, showInDecor: true, date: new Date().toISOString().split('T')[0]
       });
       await saveGallery(gallery);
       try {
-        await withRetry(() => commitShareCard({ id: newId, title, altText: finalAltText, imageUrl, slug }), 2, 'pagina de compartilhamento');
+        await withRetry(() => commitShareCard({ id: newId, title, altText: finalAltText, imageUrl: (isVideo ? posterUrl : imageUrl), slug }), 2, 'pagina de compartilhamento');
       } catch (err) {
         console.warn('Pagina de compartilhamento nao gerada (nao critico):', err.message);
       }
@@ -1641,7 +1628,12 @@ ${body}
     const img     = gallery.find(i => i.id === id);
     if (!img) return;
 
-    if (img.filename) {
+    if (img.imageUrl && /^https?:\/\//i.test(img.imageUrl)) {
+      // item novo (Supabase Storage) — apaga o arquivo real e a capa de vídeo, se houver
+      await MediaUpload.deleteMedia(img.imageUrl);
+      if (img.posterUrl) await MediaUpload.deleteMedia(img.posterUrl);
+    } else if (img.filename) {
+      // item antigo (ainda no GitHub, de antes da migração pro Supabase)
       try {
         const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${IMAGE_FOLDER}/${img.filename}`;
         const check = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` } });
@@ -1709,15 +1701,20 @@ ${body}
     try {
       let filename = current.filename;
       let imageUrl = current.imageUrl;
+      let isVideo = current.isVideo || false;
+      let posterUrl = current.posterUrl || null;
 
       if (newFile) {
         btnSalvar.textContent = 'Enviando imagem...';
         // Reaproveita o mesmo nome de arquivo -> substitui a imagem sem criar duplicata
-        imageUrl = await withRetry(() => uploadToGitHub(newFile, filename), 3, filename);
+        const result = await withRetry(() => uploadToGitHub(newFile, filename), 3, filename);
+        imageUrl = result.url;
+        isVideo = result.isVideo;
+        posterUrl = result.posterUrl;
       }
 
       btnSalvar.textContent = 'Salvando...';
-      const gallery = getGallery().map(i => i.id===id ? {...i, title, altText:alt, description:desc, styles, filename, imageUrl, draft: false} : i);
+      const gallery = getGallery().map(i => i.id===id ? {...i, title, altText:alt, description:desc, styles, filename, imageUrl, isVideo, posterUrl, draft: false} : i);
       await saveGallery(gallery);
       renderGallery();
       closeEditModal();
@@ -1725,7 +1722,7 @@ ${body}
 
       // gera/atualiza a pagina de preview (/f/) pra esse item -- nao bloqueia o save se falhar
       try {
-        await withRetry(() => commitShareCard({ id, title, altText: alt, imageUrl }), 2, 'pagina de compartilhamento: ' + title);
+        await withRetry(() => commitShareCard({ id, title, altText: alt, imageUrl: (isVideo ? posterUrl : imageUrl) }), 2, 'pagina de compartilhamento: ' + title);
       } catch (err) {
         console.warn('Pagina de compartilhamento nao gerada (nao critico):', title, err.message);
       }
@@ -1788,10 +1785,15 @@ ${body}
 
     // Grid (ordenado alfabeticamente pelo titulo, para navegacao previsivel)
     // Ordem de upload (mais recente primeiro, como o array ja vem). A alfabetica fica a cargo do toggle no site.
-    const gridHtml = gallery.map(img => `      <figure class="flash-item" data-id="${img.id}" data-styles="${(img.styles||[]).join(',')}" data-description="${escapeHtml((img.description || '').replace(/\s+/g, ' ').trim())}">
-        <img src="${img.imageUrl}" alt="${escapeHtml(img.altText || img.title)}" loading="lazy" />
+    const gridHtml = gallery.map(img => {
+      const mediaHtml = img.isVideo
+        ? `<video src="${img.imageUrl}" poster="${img.posterUrl || ''}" controls muted playsinline loop preload="metadata"></video>`
+        : `<img src="${img.imageUrl}" alt="${escapeHtml(img.altText || img.title)}" loading="lazy" />`;
+      return `      <figure class="flash-item" data-id="${img.id}" data-styles="${(img.styles||[]).join(',')}" data-description="${escapeHtml((img.description || '').replace(/\s+/g, ' ').trim())}">
+        ${mediaHtml}
         <figcaption>${escapeHtml(img.title)}</figcaption>
-      </figure>`).join('\n');
+      </figure>`;
+    }).join('\n');
 
     const gStart = '<!-- FLASH_GRID_START -->';
     const gEnd    = '<!-- FLASH_GRID_END -->';
@@ -1843,7 +1845,7 @@ ${body}
     // entao a description aqui pode ser puro CTA, sem compromisso nenhum com SEO.
     const shareDesc = `${item.title} disponível. Chama no WhatsApp pra fechar.`;
 
-    let heroImg = `${SITE_URL}/${item.imageUrl}`; // fallback: imagem crua
+    let heroImg = MediaUpload.resolveUrl(item.imageUrl, SITE_URL); // fallback: imagem crua
     let heroImgIsCard = false;
     try {
       const cardPath = `og-cards/flash/${item.id}-${slug}.jpg`;

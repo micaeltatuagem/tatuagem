@@ -276,6 +276,7 @@
     }
     .flash-item:hover { transform: translateY(-3px); border-color: rgba(212,201,176,0.35); }
     .flash-item img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
+    .flash-item video { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
     .flash-item figcaption {
       font-family: 'Cormorant Garamond', serif;
       font-size: 0.92rem;
@@ -543,6 +544,7 @@
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" id="lightboxClose" aria-label="Fechar">&times;</button>
   <img id="lightboxImg" src="" alt="" />
+  <video id="lightboxVideo" src="" controls muted playsinline loop style="display:none; max-width:100%; max-height:80vh;"></video>
   <p class="lightbox-caption" id="lightboxCaption"></p>
   <p class="lightbox-description" id="lightboxDescription"></p>
   <div class="lightbox-actions">
@@ -614,6 +616,7 @@
   // Lightbox
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxVideo = document.getElementById('lightboxVideo');
   const lightboxCaption = document.getElementById('lightboxCaption');
   const lightboxDescription = document.getElementById('lightboxDescription');
   const lightboxClose = document.getElementById('lightboxClose');
@@ -621,10 +624,21 @@
 
   items.forEach(item => {
     item.addEventListener('click', () => {
-      const img = item.querySelector('img');
+      const media = item.querySelector('img, video');
       const nome = item.querySelector('figcaption').textContent;
-      lightboxImg.src = img.src;
-      lightboxImg.alt = img.alt;
+      if (media && media.tagName === 'VIDEO') {
+        lightboxVideo.src = media.currentSrc || media.src;
+        lightboxVideo.style.display = 'block';
+        lightboxImg.style.display = 'none';
+        lightboxImg.src = '';
+      } else {
+        lightboxImg.src = media.src;
+        lightboxImg.alt = media.alt;
+        lightboxImg.style.display = 'block';
+        lightboxVideo.pause();
+        lightboxVideo.style.display = 'none';
+        lightboxVideo.src = '';
+      }
       lightboxCaption.textContent = nome;
       lightboxDescription.textContent = item.dataset.description || '';
       const msg = `Oi Micael! Vi a peça de aerografia "${nome}" no site e quero saber mais.`;
@@ -634,7 +648,7 @@
     });
   });
 
-  function closeLightbox() { lightbox.classList.remove('open'); }
+  function closeLightbox() { lightbox.classList.remove('open'); lightboxVideo.pause(); }
   lightboxClose.addEventListener('click', closeLightbox);
   lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });

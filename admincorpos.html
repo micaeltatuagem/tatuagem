@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/media-upload.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -177,7 +178,7 @@
     <p class="hint-text">Essas fotos aparecem na ferramenta "Criar" (preview-tatuagem) pra quem não quer subir a própria foto.</p>
     <div class="form-group">
       <label>Arquivo (WEBP, JPG, PNG)</label>
-      <input type="file" id="imageFile" accept="image/*" />
+      <input type="file" id="imageFile" accept="image/*,video/*" />
     </div>
     <div class="preview-box">
       <img id="previewImage" alt="preview" />
@@ -269,7 +270,7 @@
     <div class="form-group">
       <label>Imagem atual</label>
       <img id="editCurrentImg" src="" alt="" style="max-width:100%;max-height:200px;object-fit:contain;background:#f2ede2;border-radius:6px;padding:.5rem;display:block;margin-bottom:.5rem;" />
-      <input type="file" id="editImageFile" accept="image/*" />
+      <input type="file" id="editImageFile" accept="image/*,video/*" />
       <p style="font-size:.72rem;color:var(--muted);margin-top:.3rem;">Deixe em branco para manter a imagem atual.</p>
     </div>
     <div class="form-group">
@@ -454,7 +455,9 @@
     }
     container.innerHTML = gallery.map(img => `
       <div class="gallery-item">
-        <img src="${img.imageUrl || ''}" class="gallery-item-image" alt="${escapeHtml(img.nome)}" loading="lazy" />
+        ${img.isVideo
+          ? `<video src="${img.imageUrl || ''}" class="gallery-item-image" poster="${img.posterUrl || ''}" muted playsinline loop preload="metadata"></video><span style="position:absolute;top:.4rem;left:.4rem;background:rgba(0,0,0,.65);color:#fff;font-size:.62rem;padding:.15rem .4rem;border-radius:3px;z-index:2;">▶ vídeo</span>`
+          : `<img src="${img.imageUrl || ''}" class="gallery-item-image" alt="${escapeHtml(img.nome)}" loading="lazy" />`}
         <div class="gallery-item-info">
           <div class="gallery-item-title">${escapeHtml(img.nome)}</div>
           <div class="gallery-item-gender">${img.gender === 'feminino' ? 'Feminino' : 'Masculino'}</div>
@@ -473,31 +476,9 @@
   }
 
   // ── UPLOAD ──
+  // Upload de mídia (imagem OU vídeo) via módulo compartilhado (Supabase Storage).
   async function uploadToGitHub(file, filename, gender) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = async e => {
-        const base64 = e.target.result.split(',')[1];
-        const path = `${IMAGE_FOLDER}/${gender}/${filename}`;
-        const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
-        let sha = null;
-        try {
-          const check = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` } });
-          if (check.ok) sha = (await check.json()).sha;
-        } catch {}
-        const body = { message: `Adiciona base de corpo: ${filename}`, content: base64, branch: BRANCH };
-        if (sha) body.sha = sha;
-        const res = await fetch(url, {
-          method: 'PUT',
-          headers: { Authorization: `Bearer ${GH_TOKEN}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-        if (!res.ok) { const err = await res.json(); reject(new Error(err.message || 'Erro no upload')); return; }
-        resolve(path);
-      };
-      reader.onerror = () => reject(new Error('Erro ao ler arquivo'));
-      reader.readAsDataURL(file);
-    });
+    return MediaUpload.uploadMedia(file, `corpos/${gender}`);
   }
 
   // ── ADD IMAGE ──
@@ -518,14 +499,15 @@
     setProgress(true, 'Enviando imagem...', 20);
 
     try {
-      setProgress(true, 'Enviando para GitHub...', 50);
-      const imageUrl = await uploadToGitHub(file, filename, gender);
+      setProgress(true, 'Enviando para o armazenamento...', 50);
+      const { url: imageUrl, isVideo, posterUrl } = await uploadToGitHub(file, filename, gender);
 
       setProgress(true, 'Salvando metadados...', 85);
       const gallery = getGallery();
       const newId = gallery.length ? Math.max(...gallery.map(i => i.id)) + 1 : 1;
       gallery.unshift({
         id: newId, filename, imageUrl, nome, gender,
+        isVideo, posterUrl,
         date: new Date().toISOString().split('T')[0]
       });
       await saveGallery(gallery);
@@ -569,7 +551,10 @@
     const img = gallery.find(i => i.id === id);
     if (!img) return;
 
-    if (img.imageUrl) {
+    if (img.imageUrl && /^https?:\/\//i.test(img.imageUrl)) {
+      await MediaUpload.deleteMedia(img.imageUrl);
+      if (img.posterUrl) await MediaUpload.deleteMedia(img.posterUrl);
+    } else if (img.imageUrl) {
       try {
         const url = `${WORKER_URL}/gh/repos/${REPO_OWNER}/${REPO_NAME}/contents/${img.imageUrl}`;
         const check = await fetch(url, { headers: { Authorization: `Bearer ${GH_TOKEN}` } });
@@ -628,13 +613,18 @@
     try {
       let filename = current.filename;
       let imageUrl = current.imageUrl;
+      let isVideo = current.isVideo || false;
+      let posterUrl = current.posterUrl || null;
       let effectiveGender = gender;
 
       if (newFile) {
         btnSalvar.textContent = 'Enviando imagem...';
         // se o genero mudou, o caminho muda tambem (pasta diferente); a imagem antiga
         // fica orfa no repositorio nesse caso, mas isso e raro e nao afeta o site
-        imageUrl = await withRetry(() => uploadToGitHub(newFile, filename, effectiveGender), 3, filename);
+        const result = await withRetry(() => uploadToGitHub(newFile, filename, effectiveGender), 3, filename);
+        imageUrl = result.url;
+        isVideo = result.isVideo;
+        posterUrl = result.posterUrl;
       } else if (gender !== current.gender) {
         // trocou de genero sem trocar a imagem: precisa mover o arquivo (reenvia no novo caminho)
         showAlert('error', '⚠ Pra trocar o gênero, é preciso reenviar a imagem também (escolha o arquivo de novo).');
@@ -644,7 +634,7 @@
       }
 
       btnSalvar.textContent = 'Salvando...';
-      const gallery = getGallery().map(i => i.id === id ? {...i, nome, gender: effectiveGender, filename, imageUrl} : i);
+      const gallery = getGallery().map(i => i.id === id ? {...i, nome, gender: effectiveGender, filename, imageUrl, isVideo, posterUrl} : i);
       await saveGallery(gallery);
       renderGallery();
       updateStats();
@@ -743,7 +733,9 @@
     const sampleGridHtmlInitial = samples.length
       ? samples.map(it => {
           const alt = escapeHtml(it.nome || '');
-          return `<a href="/preview-tatuagem" class="sample-item"><img src="/${it.imageUrl}" alt="${alt}" loading="lazy"></a>`;
+          const thumb = it.isVideo ? (it.posterUrl || it.imageUrl) : it.imageUrl;
+          const thumbResolved = MediaUpload.resolveUrl(thumb, SITE_URL);
+          return `<a href="/preview-tatuagem" class="sample-item"><img src="${thumbResolved}" alt="${alt}" loading="lazy"></a>`;
         }).join('')
       : '<p class="sample-empty">Novas fotos de referência em breve.</p>';
     const otherItemsHtmlInitial = names.filter(n => n !== name).map(n => {
@@ -752,7 +744,9 @@
     }).join('');
 
     const heroItem = items[0];
-    const heroImg = heroItem ? `${SITE_URL}/${heroItem.imageUrl}` : `${SITE_URL}/favicon.png`;
+    const heroImg = heroItem
+      ? (heroItem.isVideo ? (heroItem.posterUrl || `${SITE_URL}/favicon.png`) : MediaUpload.resolveUrl(heroItem.imageUrl, SITE_URL))
+      : `${SITE_URL}/favicon.png`;
     const canonical = `${SITE_URL}/${path}`;
 
     const html = PageGen.buildCategoryPageHtml({
@@ -823,7 +817,8 @@
     const contentData = getContent().pecas[id] || { sections: [], faq: [] };
     const slug = PageGen.slugify(item.nome);
     const path = `${IMAGE_FOLDER}/peca-${item.id}-${slug}.html`;
-    const heroImg = `${SITE_URL}/${item.imageUrl}`;
+    const heroImg = item.isVideo ? (item.posterUrl || `${SITE_URL}/favicon.png`) : MediaUpload.resolveUrl(item.imageUrl, SITE_URL);
+    const heroMediaUrl = MediaUpload.resolveUrl(item.imageUrl, SITE_URL);
     const canonical = `${SITE_URL}/${path}`;
     const genderLabel = item.gender === 'feminino' ? 'feminino' : 'masculino';
 
@@ -833,6 +828,7 @@
       metaDesc: `Referência de posicionamento pra tatuagem no(a) ${item.nome}, corpo ${genderLabel}. Muriaé-MG.`,
       shareDesc: `Pensando em tatuar o(a) ${item.nome}? Chama no WhatsApp e tira suas dúvidas.`,
       canonical, heroImg, heroImgIsGenerated: false,
+      heroMediaUrl, heroIsVideo: !!item.isVideo, heroPosterUrl: item.posterUrl || null,
       breadcrumbs: [
         { name: 'Início', url: `${SITE_URL}/` },
         { name: item.nome, url: canonical }

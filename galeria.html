@@ -318,6 +318,23 @@
       opacity: 0;
     }
 
+    .video-badge {
+      position: absolute;
+      top: .5rem;
+      right: .5rem;
+      background: rgba(0,0,0,.65);
+      color: #fff;
+      font-size: .75rem;
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      pointer-events: none;
+    }
+
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -1033,6 +1050,7 @@
   <div class="lightbox-content">
     <div class="lightbox-image-container">
       <img class="lightbox-image" id="lightboxImage" src="" alt="Galeria" />
+      <video class="lightbox-image" id="lightboxVideo" src="" controls muted playsinline loop style="display:none;"></video>
     </div>
   </div>
   
@@ -1227,9 +1245,12 @@
       const alt = buildAltText(img);
       const title = escapeHtml(img.title || '');
       const tags  = (img.styles || []).map(s => `<span class="tag">${escapeHtml(s)}</span>`).join('');
+      const thumbHtml = img.isVideo
+        ? `<img src="${img.posterUrl || src}" alt="${alt}" loading="lazy" /><span class="video-badge">▶</span>`
+        : `<img src="${src}" alt="${alt}" loading="lazy" />`;
       return `
         <div class="gallery-item" onclick="openLightbox(${idx})">
-          <img src="${src}" alt="${alt}" loading="lazy" />
+          ${thumbHtml}
           <div class="gallery-info">
             ${title ? `<div class="gallery-info-title">${title}</div>` : ''}
           </div>
@@ -1259,13 +1280,27 @@
   function closeLightbox() {
     const lightbox = document.getElementById('lightbox');
     lightbox.classList.remove('active');
+    const lightboxVideo = document.getElementById('lightboxVideo');
+    if (lightboxVideo) lightboxVideo.pause();
   }
 
   function updateLightbox() {
     const img = filteredData[currentImageIndex];
     const lightboxImg = document.getElementById('lightboxImage');
-    lightboxImg.src = img.imageUrl || img.image;
-    lightboxImg.alt = buildAltText(img);
+    const lightboxVideo = document.getElementById('lightboxVideo');
+    if (img.isVideo) {
+      lightboxVideo.src = img.imageUrl || img.image;
+      lightboxVideo.style.display = 'block';
+      lightboxImg.style.display = 'none';
+      lightboxImg.src = '';
+    } else {
+      lightboxImg.src = img.imageUrl || img.image;
+      lightboxImg.alt = buildAltText(img);
+      lightboxImg.style.display = 'block';
+      lightboxVideo.style.display = 'none';
+      lightboxVideo.pause();
+      lightboxVideo.src = '';
+    }
     document.getElementById('lightboxTitle').textContent = img.title;
     
     const tagsHtml = (img.styles || []).map(s => `<span class="lightbox-tag">${escapeHtml(s)}</span>`).join('');

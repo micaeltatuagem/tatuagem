@@ -2336,11 +2336,15 @@
       const thumb = document.createElement('div');
       thumb.className = 'base-thumb';
       thumb.title = item.nome;
-      thumb.innerHTML = `<img src="${item.imageUrl}" alt="${item.nome}" loading="lazy">`;
+      // A ferramenta desenha a foto num <canvas> — vídeo não funciona aqui,
+      // então sempre usamos uma imagem estática (a capa gerada automaticamente
+      // no upload, se o item de referência for vídeo).
+      const stillUrl = item.isVideo ? (item.posterUrl || item.imageUrl) : item.imageUrl;
+      thumb.innerHTML = `<img src="${stillUrl}" alt="${item.nome}" loading="lazy">`;
       thumb.addEventListener('click', () => {
         baseThumbs.querySelectorAll('.base-thumb').forEach(t => t.classList.remove('selected'));
         thumb.classList.add('selected');
-        loadBodyPhotoFromUrl(item.imageUrl);
+        loadBodyPhotoFromUrl(stillUrl);
       });
       baseThumbs.appendChild(thumb);
     });
