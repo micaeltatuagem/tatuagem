@@ -1207,7 +1207,7 @@
       const mediaHtml = img.isVideo
         ? `<video src="${img.imageUrl}" poster="${img.posterUrl || ''}" controls muted playsinline loop preload="metadata"></video>`
         : `<img src="${img.imageUrl}" alt="${escapeHtml(img.altText || img.title)}" loading="lazy" />`;
-      return `      <figure class="flash-item" data-id="${img.id}" data-styles="${(img.styles||[]).join(',')}" data-description="${escapeHtml((img.description || '').replace(/\s+/g, ' ').trim())}">
+      return `      <figure class="flash-item" data-id="${img.id}" data-video="${!!img.isVideo}" data-styles="${(img.styles||[]).join(',')}" data-description="${escapeHtml((img.description || '').replace(/\s+/g, ' ').trim())}">
         ${mediaHtml}
         <figcaption>${escapeHtml(img.title)}</figcaption>
       </figure>`;

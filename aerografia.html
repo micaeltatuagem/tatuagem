@@ -246,6 +246,29 @@
     .filter-btn:hover { color: var(--bone); border-color: rgba(212,201,176,0.35); }
     .filter-btn.active { background: var(--blood); color: var(--bone); border-color: var(--blood); }
 
+    /* ── ABAS FOTO / VÍDEO ── */
+    .media-tabs {
+      display: flex;
+      justify-content: center;
+      gap: .7rem;
+      margin-bottom: 1.4rem;
+    }
+    .media-tab-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.65rem 1.5rem;
+      border-radius: 4px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .media-tab-btn:hover { color: var(--bone); border-color: rgba(212,201,176,0.35); }
+    .media-tab-btn.active { background: var(--bone); color: var(--ink); border-color: var(--bone); }
+
     .flash-search {
       display: block;
       max-width: 420px;
@@ -471,6 +494,11 @@
     Tem uma ideia ou uma parede? Chama no <a href="https://wa.me/5532999666946?text=Ol%C3%A1.+Vi+a+p%C3%A1gina+de+aerografia+e+quero+um+or%C3%A7amento" target="_blank" rel="noopener" onclick="gtag('event','click_whatsapp',{event_category:'cta',event_label:'aerografia'})">WhatsApp</a> com a ideia.
   </p>
 
+  <div class="media-tabs" id="mediaTabs">
+    <button class="media-tab-btn active" data-media="foto">📷 Fotos</button>
+    <button class="media-tab-btn" data-media="video">▶ Vídeos</button>
+  </div>
+
   <div class="flash-filters" id="flashFilters">
 <!-- AEROGRAFIA_FILTERS_START -->
     <div class="filter-group">
@@ -576,8 +604,11 @@
   const flashGridEl = document.getElementById('flashGrid');
   const items = Array.from(document.querySelectorAll('.flash-item'));
   const emptyMsg = document.getElementById('flashEmpty');
+  const emptyMsgDefaultHtml = emptyMsg.innerHTML;
   const filterBtns = Array.from(document.querySelectorAll('.filter-btn'));
+  const mediaTabBtns = Array.from(document.querySelectorAll('.media-tab-btn'));
   let activeFilter = 'all';
+  let activeMediaType = 'foto'; // 'foto' | 'video' — nunca mistura os dois
 
   emptyMsg.style.display = items.length === 0 ? 'block' : 'none';
 
@@ -587,14 +618,33 @@
     items.forEach(item => {
       const text = item.querySelector('figcaption').textContent.toLowerCase();
       const tags = (item.dataset.styles || '').split(',');
+      const isVideo = item.dataset.video === 'true';
       const matchesText = text.includes(term);
       const matchesFilter = activeFilter === 'all' || tags.includes(activeFilter);
-      const visible = matchesText && matchesFilter;
+      const matchesMedia = activeMediaType === 'video' ? isVideo : !isVideo;
+      const visible = matchesText && matchesFilter && matchesMedia;
       item.hidden = !visible;
       if (visible) visibleCount++;
     });
-    if (items.length > 0) emptyMsg.style.display = visibleCount === 0 ? 'block' : 'none';
+    if (items.length > 0) {
+      if (visibleCount === 0 && activeMediaType === 'video') {
+        emptyMsg.innerHTML = 'Nenhum vídeo publicado ainda. Volte em breve!';
+      } else {
+        emptyMsg.innerHTML = emptyMsgDefaultHtml;
+      }
+      emptyMsg.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
   }
+
+  mediaTabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      mediaTabBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeMediaType = btn.dataset.media;
+      gtag('event', 'filter_media_type_aerografia', { event_category: 'aerografia', event_label: activeMediaType });
+      applyFilters();
+    });
+  });
 
   searchInput.addEventListener('input', applyFilters);
 
@@ -663,8 +713,11 @@
     filterBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     activeFilter = tag;
-    applyFilters();
   })();
+
+  // Aplica os filtros (incluindo a aba Fotos por padrão) já na carga da página —
+  // sem isso, vídeos apareceriam misturados às fotos antes do primeiro clique.
+  applyFilters();
 </script>
 
 <script src="nav-mobile.js" defer></script>

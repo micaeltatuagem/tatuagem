@@ -253,6 +253,36 @@
       line-height: 1.8;
     }
 
+    /* ── ABAS FOTO / VÍDEO ── */
+    .media-tabs {
+      display: flex;
+      justify-content: center;
+      gap: .8rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .media-tab-btn {
+      padding: 0.75rem 1.8rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted, #a89e8e);
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      border-radius: 4px;
+      transition: all 0.25s;
+    }
+
+    .media-tab-btn:hover { border-color: var(--bone); color: var(--bone); }
+
+    .media-tab-btn.active {
+      background: var(--bone);
+      border-color: var(--bone);
+      color: var(--ink, #0a0a0a);
+    }
+
     /* ── FILTERS ── */
     .filters {
       display: flex;
@@ -983,6 +1013,12 @@
   </div>
   </div>
 
+  <!-- ── ABAS FOTO / VÍDEO (mostradas separadas, nunca misturadas) ── -->
+  <div class="media-tabs fade-in" id="mediaTabsContainer">
+    <button class="media-tab-btn active" id="tabFotos" onclick="setMediaType('foto')">📷 Fotos</button>
+    <button class="media-tab-btn" id="tabVideos" onclick="setMediaType('video')">▶ Vídeos</button>
+  </div>
+
   <!-- ── FILTERS ── -->
   <div class="filters fade-in" id="filtersContainer">
     <!-- Filters will be inserted here -->
@@ -1106,6 +1142,7 @@
   let filteredData = [];
   let allTags = [];
   let currentFilterStyle = null;
+  let currentMediaType = 'foto'; // 'foto' | 'video' — nunca mistura os dois
   let currentImageIndex = 0;
 
   // ── INITIALIZE ── 
@@ -1154,7 +1191,7 @@
         </div>`;
     }
 
-    filteredData = [...galleryData];
+    filteredData = galleryData.filter(img => !img.isVideo); // aba padrão: Fotos
   }
 
   function escapeHtml(str) {
@@ -1203,23 +1240,37 @@
     container.innerHTML = html;
   }
 
-  // ── FILTER GALLERY ── 
+  // ── ABA FOTO / VÍDEO ──
+  // Os dois nunca aparecem juntos no mesmo grid — trocar de aba troca
+  // completamente o conjunto de itens mostrado.
+  function setMediaType(type) {
+    currentMediaType = type;
+    document.getElementById('tabFotos').classList.toggle('active', type === 'foto');
+    document.getElementById('tabVideos').classList.toggle('active', type === 'video');
+    applyFilters();
+  }
+
+  // ── FILTER GALLERY ──
   function filterGallery(style) {
     currentFilterStyle = style;
-    
+
     // Update active button
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.classList.remove('active');
     });
     event.target.classList.add('active');
 
-    // Filter data
-    if (style === null) {
-      filteredData = [...galleryData];
-    } else {
-      filteredData = galleryData.filter(img => img.styles && img.styles.includes(style));
-    }
+    applyFilters();
+  }
 
+  // Combina o filtro de estilo com a aba foto/vídeo — os dois critérios
+  // juntos, nunca um vídeo aparecendo na aba Fotos ou vice-versa.
+  function applyFilters() {
+    filteredData = galleryData.filter(img => {
+      const matchesType = currentMediaType === 'video' ? !!img.isVideo : !img.isVideo;
+      const matchesStyle = currentFilterStyle === null || (img.styles && img.styles.includes(currentFilterStyle));
+      return matchesType && matchesStyle;
+    });
     renderGallery();
   }
 
@@ -1228,12 +1279,15 @@
     const grid = document.getElementById('galleryGrid');
 
     if (filteredData.length === 0) {
-      // Só mostra empty-state de "nenhum neste estilo" se há dados globais
+      // Só mostra empty-state de "nenhum neste estilo/tipo" se há dados globais
       if (galleryData.length > 0) {
+        const msg = currentMediaType === 'video'
+          ? (currentFilterStyle ? `Nenhum vídeo neste estilo ainda.` : `Nenhum vídeo publicado ainda. Volte em breve!`)
+          : `Nenhuma imagem neste estilo ainda.`;
         grid.innerHTML = `
           <div class="empty-state">
-            <div class="empty-state-icon">🎨</div>
-            <p class="empty-state-text">Nenhuma imagem neste estilo ainda.</p>
+            <div class="empty-state-icon">${currentMediaType === 'video' ? '🎬' : '🎨'}</div>
+            <p class="empty-state-text">${msg}</p>
           </div>`;
       }
       // Se galleryData também está vazio, a mensagem já foi colocada em loadGallery
