@@ -175,10 +175,10 @@
   <div class="form-section">
     <h2>Upload em Lote</h2>
     <p style="color:var(--muted);font-size:.85rem;margin-bottom:.8rem;">
-      Selecione várias imagens de uma vez. Título é gerado automaticamente a partir do nome do arquivo — revise e ajuste depois na lista abaixo.
+      Selecione várias imagens ou vídeos de uma vez (vídeo até 45MB). Título é gerado automaticamente a partir do nome do arquivo — revise e ajuste depois na lista abaixo.
     </p>
     <div class="form-group">
-      <label>Arquivos (múltiplos)</label>
+      <label>Arquivos (imagem ou vídeo, múltiplos)</label>
       <input type="file" id="bulkFiles" accept="image/*,video/*" multiple />
     </div>
     <div class="upload-progress" id="bulkProgress">
@@ -191,9 +191,9 @@
 
   <!-- Adicionar peça -->
   <div class="form-section">
-    <h2>Adicionar Nova Peça</h2>
+    <h2>Adicionar Nova Peça (Imagem ou Vídeo)</h2>
     <div class="form-group">
-      <label>Arquivo (WEBP, JPG, PNG)</label>
+      <label>Arquivo (imagem: WEBP, JPG, PNG · vídeo: MP4, WEBM, MOV — até 45MB)</label>
       <input type="file" id="imageFile" accept="image/*,video/*" />
     </div>
     <div class="preview-box">
@@ -308,10 +308,10 @@
     <h3>Editar Peça</h3>
     <input type="hidden" id="editId" />
     <div class="form-group">
-      <label>Imagem atual</label>
+      <label>Imagem/vídeo atual</label>
       <img id="editCurrentImg" src="" alt="" style="max-width:100%;max-height:160px;object-fit:contain;background:#111;border-radius:6px;padding:.5rem;display:block;margin-bottom:.5rem;" />
       <input type="file" id="editImageFile" accept="image/*,video/*" />
-      <p style="font-size:.72rem;color:var(--muted);margin-top:.3rem;">Deixe em branco para manter a imagem atual.</p>
+      <p style="font-size:.72rem;color:var(--muted);margin-top:.3rem;">Deixe em branco para manter o arquivo atual. Pra trocar, pode escolher tanto imagem quanto vídeo (até 45MB).</p>
     </div>
     <div class="form-group">
       <label>Título</label>
