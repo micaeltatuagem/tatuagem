@@ -346,6 +346,44 @@
 
     .add-tatoo-form input:focus { border-color: var(--gold); }
 
+    /* ── VÍNCULO COM PROMOÇÃO ── */
+    .link-promo-form {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .link-promo-form label {
+      display: block; font-size: .68rem; color: var(--muted);
+      letter-spacing: .06em; text-transform: uppercase; margin-bottom: 4px;
+    }
+
+    .link-promo-form input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: .82rem;
+      padding: 8px 10px;
+      outline: none;
+      text-transform: uppercase;
+    }
+
+    .link-promo-form input:focus { border-color: var(--gold); }
+
+    .link-promo-status {
+      font-size: .78rem; color: var(--muted); margin-bottom: 10px;
+    }
+
+    .link-promo-status strong { color: var(--gold); }
+
     /* termo viewer */
     .termo-viewer {
       background: var(--surface2);
@@ -717,6 +755,24 @@ function buildModalHTML(rec) {
       </div>
     </div>
 
+    <!-- VÍNCULO COM PROMOÇÃO -->
+    <div class="modal-section">
+      <p class="modal-section-title">Vínculo com Promoção</p>
+      <p class="link-promo-status">
+        Código atual:
+        ${rec.codigo_indicacao
+          ? `<strong>${escapeHtml(rec.codigo_indicacao)}</strong>`
+          : '<span style="color:#c0392b">nenhum — não aparece vinculada no painel de Promoções</span>'}
+      </p>
+      <div class="link-promo-form">
+        <div>
+          <label>Código de indicação (de clientes_promo)</label>
+          <input type="text" id="codigoIndicacaoInput" placeholder="Ex: ABC123" value="${escapeHtml(rec.codigo_indicacao) || ''}" />
+        </div>
+        <button class="btn btn-success btn-sm" style="white-space:nowrap" onclick="salvarCodigoIndicacao('${rec.id}')">🔗 Vincular</button>
+      </div>
+    </div>
+
     <!-- ANAMNESE -->
     <div class="modal-section">
       <p class="modal-section-title">Anamnese</p>
@@ -770,6 +826,32 @@ function closeModal() {
 
 function closeModalBg(e) {
   if (e.target === document.getElementById('modalBg')) closeModal();
+}
+
+// ─────────────────────────────────────
+// VÍNCULO COM PROMOÇÃO
+// ─────────────────────────────────────
+// Só existe pra corrigir manualmente o caso em que a cliente preencheu a
+// anamnese sem vir do link com ?cod= (ex: preencheu antes de se cadastrar
+// na promoção, ou o link foi aberto errado). O vínculo automático continua
+// sendo feito por anamnese.html via URLSearchParams — isso aqui é só o
+// reparo manual pelo admin.
+async function salvarCodigoIndicacao(id) {
+  const input = document.getElementById('codigoIndicacaoInput');
+  const codigo = input.value.trim().toUpperCase() || null;
+
+  const { error } = await db
+    .from('anamneses')
+    .update({ codigo_indicacao: codigo })
+    .eq('id', id);
+
+  if (error) { snack('Erro: ' + error.message); return; }
+
+  const rec = allRecords.find(r => r.id === id);
+  if (rec) rec.codigo_indicacao = codigo;
+
+  snack(codigo ? `Vinculada ao código ${codigo}.` : 'Vínculo removido.');
+  openModal(id); // re-render pra atualizar o "Código atual" e o botão de tatuagem
 }
 
 // ─────────────────────────────────────
