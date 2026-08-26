@@ -206,6 +206,19 @@
     @media (max-width: 560px) {
       .content-panel { padding: 1.5rem 1.25rem; }
     }
+    /* ── Agrupamento visual do formulário em etapas ─────────────── */
+    .form-group { margin-bottom: 2.6rem; padding-bottom: 2.2rem; border-bottom: 1px solid var(--border); }
+    .form-group:last-of-type { border-bottom: none; padding-bottom: 0; }
+    .form-group-head { display: flex; align-items: baseline; gap: .7rem; margin-bottom: .3rem; }
+    .form-group-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 1.6rem; height: 1.6rem; border-radius: 50%;
+      border: 1px solid var(--border-focus); color: var(--bone);
+      font-size: .85rem; flex-shrink: 0;
+    }
+    .form-group-title { font-size: 1.05rem; color: var(--bone); font-weight: 600; }
+    .form-group-desc { color: var(--muted); font-size: .9rem; margin: .3rem 0 1.5rem 2.3rem; }
+
     .field { margin-bottom: 1.8rem; }
     .field label {
       display: block;
@@ -852,98 +865,122 @@
       <input type="text" id="site" name="site" tabindex="-1" autocomplete="off" />
     </div>
 
-    <div class="field">
-      <label for="nome">Nome <span class="req">*</span></label>
-      <input type="text" id="nome" name="nome" required />
+    <div class="form-group">
+      <div class="form-group-head">
+        <span class="form-group-num">1</span>
+        <span class="form-group-title">Seus dados</span>
+      </div>
+      <p class="form-group-desc">Pra eu saber quem é você e poder te chamar no WhatsApp.</p>
+
+      <div class="field">
+        <label for="nome">Nome <span class="req">*</span></label>
+        <input type="text" id="nome" name="nome" required />
+      </div>
+
+      <div class="field">
+        <label for="idade">Idade <span class="req">*</span></label>
+        <input type="number" id="idade" name="idade" placeholder="Sua idade" min="1" max="120" inputmode="numeric" autocomplete="off" required />
+        <span class="hint">Atendimento disponível apenas para maiores de 18 anos.</span>
+        <span class="hint" id="idade-aviso" style="display:none; color:var(--error);"></span>
+      </div>
+
+      <div class="field">
+        <label for="whatsapp">WhatsApp <span class="req">*</span></label>
+        <input type="tel" id="whatsapp" name="whatsapp" placeholder="(32) 99999-9999" autocomplete="tel" required />
+      </div>
     </div>
 
-    <div class="field">
-      <label for="idade">Idade <span class="req">*</span></label>
-      <input type="number" id="idade" name="idade" placeholder="Sua idade" min="1" max="120" inputmode="numeric" autocomplete="off" required />
-      <span class="hint">Atendimento disponível apenas para maiores de 18 anos.</span>
-      <span class="hint" id="idade-aviso" style="display:none; color:var(--error);"></span>
-    </div>
+    <div class="form-group">
+      <div class="form-group-head">
+        <span class="form-group-num">2</span>
+        <span class="form-group-title">Sua tatuagem</span>
+      </div>
+      <p class="form-group-desc">Não precisa ter tudo certo na cabeça. O que der pra descrever já ajuda a preparar a conversa.</p>
 
-    <div class="field">
-      <label for="whatsapp">WhatsApp <span class="req">*</span></label>
-      <input type="tel" id="whatsapp" name="whatsapp" placeholder="(32) 99999-9999" autocomplete="tel" required />
-    </div>
+      <div class="field">
+        <label for="ideia">O que você imagina tatuar? <span class="req">*</span></label>
+        <textarea id="ideia" name="ideia" required placeholder="Tema, símbolos, referências, a sensação que quer transmitir..."></textarea>
+      </div>
 
-    <div class="field">
-      <label for="ideia">O que você imagina tatuar? <span class="req">*</span></label>
-      <textarea id="ideia" name="ideia" required placeholder="Tema, símbolos, referências, a sensação que quer transmitir..."></textarea>
-    </div>
-
-    <div class="field">
-      <label for="estilo">Estilo <span class="req">*</span></label>
-      <select id="estilo" name="estilo" required>
-        <option value="" disabled selected>Selecione um estilo</option>
-        <option value="Blackwork">Blackwork</option>
-        <option value="Dark Art">Dark Art</option>
-        <option value="Colorido / Neo-tradicional">Colorido / Neo-tradicional</option>
-        <option value="Ornamental">Ornamental</option>
-        <option value="Ainda não sei">Ainda não sei</option>
-      </select>
-    </div>
-
-    <div class="field">
-      <label for="tamanho">Tamanho aproximado <span class="req">*</span></label>
-      <select id="tamanho" name="tamanho" required>
-        <option value="" disabled selected>Selecione um tamanho</option>
-        <option value="Pequena (até 10cm)">Pequena (até 10cm)</option>
-        <option value="Média (10 a 20cm)">Média (10 a 20cm)</option>
-        <option value="Grande (acima de 20cm)">Grande (acima de 20cm)</option>
-        <option value="Não sei">Não sei</option>
-      </select>
-    </div>
-
-    <div class="field">
-      <label for="local">Local do corpo <span class="req">*</span></label>
-      <input type="text" id="local" name="local" required placeholder="Ex: antebraço direito, costas, panturrilha..." />
-    </div>
-
-    <div class="field">
-      <label for="referencias">Referências visuais</label>
-      <textarea id="referencias" name="referencias" placeholder="Descreva referências, estilos parecidos ou artistas que admira"></textarea>
-      <span class="hint">Tem fotos de referência? Pode enviar direto na conversa do WhatsApp depois.</span>
-    </div>
-
-    <div class="field">
-      <label for="disponibilidade">Disponibilidade</label>
-      <input type="text" id="disponibilidade" name="disponibilidade" placeholder="Dias ou horários de preferência" />
-    </div>
-
-    <div class="field">
-      <label for="email">E-mail <span style="color:var(--muted);font-size:.85em;">(opcional)</span></label>
-      <input type="email" id="email" placeholder="voce@email.com" autocomplete="email" />
-    </div>
-
-    <div class="field">
-      <label for="canal">Como conheceu o Micael? <span class="req">*</span></label>
-      <div class="select-wrap">
-        <select id="canal" required>
-          <option value="" disabled selected>Selecione</option>
-          <option value="panfleto">Panfleto</option>
-          <option value="instagram">Instagram</option>
-          <option value="indicacao">Indicação de amigo</option>
-          <option value="outro">Outro</option>
+      <div class="field">
+        <label for="estilo">Estilo <span class="req">*</span></label>
+        <select id="estilo" name="estilo" required>
+          <option value="" disabled selected>Selecione um estilo</option>
+          <option value="Blackwork">Blackwork</option>
+          <option value="Dark Art">Dark Art</option>
+          <option value="Colorido / Neo-tradicional">Colorido / Neo-tradicional</option>
+          <option value="Ornamental">Ornamental</option>
+          <option value="Ainda não sei">Ainda não sei</option>
         </select>
       </div>
-    </div>
 
-    <div class="field" id="campo-codigo">
-      <label for="codigo-indicador">Tem um código de indicação? <span style="color:var(--muted);font-size:.85em;">(opcional)</span></label>
-      <div class="codigo-wrap">
-        <input type="text" id="codigo-indicador" placeholder="MT-XXXX" style="text-transform:uppercase;" />
-        <button type="button" class="btn-verificar" id="btn-verificar">Verificar</button>
+      <div class="field">
+        <label for="tamanho">Tamanho aproximado <span class="req">*</span></label>
+        <select id="tamanho" name="tamanho" required>
+          <option value="" disabled selected>Selecione um tamanho</option>
+          <option value="Pequena (até 10cm)">Pequena (até 10cm)</option>
+          <option value="Média (10 a 20cm)">Média (10 a 20cm)</option>
+          <option value="Grande (acima de 20cm)">Grande (acima de 20cm)</option>
+          <option value="Não sei">Não sei</option>
+        </select>
       </div>
-      <p class="codigo-status" id="codigo-status"></p>
+
+      <div class="field">
+        <label for="local">Local do corpo <span class="req">*</span></label>
+        <input type="text" id="local" name="local" required placeholder="Ex: antebraço direito, costas, panturrilha..." />
+      </div>
+
+      <div class="field">
+        <label for="referencias">Referências visuais <span style="color:var(--muted);font-size:.85em;">(opcional)</span></label>
+        <textarea id="referencias" name="referencias" placeholder="Descreva referências, estilos parecidos ou artistas que admira"></textarea>
+        <span class="hint">Tem fotos de referência? Pode enviar direto na conversa do WhatsApp depois.</span>
+      </div>
+
+      <div class="field">
+        <label for="disponibilidade">Disponibilidade <span style="color:var(--muted);font-size:.85em;">(opcional)</span></label>
+        <input type="text" id="disponibilidade" name="disponibilidade" placeholder="Dias ou horários de preferência" />
+      </div>
     </div>
 
-    <label class="aceite">
-      <input type="checkbox" id="aceite" required />
-      <span>Concordo em receber contatos do Micael Tatuagem via WhatsApp e e-mail sobre meu atendimento, promoções e novidades. Meus dados não serão compartilhados com terceiros.</span>
-    </label>
+    <div class="form-group">
+      <div class="form-group-head">
+        <span class="form-group-num">3</span>
+        <span class="form-group-title">Pra fechar</span>
+      </div>
+      <p class="form-group-desc">Últimas perguntas, aí é só revisar e enviar.</p>
+
+      <div class="field">
+        <label for="email">E-mail <span style="color:var(--muted);font-size:.85em;">(opcional)</span></label>
+        <input type="email" id="email" placeholder="voce@email.com" autocomplete="email" />
+      </div>
+
+      <div class="field">
+        <label for="canal">Como conheceu o Micael? <span class="req">*</span></label>
+        <div class="select-wrap">
+          <select id="canal" required>
+            <option value="" disabled selected>Selecione</option>
+            <option value="panfleto">Panfleto</option>
+            <option value="instagram">Instagram</option>
+            <option value="indicacao">Indicação de amigo</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field" id="campo-codigo">
+        <label for="codigo-indicador">Tem um código de indicação? <span style="color:var(--muted);font-size:.85em;">(opcional)</span></label>
+        <div class="codigo-wrap">
+          <input type="text" id="codigo-indicador" placeholder="MT-XXXX" style="text-transform:uppercase;" />
+          <button type="button" class="btn-verificar" id="btn-verificar">Verificar</button>
+        </div>
+        <p class="codigo-status" id="codigo-status"></p>
+      </div>
+
+      <label class="aceite">
+        <input type="checkbox" id="aceite" required />
+        <span>Concordo em receber contatos do Micael Tatuagem via WhatsApp e e-mail sobre meu atendimento, promoções e novidades. Meus dados não serão compartilhados com terceiros.</span>
+      </label>
+    </div>
 
     <button type="submit" class="btn-primary" id="btn-submit">Enviar e continuar no WhatsApp</button>
 
