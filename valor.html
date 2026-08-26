@@ -213,6 +213,17 @@
       padding: 2rem 2.2rem;
     }
 
+    /* ── Resumo rápido de preços (topo, pra quem chega direto atrás do valor) ── */
+    .price-summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-bottom: 1.6rem;
+      padding-bottom: 1.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .price-summary .price-note { margin-top: .6rem; width: 100%; font-style: normal; }
+
     /* ── Seção editorial (valor/processo) ─────────────────────── */
     .essay { margin-bottom: 3.5rem; }
     .essay h2 {
@@ -416,6 +427,27 @@
 <main>
   <div class="page-inner">
   <div class="content-panel">
+
+  <!-- ═══════════ RESUMO RÁPIDO ═══════════ -->
+  <section class="price-summary">
+    <div class="price-tag">
+      <span class="label">Sessão avulsa</span>
+      <span class="value">R$400<small>,00</small></span>
+    </div>
+    <div class="price-tag">
+      <span class="label">Micro tatuagem</span>
+      <span class="value">R$150<small>,00</small></span>
+    </div>
+    <div class="price-tag">
+      <span class="label">Flash até 10cm</span>
+      <span class="value">R$350<small>,00</small></span>
+    </div>
+    <div class="price-tag">
+      <span class="label">Fechamento, por sessão</span>
+      <span class="value">R$400<small>,00</small></span>
+    </div>
+    <p class="price-note">Sessão única até R$600 dá pra parcelar sem juros, sem cartão. <a href="#layaway" style="color:var(--accent);">Ver como funciona o layaway ↓</a></p>
+  </section>
 
   <!-- ═══════════ SEÇÃO EDITORIAL: PROCESSO / FILOSOFIA ═══════════ -->
   <section class="essay">
