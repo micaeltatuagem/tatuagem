@@ -47,6 +47,25 @@
     gtag('config', 'G-JB6GZM1DFM');
   </script>
 
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('consent', 'revoke'); // nega até o usuário aceitar, igual o Consent Mode do GA4 acima
+  fbq('init', '752589036406948');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+
   <style>
     /* ── Tokens ──────────────────────────────────────────────── */
     :root {
@@ -1929,7 +1948,7 @@ function initMapaEstudio() {
 <!-- ── Consentimento de cookies (LGPD) ─────────────────────────── -->
 <div id="cookie-consent" style="position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.97);border-top:1px solid var(--border-hi);padding:1rem 1.5rem;display:none;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-family:var(--font-ui);">
   <p style="margin:0;font-size:.9rem;color:var(--ink-muted);max-width:560px;">
-    Usamos cookies de análise (Google Analytics) pra entender como o site é usado. Você pode aceitar ou recusar.
+    Usamos cookies de análise (Google Analytics) e de marketing (Meta Ads) pra entender como o site é usado e mostrar anúncios relevantes. Você pode aceitar ou recusar.
   </p>
   <div style="display:flex;gap:.6rem;">
     <button id="consent-decline" style="background:transparent;border:1px solid var(--border-hi);color:var(--ink-muted);padding:.6rem 1.2rem;border-radius:3px;cursor:pointer;font-family:var(--font-ui);">Recusar</button>
@@ -1944,6 +1963,7 @@ function initMapaEstudio() {
 
     function grant() {
       gtag('consent', 'update', { 'analytics_storage': 'granted' });
+      if (typeof fbq === 'function') fbq('consent', 'grant');
     }
 
     if (saved === 'accepted') {
