@@ -126,22 +126,27 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
       {
         "@type": "Question",
         "name": "Como funciona o pagamento da tatuagem?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Em fechamentos e coberturas, cada sessão é paga na hora, na sessão: você paga o que foi feito naquele dia. Já para tatuagens de sessão única até R$600,00, existe a opção de layaway, parcelamento sem juros antes de tatuar." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Em fechamentos e coberturas, você escolhe: pagar cada sessão na hora, no dia, ou fechar um preço único, combinado antes de começar, com 10% de desconto sobre a soma das sessões. Já para tatuagens de sessão única até R$600,00, existe a opção de layaway, parcelamento sem juros antes de tatuar." }
       },
       {
         "@type": "Question",
         "name": "É possível parcelar a tatuagem antes de fazer?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Sim, para tatuagens de sessão única de até R$600,00, através do layaway: funciona como uma caderneta de crediário, você se cadastra no site, paga as parcelas sem precisar de cartão e agenda a sessão assim que a última é paga. Parcela-se em 2x, 3x ou 4x sem juros. Fechamentos e coberturas não entram nessa modalidade." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Sim. Para tatuagens de sessão única de até R$600,00, através do layaway: funciona como uma caderneta de crediário, você se cadastra no site, paga as parcelas sem precisar de cartão e agenda a sessão assim que a última é paga, em 2x, 3x ou 4x sem juros. Para fechamentos e coberturas no formato Preço Fechado, também é possível parcelar via layaway, combinado caso a caso e sem teto fixo de parcelas." }
       },
       {
         "@type": "Question",
         "name": "Quanto custa um fechamento de tatuagem?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Cada sessão custa R$400,00, com 20% de desconto na primeira. O número de sessões varia com a complexidade do projeto: fechamentos menores levam de 3 a 4 sessões, um braço inteiro pode passar de 6." }
+        "acceptedAnswer": { "@type": "Answer", "text": "Cada sessão custa R$400,00, com 20% de desconto na primeira. O número de sessões varia com a complexidade do projeto: fechamentos menores levam de 3 a 4 sessões, um braço inteiro pode passar de 6. Também é possível fechar um preço único, combinado antes de começar, com 10% de desconto sobre a soma das sessões." }
+      },
+      {
+        "@type": "Question",
+        "name": "O que é o preço fechado de um fechamento ou cobertura?",
+        "acceptedAnswer": { "@type": "Answer", "text": "É a opção de combinar, antes de começar, o número de sessões e o intervalo entre elas, e pagar um valor total único com 10% de desconto sobre a soma das sessões (esse desconto não acumula com o desconto da primeira sessão do pagamento por sessão). O valor combinado é fechado nesses termos; se o projeto precisar de sessões extras além do combinado, elas são cobradas à parte. Pode ser pago à vista, parcelado no cartão, ou pelo layaway." }
       },
       {
         "@type": "Question",
         "name": "Quanto custa cobertura de tatuagem?",
-        "acceptedAnswer": { "@type": "Answer", "text": "A sessão custa o mesmo valor de qualquer outra, R$400,00. O que muda é a quantidade de sessões: cobertura costuma levar de 4 a 6, dependendo do caso." }
+        "acceptedAnswer": { "@type": "Answer", "text": "A sessão custa o mesmo valor de qualquer outra, R$400,00. O que muda é a quantidade de sessões: cobertura costuma levar de 4 a 6, dependendo do caso. Assim como nos fechamentos, também dá pra fechar um preço único com 10% de desconto." }
       },
       {
         "@type": "Question",
@@ -336,6 +341,51 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
 
     .price-note { font-size: .92rem; color: var(--muted); font-style: italic; margin-top: .8rem; }
 
+    /* ── Cards de opção de pagamento (Por Sessão vs Preço Fechado) ── */
+    .payment-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin: 1.6rem 0 .8rem;
+    }
+    @media (max-width: 640px) {
+      .payment-options { grid-template-columns: 1fr; }
+    }
+    .payment-card {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem 1.4rem;
+      background: rgba(212,201,176,0.04);
+    }
+    .payment-card.destaque {
+      border-color: rgba(200,169,110,0.45);
+      background: rgba(200,169,110,0.06);
+    }
+    .payment-card h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--accent);
+      margin-bottom: .2rem;
+    }
+    .payment-card .payment-tagline {
+      font-size: .82rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: .9rem;
+    }
+    .payment-card ul { list-style: none; margin: 0; }
+    .payment-card ul li {
+      padding: .4rem 0 .4rem 1.1rem;
+      position: relative;
+      font-size: .96rem;
+      color: var(--bone);
+      opacity: .88;
+      border-bottom: none;
+    }
+    .payment-card ul li::before { content: '—'; position: absolute; left: 0; color: var(--accent); }
+
     .cta-box {
       text-align: center;
       padding: 2.4rem 1.5rem;
@@ -471,7 +521,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
       <span class="label">Fechamento, por sessão</span>
       <span class="value">R$400<small>,00</small></span>
     </div>
-    <p class="price-note">Sessão única até R$600 dá pra parcelar sem juros, sem cartão. <a href="#layaway" style="color:var(--accent);">Ver como funciona o layaway ↓</a></p>
+    <p class="price-note">Fechamentos e coberturas: pague por sessão ou feche o preço total com 10% de desconto. Sessão única até R$600 dá pra parcelar sem juros, sem cartão. <a href="#layaway" style="color:var(--accent);">Ver como funciona ↓</a></p>
   </section>
 
   <!-- ═══════════ SEÇÃO EDITORIAL: PROCESSO / FILOSOFIA ═══════════ -->
@@ -495,9 +545,32 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   <!-- ═══════════ SEÇÃO: PREÇOS ═══════════ -->
 
   <div class="price-block">
-    <h2>Pagamento por sessão</h2>
+    <h2>Como funciona o pagamento</h2>
     <p>Nenhuma tatuagem é considerada terminada numa sessão só. Peças pequenas e médias, pagas integralmente e executadas numa única sessão, incluem retoque garantido entre 30 e 90 dias depois: é comum precisar puxar contraste ou corrigir algum encontro de linha, e isso faz parte do processo, não é um extra.</p>
-    <p>Já em fechamentos e coberturas, cada sessão é paga na hora, no dia. Não trabalho com "fechar o pacote e pagar tudo antes" nesses casos: cada etapa vale por si, e você paga o que foi feito naquele dia, com a última sessão já reservada pro retoque final.</p>
+    <p>Já em fechamentos e coberturas, que passam por várias sessões, você escolhe como paga: sessão por sessão, ou preço fechado, combinado antes de começar.</p>
+
+    <div class="payment-options">
+      <div class="payment-card">
+        <h3>Por Sessão</h3>
+        <p class="payment-tagline">Paga o que foi feito, no dia</p>
+        <ul>
+          <li>Cada sessão é paga na hora, no dia: você paga o que foi feito naquele dia.</li>
+          <li>R$400,00 por sessão, com 20% de desconto na primeira.</li>
+          <li>Mais flexível se o número de sessões do projeto acabar variando pelo caminho.</li>
+        </ul>
+      </div>
+      <div class="payment-card destaque">
+        <h3>Preço Fechado</h3>
+        <p class="payment-tagline">Combinado antes, com desconto</p>
+        <ul>
+          <li>Definimos juntos, antes de começar, o número de sessões e o intervalo entre elas.</li>
+          <li>Valor total com <strong style="color:var(--accent);">10% de desconto</strong> sobre a soma das sessões (não acumula com o desconto da primeira sessão do pagamento por sessão).</li>
+          <li>Pode ser pago à vista, parcelado no cartão, ou pelo layaway.</li>
+          <li>Preço fechado nesses termos: sessões extras além do combinado são cobradas à parte.</li>
+        </ul>
+      </div>
+    </div>
+
     <div class="price-tag">
       <span class="label">Sessão avulsa</span>
       <span class="value">R$400<small>,00</small></span>
@@ -521,13 +594,13 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
       <span class="label">Desconto na 1ª sessão</span>
       <span class="value">-20%</span>
     </div>
-    <p class="price-note">Exemplo: fechamento de 3 sessões sai por R$1.120,00 com o desconto na primeira. O valor final depende do número de sessões que o projeto exigir.</p>
+    <p class="price-note">Exemplo com 3 sessões: por sessão, sai R$1.120,00 (com o desconto na primeira). No Preço Fechado, combinado antes, sai R$1.080,00 (10% sobre R$1.200,00). Você escolhe o formato lá em cima, em "Como funciona o pagamento". O valor final depende do número de sessões que o projeto exigir.</p>
   </div>
 
   <div class="price-block">
     <h2>Cobertura</h2>
     <p>Cobertura tem um processo próprio: já na primeira sessão, além do traço, trabalho o preto de definição em algumas áreas e, às vezes, um tom de pele pra amaciar detalhes indesejados da tatuagem antiga.</p>
-    <p>Por isso, cobertura costuma levar mais sessões que um fechamento comum: geralmente de 4 a 6, dependendo do caso, sempre terminando numa sessão de retoque, como em qualquer fechamento. O valor da sessão é o mesmo; o que muda é a quantidade que o projeto pede.</p>
+    <p>Por isso, cobertura costuma levar mais sessões que um fechamento comum: geralmente de 4 a 6, dependendo do caso, sempre terminando numa sessão de retoque, como em qualquer fechamento. O valor da sessão é o mesmo; o que muda é a quantidade que o projeto pede. Assim como nos fechamentos, também dá pra escolher entre pagar por sessão ou fechar um preço único com 10% de desconto, combinado antes de começar.</p>
     <div class="price-tag">
       <span class="label">Sessão (mesmo valor de sempre)</span>
       <span class="value">R$400<small>,00</small></span>
@@ -551,16 +624,19 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
 
   <div class="price-block" id="layaway">
     <h2>Layaway: pague parcelado antes de fazer</h2>
-    <p>Pra tatuagens de sessão única de até R$600,00 (sessão avulsa, micro tatuagem e flash), dá pra parcelar o valor antes de tatuar. Funciona como uma caderneta de crediário antiga, mas <strong style="color:var(--accent);">totalmente sem juros</strong>: você vai pagando as parcelas aos poucos, sem precisar de cartão de crédito, e assim que a última entrar, agenda a sessão. Você escolhe entre 2x, 3x ou 4x: o valor total parcelado é exatamente igual ao valor à vista, dividido em partes iguais.</p>
-    <p>A sessão só é agendada depois que a última parcela é confirmada. É aquela força pra você realizar o sonho da sua tatuagem, sem pressa e sem comprometer as suas contas.</p>
+    <p>Existem duas versões do layaway, dependendo da peça:</p>
     <ul>
-      <li>Disponível só para peças de sessão única, até R$600,00.</li>
-      <li>Requer cadastro no site antes da primeira parcela, pra vincular os pagamentos ao cliente e controlar o andamento.</li>
-      <li>Fechamentos e coberturas não entram nessa modalidade: seguem sempre pagos sessão por sessão, como descrito acima.</li>
-      <li>O retoque garantido (30 a 90 dias após a execução) vale normalmente pra tatuagens feitas via layaway, sem custo adicional.</li>
-      <li>A primeira parcela funciona como entrada de reserva e não é reembolsável.</li>
+      <li><strong>Sessão única, até R$600,00</strong> (sessão avulsa, micro tatuagem e flash): funciona como uma caderneta de crediário antiga, mas <strong style="color:var(--accent);">totalmente sem juros</strong>. Você se cadastra no site, vai pagando as parcelas sem precisar de cartão, em 2x, 3x ou 4x, e agenda a sessão assim que a última entra. O valor total parcelado é igual ao valor à vista, dividido em partes iguais.</li>
+      <li><strong>Fechamentos e coberturas no formato Preço Fechado:</strong> o parcelamento é combinado caso a caso, também sem juros e sem cartão obrigatório, sem um teto fixo de vezes — o número de parcelas acompanha o valor e o cronograma do fechamento.</li>
     </ul>
-    <p class="price-note">O esboço/decalque (ver abaixo) é sempre cobrado à parte e não entra no parcelamento do layaway.</p>
+    <p>Nos dois casos, a sessão só é agendada depois que a última parcela é confirmada. É aquela força pra você realizar o sonho da sua tatuagem, sem pressa e sem comprometer as suas contas.</p>
+    <ul>
+      <li>Layaway de sessão única vale só até R$600,00; layaway de fechamento/cobertura só se aplica ao formato Preço Fechado (não entra no pagamento por sessão).</li>
+      <li>Requer cadastro no site antes da primeira parcela, pra vincular os pagamentos ao cliente e controlar o andamento.</li>
+      <li>O retoque garantido (30 a 90 dias após a execução) vale normalmente pras tatuagens feitas via layaway, sem custo adicional.</li>
+      <li>A primeira parcela funciona como entrada de reserva e não é reembolsável, nos dois casos.</li>
+    </ul>
+    <p class="price-note">O esboço/decalque (ver abaixo) é sempre cobrado à parte e não entra em nenhum dos dois parcelamentos.</p>
   </div>
 
   <div class="price-block">
@@ -570,7 +646,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
       <span class="label">Esboço / decalque sob medida</span>
       <span class="value">R$100<small>,00</small></span>
     </div>
-    <p class="price-note">Cobrado à parte, independente da tatuagem sair ou não. Esse valor não entra no parcelamento do layaway.</p>
+    <p class="price-note">Cobrado à parte, independente da tatuagem sair ou não. Esse valor não entra em nenhum dos parcelamentos.</p>
   </div>
 
   <div class="price-block">
