@@ -1283,7 +1283,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     const whatsUrl = `https://wa.me/5532999666946?text=${encodeURIComponent(msg)}`;
 
     if (typeof gtag === 'function') {
-      gtag('event', 'reserva_form_submit', { event_category: 'conversao', event_label: estilo });
+      gtag('event', 'reserva_form_submit', { event_category: 'conversao', event_label: estilo }); if(typeof fbq==='function')fbq('track','Lead');
     }
 
     // Gera codigo unico de indicacao
