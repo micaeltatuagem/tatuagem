@@ -11,6 +11,7 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
+fbq('consent', 'revoke');
 fbq('init', '752589036406948');
 fbq('track', 'PageView');
 </script>
@@ -27,6 +28,12 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied'
+    });
   gtag('js', new Date());
   gtag('config', 'G-JB6GZM1DFM');
 </script>
@@ -2785,5 +2792,44 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
 </script>
 <script src="flash-decor.js" defer></script>
 <script src="nav-mobile.js" defer></script>
+
+<!-- ── Consentimento de cookies (LGPD) ─────────────────────────── -->
+<div id="cookie-consent" style="position:fixed;bottom:0;left:0;right:0;z-index:9999;background:rgba(10,10,10,0.97);border-top:1px solid rgba(255,255,255,0.15);padding:1rem 1.5rem;display:none;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-family:sans-serif;">
+  <p style="margin:0;font-size:.9rem;color:#cfc9bc;max-width:560px;">
+    Usamos cookies de análise (Google Analytics) e de marketing (Meta Ads) pra entender como o site é usado e mostrar anúncios relevantes. Você pode aceitar ou recusar.
+  </p>
+  <div style="display:flex;gap:.6rem;">
+    <button id="consent-decline" style="background:transparent;border:1px solid rgba(255,255,255,0.3);color:#cfc9bc;padding:.6rem 1.2rem;border-radius:3px;cursor:pointer;font-family:sans-serif;">Recusar</button>
+    <button id="consent-accept" style="background:#7a8c3a;border:none;color:#fff;padding:.6rem 1.2rem;border-radius:3px;cursor:pointer;font-family:sans-serif;font-weight:700;">Aceitar</button>
+  </div>
+</div>
+<script>
+  (function(){
+    var KEY = 'cookie_consent_v1';
+    var banner = document.getElementById('cookie-consent');
+    var saved = localStorage.getItem(KEY);
+
+    function grant() {
+      if (typeof gtag === 'function') gtag('consent', 'update', { 'analytics_storage': 'granted' });
+      if (typeof fbq === 'function') fbq('consent', 'grant');
+    }
+
+    if (saved === 'accepted') {
+      grant();
+    } else if (saved !== 'declined') {
+      banner.style.display = 'flex';
+    }
+
+    document.getElementById('consent-accept').addEventListener('click', function() {
+      localStorage.setItem(KEY, 'accepted');
+      grant();
+      banner.style.display = 'none';
+    });
+    document.getElementById('consent-decline').addEventListener('click', function() {
+      localStorage.setItem(KEY, 'declined');
+      banner.style.display = 'none';
+    });
+  })();
+</script>
 </body>
 </html>
