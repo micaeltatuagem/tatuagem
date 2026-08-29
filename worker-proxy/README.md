@@ -69,6 +69,25 @@ wrangler deploy                  # redeploy pra aplicar o binding novo
 Não precisa criar nada manualmente no dashboard — o binding é criado
 automaticamente no primeiro deploy depois dessa mudança.
 
+## 6. Deploy sem terminal (pelo navegador)
+
+Se não tiver o `wrangler` instalado (ex.: computador sem terminal),
+dá pra fazer tudo pelo dashboard:
+
+1. dash.cloudflare.com → Workers & Pages → tatuagem-gh-proxy
+2. Settings → Bindings → Add binding → **Rate limiter** → nome
+   `RATE_LIMITER`, limit `5`, period `60`.
+3. Botão **Edit code** → apaga tudo → cola o conteúdo de
+   `worker-proxy/worker.js` deste repositório → **Deploy**.
+
+Nota (29/08/2026): o código publicado no Cloudflare tinha divergido do
+que estava commitado aqui — alguém tinha adicionado headers de CORS e
+um stub `WorkflowStatusDO` direto pelo editor do dashboard, sem levar
+essa mudança de volta pro GitHub. Esse arquivo já foi atualizado pra
+incluir os dois; a partir de agora, qualquer edição feita direto no
+dashboard precisa ser copiada de volta pra cá pra não perder o
+histórico.
+
 ## O que isso muda na prática
 
 - O token de verdade do GitHub nunca mais aparece no navegador, no DevTools,

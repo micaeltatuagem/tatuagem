@@ -24,6 +24,12 @@
 const REPO_OWNER = "micaeltatuagem";
 const REPO_NAME  = "tatuagem";
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Authorization, Content-Type",
+};
+
 // Comparação constant-time — evita vazar a senha por timing attack (byte a
 // byte). Sempre percorre o buffer inteiro, nunca retorna cedo por causa de
 // um byte diferente.
@@ -41,47 +47,47 @@ function timingSafeEqual(a, b) {
 
 export default {
   async fetch(request, env) {
-    // Só aceita chamadas por /gh/...
     const url = new URL(request.url);
-    if (!url.pathname.startsWith("/gh/")) {
-      return new Response("Not found", { status: 404 });
+
+    if (request.method === "OPTIONS") {
+      return new Response(null, { status: 204, headers: CORS_HEADERS });
     }
 
-    // 0) Rate limit por IP — protege ADMIN_PASSWORD (chave-mestra de escrita
-    // do repo) contra força bruta. Precisa do binding RATE_LIMITER em
-    // wrangler.jsonc (Wrangler >= 4.36.0).
+    if (!url.pathname.startsWith("/gh/")) {
+      return new Response("Not found", { status: 404, headers: CORS_HEADERS });
+    }
+
+    // Rate limit por IP — protege ADMIN_PASSWORD (chave-mestra de escrita do
+    // repo) contra força bruta. Precisa do binding RATE_LIMITER.
     if (env.RATE_LIMITER) {
       const ip = request.headers.get("cf-connecting-ip") || "unknown";
       const { success } = await env.RATE_LIMITER.limit({ key: ip });
       if (!success) {
         return new Response(JSON.stringify({ message: "Muitas tentativas — aguarde um minuto." }), {
           status: 429,
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", ...CORS_HEADERS },
         });
       }
     }
 
-    // 1) Confere a senha enviada pelo painel admin (comparação constant-time)
     const auth = request.headers.get("Authorization") || "";
     const senhaEnviada = auth.replace(/^Bearer\s+/i, "");
     if (!timingSafeEqual(senhaEnviada, env.ADMIN_PASSWORD)) {
       return new Response(JSON.stringify({ message: "Senha inválida" }), {
         status: 401,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...CORS_HEADERS },
       });
     }
 
-    // 2) Trava de segurança: só deixa mexer no repo esperado, nunca em outro
-    const githubPath = url.pathname.replace(/^\/gh/, ""); // ex: /repos/owner/repo/contents/...
+    const githubPath = url.pathname.replace(/^\/gh/, "");
     const permitido = githubPath.startsWith(`/repos/${REPO_OWNER}/${REPO_NAME}`);
     if (!permitido) {
       return new Response(JSON.stringify({ message: "Caminho não permitido" }), {
         status: 403,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...CORS_HEADERS },
       });
     }
 
-    // 3) Repassa a chamada pra API real do GitHub, agora com o token de verdade
     const githubUrl = "https://api.github.com" + githubPath + url.search;
 
     const init = {
@@ -99,10 +105,13 @@ export default {
 
     const ghResponse = await fetch(githubUrl, init);
 
-    // 4) Devolve a resposta do GitHub direto pro painel admin
     return new Response(ghResponse.body, {
       status: ghResponse.status,
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...CORS_HEADERS },
     });
   },
 };
+
+export class WorkflowStatusDO {
+  constructor(ctx, env) {}
+}
