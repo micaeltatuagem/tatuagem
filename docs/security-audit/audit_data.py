@@ -586,11 +586,13 @@ GITHUB_ISSUES = [
 
 FIXED_IDS = {
     "C1": (
-        "Corrigido no código (commit d2308a8f) e confirmado no banco: a política "
-        "\"Guia verbetes - escrita publica (anon)\" (cmd=ALL, role anon, sem condição) foi removida e "
-        "substituída por uma política restrita ao role authenticated — confirmado via consulta a "
-        "pg_policies em 29/08/2026 (só sobraram a política de SELECT público e a nova de escrita "
-        "authenticated). Pendente apenas confirmar a mesma restrição no bucket de Storage guia-imagens."
+        "Corrigido de ponta a ponta. Código: commit d2308a8f (adminguia.html usa "
+        "supabase.auth.signInWithPassword() real; admin-guia-upload.html removido). Banco (29/08/2026): "
+        "a política \"Guia verbetes - escrita publica (anon)\" (cmd=ALL, role anon, sem condição) foi "
+        "removida da tabela guia_verbetes e substituída por uma restrita a authenticated; e a política "
+        "\"Upload publico bucket guia-imagens\" (INSERT, role anon) foi removida do bucket de Storage "
+        "guia-imagens — restaram só as 4 políticas corretas (leitura pública + "
+        "insert/update/delete restritos a authenticated). Confirmado via pg_policies em ambos os casos."
     ),
     "A2": "Corrigido no commit d2308a8f (slug validado por allow-list + checagem de contenção de path em generate-guia-pages.js).",
     "A3": (
@@ -632,13 +634,15 @@ VERIFIED_OK_IDS = {
         "só (esperado). Nenhuma ação necessária."
     ),
 }
-PARTIAL_FIX_IDS = {"C1"}  # correção de código feita, falta ação manual (Supabase) — só o bucket guia-imagens
+PARTIAL_FIX_IDS = set()  # nada mais em estado parcial — os 9 corrigíveis foram fechados de ponta a ponta
 POST_AUDIT_NOTE = (
-    "C1 (parcial — falta confirmar o bucket guia-imagens), A2, A3, A4, M1, M2, M3 e B1 já foram "
-    "corrigidos no código, confirmados no banco ou confirmados em produção entre 29/08/2026 e a "
-    "publicação deste relatório (commits d2308a8f, c0c86118 e db7e9bb8). M4 foi verificado e não era "
-    "uma vulnerabilidade. Ainda em aberto: A1 (senha exposta no histórico git — não há como 'corrigir', "
-    "só tratar como comprometida) e I1 (restrição da chave do Google Maps no Google Cloud Console)."
+    "C1, A2, A3, A4, M1, M2, M3 e B1 — todos os achados de severidade crítica/alta/média/baixa que "
+    "tinham correção possível — foram corrigidos no código, confirmados no banco ou confirmados em "
+    "produção entre 29/08/2026 e a publicação deste relatório (commits d2308a8f, c0c86118 e db7e9bb8; "
+    "e políticas RLS/GRANT ajustadas no Supabase). M4 foi verificado e não era uma vulnerabilidade. "
+    "Restam em aberto só A1 (senha exposta no histórico git — não há como 'corrigir', só tratar como "
+    "comprometida caso reaproveitada em outro lugar) e I1 (restrição da chave do Google Maps no Google "
+    "Cloud Console — ação opcional, de baixo risco)."
 )
 
 PROJECT_NAME = "micaeltatuagem/tatuagem"
