@@ -9,6 +9,7 @@
   <meta name="robots" content="noindex, nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -97,8 +98,12 @@
     <div class="login-sub">Micael Tatuagem</div>
     <form id="loginForm">
       <div class="login-group">
-        <label>Senha do admin</label>
-        <input type="password" id="inputToken" required autofocus autocomplete="current-password">
+        <label>E-mail</label>
+        <input type="email" id="inputEmail" required autofocus autocomplete="username">
+      </div>
+      <div class="login-group">
+        <label>Senha</label>
+        <input type="password" id="inputToken" required autocomplete="current-password">
       </div>
       <button type="submit" class="btn-login">Entrar</button>
       <div class="login-err" id="loginErr"></div>
@@ -112,6 +117,7 @@
     <div class="admin-header-links">
       <a href="admin-hub">← Painel</a>
       <a href="guia" target="_blank">Ver página pública ↗</a>
+      <a href="#" id="btnLogout">Sair</a>
     </div>
   </div>
 
@@ -220,9 +226,21 @@
   const SUPABASE_KEY   = 'sb_publishable_7LF70sbQS_es_uco138rqw_YfbqnIsa';
   const BUCKET_IMAGENS = 'guia-imagens';
 
-  // senha simples só pra travar o acesso a essa tela (não é autenticação do Supabase)
-  const ADMIN_SENHA = 'Sofilhadaputa1';
-  const SESSAO_KEY = 'guiaAdminOk';
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // Só aceita slugs "seguros" (evita path traversal na geração estática — ver
+  // scripts/generate-guia-pages.js). Mantém em sincronia com a validação lá.
+  const SLUG_RE = /^[a-z0-9-]+$/;
+
+  // Monta os headers de autenticação a partir da sessão real do Supabase Auth
+  // (não da anon key sozinha) — é essa sessão que o RLS de guia_verbetes
+  // precisa enxergar pra liberar escrita ao role authenticated.
+  async function authHeaders(extra = {}) {
+    const { data: { session } } = await sb.auth.getSession();
+    const token = session?.access_token || SUPABASE_KEY;
+    return { apikey: SUPABASE_KEY, Authorization: `Bearer ${token}`, ...extra };
+  }
 
   let entries = [];
   let currentFilter = 'todos';
@@ -245,25 +263,35 @@
     return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_IMAGENS}/${caminho}`;
   }
 
-  // ── LOGIN ──
+  // ── LOGIN (Supabase Auth real — verificado no servidor do Supabase) ──
   document.getElementById('loginForm').addEventListener('submit', handleLogin);
 
-  function handleLogin(e){
+  async function handleLogin(e){
     e.preventDefault();
-    const senha = document.getElementById('inputToken').value.trim();
+    const email = document.getElementById('inputEmail').value.trim();
+    const senha = document.getElementById('inputToken').value;
     const errEl = document.getElementById('loginErr');
-    if (senha !== ADMIN_SENHA) {
-      errEl.textContent = '❌ Senha incorreta.';
-      return;
-    }
-    sessionStorage.setItem(SESSAO_KEY, '1');
+    const btn = e.target.querySelector('button[type="submit"]');
+    btn.disabled = true;
     errEl.textContent = '';
-    showPanel();
+    const { error } = await sb.auth.signInWithPassword({ email, password: senha });
+    btn.disabled = false;
+    if (error) errEl.textContent = '❌ Credenciais inválidas.';
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    if (sessionStorage.getItem(SESSAO_KEY) === '1') showPanel();
+  sb.auth.onAuthStateChange((event, session) => {
+    if (session) showPanel(); else showLogin();
   });
+
+  document.getElementById('btnLogout').addEventListener('click', async (e) => {
+    e.preventDefault();
+    await sb.auth.signOut();
+  });
+
+  function showLogin(){
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('adminPanel').style.display = 'none';
+  }
 
   async function showPanel(){
     document.getElementById('loginScreen').style.display = 'none';
@@ -276,7 +304,7 @@
   async function loadEntries(){
     try {
       const resp = await fetch(`${SUPABASE_URL}/rest/v1/guia_verbetes?select=*&order=termo.asc`, {
-        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+        headers: await authHeaders()
       });
       entries = resp.ok ? await resp.json() : [];
     } catch {
@@ -382,7 +410,7 @@
     try {
       const resp = await fetch(`${SUPABASE_URL}/rest/v1/guia_verbetes?id=eq.${id}`, {
         method: 'DELETE',
-        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+        headers: await authHeaders()
       });
       if (!resp.ok) throw new Error(await resp.text());
       showAlert('success', 'Verbete excluído.');
@@ -397,11 +425,7 @@
     const caminho = `${slug}-${Date.now()}.${extensao}`;
     const resp = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET_IMAGENS}/${caminho}`, {
       method: 'POST',
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': arquivo.type
-      },
+      headers: await authHeaders({ 'Content-Type': arquivo.type }),
       body: arquivo
     });
     if (!resp.ok) throw new Error('Falha no upload da imagem: ' + await resp.text());
@@ -418,6 +442,10 @@
       const id = document.getElementById('fId').value;
       const slug = document.getElementById('fSlug').value.trim();
       const arquivo = document.getElementById('fImagemArquivo').files[0];
+
+      if (!SLUG_RE.test(slug)) {
+        throw new Error('Slug inválido: use só letras minúsculas, números e hífen (ex.: "tatuagem-old-school").');
+      }
 
       let imagemUrl = id ? (entries.find(x => String(x.id) === String(id))?.imagem_url || null) : null;
       if (arquivo) {
@@ -447,19 +475,13 @@
       if (id) {
         resp = await fetch(`${SUPABASE_URL}/rest/v1/guia_verbetes?id=eq.${id}`, {
           method: 'PATCH',
-          headers: {
-            apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json', Prefer: 'return=minimal'
-          },
+          headers: await authHeaders({ 'Content-Type': 'application/json', Prefer: 'return=minimal' }),
           body: JSON.stringify(data)
         });
       } else {
         resp = await fetch(`${SUPABASE_URL}/rest/v1/guia_verbetes`, {
           method: 'POST',
-          headers: {
-            apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json', Prefer: 'return=minimal'
-          },
+          headers: await authHeaders({ 'Content-Type': 'application/json', Prefer: 'return=minimal' }),
           body: JSON.stringify(data)
         });
       }

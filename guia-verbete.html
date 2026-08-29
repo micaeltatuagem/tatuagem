@@ -216,7 +216,9 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
           elImagem.classList.remove('oculto');
         }
 
-        if (verbete.link_estilo) {
+        // Só aceita link interno (começa com "/") ou https:// — bloqueia
+        // esquemas perigosos como javascript:/data: vindos de um campo do banco.
+        if (verbete.link_estilo && /^(\/|https:\/\/)/i.test(verbete.link_estilo)) {
           const elLink = document.getElementById('link-estilo');
           elLink.href = verbete.link_estilo;
           elLink.classList.remove('oculto');

@@ -33,6 +33,11 @@ const CATEGORIAS = {
   termo: 'Termo'
 };
 
+// Só aceita slugs "seguros" pra usar em caminho de arquivo — bloqueia path
+// traversal (ex.: "../../algo") vindo de um valor gravado na tabela
+// guia_verbetes. Mantém em sincronia com a mesma validação em adminguia.html.
+const SLUG_RE = /^[a-z0-9-]+$/;
+
 function urlImagem(caminho) {
   if (!caminho) return '';
   if (/^https?:\/\//i.test(caminho)) return caminho;
@@ -525,16 +530,29 @@ async function main() {
   }
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
+  const verbetesValidos = [];
   for (const v of verbetes) {
     if (!v.slug) continue;
+    if (!SLUG_RE.test(v.slug)) {
+      console.warn(`  IGNORADO: slug inválido/potencialmente perigoso "${v.slug}" (id ${v.id ?? '?'}) — só letras minúsculas, números e hífen são aceitos.`);
+      continue;
+    }
+    // Defesa em profundidade: mesmo com o slug já validado pela allow-list,
+    // confirma que o caminho final continua dentro de OUTPUT_DIR antes de
+    // escrever em disco.
     const dir = path.join(OUTPUT_DIR, v.slug);
+    if (path.relative(OUTPUT_DIR, dir).startsWith('..') || path.isAbsolute(path.relative(OUTPUT_DIR, dir))) {
+      console.warn(`  IGNORADO: slug "${v.slug}" resolveria pra fora de guia/.`);
+      continue;
+    }
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, 'index.html'), renderPagina(v, posts));
     console.log(`  gerado: guia/${v.slug}/index.html`);
+    verbetesValidos.push(v);
   }
 
-  atualizarSitemap(verbetes);
-  atualizarListaEstatica(verbetes);
+  atualizarSitemap(verbetesValidos);
+  atualizarListaEstatica(verbetesValidos);
 
   console.log('Concluído.');
 }
