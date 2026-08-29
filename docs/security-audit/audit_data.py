@@ -585,15 +585,36 @@ GITHUB_ISSUES = [
 ]
 
 FIXED_IDS = {
-    "C1": "Corrigido no commit d2308a8f (adminguia.html usa supabase.auth.signInWithPassword() real; admin-guia-upload.html removido).",
+    "C1": (
+        "Corrigido no código (commit d2308a8f) e confirmado no banco: a política "
+        "\"Guia verbetes - escrita publica (anon)\" (cmd=ALL, role anon, sem condição) foi removida e "
+        "substituída por uma política restrita ao role authenticated — confirmado via consulta a "
+        "pg_policies em 29/08/2026 (só sobraram a política de SELECT público e a nova de escrita "
+        "authenticated). Pendente apenas confirmar a mesma restrição no bucket de Storage guia-imagens."
+    ),
     "A2": "Corrigido no commit d2308a8f (slug validado por allow-list + checagem de contenção de path em generate-guia-pages.js).",
     "A4": "Corrigido no commit d2308a8f (link_estilo só é usado como href se começar com '/' ou 'https://').",
+    "M3": (
+        "Corrigido no banco (29/08/2026): as políticas frouxas delete_admin/select_admin/update_admin "
+        "(que liberavam SELECT/UPDATE/DELETE pra qualquer usuário authenticated, não só o admin) foram "
+        "removidas; o INSERT público foi recriado com WITH CHECK exigindo que status_desconto, "
+        "tatuagens_feitas, indicacoes_confirmadas, sessao_gratis_liberada, sessao_gratis_usada e as "
+        "datas de liberação/uso estejam nos valores neutros de início — confirmado via consulta a "
+        "pg_policies."
+    ),
+}
+VERIFIED_OK_IDS = {
+    "M4": (
+        "Verificado no banco (29/08/2026) — não era uma vulnerabilidade: RLS de anamneses já restringe "
+        "SELECT/UPDATE/DELETE ao UUID específico do admin (auth.uid() = '9adc605d-...'), INSERT público "
+        "só (esperado). Nenhuma ação necessária."
+    ),
 }
 POST_AUDIT_NOTE = (
-    "Os achados C1, A2 e A4 já foram corrigidos no commit d2308a8f, publicado logo após esta "
-    "auditoria. Ficou pendente uma ação que só pode ser feita no dashboard do Supabase (fora deste "
-    "repositório): confirmar que a política RLS de guia_verbetes restringe INSERT/UPDATE/DELETE ao "
-    "role authenticated. Até essa confirmação, trate C1 como mitigado no código mas não fechado."
+    "C1, A2, A4 e M3 já foram corrigidos (código no commit d2308a8f; políticas RLS de guia_verbetes e "
+    "clientes_promo revisadas e confirmadas em produção em 29/08/2026). M4 foi verificado e não era uma "
+    "vulnerabilidade. Pendente: confirmar a política RLS do bucket de Storage guia-imagens (parte do "
+    "achado C1) e as recomendações de prioridade P2/P3 do relatório."
 )
 
 PROJECT_NAME = "micaeltatuagem/tatuagem"

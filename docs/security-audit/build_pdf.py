@@ -13,7 +13,7 @@ from reportlab.pdfgen import canvas as pdfcanvas
 from audit_data import (
     FINDINGS, STRENGTHS, RECOMMENDATIONS, GITHUB_ISSUES, COLORS, SEV_LABEL,
     PROJECT_NAME, AUDIT_DATE, COMMIT_SHA, SCOPE_TEXT, METHODOLOGY_TEXT,
-    FIXED_IDS, POST_AUDIT_NOTE,
+    FIXED_IDS, VERIFIED_OK_IDS, POST_AUDIT_NOTE,
 )
 
 OUT = "relatorio-auditoria-seguranca.pdf"
@@ -286,9 +286,13 @@ for cat in cat_order:
         header = f'[{f["id"]}] {sev_chip(f["sev"])} — {f["title"]}'
         if f["id"] in FIXED_IDS:
             header += f'  <font color="{COLORS["forte"]}"><b>[CORRIGIDO]</b></font>'
+        elif f["id"] in VERIFIED_OK_IDS:
+            header += f'  <font color="{COLORS["forte"]}"><b>[VERIFICADO OK]</b></font>'
         block.append(Paragraph(header, styles["FindTitle"]))
         if f["id"] in FIXED_IDS:
             block.append(Paragraph(f'<font color="{COLORS["forte"]}">✓ {FIXED_IDS[f["id"]]}</font>', styles["BodySmall"]))
+        elif f["id"] in VERIFIED_OK_IDS:
+            block.append(Paragraph(f'<font color="{COLORS["forte"]}">✓ {VERIFIED_OK_IDS[f["id"]]}</font>', styles["BodySmall"]))
         files_txt = "<br/>".join(f"• {ff}" for ff in f["files"])
         block.append(Paragraph(f'<b>Arquivo:linha</b><br/>{files_txt}', styles["BodySmall"]))
         block.append(Paragraph(f'<b>Descrição:</b> {f["desc"]}', styles["Body"]))
@@ -313,6 +317,8 @@ for f in sorted(FINDINGS, key=lambda x: -{"critica": 4, "alta": 3, "media": 2, "
     desc_txt = f["title"]
     if f["id"] in FIXED_IDS:
         desc_txt += f' <font color="{COLORS["forte"]}"><b>[CORRIGIDO]</b></font>'
+    elif f["id"] in VERIFIED_OK_IDS:
+        desc_txt += f' <font color="{COLORS["forte"]}"><b>[VERIFICADO OK]</b></font>'
     desc = Paragraph(desc_txt, styles["BodySmall"])
     table_data.append([chip, loc, desc])
 
