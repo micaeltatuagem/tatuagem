@@ -633,16 +633,21 @@ VERIFIED_OK_IDS = {
         "SELECT/UPDATE/DELETE ao UUID específico do admin (auth.uid() = '9adc605d-...'), INSERT público "
         "só (esperado). Nenhuma ação necessária."
     ),
+    "I1": (
+        "Verificado no Google Cloud Console (29/08/2026) — não era uma vulnerabilidade: a chave 'Maps "
+        "Platform API Key' já estava restrita por site (micaeltatuagem.com.br, www.micaeltatuagem.com.br "
+        "e micaeltatuagem.github.io) e por API (só Geocoding, Maps Embed, Maps JavaScript e Places API — "
+        "as 4 realmente usadas pelo site). Nenhuma ação necessária."
+    ),
 }
 PARTIAL_FIX_IDS = set()  # nada mais em estado parcial — os 9 corrigíveis foram fechados de ponta a ponta
 POST_AUDIT_NOTE = (
     "C1, A2, A3, A4, M1, M2, M3 e B1 — todos os achados de severidade crítica/alta/média/baixa que "
     "tinham correção possível — foram corrigidos no código, confirmados no banco ou confirmados em "
     "produção entre 29/08/2026 e a publicação deste relatório (commits d2308a8f, c0c86118 e db7e9bb8; "
-    "e políticas RLS/GRANT ajustadas no Supabase). M4 foi verificado e não era uma vulnerabilidade. "
-    "Restam em aberto só A1 (senha exposta no histórico git — não há como 'corrigir', só tratar como "
-    "comprometida caso reaproveitada em outro lugar) e I1 (restrição da chave do Google Maps no Google "
-    "Cloud Console — ação opcional, de baixo risco)."
+    "e políticas RLS/GRANT ajustadas no Supabase). M4 e I1 foram verificados e não eram vulnerabilidades. "
+    "Resta em aberto só A1 (senha exposta no histórico git — não há como 'corrigir', só tratar como "
+    "comprometida caso reaproveitada em outro lugar). Auditoria concluída."
 )
 
 PROJECT_NAME = "micaeltatuagem/tatuagem"
