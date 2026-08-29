@@ -56,6 +56,19 @@ A tela de login deixa de validar um token do GitHub e passa a só guardar a
 senha que você digitou (pra mandar no header Bearer). Não precisa mais
 colar um Personal Access Token inteiro no navegador — só a sua senha curta.
 
+## 5. Rate limiting (proteção contra força bruta na senha)
+
+O `wrangler.jsonc` já vem com um binding nativo de rate limiting da
+Cloudflare (5 tentativas por IP a cada 60s). Só precisa de:
+
+```bash
+npm install -g wrangler@latest   # garanta Wrangler >= 4.36.0
+wrangler deploy                  # redeploy pra aplicar o binding novo
+```
+
+Não precisa criar nada manualmente no dashboard — o binding é criado
+automaticamente no primeiro deploy depois dessa mudança.
+
 ## O que isso muda na prática
 
 - O token de verdade do GitHub nunca mais aparece no navegador, no DevTools,

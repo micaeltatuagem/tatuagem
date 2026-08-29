@@ -1129,9 +1129,20 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   const formRenderedAt = Date.now();
 
   // ── Utilitários ─────────────────────────────────────────────
+  // Código de indicação: 6 caracteres de um alfabeto de 32 símbolos (sem
+  // 0/O/1/I, que se confundem fácil no WhatsApp) gerados com
+  // crypto.getRandomValues — 32^6 ≈ 1 bilhão de combinações, contra as
+  // 9.000 do formato numérico antigo (MT-0000 a MT-9999), que dava pra
+  // varrer inteiro e coletar nome/progresso de indicação de todo mundo.
+  const CODIGO_ALFABETO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   function gerarCodigo() {
-    const n = Math.floor(1000 + Math.random() * 9000);
-    return `MT-${n}`;
+    const bytes = new Uint8Array(6);
+    crypto.getRandomValues(bytes);
+    let sufixo = '';
+    for (let i = 0; i < bytes.length; i++) {
+      sufixo += CODIGO_ALFABETO[bytes[i] % CODIGO_ALFABETO.length];
+    }
+    return `MT-${sufixo}`;
   }
 
   function formatarWhats(v) {
@@ -1324,16 +1335,12 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
       btnSubmit.disabled = false;
       btnSubmit.textContent = 'Enviar e continuar no WhatsApp';
       if (error.code === '23505') {
-        // WhatsApp ja cadastrado - busca o codigo existente e segue normalmente
-        const { data: existente } = await sb
-          .rpc('buscar_cliente_por_whatsapp', { wpp: whatsapp })
-          .maybeSingle();
-        if (existente) {
-          document.getElementById('tela-form').style.display = 'none';
-          mostrarPainel(existente.codigo_indicacao, whatsUrl);
-          return;
-        }
-        return mostrarErro('Este WhatsApp já está cadastrado. Se precisar de ajuda, entre em contato.');
+        // WhatsApp já cadastrado. Antes isso buscava e mostrava o código de
+        // indicação do dono real do número (via buscar_cliente_por_whatsapp)
+        // pra QUALQUER pessoa que digitasse esse WhatsApp — sem nenhuma prova
+        // de que o número era dela. Agora só avisa, sem devolver dado de
+        // outro cliente (ver achado M2 da auditoria de segurança).
+        return mostrarErro('Este WhatsApp já está cadastrado. Se precisar recuperar seu código de indicação, entre em contato pelo WhatsApp do estúdio.');
       }
       return mostrarErro('Erro ao cadastrar. Tente novamente ou entre em contato pelo WhatsApp.');
     }

@@ -24,6 +24,21 @@
 const REPO_OWNER = "micaeltatuagem";
 const REPO_NAME  = "tatuagem";
 
+// Comparação constant-time — evita vazar a senha por timing attack (byte a
+// byte). Sempre percorre o buffer inteiro, nunca retorna cedo por causa de
+// um byte diferente.
+function timingSafeEqual(a, b) {
+  const enc = new TextEncoder();
+  const bufA = enc.encode(a);
+  const bufB = enc.encode(b);
+  const len = Math.max(bufA.length, bufB.length, 1);
+  let diff = bufA.length === bufB.length ? 0 : 1;
+  for (let i = 0; i < len; i++) {
+    diff |= (bufA[i] || 0) ^ (bufB[i] || 0);
+  }
+  return diff === 0;
+}
+
 export default {
   async fetch(request, env) {
     // Só aceita chamadas por /gh/...
@@ -32,10 +47,24 @@ export default {
       return new Response("Not found", { status: 404 });
     }
 
-    // 1) Confere a senha enviada pelo painel admin
+    // 0) Rate limit por IP — protege ADMIN_PASSWORD (chave-mestra de escrita
+    // do repo) contra força bruta. Precisa do binding RATE_LIMITER em
+    // wrangler.jsonc (Wrangler >= 4.36.0).
+    if (env.RATE_LIMITER) {
+      const ip = request.headers.get("cf-connecting-ip") || "unknown";
+      const { success } = await env.RATE_LIMITER.limit({ key: ip });
+      if (!success) {
+        return new Response(JSON.stringify({ message: "Muitas tentativas — aguarde um minuto." }), {
+          status: 429,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+    }
+
+    // 1) Confere a senha enviada pelo painel admin (comparação constant-time)
     const auth = request.headers.get("Authorization") || "";
     const senhaEnviada = auth.replace(/^Bearer\s+/i, "");
-    if (senhaEnviada !== env.ADMIN_PASSWORD) {
+    if (!timingSafeEqual(senhaEnviada, env.ADMIN_PASSWORD)) {
       return new Response(JSON.stringify({ message: "Senha inválida" }), {
         status: 401,
         headers: { "Content-Type": "application/json" },
