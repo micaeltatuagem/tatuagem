@@ -606,10 +606,11 @@ FIXED_IDS = {
         "combinações), substituindo o formato numérico de 9.000 combinações."
     ),
     "M2": (
-        "Corrigido no commit c0c86118: removida a chamada a buscar_cliente_por_whatsapp no fluxo de "
-        "WhatsApp duplicado em reserva.html — não devolve mais dados de outro cliente. Pendente ação "
-        "manual no Supabase: REVOKE EXECUTE dessa função pro role anon (a função em si continua "
-        "chamável direto via RPC até isso ser feito)."
+        "Corrigido de ponta a ponta: código (commit c0c86118) removeu a chamada a "
+        "buscar_cliente_por_whatsapp no fluxo de WhatsApp duplicado em reserva.html; e no banco "
+        "(29/08/2026) o EXECUTE dessa função foi revogado de PUBLIC e de anon (era necessário revogar "
+        "de PUBLIC também, não só de anon, porque toda função nova recebe EXECUTE de PUBLIC por padrão "
+        "no Postgres) — confirmado via has_function_privilege('anon', ...) retornando false."
     ),
     "M3": (
         "Corrigido no banco (29/08/2026): as políticas frouxas delete_admin/select_admin/update_admin "
@@ -631,14 +632,13 @@ VERIFIED_OK_IDS = {
         "só (esperado). Nenhuma ação necessária."
     ),
 }
-PARTIAL_FIX_IDS = {"C1", "M2"}  # correção de código feita, falta ação manual (Supabase)
+PARTIAL_FIX_IDS = {"C1"}  # correção de código feita, falta ação manual (Supabase) — só o bucket guia-imagens
 POST_AUDIT_NOTE = (
-    "C1 (parcial — falta bucket guia-imagens), A2, A3, A4, M1, M2 (parcial — falta revogar a função RPC "
-    "no Supabase), M3 e B1 já foram corrigidos no código, confirmados no banco ou confirmados em "
-    "produção entre 29/08/2026 e a publicação deste relatório (commits d2308a8f, c0c86118 e db7e9bb8). "
-    "M4 foi verificado e não era uma vulnerabilidade. Ainda em aberto: A1 (senha exposta no histórico "
-    "git — não há como 'corrigir', só tratar como comprometida) e I1 (restrição da chave do Google Maps "
-    "no Google Cloud Console)."
+    "C1 (parcial — falta confirmar o bucket guia-imagens), A2, A3, A4, M1, M2, M3 e B1 já foram "
+    "corrigidos no código, confirmados no banco ou confirmados em produção entre 29/08/2026 e a "
+    "publicação deste relatório (commits d2308a8f, c0c86118 e db7e9bb8). M4 foi verificado e não era "
+    "uma vulnerabilidade. Ainda em aberto: A1 (senha exposta no histórico git — não há como 'corrigir', "
+    "só tratar como comprometida) e I1 (restrição da chave do Google Maps no Google Cloud Console)."
 )
 
 PROJECT_NAME = "micaeltatuagem/tatuagem"
