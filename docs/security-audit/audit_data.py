@@ -594,9 +594,10 @@ FIXED_IDS = {
     ),
     "A2": "Corrigido no commit d2308a8f (slug validado por allow-list + checagem de contenção de path em generate-guia-pages.js).",
     "A3": (
-        "Corrigido no commit c0c86118: adicionado rate limiting nativo da Cloudflare "
-        "(5 tentativas por IP a cada 60s) em worker.js/wrangler.jsonc, protegendo ADMIN_PASSWORD "
-        "contra força bruta. Requer redeploy do Worker (wrangler deploy) pra entrar em vigor."
+        "Corrigido e confirmado em produção (29/08/2026): rate limiting nativo da Cloudflare "
+        "(5 tentativas por IP a cada 60s) adicionado via dashboard (binding RATE_LIMITER) e código "
+        "publicado (commit db7e9bb8), protegendo ADMIN_PASSWORD contra força bruta. Testado com login "
+        "real no adminblog.html após o deploy."
     ),
     "A4": "Corrigido no commit d2308a8f (link_estilo só é usado como href se começar com '/' ou 'https://').",
     "M1": (
@@ -619,9 +620,8 @@ FIXED_IDS = {
         "pg_policies."
     ),
     "B1": (
-        "Corrigido no commit c0c86118: worker.js agora compara a senha com uma função constant-time "
-        "(timingSafeEqual), em vez do operador !== padrão do JavaScript. Depende do mesmo redeploy do "
-        "Worker que o achado A3 pra entrar em vigor em produção."
+        "Corrigido e confirmado em produção (29/08/2026): worker.js agora compara a senha com uma "
+        "função constant-time (timingSafeEqual), publicado junto com o rate limiting (commit db7e9bb8)."
     ),
 }
 VERIFIED_OK_IDS = {
@@ -631,14 +631,14 @@ VERIFIED_OK_IDS = {
         "só (esperado). Nenhuma ação necessária."
     ),
 }
-PARTIAL_FIX_IDS = {"C1", "A3", "M2", "B1"}  # correção de código feita, falta ação manual (Cloudflare/Supabase)
+PARTIAL_FIX_IDS = {"C1", "M2"}  # correção de código feita, falta ação manual (Supabase)
 POST_AUDIT_NOTE = (
-    "C1 (parcial — falta bucket guia-imagens), A2, A3 (parcial — falta redeploy do Worker), A4, M1, M2 "
-    "(parcial — falta revogar a função RPC no Supabase), M3 e B1 (parcial — mesmo redeploy do Worker "
-    "que A3) já foram corrigidos no código e/ou confirmados no banco entre 29/08/2026 e a publicação "
-    "deste relatório (commits d2308a8f e c0c86118). M4 foi verificado e não era uma vulnerabilidade. "
-    "Ainda em aberto: A1 (senha exposta no histórico git — não há como 'corrigir', só tratar como "
-    "comprometida) e I1 (restrição da chave do Google Maps no Google Cloud Console)."
+    "C1 (parcial — falta bucket guia-imagens), A2, A3, A4, M1, M2 (parcial — falta revogar a função RPC "
+    "no Supabase), M3 e B1 já foram corrigidos no código, confirmados no banco ou confirmados em "
+    "produção entre 29/08/2026 e a publicação deste relatório (commits d2308a8f, c0c86118 e db7e9bb8). "
+    "M4 foi verificado e não era uma vulnerabilidade. Ainda em aberto: A1 (senha exposta no histórico "
+    "git — não há como 'corrigir', só tratar como comprometida) e I1 (restrição da chave do Google Maps "
+    "no Google Cloud Console)."
 )
 
 PROJECT_NAME = "micaeltatuagem/tatuagem"
