@@ -593,7 +593,23 @@ FIXED_IDS = {
         "authenticated). Pendente apenas confirmar a mesma restrição no bucket de Storage guia-imagens."
     ),
     "A2": "Corrigido no commit d2308a8f (slug validado por allow-list + checagem de contenção de path em generate-guia-pages.js).",
+    "A3": (
+        "Corrigido no commit c0c86118: adicionado rate limiting nativo da Cloudflare "
+        "(5 tentativas por IP a cada 60s) em worker.js/wrangler.jsonc, protegendo ADMIN_PASSWORD "
+        "contra força bruta. Requer redeploy do Worker (wrangler deploy) pra entrar em vigor."
+    ),
     "A4": "Corrigido no commit d2308a8f (link_estilo só é usado como href se começar com '/' ou 'https://').",
+    "M1": (
+        "Corrigido no commit c0c86118: gerarCodigo() em reserva.html agora usa "
+        "crypto.getRandomValues() com alfabeto de 32 símbolos e 6 caracteres (32^6 ≈ 1 bilhão de "
+        "combinações), substituindo o formato numérico de 9.000 combinações."
+    ),
+    "M2": (
+        "Corrigido no commit c0c86118: removida a chamada a buscar_cliente_por_whatsapp no fluxo de "
+        "WhatsApp duplicado em reserva.html — não devolve mais dados de outro cliente. Pendente ação "
+        "manual no Supabase: REVOKE EXECUTE dessa função pro role anon (a função em si continua "
+        "chamável direto via RPC até isso ser feito)."
+    ),
     "M3": (
         "Corrigido no banco (29/08/2026): as políticas frouxas delete_admin/select_admin/update_admin "
         "(que liberavam SELECT/UPDATE/DELETE pra qualquer usuário authenticated, não só o admin) foram "
@@ -601,6 +617,11 @@ FIXED_IDS = {
         "tatuagens_feitas, indicacoes_confirmadas, sessao_gratis_liberada, sessao_gratis_usada e as "
         "datas de liberação/uso estejam nos valores neutros de início — confirmado via consulta a "
         "pg_policies."
+    ),
+    "B1": (
+        "Corrigido no commit c0c86118: worker.js agora compara a senha com uma função constant-time "
+        "(timingSafeEqual), em vez do operador !== padrão do JavaScript. Depende do mesmo redeploy do "
+        "Worker que o achado A3 pra entrar em vigor em produção."
     ),
 }
 VERIFIED_OK_IDS = {
@@ -610,11 +631,14 @@ VERIFIED_OK_IDS = {
         "só (esperado). Nenhuma ação necessária."
     ),
 }
+PARTIAL_FIX_IDS = {"C1", "A3", "M2", "B1"}  # correção de código feita, falta ação manual (Cloudflare/Supabase)
 POST_AUDIT_NOTE = (
-    "C1, A2, A4 e M3 já foram corrigidos (código no commit d2308a8f; políticas RLS de guia_verbetes e "
-    "clientes_promo revisadas e confirmadas em produção em 29/08/2026). M4 foi verificado e não era uma "
-    "vulnerabilidade. Pendente: confirmar a política RLS do bucket de Storage guia-imagens (parte do "
-    "achado C1) e as recomendações de prioridade P2/P3 do relatório."
+    "C1 (parcial — falta bucket guia-imagens), A2, A3 (parcial — falta redeploy do Worker), A4, M1, M2 "
+    "(parcial — falta revogar a função RPC no Supabase), M3 e B1 (parcial — mesmo redeploy do Worker "
+    "que A3) já foram corrigidos no código e/ou confirmados no banco entre 29/08/2026 e a publicação "
+    "deste relatório (commits d2308a8f e c0c86118). M4 foi verificado e não era uma vulnerabilidade. "
+    "Ainda em aberto: A1 (senha exposta no histórico git — não há como 'corrigir', só tratar como "
+    "comprometida) e I1 (restrição da chave do Google Maps no Google Cloud Console)."
 )
 
 PROJECT_NAME = "micaeltatuagem/tatuagem"

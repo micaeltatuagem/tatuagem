@@ -13,7 +13,7 @@ from reportlab.pdfgen import canvas as pdfcanvas
 from audit_data import (
     FINDINGS, STRENGTHS, RECOMMENDATIONS, GITHUB_ISSUES, COLORS, SEV_LABEL,
     PROJECT_NAME, AUDIT_DATE, COMMIT_SHA, SCOPE_TEXT, METHODOLOGY_TEXT,
-    FIXED_IDS, VERIFIED_OK_IDS, POST_AUDIT_NOTE,
+    FIXED_IDS, VERIFIED_OK_IDS, PARTIAL_FIX_IDS, POST_AUDIT_NOTE,
 )
 
 OUT = "relatorio-auditoria-seguranca.pdf"
@@ -284,13 +284,15 @@ for cat in cat_order:
     for f in sorted(cat_findings, key=lambda x: -{"critica": 4, "alta": 3, "media": 2, "baixa": 1, "informativa": 0}[x["sev"]]):
         block = []
         header = f'[{f["id"]}] {sev_chip(f["sev"])} — {f["title"]}'
+        badge_color = COLORS["media"] if f["id"] in PARTIAL_FIX_IDS else COLORS["forte"]
+        badge_label = "[CORRIGIDO NO CÓDIGO — AÇÃO PENDENTE]" if f["id"] in PARTIAL_FIX_IDS else "[CORRIGIDO]"
         if f["id"] in FIXED_IDS:
-            header += f'  <font color="{COLORS["forte"]}"><b>[CORRIGIDO]</b></font>'
+            header += f'  <font color="{badge_color}"><b>{badge_label}</b></font>'
         elif f["id"] in VERIFIED_OK_IDS:
             header += f'  <font color="{COLORS["forte"]}"><b>[VERIFICADO OK]</b></font>'
         block.append(Paragraph(header, styles["FindTitle"]))
         if f["id"] in FIXED_IDS:
-            block.append(Paragraph(f'<font color="{COLORS["forte"]}">✓ {FIXED_IDS[f["id"]]}</font>', styles["BodySmall"]))
+            block.append(Paragraph(f'<font color="{badge_color}">✓ {FIXED_IDS[f["id"]]}</font>', styles["BodySmall"]))
         elif f["id"] in VERIFIED_OK_IDS:
             block.append(Paragraph(f'<font color="{COLORS["forte"]}">✓ {VERIFIED_OK_IDS[f["id"]]}</font>', styles["BodySmall"]))
         files_txt = "<br/>".join(f"• {ff}" for ff in f["files"])
@@ -316,7 +318,9 @@ for f in sorted(FINDINGS, key=lambda x: -{"critica": 4, "alta": 3, "media": 2, "
     loc = Paragraph(f'[{f["id"]}] ' + f["files"][0].split(" (")[0], styles["BodySmall"])
     desc_txt = f["title"]
     if f["id"] in FIXED_IDS:
-        desc_txt += f' <font color="{COLORS["forte"]}"><b>[CORRIGIDO]</b></font>'
+        t_color = COLORS["media"] if f["id"] in PARTIAL_FIX_IDS else COLORS["forte"]
+        t_label = "[PARCIAL]" if f["id"] in PARTIAL_FIX_IDS else "[CORRIGIDO]"
+        desc_txt += f' <font color="{t_color}"><b>{t_label}</b></font>'
     elif f["id"] in VERIFIED_OK_IDS:
         desc_txt += f' <font color="{COLORS["forte"]}"><b>[VERIFICADO OK]</b></font>'
     desc = Paragraph(desc_txt, styles["BodySmall"])
