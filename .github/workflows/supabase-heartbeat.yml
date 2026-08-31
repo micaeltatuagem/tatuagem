@@ -2,7 +2,7 @@ name: Supabase Heartbeat
 
 on:
   schedule:
-    - cron: '0 9 * * 0,3'   # domingo e quarta, 9h UTC
+    - cron: '0 9 * * 0,3' # domingo e quarta, 9h UTC
   workflow_dispatch: {}
 
 permissions:
@@ -14,35 +14,76 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Ping Supabase (heartbeat table)
         id: read
         run: |
-          curl -sf -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/heartbeat?select=id&order=id.desc&limit=1" \
+          if [ -z "${{ secrets.SUPABASE_URL }}" ] || [ -z "${{ secrets.SUPABASE_ANON_KEY }}" ]; then
+            echo "::error::SUPABASE_URL ou SUPABASE_ANON_KEY não configurados nos Secrets do repositório."
+            exit 1
+          fi
+
+          HTTP_STATUS=$(curl -s -o response.json -w "%{http_code}" -X GET \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/heartbeat?select=id&order=id.desc&limit=1" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
+
+          echo "HTTP status: $HTTP_STATUS"
+          echo "Resposta:"
+          cat response.json
+
+          if [ "$HTTP_STATUS" -ge 400 ]; then
+            echo "::error::Falha no SELECT do heartbeat (HTTP $HTTP_STATUS)."
+            exit 22
+          fi
 
       - name: Insert new heartbeat row
         id: insert
         run: |
-          curl -sf -X POST "${{ secrets.SUPABASE_URL }}/rest/v1/heartbeat" \
+          HTTP_STATUS=$(curl -s -o response.json -w "%{http_code}" -X POST \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/heartbeat" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Content-Type: application/json" \
             -H "Prefer: return=minimal" \
-            -d '{}'
+            -d '{}')
+
+          echo "HTTP status: $HTTP_STATUS"
+          echo "Resposta:"
+          cat response.json
+
+          if [ "$HTTP_STATUS" -ge 400 ]; then
+            echo "::error::Falha no INSERT do heartbeat (HTTP $HTTP_STATUS)."
+            exit 22
+          fi
 
       - name: Delete heartbeat rows older than 7 days
         id: cleanup
         run: |
+          if [ -z "${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" ]; then
+            echo "::error::SUPABASE_SERVICE_ROLE_KEY não configurado nos Secrets do repositório."
+            exit 1
+          fi
+
           CUTOFF=$(date -u -d '7 days ago' +"%Y-%m-%dT%H:%M:%SZ")
-          curl -sf -X DELETE "${{ secrets.SUPABASE_URL }}/rest/v1/heartbeat?created_at=lt.${CUTOFF}" \
+
+          HTTP_STATUS=$(curl -s -o response.json -w "%{http_code}" -X DELETE \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/heartbeat?created_at=lt.${CUTOFF}" \
             -H "apikey: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
-            -H "Prefer: return=minimal"
-        # Nota: DELETE via anon/publishable key normalmente é bloqueado por RLS (o que é bom!).
-        # Por isso essa etapa usa a secret key (antiga service_role), que ignora RLS.
+            -H "Prefer: return=minimal")
+
+          echo "HTTP status: $HTTP_STATUS"
+          echo "Resposta:"
+          cat response.json
+
+          if [ "$HTTP_STATUS" -ge 400 ]; then
+            echo "::error::Falha no DELETE do heartbeat (HTTP $HTTP_STATUS)."
+            exit 22
+          fi
+          # Nota: DELETE via anon/publishable key normalmente é bloqueado por RLS (o que é bom!).
+          # Por isso essa etapa usa a secret key (antiga service_role), que ignora RLS.
 
       - name: Update last-run marker (keeps repo active)
         run: |
@@ -56,7 +97,7 @@ jobs:
 
       - name: Open issue on failure
         if: failure()
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             await github.rest.issues.create({
@@ -64,7 +105,7 @@ jobs:
               repo: context.repo.repo,
               title: `🔴 Supabase Heartbeat falhou em ${new Date().toISOString().slice(0,10)}`,
               body: [
-                'O workflow **Supabase Heartbeat** falhou.',
+                'O workflow Supabase Heartbeat falhou.',
                 '',
                 `Run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
                 '',
