@@ -604,6 +604,48 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     letter-spacing:.03em; cursor:pointer;
   }
 
+  /* ---- Régua de medidas (calibração de tamanho real em cm) ---- */
+  .measure-chips{ display:flex; gap:6px; flex-wrap:wrap; }
+  .measure-chips button{
+    background:transparent; border:1px solid var(--line); color:var(--paper);
+    border-radius:20px; padding:5px 11px; font-size:11px; cursor:pointer;
+  }
+  .measure-chips button:hover{ border-color:var(--gold); color:var(--gold); }
+  #measureCmInput{
+    width:64px; background:var(--ink); border:1px solid var(--line); color:var(--paper);
+    border-radius:4px; padding:6px 8px; font-size:13px;
+  }
+  #measureApplyBtn{
+    flex:0 0 auto; background:transparent; color:var(--gold); border:1px solid var(--gold);
+    border-radius:4px; padding:8px 14px; font-size:12px; font-weight:600;
+    letter-spacing:.03em; cursor:pointer;
+  }
+  .ruler-tool{
+    position:absolute; top:50%; left:50%; height:0; z-index:40;
+    display:none;
+  }
+  .canvas-shell.measure-mode .ruler-tool{ display:block; }
+  .canvas-shell.measure-mode .zoom-stage{ cursor:default; }
+  .ruler-tool .ruler-line{
+    position:absolute; top:0; left:0; height:2px; background:var(--crimson-bright);
+    box-shadow:0 0 0 1px rgba(0,0,0,.4);
+  }
+  .ruler-tool .ruler-handle{
+    position:absolute; top:0; width:20px; height:20px; margin-top:-10px; margin-left:-10px;
+    border-radius:50%; background:var(--crimson-bright); border:2px solid #fff;
+    touch-action:none; cursor:ew-resize;
+  }
+  .ruler-tool .ruler-badge{
+    position:absolute; top:-30px; left:50%; transform:translateX(-50%);
+    background:rgba(13,13,13,.88); border:1px solid var(--gold); color:var(--gold);
+    font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:.03em;
+    padding:3px 9px; border-radius:4px; white-space:nowrap;
+  }
+  .cm-readout{
+    font-size:11.5px; color:var(--gold); margin-top:6px; min-height:14px;
+  }
+  .cm-readout.hint{ color:var(--text-dim); font-style:italic; }
+
   #baseImg{
     position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
     display:none;
@@ -1206,6 +1248,9 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     <button class="strip-btn" id="baseToggleBtn" title="Base de corpo pronta" aria-label="Base de corpo pronta">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg>
     </button>
+    <button class="strip-btn" id="rulerBtn" title="Ver tamanho real em cm" aria-label="Calibrar e ver tamanho real em centímetros">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="9" width="19" height="6" rx="1"/><path d="M6.5 9v2.6M10 9v1.6M13.5 9v2.6M17 9v1.6"/></svg>
+    </button>
     <button class="strip-btn" id="resetBtn" title="Reiniciar" aria-label="Reiniciar">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
     </button>
@@ -1279,6 +1324,18 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     <button type="button" id="drawDoneBtn">Concluir</button>
   </div>
 
+  <div class="draw-bar" id="measureBar" style="flex-wrap:wrap;">
+    <span class="draw-bar-label" style="flex-basis:100%;">Arraste as duas pontas da régua até cobrir algo que você sabe o tamanho real, depois digite quantos cm isso mede.</span>
+    <div class="measure-chips" id="measureChips">
+      <button type="button" data-cm="14">Cédula de dinheiro · 14cm</button>
+      <button type="button" data-cm="8.5">Cartão · 8,5cm</button>
+    </div>
+    <input type="number" id="measureCmInput" min="1" max="60" step="0.5" value="14" inputmode="decimal">
+    <span class="draw-bar-width">cm</span>
+    <button type="button" id="measureApplyBtn">Aplicar</button>
+    <button type="button" id="measureDoneBtn">Concluir</button>
+  </div>
+
   <div class="gallery-strip aged-paper" id="galleryStrip">
     <div class="gallery-expand-handle" id="galleryExpandHandle" title="Expandir/recolher galeria" aria-label="Expandir ou recolher galeria de flashs">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
@@ -1339,6 +1396,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     <div class="control">
       <label>Escala <span id="scaleVal">100%</span></label>
       <input type="range" id="scaleRange" min="20" max="300" value="100">
+      <div class="cm-readout hint" id="cmReadout">Toque em 📏 na barra de cima pra ver o tamanho em cm</div>
     </div>
     <div class="control">
       <label>Rotação <span id="rotVal">0°</span></label>
@@ -1445,6 +1503,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   // backdrop modal — assim o canvas continua recebendo toque enquanto ela está aberta.
   let drawMode = false;
   function enterDrawMode(){
+    exitMeasureMode();
     drawMode = true;
     drawToggleBtn.classList.add('active');
     canvasShell.classList.add('draw-mode');
@@ -1465,6 +1524,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
 
   function openPopover(id){
     exitDrawMode();
+    exitMeasureMode();
     document.querySelectorAll('.popover.open').forEach(p => p.classList.remove('open'));
     document.getElementById(id).classList.add('open');
     popoverBackdrop.classList.add('open');
@@ -1489,6 +1549,15 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
       enterDrawMode();
     }
   });
+  rulerBtn.addEventListener('click', () => {
+    if(measureMode){
+      exitMeasureMode();
+    } else {
+      closeAllPopovers();
+      exitDrawMode();
+      enterMeasureMode();
+    }
+  });
 
   const flashGrid = document.getElementById('flashGrid');
   const uploadFlashInput = document.getElementById('customFlashInput');
@@ -1496,6 +1565,13 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   const bodyPhotoInput = document.getElementById('bodyPhotoInput');
   const uploadBtn = document.getElementById('uploadBtn');
   const resetBtn = document.getElementById('resetBtn');
+  const rulerBtn = document.getElementById('rulerBtn');
+  const measureBar = document.getElementById('measureBar');
+  const measureChips = document.getElementById('measureChips');
+  const measureCmInput = document.getElementById('measureCmInput');
+  const measureApplyBtn = document.getElementById('measureApplyBtn');
+  const measureDoneBtn = document.getElementById('measureDoneBtn');
+  const cmReadout = document.getElementById('cmReadout');
   const downloadBtn = document.getElementById('downloadBtn');
   const shareBtn = document.getElementById('shareBtn');
 
@@ -1659,6 +1735,132 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
       x: (clientX - stageRect.left) / stageRect.width * shellRect.width,
       y: (clientY - stageRect.top) / stageRect.height * shellRect.height
     };
+  }
+
+  // ---------- Régua de medidas: calibra px-por-cm arrastando 2 pontas sobre uma
+  // referência real (cédula, cartão) e mostra o tamanho aproximado da tatuagem em cm.
+  // Vive no mesmo #layersContainer que as outras camadas, em px "lógicos" do
+  // canvasShell (mesmo espaço de getStagePoint), então acompanha o zoom igual a tudo mais.
+  let measureMode = false;
+  let pxPerCm = null;
+  let rulerEl = null;
+  let rulerLine = null;
+  let rulerHandleL = null;
+  let rulerHandleR = null;
+  let rulerBadge = null;
+  let ruler = null; // { xL, xR, y } em px lógicos do canvasShell
+
+  function ensureRulerDom(){
+    if(rulerEl) return;
+    rulerEl = document.createElement('div');
+    rulerEl.className = 'ruler-tool';
+    rulerLine = document.createElement('div');
+    rulerLine.className = 'ruler-line';
+    rulerBadge = document.createElement('div');
+    rulerBadge.className = 'ruler-badge';
+    rulerHandleL = document.createElement('div');
+    rulerHandleL.className = 'ruler-handle';
+    rulerHandleR = document.createElement('div');
+    rulerHandleR.className = 'ruler-handle';
+    rulerEl.append(rulerLine, rulerBadge, rulerHandleL, rulerHandleR);
+    layersContainer.appendChild(rulerEl);
+
+    let dragSide = null;
+    function onDown(side){
+      return (e) => {
+        e.stopPropagation();
+        dragSide = side;
+        e.target.setPointerCapture && e.target.setPointerCapture(e.pointerId);
+      };
+    }
+    rulerHandleL.addEventListener('pointerdown', onDown('L'));
+    rulerHandleR.addEventListener('pointerdown', onDown('R'));
+    window.addEventListener('pointermove', (e) => {
+      if(!dragSide || !ruler) return;
+      const p = getStagePoint(e.clientX, e.clientY);
+      if(dragSide === 'L') ruler.xL = p.x; else ruler.xR = p.x;
+      renderRuler();
+    });
+    window.addEventListener('pointerup', () => { dragSide = null; });
+  }
+
+  function renderRuler(){
+    if(!ruler) return;
+    const x1 = Math.min(ruler.xL, ruler.xR);
+    const x2 = Math.max(ruler.xL, ruler.xR);
+    rulerEl.style.left = x1 + 'px';
+    rulerEl.style.top = ruler.y + 'px';
+    const w = x2 - x1;
+    rulerLine.style.width = w + 'px';
+    rulerHandleL.style.left = '0px';
+    rulerHandleR.style.left = w + 'px';
+    rulerBadge.style.left = (w/2) + 'px';
+    rulerBadge.textContent = pxPerCm ? (w / pxPerCm).toFixed(1) + ' cm' : Math.round(w) + ' px';
+  }
+
+  function enterMeasureMode(){
+    ensureRulerDom();
+    const shellRect = canvasShell.getBoundingClientRect();
+    if(!ruler){
+      const cx = shellRect.width / 2, halfW = Math.min(90, shellRect.width * 0.28);
+      ruler = { xL: cx - halfW, xR: cx + halfW, y: shellRect.height / 2 };
+    }
+    measureMode = true;
+    rulerBtn.classList.add('active');
+    canvasShell.classList.add('measure-mode');
+    measureBar.classList.add('open');
+    renderRuler();
+  }
+
+  function exitMeasureMode(){
+    measureMode = false;
+    rulerBtn.classList.remove('active');
+    canvasShell.classList.remove('measure-mode');
+    measureBar.classList.remove('open');
+  }
+
+  function resetCalibration(){
+    pxPerCm = null;
+    ruler = null;
+    updateCmReadout();
+  }
+
+  measureChips.querySelectorAll('button[data-cm]').forEach(btn => {
+    btn.addEventListener('click', () => { measureCmInput.value = btn.dataset.cm; });
+  });
+
+  measureApplyBtn.addEventListener('click', () => {
+    const cm = parseFloat(measureCmInput.value);
+    if(!ruler || !cm || cm <= 0){
+      alert('Digite quantos centímetros a régua vermelha está cobrindo.');
+      return;
+    }
+    const widthPx = Math.abs(ruler.xR - ruler.xL);
+    pxPerCm = widthPx / cm;
+    renderRuler();
+    updateCmReadout();
+  });
+
+  measureDoneBtn.addEventListener('click', exitMeasureMode);
+
+  // atualiza o "≈ X cm" mostrado no popover de Ajustar camada, pra camada ativa
+  function updateCmReadout(){
+    if(!cmReadout) return;
+    if(!pxPerCm){
+      cmReadout.textContent = 'Toque em 📏 na barra de cima pra ver o tamanho em cm';
+      cmReadout.classList.add('hint');
+      return;
+    }
+    const layer = layers.find(l => l.id === activeLayerId);
+    if(!layer || layer.type !== 'image'){
+      cmReadout.textContent = 'Régua calibrada — selecione um flash pra ver o tamanho';
+      cmReadout.classList.add('hint');
+      return;
+    }
+    // mesma referência usada na exportação: caixa da camada é 160px lógicos * escala
+    const widthCm = (160 * layer.scale) / pxPerCm;
+    cmReadout.textContent = `≈ ${widthCm.toFixed(1)} cm de largura nessa foto`;
+    cmReadout.classList.remove('hint');
   }
 
   function renderStrokePreview(){
@@ -2199,6 +2401,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     if(!layer){
       activeLayerLabel.textContent = 'Nenhuma camada selecionada';
       textControls.style.display = 'none';
+      updateCmReadout();
       return;
     }
     opacityRange.value = Math.round(layer.opacity * 100);
@@ -2210,6 +2413,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     rotVal.textContent = layer.rotation + '°';
     flipBtn.classList.toggle('active', !!layer.mirror);
     activeLayerLabel.textContent = 'Editando camada ' + (layers.findIndex(l => l.id === id) + 1) + ' de ' + layers.length;
+    updateCmReadout();
 
     if(layer.type === 'text'){
       textControls.style.display = 'flex';
@@ -2302,6 +2506,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     baseImg.style.display = 'block';
     emptyState.style.display = 'none';
     resetZoom();
+    resetCalibration();
     updateDownloadState();
   }
   uploadBtn.addEventListener('click', () => bodyPhotoInput.click());
@@ -2396,6 +2601,8 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     emptyState.style.display = 'flex';
     baseThumbs.querySelectorAll('.base-thumb').forEach(n => n.classList.remove('selected'));
     resetZoom();
+    resetCalibration();
+    exitMeasureMode();
     updateLayerThumbs();
     [opacityRange, blendMode, scaleRange, rotRange, flipBtn, deleteSelectedBtn].forEach(c => c.disabled = true);
     activeLayerLabel.textContent = 'Nenhuma camada selecionada';
@@ -2430,6 +2637,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     if(!layer) return;
     layer.scale = scaleRange.value / 100;
     applyLayerStyle(layer);
+    updateCmReadout();
   });
   rotRange.addEventListener('input', () => {
     const layer = layers.find(l => l.id === activeLayerId);

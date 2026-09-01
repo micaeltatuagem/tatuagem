@@ -386,6 +386,55 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     }
     .payment-card ul li::before { content: '—'; position: absolute; left: 0; color: var(--accent); }
 
+    /* ── Régua de medidas: referência de tamanho por região do corpo ── */
+    .size-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.1rem;
+      margin: 1.6rem 0 .6rem;
+    }
+    @media (max-width: 640px) {
+      .size-grid { grid-template-columns: 1fr; }
+    }
+    .size-card {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.1rem 1.3rem;
+      background: rgba(212,201,176,0.04);
+    }
+    .size-card h4 {
+      font-family: 'IM Fell English', serif;
+      font-style: italic;
+      color: var(--accent);
+      font-size: .95rem;
+      letter-spacing: .03em;
+      margin-bottom: .8rem;
+    }
+    .size-row { display: flex; align-items: center; gap: .55rem; margin-bottom: .5rem; }
+    .size-row:last-child { margin-bottom: 0; }
+    .size-tag {
+      flex: 0 0 16px;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: .92rem;
+      color: var(--muted);
+    }
+    .size-bar {
+      flex: 1 1 auto;
+      height: 5px;
+      background: rgba(212,201,176,0.08);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .size-bar i { display: block; height: 100%; background: var(--accent); border-radius: 3px; }
+    .size-cm {
+      flex: 0 0 40px;
+      text-align: right;
+      font-size: .82rem;
+      color: var(--bone);
+      opacity: .8;
+    }
+
     .cta-box {
       text-align: center;
       padding: 2.4rem 1.5rem;
@@ -615,6 +664,50 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
       <span class="value">R$350<small>,00</small></span>
     </div>
     <p>Essas peças já incluem o retoque garantido entre 30 e 90 dias depois da execução: é nessa janela que se checa se precisa puxar contraste ou corrigir algum encontro de linha. Passado esse prazo, o retoque passa a ser cobrado pelo valor mínimo vigente.</p>
+  </div>
+
+  <div class="price-block" id="tamanhos">
+    <h2>Quanto mede uma tatuagem?</h2>
+    <p>Essa é uma das dúvidas mais comuns antes de fechar o desenho. Como referência, uso três faixas — P, M e G — pra cada região do corpo. O tamanho final sempre depende do desenho, mas essa régua já ajuda a imaginar o resultado antes de conversarmos.</p>
+    <div class="size-grid">
+      <div class="size-card">
+        <h4>Antebraço</h4>
+        <div class="size-row"><span class="size-tag">P</span><span class="size-bar"><i style="width:23%"></i></span><span class="size-cm">8 cm</span></div>
+        <div class="size-row"><span class="size-tag">M</span><span class="size-bar"><i style="width:43%"></i></span><span class="size-cm">15 cm</span></div>
+        <div class="size-row"><span class="size-tag">G</span><span class="size-bar"><i style="width:63%"></i></span><span class="size-cm">22 cm</span></div>
+      </div>
+      <div class="size-card">
+        <h4>Braço (bíceps/tríceps)</h4>
+        <div class="size-row"><span class="size-tag">P</span><span class="size-bar"><i style="width:29%"></i></span><span class="size-cm">10 cm</span></div>
+        <div class="size-row"><span class="size-tag">M</span><span class="size-bar"><i style="width:51%"></i></span><span class="size-cm">18 cm</span></div>
+        <div class="size-row"><span class="size-tag">G</span><span class="size-bar"><i style="width:71%"></i></span><span class="size-cm">25 cm</span></div>
+      </div>
+      <div class="size-card">
+        <h4>Coxa</h4>
+        <div class="size-row"><span class="size-tag">P</span><span class="size-bar"><i style="width:34%"></i></span><span class="size-cm">12 cm</span></div>
+        <div class="size-row"><span class="size-tag">M</span><span class="size-bar"><i style="width:57%"></i></span><span class="size-cm">20 cm</span></div>
+        <div class="size-row"><span class="size-tag">G</span><span class="size-bar"><i style="width:86%"></i></span><span class="size-cm">30 cm</span></div>
+      </div>
+      <div class="size-card">
+        <h4>Panturrilha</h4>
+        <div class="size-row"><span class="size-tag">P</span><span class="size-bar"><i style="width:29%"></i></span><span class="size-cm">10 cm</span></div>
+        <div class="size-row"><span class="size-tag">M</span><span class="size-bar"><i style="width:46%"></i></span><span class="size-cm">16 cm</span></div>
+        <div class="size-row"><span class="size-tag">G</span><span class="size-bar"><i style="width:63%"></i></span><span class="size-cm">22 cm</span></div>
+      </div>
+      <div class="size-card">
+        <h4>Costas (omoplata)</h4>
+        <div class="size-row"><span class="size-tag">P</span><span class="size-bar"><i style="width:34%"></i></span><span class="size-cm">12 cm</span></div>
+        <div class="size-row"><span class="size-tag">M</span><span class="size-bar"><i style="width:57%"></i></span><span class="size-cm">20 cm</span></div>
+        <div class="size-row"><span class="size-tag">G</span><span class="size-bar"><i style="width:100%"></i></span><span class="size-cm">35 cm</span></div>
+      </div>
+      <div class="size-card">
+        <h4>Punho / Tornozelo</h4>
+        <div class="size-row"><span class="size-tag">P</span><span class="size-bar"><i style="width:14%"></i></span><span class="size-cm">5 cm</span></div>
+        <div class="size-row"><span class="size-tag">M</span><span class="size-bar"><i style="width:23%"></i></span><span class="size-cm">8 cm</span></div>
+        <div class="size-row"><span class="size-tag">G</span><span class="size-bar"><i style="width:34%"></i></span><span class="size-cm">12 cm</span></div>
+      </div>
+    </div>
+    <p class="price-note">Flash até 15cm (faixa M) entra no valor fechado de R$350 — acima disso, vira sessão avulsa. Quer ver o tamanho real na sua própria pele antes de decidir? Use o <a href="preview-tatuagem" style="color:var(--accent);">Criar</a>, que já mostra o tamanho em centímetros direto na sua foto.</p>
   </div>
 
   <div class="price-block" id="layaway">
