@@ -1488,6 +1488,31 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
 
 <script>
 (function(){
+  // ---------- Lazy-load real de imagens (grade de flash tem 600+ itens; o
+  // atributo nativo loading="lazy" só existe a partir do Safari 15.4, então em
+  // iOS mais antigo (iPhone 7 etc.) TODAS as imagens tentavam carregar de uma
+  // vez na abertura da página, travando aparelhos com pouca RAM). IntersectionObserver
+  // existe desde o Safari 12.1, então isso cobre praticamente qualquer aparelho em uso. ----------
+  const lazyImgObserver = ('IntersectionObserver' in window)
+    ? new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if(!entry.isIntersecting) return;
+          const img = entry.target;
+          if(img.dataset.src){ img.src = img.dataset.src; img.removeAttribute('data-src'); }
+          observer.unobserve(img);
+        });
+      }, { rootMargin: '400px 0px', threshold: 0.01 })
+    : null;
+
+  function lazyLoadImg(img, src){
+    if(lazyImgObserver){
+      img.dataset.src = src;
+      lazyImgObserver.observe(img);
+    } else {
+      img.src = src;
+    }
+  }
+
   // ---------- Popovers (painéis contextuais) ----------
   const popoverBackdrop = document.getElementById('popoverBackdrop');
   const galleryStrip = document.getElementById('galleryStrip');
@@ -2293,7 +2318,8 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     el.className = 'flash-item';
     el.draggable = true;
     const altText = nome || `Opção de flash ${index+1}`;
-    el.innerHTML = `<span class="num">${String(index+1).padStart(2,'0')}</span><img src="${src}" alt="${altText}" loading="lazy">`;
+    el.innerHTML = `<span class="num">${String(index+1).padStart(2,'0')}</span><img alt="${altText}">`;
+    lazyLoadImg(el.querySelector('img'), src);
     el.addEventListener('click', () => addImageLayer(src));
     el.addEventListener('dragstart', (e) => {
       e.dataTransfer.effectAllowed = 'copy';
@@ -2632,7 +2658,8 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
       // então sempre usamos uma imagem estática (a capa gerada automaticamente
       // no upload, se o item de referência for vídeo).
       const stillUrl = item.isVideo ? (item.posterUrl || item.imageUrl) : item.imageUrl;
-      thumb.innerHTML = `<img src="${stillUrl}" alt="${item.nome}" loading="lazy">`;
+      thumb.innerHTML = `<img alt="${item.nome}">`;
+      lazyLoadImg(thumb.querySelector('img'), stillUrl);
       thumb.addEventListener('click', () => {
         baseThumbs.querySelectorAll('.base-thumb').forEach(t => t.classList.remove('selected'));
         thumb.classList.add('selected');
