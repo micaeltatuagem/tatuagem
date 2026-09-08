@@ -2462,9 +2462,11 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     applyLayerStyle(layer);
 
     el.addEventListener('pointerdown', (e) => {
-      // com o modo desenho ativo, deixa o toque "passar direto" pro canvasShell,
-      // que inicia um traço novo por cima da camada em vez de selecioná-la/movê-la
-      if(drawMode) return;
+      // Tocar diretamente numa camada já existente sempre seleciona/move ela,
+      // mesmo com o modo desenho ativo (que agora é o padrão de abertura da
+      // ferramenta) -- senão arrastar um flash/texto que já foi colocado saía
+      // desenhando uma linha em cima em vez de mover. Desenhar continua
+      // funcionando normalmente em qualquer área vazia do canvas/foto base.
       const role = e.target.dataset ? e.target.dataset.role : null;
       selectLayer(layer.id);
       if(role === 'del'){
