@@ -599,6 +599,13 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   }
   .draw-bar input[type="range"]{ flex:1 1 90px; min-width:70px; }
   .draw-bar-width{ font-size:11.5px; color:var(--gold); flex:0 0 auto; min-width:32px; }
+  .brush-toggle{ display:flex; gap:4px; flex:0 0 auto; }
+  .brush-toggle button{
+    width:34px; height:34px; border:1px solid var(--line); border-radius:4px;
+    background:none; color:var(--paper); font-size:15px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; line-height:1;
+  }
+  .brush-toggle button.active{ border-color:var(--gold); background:var(--gold); }
   #drawDoneBtn{
     flex:0 0 auto; background:var(--gold); color:#1b1710; border:none;
     border-radius:4px; padding:8px 14px; font-size:12px; font-weight:600;
@@ -1318,9 +1325,13 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   </div>
 
   <div class="draw-bar" id="drawBar">
-    <span class="draw-bar-label">Desenhando à mão livre — toque e arraste na foto</span>
+    <span class="draw-bar-label">Desenhando à mão livre — toque e arraste na tela</span>
+    <div class="brush-toggle" id="brushToggle" role="group" aria-label="Tipo de traço">
+      <button type="button" class="active" data-brush="pen" title="Caneta (traço firme)">✏️</button>
+      <button type="button" data-brush="airbrush" title="Aerógrafo (traço suave, tipo spray)">💨</button>
+    </div>
     <input type="color" id="drawColorInput" value="#1b1710" title="Cor do traço">
-    <input type="range" id="drawWidthRange" min="1" max="24" value="4" title="Espessura do traço">
+    <input type="range" id="drawWidthRange" min="1" max="40" value="4" title="Espessura do traço">
     <span class="draw-bar-width" id="drawWidthVal">4px</span>
     <button type="button" id="drawDoneBtn">Concluir</button>
   </div>
@@ -1495,6 +1506,14 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   const drawWidthVal = document.getElementById('drawWidthVal');
   const drawBar = document.getElementById('drawBar');
   const drawDoneBtn = document.getElementById('drawDoneBtn');
+  const brushToggle = document.getElementById('brushToggle');
+  let drawBrushType = 'pen';
+  brushToggle.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      drawBrushType = btn.dataset.brush;
+      brushToggle.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
+    });
+  });
 
   // ---------- Modo "desenhar à mão livre" ----------
   // Cada traço vira sua própria camada (mesmo sistema de mover/girar/redimensionar/apagar
@@ -1863,22 +1882,59 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     cmReadout.classList.remove('hint');
   }
 
+  // Aerógrafo: em vez de um traço único e firme, desenha duas passadas por cima do
+  // mesmo caminho -- um "halo" largo e bem borrado por baixo (baixa opacidade) e um
+  // núcleo mais estreito e menos borrado por cima -- simulando a borda difusa de spray.
+  const AB_OUTER_WIDTH_MULT = 2.2, AB_OUTER_BLUR_MULT = 0.55, AB_OUTER_OPACITY = 0.35;
+  const AB_INNER_WIDTH_MULT = 1.15, AB_INNER_BLUR_MULT = 0.2, AB_INNER_OPACITY = 0.55;
+
+  function airbrushSvgMarkup(idPrefix){
+    return `<defs>
+        <filter id="${idPrefix}-o" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="1"/></filter>
+        <filter id="${idPrefix}-i" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="1"/></filter>
+      </defs>
+      <polyline class="ab-outer" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="${AB_OUTER_OPACITY}" filter="url(#${idPrefix}-o)"/>
+      <polyline class="ab-inner" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="${AB_INNER_OPACITY}" filter="url(#${idPrefix}-i)"/>`;
+  }
+
+  function updateAirbrushSvg(svgRoot, idPrefix, pointsAttr, color, width){
+    svgRoot.querySelector(`#${idPrefix}-o feGaussianBlur`).setAttribute('stdDeviation', width * AB_OUTER_BLUR_MULT);
+    svgRoot.querySelector(`#${idPrefix}-i feGaussianBlur`).setAttribute('stdDeviation', width * AB_INNER_BLUR_MULT);
+    const outer = svgRoot.querySelector('.ab-outer');
+    outer.setAttribute('points', pointsAttr);
+    outer.setAttribute('stroke', color);
+    outer.setAttribute('stroke-width', width * AB_OUTER_WIDTH_MULT);
+    const inner = svgRoot.querySelector('.ab-inner');
+    inner.setAttribute('points', pointsAttr);
+    inner.setAttribute('stroke', color);
+    inner.setAttribute('stroke-width', width * AB_INNER_WIDTH_MULT);
+  }
+
   function renderStrokePreview(){
     if(!strokePreviewEl){
       strokePreviewEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       strokePreviewEl.setAttribute('viewBox', `0 0 ${canvasShell.getBoundingClientRect().width} ${canvasShell.getBoundingClientRect().height}`);
       strokePreviewEl.style.cssText = 'position:absolute; inset:0; width:100%; height:100%; pointer-events:none;';
-      const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-      poly.setAttribute('fill', 'none');
-      poly.setAttribute('stroke-linecap', 'round');
-      poly.setAttribute('stroke-linejoin', 'round');
-      strokePreviewEl.appendChild(poly);
+      if(activeStroke.brush === 'airbrush'){
+        strokePreviewEl.innerHTML = airbrushSvgMarkup('ab-preview');
+      } else {
+        const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+        poly.setAttribute('fill', 'none');
+        poly.setAttribute('stroke-linecap', 'round');
+        poly.setAttribute('stroke-linejoin', 'round');
+        strokePreviewEl.appendChild(poly);
+      }
       layersContainer.appendChild(strokePreviewEl);
     }
-    const poly = strokePreviewEl.querySelector('polyline');
-    poly.setAttribute('stroke', activeStroke.color);
-    poly.setAttribute('stroke-width', activeStroke.width);
-    poly.setAttribute('points', activeStroke.pts.map(p => p.x + ',' + p.y).join(' '));
+    const pointsAttr = activeStroke.pts.map(p => p.x + ',' + p.y).join(' ');
+    if(activeStroke.brush === 'airbrush'){
+      updateAirbrushSvg(strokePreviewEl, 'ab-preview', pointsAttr, activeStroke.color, activeStroke.width);
+    } else {
+      const poly = strokePreviewEl.querySelector('polyline');
+      poly.setAttribute('stroke', activeStroke.color);
+      poly.setAttribute('stroke-width', activeStroke.width);
+      poly.setAttribute('points', pointsAttr);
+    }
   }
 
   function startDrawStroke(e){
@@ -1887,6 +1943,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     activeStroke = {
       color: drawColorInput.value,
       width: parseInt(drawWidthRange.value, 10) || 4,
+      brush: drawBrushType,
       pts: [p]
     };
     renderStrokePreview();
@@ -1931,7 +1988,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     const layer = {
       id, type: 'draw',
       points: localPts, w, h,
-      color: stroke.color, strokeWidth: stroke.width,
+      color: stroke.color, strokeWidth: stroke.width, brush: stroke.brush,
       leftPct: (minX + maxX) / 2 / shellRect.width * 100,
       topPct: (minY + maxY) / 2 / shellRect.height * 100,
       scale: 1, rotation: 0, opacity: 1, blend: 'normal', mirror: false
@@ -2316,15 +2373,21 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
       el.style.width = layer.w + 'px';
       el.style.height = layer.h + 'px';
       const pointsAttr = layer.points.map(p => p.x + ',' + p.y).join(' ');
+      const strokeMarkup = layer.brush === 'airbrush'
+        ? airbrushSvgMarkup(layer.id)
+        : `<polyline points="${pointsAttr}" fill="none" stroke="${layer.color}" stroke-width="${layer.strokeWidth}" stroke-linecap="round" stroke-linejoin="round"/>`;
       el.innerHTML = `
         <svg class="overlay-draw-svg" width="${layer.w}" height="${layer.h}" viewBox="0 0 ${layer.w} ${layer.h}">
-          <polyline points="${pointsAttr}" fill="none" stroke="${layer.color}" stroke-width="${layer.strokeWidth}" stroke-linecap="round" stroke-linejoin="round"/>
+          ${strokeMarkup}
         </svg>
         <div class="rot" data-role="rot" title="Girar"></div>
         <div class="handle" data-role="resize" title="Redimensionar"></div>
         <div class="del" data-role="del" title="Remover camada">×</div>
       `;
       layer.svgEl = el.querySelector('.overlay-draw-svg');
+      if(layer.brush === 'airbrush'){
+        updateAirbrushSvg(layer.svgEl, layer.id, pointsAttr, layer.color, layer.strokeWidth);
+      }
     } else {
       el.innerHTML = `
         <img class="overlay-img" src="${layer.src}" alt="Camada de tatuagem">
@@ -2854,14 +2917,31 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         ctx.strokeStyle = layer.color;
-        ctx.lineWidth = layer.strokeWidth * ratio;
-        ctx.beginPath();
-        layer.points.forEach((p, idx) => {
-          const px = (p.x - layer.w / 2) * ratio;
-          const py = (p.y - layer.h / 2) * ratio;
-          if(idx === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-        });
-        ctx.stroke();
+        const tracePath = () => {
+          ctx.beginPath();
+          layer.points.forEach((p, idx) => {
+            const px = (p.x - layer.w / 2) * ratio;
+            const py = (p.y - layer.h / 2) * ratio;
+            if(idx === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+          });
+        };
+        if(layer.brush === 'airbrush'){
+          // mesma dupla passada do editor: halo largo/borrado por baixo, núcleo por cima
+          const baseAlpha = layer.opacity;
+          ctx.filter = `blur(${layer.strokeWidth * AB_OUTER_BLUR_MULT * ratio}px)`;
+          ctx.globalAlpha = baseAlpha * AB_OUTER_OPACITY;
+          ctx.lineWidth = layer.strokeWidth * AB_OUTER_WIDTH_MULT * ratio;
+          tracePath(); ctx.stroke();
+          ctx.filter = `blur(${layer.strokeWidth * AB_INNER_BLUR_MULT * ratio}px)`;
+          ctx.globalAlpha = baseAlpha * AB_INNER_OPACITY;
+          ctx.lineWidth = layer.strokeWidth * AB_INNER_WIDTH_MULT * ratio;
+          tracePath(); ctx.stroke();
+          ctx.filter = 'none';
+        } else {
+          ctx.lineWidth = layer.strokeWidth * ratio;
+          tracePath();
+          ctx.stroke();
+        }
       } else {
         const oImg = await loadImageAsync(layer.src);
         const baseSize = (layer.el.offsetWidth / shellRect.width) * W;
