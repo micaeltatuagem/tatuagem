@@ -241,9 +241,15 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     border-top:1px solid var(--line);
     padding:6px 4px;
     display:flex; flex-direction:column; gap:6px;
-    max-height:112px;
-    transition:max-height .22s ease;
     position:relative;
+  }
+  /* fechado por padrão: o foco fica na área de desenho, o catálogo só aparece
+     quando a pessoa pede (botão "Flashs" na barra de cima, ou puxando a aba) */
+  .gallery-strip:not(.expanded) .desktop-layers-dock,
+  .gallery-strip:not(.expanded) .flash-source-row,
+  .gallery-strip:not(.expanded) .style-filter-row,
+  .gallery-strip:not(.expanded) .flash-grid{
+    display:none;
   }
   .gallery-strip.expanded{
     max-height:48vh;
@@ -279,12 +285,17 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
       max-width:1800px;
       padding:0 28px;
       display:grid;
-      grid-template-columns: 1fr minmax(280px,360px);
+      grid-template-columns: 1fr 0px;
       grid-template-rows: auto 1fr auto;
       grid-template-areas:
         "top      gallery"
         "canvas   gallery"
         "bottom   gallery";
+      column-gap:0;
+      transition:grid-template-columns .2s ease;
+    }
+    .app-shell.gallery-open{
+      grid-template-columns: 1fr minmax(280px,360px);
       column-gap:22px;
     }
     .top-strip{ grid-area:top; }
@@ -298,6 +309,10 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
       border-left:1px solid var(--line);
       padding:0 0 0 18px;
       margin-left:4px;
+      overflow:hidden;
+    }
+    .app-shell:not(.gallery-open) .gallery-strip{
+      border-left:none; padding-left:0; margin-left:0;
     }
     .gallery-expand-handle{ display:none; }
     .app-shell .style-filter-row{ display:flex; }
@@ -1256,6 +1271,9 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     <button class="strip-btn" id="baseToggleBtn" title="Base de corpo pronta" aria-label="Base de corpo pronta">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg>
     </button>
+    <button class="strip-btn" id="galleryToggleBtn" title="Catálogo de flashs e camadas" aria-label="Abrir ou fechar catálogo de flashs e camadas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    </button>
     <button class="strip-btn" id="rulerBtn" title="Ver tamanho real em cm" aria-label="Calibrar e ver tamanho real em centímetros">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="9" width="19" height="6" rx="1"/><path d="M6.5 9v2.6M10 9v1.6M13.5 9v2.6M17 9v1.6"/></svg>
     </button>
@@ -1517,8 +1535,21 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   const popoverBackdrop = document.getElementById('popoverBackdrop');
   const galleryStrip = document.getElementById('galleryStrip');
   const galleryExpandHandle = document.getElementById('galleryExpandHandle');
+  const galleryToggleBtn = document.getElementById('galleryToggleBtn');
+  const appShell = document.querySelector('.app-shell');
+
+  // Catálogo de flash + camadas (desktop) começam fechados: o foco fica na
+  // área de desenho, e a pessoa abre o painel só quando quiser escolher algo.
+  function setGalleryOpen(open){
+    galleryStrip.classList.toggle('expanded', open);
+    appShell.classList.toggle('gallery-open', open);
+    galleryToggleBtn.classList.toggle('active', open);
+  }
   galleryExpandHandle.addEventListener('click', () => {
-    galleryStrip.classList.toggle('expanded');
+    setGalleryOpen(!galleryStrip.classList.contains('expanded'));
+  });
+  galleryToggleBtn.addEventListener('click', () => {
+    setGalleryOpen(!galleryStrip.classList.contains('expanded'));
   });
   const baseToggleBtn = document.getElementById('baseToggleBtn');
   const adjustToggleBtn = document.getElementById('adjustToggleBtn');
@@ -2320,7 +2351,10 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     const altText = nome || `Opção de flash ${index+1}`;
     el.innerHTML = `<span class="num">${String(index+1).padStart(2,'0')}</span><img alt="${altText}">`;
     lazyLoadImg(el.querySelector('img'), src);
-    el.addEventListener('click', () => addImageLayer(src));
+    el.addEventListener('click', () => {
+      addImageLayer(src);
+      setGalleryOpen(false);
+    });
     el.addEventListener('dragstart', (e) => {
       e.dataTransfer.effectAllowed = 'copy';
       e.dataTransfer.setData('text/plain', 'flash-src:' + src);
