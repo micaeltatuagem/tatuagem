@@ -1164,6 +1164,28 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   }
 </style>
 <link rel="stylesheet" href="nav-mobile.css">
+<style>
+  /* Paisagem com pouca altura (ex.: iPhone 7 e outros aparelhos compactos):
+     o nav do site + as faixas fixas do app (top-strip, bottom-strip, barra
+     de desenho) juntas passavam da altura da viewport e o quadro de
+     desenho (.canvas-wrap) — que só recebe "o que sobra" — era espremido
+     a quase 0px. Aqui a gente enxuga tudo que não é o quadro de desenho
+     e garante uma altura mínima real pra ele. */
+  @media (max-height:480px) and (orientation:landscape){
+    nav{ padding:4px 12px; }
+    nav .nav-logo img{ height:20px; width:20px; }
+
+    .top-strip, .bottom-strip{ padding:3px 4px; gap:6px; }
+    .strip-btn{ width:30px; height:30px; }
+    .strip-btn svg{ width:16px; height:16px; }
+
+    .draw-bar{ padding:4px 8px; margin:0 0 4px; gap:6px; }
+    .draw-bar input[type="color"],
+    .brush-toggle button{ width:26px; height:26px; }
+
+    .canvas-wrap{ padding:4px; min-height:130px; }
+  }
+</style>
 </head>
 <body>
 <nav>
