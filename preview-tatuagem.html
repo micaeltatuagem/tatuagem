@@ -353,6 +353,27 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   }
   .popover .sub{ font-size:12px; color:var(--text-dim); margin-bottom:14px; }
 
+  /* ---- Tutorial (legenda dos botões) ---- */
+  .tutorial-section-title{
+    font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--gold); margin:16px 0 8px;
+  }
+  .tutorial-section-title:first-child{ margin-top:0; }
+  .tutorial-list{ display:flex; flex-direction:column; gap:12px; }
+  .tutorial-item{ display:flex; gap:12px; align-items:flex-start; }
+  .tutorial-icon{
+    flex:0 0 auto; width:30px; height:30px; border:1px solid var(--line);
+    border-radius:6px; display:flex; align-items:center; justify-content:center;
+    color:var(--gold);
+  }
+  .tutorial-icon svg{ width:16px; height:16px; }
+  .tutorial-item b{
+    font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:.03em;
+    text-transform:uppercase; color:var(--paper);
+  }
+  .tutorial-item p{ margin:2px 0 0; font-size:12px; color:var(--text-dim); line-height:1.4; }
+  .tutorial-gesture{ font-size:12px; color:var(--text-dim); line-height:1.5; margin:0; }
+
   .wrap{max-width:1180px;margin:0 auto;}
 
   /* ---- Papel envelhecido (compartilhado entre flash-panel e canvas-shell) ---- */
@@ -1316,6 +1337,9 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
         <button type="button" data-platform="copy">🔗 Copiar link</button>
       </div>
     </div>
+    <button class="strip-btn" id="tutorialBtn" title="Como usar" aria-label="Abrir tutorial de uso">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.9.4-1.5 1-1.5 2.2v.3" stroke-linecap="round"/><circle cx="12" cy="17.2" r=".9" fill="currentColor" stroke="none"/></svg>
+    </button>
   </div>
 
   <div class="canvas-wrap">
@@ -1526,6 +1550,75 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   </div>
 </div>
 
+<div class="popover" id="tutorialPopover">
+  <button class="popover-close" data-close-popover>&times;</button>
+  <h2>Como usar o Criar</h2>
+  <div class="sub">Um resumo rápido de cada botão</div>
+
+  <div class="tutorial-section-title">Barra de cima</div>
+  <div class="tutorial-list">
+    <div class="tutorial-item">
+      <span class="tutorial-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7l1.5-3h5L16 7"/><circle cx="12" cy="14" r="3.2"/></svg></span>
+      <div><b>Enviar foto</b><p>Tira ou escolhe uma foto do corpo pra montar o preview em cima dela.</p></div>
+    </div>
+    <div class="tutorial-item">
+      <span class="tutorial-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg></span>
+      <div><b>Base pronta</b><p>Sem foto própria? Escolhe um corpo de exemplo (masculino ou feminino) pra testar.</p></div>
+    </div>
+    <div class="tutorial-item">
+      <span class="tutorial-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
+      <div><b>Flashs e camadas</b><p>Abre o catálogo de flashs prontos e a lista do que você já colocou na tela.</p></div>
+    </div>
+    <div class="tutorial-item">
+      <span class="tutorial-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="9" width="19" height="6" rx="1"/><path d="M6.5 9v2.6M10 9v1.6M13.5 9v2.6M17 9v1.6"/></svg></span>
+      <div><b>Régua</b><p>Mede um objeto conhecido (ex.: uma cédula) na tela pra calibrar o tamanho real em cm de tudo.</p></div>
+    </div>
+    <div class="tutorial-item">
+      <span class="tutorial-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg></span>
+      <div><b>Reiniciar</b><p>Apaga a foto e todas as camadas — começa tudo do zero.</p></div>
+    </div>
+    <div class="tutorial-item">
+      <span class="tutorial-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 19h16"/></svg></span>
+      <div><b>Baixar</b><p>Salva o preview atual como imagem, depois que você adiciona algo.</p></div>
+    </div>
+    <div class="tutorial-item">
+      <span class="tutorial-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="18" cy="5" r="2.3"/><circle cx="6" cy="12" r="2.3"/><circle cx="18" cy="19" r="2.3"/><path d="M8 10.7l8-4.4M8 13.3l8 4.4"/></svg></span>
+      <div><b>Compartilhar</b><p>Manda o preview direto pro WhatsApp, Instagram e outros.</p></div>
+    </div>
+  </div>
+
+  <div class="tutorial-section-title">Com uma camada selecionada</div>
+  <div class="tutorial-list">
+    <div class="tutorial-item">
+      <span class="tutorial-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18"/><path d="M7 8l-3 4 3 4M17 8l3 4-3 4"/></svg></span>
+      <div><b>Espelhar</b><p>Inverte o flash, texto ou desenho selecionado na horizontal.</p></div>
+    </div>
+    <div class="tutorial-item">
+      <span class="tutorial-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h13M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="16" cy="18" r="2"/></svg></span>
+      <div><b>Ajustar</b><p>Muda tamanho, rotação, opacidade e outras propriedades da camada.</p></div>
+    </div>
+    <div class="tutorial-item">
+      <span class="tutorial-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M12 6v13"/></svg></span>
+      <div><b>Texto</b><p>Adiciona uma palavra ou nome pra testar um lettering.</p></div>
+    </div>
+    <div class="tutorial-item">
+      <span class="tutorial-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20l1-4.5L14.5 6 18 9.5 8.5 19 4 20z"/><path d="M12.5 8 16 11.5"/></svg></span>
+      <div><b>Desenhar</b><p>Desenha à mão livre direto na tela, com caneta ou aerógrafo.</p></div>
+    </div>
+    <div class="tutorial-item">
+      <span class="tutorial-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l8 4.5-8 4.5-8-4.5L12 3z"/><path d="M4 12l8 4.5 8-4.5M4 16.5L12 21l8-4.5"/></svg></span>
+      <div><b>Camadas</b><p>Lista tudo que você já colocou, pra reordenar ou trocar de seleção.</p></div>
+    </div>
+    <div class="tutorial-item">
+      <span class="tutorial-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 7h14M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></span>
+      <div><b>Excluir</b><p>Remove a camada selecionada.</p></div>
+    </div>
+  </div>
+
+  <div class="tutorial-section-title">Gestos na tela</div>
+  <p class="tutorial-gesture">Arraste uma camada com o dedo pra mover. Belisque com dois dedos (ou use a roda do mouse) pra dar zoom e girar.</p>
+</div>
+
 <script>
 (function(){
   // ---------- Lazy-load real de imagens (grade de flash tem 600+ itens; o
@@ -1628,6 +1721,9 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     popoverBackdrop.classList.add('open');
   }
   function closeAllPopovers(){
+    if(document.getElementById('tutorialPopover').classList.contains('open')){
+      localStorage.setItem('criar_tutorial_seen', '1');
+    }
     document.querySelectorAll('.popover.open').forEach(p => p.classList.remove('open'));
     popoverBackdrop.classList.remove('open');
   }
@@ -1639,6 +1735,24 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   adjustToggleBtn.addEventListener('click', () => openPopover('adjustPopover'));
   textToggleBtn.addEventListener('click', () => openPopover('textPopover'));
   layersToggleBtn.addEventListener('click', () => openPopover('layersPopover'));
+
+  // ---- Tutorial: reabrível a qualquer momento pelo "?", e mostrado sozinho
+  // na primeira visita (depois de o aviso de girar o aparelho, se houver,
+  // já ter sido dispensado). Fica marcado em localStorage pra não repetir
+  // sempre que a pessoa voltar ao site. ----
+  const TUTORIAL_KEY = 'criar_tutorial_seen';
+  const tutorialBtn = document.getElementById('tutorialBtn');
+  const rotatePromptEl = document.getElementById('rotatePrompt');
+  tutorialBtn.addEventListener('click', () => openPopover('tutorialPopover'));
+  function maybeShowTutorialFirstVisit(){
+    if(localStorage.getItem(TUTORIAL_KEY) === '1') return;
+    const rotateBlocking = !rotatePromptEl.classList.contains('dismissed')
+      && window.matchMedia('(max-width:979px) and (orientation:portrait)').matches;
+    if(rotateBlocking) return;
+    openPopover('tutorialPopover');
+  }
+  document.getElementById('rotatePromptDismiss').addEventListener('click', maybeShowTutorialFirstVisit);
+  setTimeout(maybeShowTutorialFirstVisit, 500);
   drawToggleBtn.addEventListener('click', () => {
     if(drawMode){
       exitDrawMode();
