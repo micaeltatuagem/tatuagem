@@ -190,6 +190,8 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     gap:10px;
     padding:10px 4px;
     border-bottom:1px solid var(--line);
+    max-height:70px;
+    transition:max-height .25s ease, padding .25s ease, opacity .2s ease;
   }
   .bottom-strip{
     border-bottom:none;
@@ -208,6 +210,14 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   .strip-btn:disabled{ opacity:.35; cursor:not-allowed; }
   .strip-btn.active{ background:var(--gold); border-color:var(--gold); color:#1b1710; }
   .strip-btn svg{ width:19px; height:19px; }
+
+  /* Telas estreitas (iPhone SE, mini etc.): 8 botões em fileira só cabem
+     com ícones um pouco menores — sem isso o último ficava cortado. */
+  @media (max-width:400px){
+    .top-strip, .bottom-strip{ gap:4px; }
+    .strip-btn{ width:30px; height:30px; }
+    .strip-btn svg{ width:15px; height:15px; }
+  }
 
   .share-menu{
     display:none;
@@ -242,6 +252,8 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     padding:6px 4px;
     display:flex; flex-direction:column; gap:6px;
     position:relative;
+    max-height:70px;
+    transition:max-height .25s ease, padding .25s ease, opacity .2s ease;
   }
   /* fechado por padrão: o foco fica na área de desenho, o catálogo só aparece
      quando a pessoa pede (botão "Flashs" na barra de cima, ou puxando a aba) */
@@ -277,6 +289,25 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   .gallery-strip #searchFlash{
     font-family:'Inter',sans-serif; font-size:12.5px; padding:8px 10px;
     border:1px solid var(--line); border-radius:4px; background:var(--ink-soft); color:var(--paper);
+  }
+
+  /* ---- Modo foco: some com tudo que não é o quadro de desenho assim que a
+     pessoa começa a arrastar/desenhar na tela (mobile), pra ele virar o
+     elemento principal em vez de disputar espaço com as faixas. Um toque
+     simples (sem arrastar) no canvas traz tudo de volta. Só entra em ação
+     no layout empilhado (abaixo de 980px); no desktop já sobra espaço. */
+  @media (max-width:979px){
+    .app-shell.focus-mode .top-strip,
+    .app-shell.focus-mode .bottom-strip{
+      max-height:0; padding-top:0; padding-bottom:0; opacity:0; border-color:transparent;
+    }
+    .app-shell.focus-mode .gallery-strip{
+      max-height:0; padding-top:0; padding-bottom:0; opacity:0; border-color:transparent;
+    }
+    .app-shell.focus-mode .draw-bar{
+      max-height:0; padding-top:0; padding-bottom:0; margin:0; opacity:0;
+    }
+    .app-shell.focus-mode .canvas-wrap{ padding:4px; }
   }
 
   /* ---- Layout desktop: workspace ocupa a tela toda, galeria vira painel lateral ---- */
@@ -624,6 +655,8 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     display:none; align-items:center; gap:10px;
     background:var(--ink-soft); border:1px solid var(--line); border-radius:6px;
     padding:8px 10px; margin:0 0 10px;
+    max-height:80px; overflow:hidden;
+    transition:max-height .25s ease, padding .25s ease, opacity .2s ease, margin .25s ease;
   }
   .draw-bar.open{ display:flex; }
   .draw-bar-label{
@@ -1795,6 +1828,39 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   const layerThumbs = document.getElementById('layerThumbs');
   const layerThumbsDock = document.getElementById('layerThumbsDock');
   const activeLayerLabel = document.getElementById('activeLayerLabel');
+
+  // ---- Modo foco: some com as faixas ao arrastar/desenhar no canvas,
+  // volta com um toque simples (sem arrastar). Só no layout mobile
+  // empilhado — no desktop (grid, >=980px) já sobra espaço de sobra.
+  // Escuta em fase de bubble, sem preventDefault/stopPropagation, então
+  // não interfere em nada do que já existe (desenho, drag de camada,
+  // pinça de zoom) — só observa. ----
+  (function(){
+    const MOVE_THRESHOLD = 8;
+    let activePointers = 0, anyMoved = false, downX = 0, downY = 0;
+    function isMobileLayout(){ return window.matchMedia('(max-width:979px)').matches; }
+    function enterFocusMode(){ if(isMobileLayout()) appShell.classList.add('focus-mode'); }
+    function exitFocusMode(){ appShell.classList.remove('focus-mode'); }
+    canvasShell.addEventListener('pointerdown', (e) => {
+      if(activePointers === 0){ anyMoved = false; downX = e.clientX; downY = e.clientY; }
+      activePointers++;
+    }, {capture:true, passive:true});
+    canvasShell.addEventListener('pointermove', (e) => {
+      if(activePointers === 0 || anyMoved) return;
+      if(Math.abs(e.clientX - downX) > MOVE_THRESHOLD || Math.abs(e.clientY - downY) > MOVE_THRESHOLD){
+        anyMoved = true;
+        enterFocusMode();
+      }
+    }, {capture:true, passive:true});
+    function onPointerEnd(){
+      activePointers = Math.max(0, activePointers - 1);
+      if(activePointers === 0 && !anyMoved && appShell.classList.contains('focus-mode')){
+        exitFocusMode();
+      }
+    }
+    canvasShell.addEventListener('pointerup', onPointerEnd, {capture:true, passive:true});
+    canvasShell.addEventListener('pointercancel', onPointerEnd, {capture:true, passive:true});
+  })();
 
   const opacityRange = document.getElementById('opacityRange');
   const opacityVal = document.getElementById('opacityVal');
