@@ -173,8 +173,7 @@ function renderPagina(v, posts) {
     "addressCountry": "BR"
   },
   "geo": { "@type": "GeoCoordinates", "latitude": -21.1265, "longitude": -42.3682 },
-  "sameAs": ["https://instagram.com/micaeltatuagem"],
-  "priceRange": "R$ 150+"
+  "sameAs": ["https://instagram.com/micaeltatuagem"]
 }
 </script>
 <script type="application/ld+json">
