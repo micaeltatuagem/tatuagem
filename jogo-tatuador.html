@@ -102,6 +102,7 @@ canvas{width:100%;aspect-ratio:320/440;background:#c98f6b;border:1px solid var(-
 .cta-link{margin-top:1rem}
 .lbl{font-size:.78rem;color:var(--muted);text-align:center;margin:0 0 .3rem;letter-spacing:.08em;text-transform:uppercase;opacity:1}
 .content-panel a{color:var(--accent)}
+.plus{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;line-height:1.45;color:var(--accent);opacity:1}
 .hide{display:none!important}
 footer{position:relative;overflow:hidden;text-align:center;padding:2.2rem 1.5rem 2.6rem;border-top:1px solid var(--border);font-size:.85rem;color:var(--muted)}
 footer>*{position:relative;z-index:1}
@@ -209,14 +210,16 @@ footer p{margin-top:.5rem;color:var(--muted)}
     <canvas id="cv" width="320" height="440" aria-label="Pele do cliente com o decalque"></canvas>
     <div id="pens"><p class="lbl">Agulhas de contorno</p><div class="row ctrl"><button class="btn alt" type="button" data-p="0">Fina</button><button class="btn alt sel" type="button" data-p="1">Média</button><button class="btn alt" type="button" data-p="2">Grossa</button></div></div>
     <div id="szs" class="hide"><p class="lbl">Agulhas de pintura</p><div class="row ctrl"><button class="btn alt" type="button" data-z="0">Pequena</button><button class="btn alt sel" type="button" data-z="1">Média</button><button class="btn alt" type="button" data-z="2">Grande</button></div></div>
+    <div id="dns" class="hide"><p class="lbl">Pintura</p><div class="row ctrl"><button class="btn alt" type="button" data-d="0">Suave</button><button class="btn alt sel" type="button" data-d="1">Densa</button></div></div>
     <div class="row ctrl hide" id="pal"></div>
-    <p class="muted hide" id="hint" style="text-align:center">Mais passadas escurecem. Misture cores para fazer degradê.</p>
+    <p class="muted hide" id="hint" style="text-align:center">Suave faz sombra e degradê, densa preenche. Além do desenho, dá para acrescentar sombra e brilho.</p>
     <div style="text-align:center"><button class="btn" id="done" type="button"></button></div>
   </section>
   <section id="result" class="hide">
     <h2 id="rtitle"></h2>
     <div class="stars" id="rstars"></div>
     <p id="rtext"></p>
+    <p class="plus hide" id="rplus"></p>
     <button class="btn" id="next" type="button"></button>
     <div class="cta-link hide" id="cta"><p>Quer tatuar de verdade?</p><a class="btn" href="https://wa.me/5532999666946?text=Ol%C3%A1.+joguei+o+jogo+do+tatuador+no+site+e+quero+fazer+uma+tatuagem+com+o+Micael" target="_blank" rel="noopener" onclick="gtag('event','click_whatsapp',{event_category:'cta',event_label:'jogo'});if(typeof fbq==='function')fbq('track','Lead')">Falar no WhatsApp</a></div>
   </section>
@@ -224,6 +227,7 @@ footer p{margin-top:.5rem;color:var(--muted)}
   <div class="content-panel" style="margin-top:1.5rem">
     <h2>Como o jogo funciona</h2>
     <p>Cada cliente chega com um desenho de flash. Você faz o contorno em uma passada, escolhendo entre agulhas de contorno de espessuras diferentes, e depois preenche a cor com agulhas de pintura pequena, média ou grande.</p>
+    <p>Na pintura, você escolhe entre aplicação suave e densa e pode acrescentar sombra e brilho além do desenho. O que for além do pedido é reconhecido no fim.</p>
     <p>A agulha é puxada de leve para a linha, como a pele faz com a máquina de verdade. Sair do traço, repassar onde já foi tatuado ou deixar a cor passar do contorno machuca o cliente. Se a dor passar do limite dele, ele vai embora.</p>
     <p>O som é o da minha Micky Sharpz, gravado enquanto eu tatuava.</p>
     <p>Quer ver como é o trabalho de verdade? Consulte o <a href="/guia">Guia</a> de termos e significados, os <a href="/fisiologia-da-tatuagem">cuidados com a tatuagem</a>, o catálogo de <a href="/flash">flash</a> ou como funciona o <a href="/valor">valor</a>.</p>
@@ -286,23 +290,23 @@ const b64buf=s=>{const t=atob(s),u=new Uint8Array(t.length);for(let i=0;i<t.leng
 const getJSON=n=>PRE&&PRE[n]?Promise.resolve(JSON.parse(PRE[n])):fetch('/jogo/'+n).then(r=>{if(!r.ok)throw 0;return r.json()});
 const getBuf=n=>PRE&&PRE[n]?Promise.resolve(b64buf(PRE[n])):fetch('/jogo/'+n).then(r=>{if(!r.ok)throw 0;return r.arrayBuffer()});
 const ev=(n,p)=>{try{if(typeof gtag==='function')gtag('event',n,p||{})}catch(e){}};
-const COL=['#c2372f','#d6a93a','#2f6fb0','#3c9a5a','#15110f'],CN=['Vermelho','Dourado','Azul','Verde','Preto'];
+const COL=['#c2372f','#d6a93a','#2f6fb0','#3c9a5a','#15110f','#f1ece0'],CN=['Vermelho','Dourado','Azul','Verde','Preto','Branco'];
 const inside=(p,x,y)=>{let c=false;for(let i=0,j=p.length-1;i<p.length;j=i++){const a=p[i],b=p[j];if((a[1]>y)!==(b[1]>y)&&x<(b[0]-a[0])*(y-a[1])/(b[1]-a[1])+a[0])c=!c}return c};
 const center=p=>{let a=1e9,b=-1e9,c=1e9,d=-1e9;p.forEach(q=>{a=Math.min(a,q[0]);b=Math.max(b,q[0]);c=Math.min(c,q[1]);d=Math.max(d,q[1])});const dx=160-(a+b)/2,dy=278-(c+d)/2;return p.map(q=>[q[0]+dx,q[1]+dy])};
 const heart=[];for(let t=0;t<=6.28;t+=.1)heart.push([160+5.6*16*Math.pow(Math.sin(t),3),215-5.6*(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))]);heart.push(heart[0]);
 const star=[];for(let i=0;i<=10;i++){const r=i%2?50:115,a=-Math.PI/2+i*Math.PI/5;star.push([160+r*Math.cos(a),225+r*Math.sin(a)])}
 const CL=[
- {n:'Dona Cida',r:'Um coração vermelho no braço.',tol:'Alta',tv:100,poly:center(heart),col:0},
- {n:'Rogério',r:'Uma estrela dourada.',tol:'Média',tv:85,poly:center(star),col:1},
- {n:'Fabiana',r:'Uma flor no estilo tradicional.',tol:'Média',tv:90,d:'florzinha'},
- {n:'Cláudio',r:'Uma adaga para o antebraço.',tol:'Média',tv:85,d:'adaga'},
- {n:'Tati',r:'Uma andorinha em voo.',tol:'Baixa',tv:70,d:'andorinha'},
- {n:'Renato',r:'Uma aranha pendurada na teia.',tol:'Baixa',tv:60,d:'aranha'}
+ {n:'Dona Cida',dat:'ao coração',r:'Um coração vermelho no braço.',tol:'Alta',tv:100,poly:center(heart),col:0},
+ {n:'Rogério',dat:'à estrela',r:'Uma estrela dourada.',tol:'Média',tv:85,poly:center(star),col:1},
+ {n:'Fabiana',dat:'à flor',r:'Uma flor no estilo tradicional.',tol:'Média',tv:90,d:'florzinha'},
+ {n:'Cláudio',dat:'à adaga',r:'Uma adaga para o antebraço.',tol:'Média',tv:85,d:'adaga'},
+ {n:'Tati',dat:'à andorinha',r:'Uma andorinha em voo.',tol:'Baixa',tv:70,d:'andorinha'},
+ {n:'Renato',dat:'à aranha',r:'Uma aranha pendurada na teia.',tol:'Baixa',tv:60,d:'aranha'}
 ];
 function sample(l,st=5){const o=[];for(let i=0;i<l.length-1;i++){const a=l[i],b=l[i+1],n=Math.max(1,Math.round(Math.hypot(b[0]-a[0],b[1]-a[1])/st));for(let k=0;k<n;k++)o.push([a[0]+(b[0]-a[0])*k/n,a[1]+(b[1]-a[1])*k/n])}o.push(l[l.length-1]);return o}
 let D=null,MC=null,MI=new Image(),refImg=null,ready=false;
 let AC=null,bz=null,lastG=0,ouch=false,snd=true,BUF={},LD={};
-let ci=0,totalMs=0,state='idle',phase=1,pen=1,sel=4,sz=1,tg,cnt,fill,mask,offPts,strokes,pain,t0,elapsed=0,drawing=false,mp=null,sset=new Set(),lastP=null,gi=-1,lk=0,penMax=0,kO=1,kF=1,last=0;
+let ci=0,totalMs=0,state='idle',phase=1,pen=1,sel=4,sz=1,dens=1,tg,cnt,fill,mask,offPts,strokes,pain,t0,elapsed=0,drawing=false,mp=null,sset=new Set(),lastP=null,gi=-1,lk=0,penMax=0,kO=1,kF=1,last=0;
 const PR=[6,9,13],POFF=[10,14,19],PP=[.3,.2,.12],PW=[3,5,8],PK=[.85,.75,.6],PRAD=[28,24,20],SR=[6,10,15],PN=[.05,.03,.02];
 const rc=document.createElement('canvas');rc.width=W;rc.height=H;const rx=rc.getContext('2d');
 const pc=document.createElement('canvas');pc.width=W;pc.height=H;const px=pc.getContext('2d');
@@ -328,8 +332,8 @@ function groan(pr,short){if(!AC||!snd)return;const t=AC.currentTime,d=short?.28:
  o.connect(f);f.connect(g);g.connect(AC.destination);o.start(t);v.start(t);o.stop(t+d+.05);v.stop(t+d+.05)}
 /* rubor e tinta */
 function blush(x,y,a,r){const g=rx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'rgba(176,42,42,'+a+')');g.addColorStop(1,'rgba(176,42,42,0)');rx.fillStyle=g;rx.fillRect(x-r,y-r,2*r,2*r)}
-function dab(x,y){const r=SR[sz],g=px.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,COL[sel]+'33');g.addColorStop(1,COL[sel]+'00');px.fillStyle=g;px.fillRect(x-r,y-r,2*r,2*r);
- for(const f of fill){const d=Math.hypot(x-f.x,y-f.y);if(d<r){const aa=.2*(1-d/r);f.a=f.a.map((v,j)=>j===sel?1-(1-v)*(1-aa):v*(1-aa))}}}
+function dab(x,y){const r=SR[sz],ad=[.09,.3][dens],g=px.createRadialGradient(x,y,0,x,y,r),hx=Math.round(ad*255).toString(16).padStart(2,'0');g.addColorStop(0,COL[sel]+hx);g.addColorStop(1,COL[sel]+'00');px.fillStyle=g;px.fillRect(x-r,y-r,2*r,2*r);
+ for(const f of fill){const d=Math.hypot(x-f.x,y-f.y);if(d<r){const aa=ad*(1-d/r);f.a=f.a.map((v,j)=>j===sel?1-(1-v)*(1-aa):v*(1-aa));f.d[sel]=1-(1-f.d[sel])*(1-aa)}}}
 /* fluxo */
 $('start').onclick=()=>{if(!ready)return;audioInit();ci=0;totalMs=0;ev('jogo_inicio');brief()};
 $('snd').onclick=()=>{snd=!snd;$('snd').textContent=snd?'Som: ligado':'Som: desligado';if(!snd)buzz(false)};
@@ -337,17 +341,18 @@ function brief(){const c=CL[ci];$('bn').textContent='Cliente '+(ci+1)+' de '+CL.
 $('go').onclick=()=>setup(ci);
 document.querySelectorAll('#pens button').forEach(b=>b.onclick=()=>{pen=+b.dataset.p;document.querySelectorAll('#pens button').forEach(x=>x.classList.toggle('sel',x===b))});
 document.querySelectorAll('#szs button').forEach(b=>b.onclick=()=>{sz=+b.dataset.z;document.querySelectorAll('#szs button').forEach(x=>x.classList.toggle('sel',x===b))});
+document.querySelectorAll('#dns button').forEach(b=>b.onclick=()=>{dens=+b.dataset.d;document.querySelectorAll('#dns button').forEach(x=>x.classList.toggle('sel',x===b))});
 $('pal').innerHTML=CN.map((n,i)=>`<button class="sw${i===4?' sel':''}" data-c="${i}" style="background:${COL[i]}" aria-label="${n}" title="${n}"></button>`).join('');
 document.querySelectorAll('#pal button').forEach(b=>b.onclick=()=>{sel=+b.dataset.c;document.querySelectorAll('#pal button').forEach(x=>x.classList.toggle('sel',x===b))});
 function setup(i){const c=CL[i];let lines,pts=[];
  if(c.poly){lines=[c.poly];for(let y=0;y<H;y+=STEP)for(let x=0;x<W;x+=STEP)if(inside(c.poly,x,y))pts.push({x,y,c:c.col});refImg=null}
  else{const d=D[c.d];lines=d.lines;for(const y in d.rows){const r=d.rows[y];for(let k=0;k<r.length;k+=2)for(let j=0;j<r[k+1];j++)pts.push({x:r[k]+j*STEP,y:+y,c:4})}refImg=new Image();refImg.src=d.ref}
- tg=lines.flatMap(l=>sample(l));cnt=new Uint8Array(tg.length);fill=pts.map(p=>({x:p.x,y:p.y,c:p.c,a:[0,0,0,0,0]}));
+ tg=lines.flatMap(l=>sample(l));cnt=new Uint8Array(tg.length);fill=pts.map(p=>({x:p.x,y:p.y,c:p.c,a:COL.map(()=>0),d:COL.map(()=>0)}));
  mask=new Uint8Array(80*110);fill.forEach(f=>{for(let cy=((f.y-2.5)/4)|0;cy<=((f.y+2.5)/4|0);cy++)for(let cx=((f.x-2.5)/4)|0;cx<=((f.x+2.5)/4|0);cx++)if(cx>=0&&cx<80&&cy>=0&&cy<110)mask[cy*80+cx]=1});
  kO=Math.min(1,150/tg.length);kF=Math.min(1,800/Math.max(1,fill.length));
  rx.clearRect(0,0,W,H);px.clearRect(0,0,W,H);offPts=[];strokes=[];lk=0;penMax=0;pain=0;phase=1;mp=null;gi=-1;lastP=null;drawing=false;state='play';
  setPhase();$('cname').textContent=c.n;show('game');t0=performance.now();last=t0;requestAnimationFrame(loop)}
-function setPhase(){$('phase').textContent=phase===1?'Etapa 1 · contorno':'Etapa 2 · cor';$('pens').classList.toggle('hide',phase!==1);$('pal').classList.toggle('hide',phase!==2);$('szs').classList.toggle('hide',phase!==2);$('hint').classList.toggle('hide',phase!==2);$('done').textContent=phase===1?'Ir para a cor':'Entregar'}
+function setPhase(){$('phase').textContent=phase===1?'Etapa 1 · contorno':'Etapa 2 · cor';$('pens').classList.toggle('hide',phase!==1);$('pal').classList.toggle('hide',phase!==2);$('szs').classList.toggle('hide',phase!==2);$('dns').classList.toggle('hide',phase!==2);$('hint').classList.toggle('hide',phase!==2);$('done').textContent=phase===1?'Ir para a cor':'Entregar'}
 /* entrada */
 const off=t=>[Math.sin(t/900)*2,Math.cos(t/700)*3];
 const raw=e=>{const r=cv.getBoundingClientRect();return[(e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height]};
@@ -370,8 +375,8 @@ function move(p){const a=lastP||p,n=Math.max(1,Math.ceil(Math.hypot(p[0]-a[0],p[
    if(m>POFF[pen])ouch=true;pain+=m>POFF[pen]?.4:.02*kb;blush(x,y,ow?.1:m>POFF[pen]?.08:.04,m>POFF[pen]?12:9)}}
  else{for(let k=1;k<=n;k++){const x=a[0]+(p[0]-a[0])*k/n,y=a[1]+(p[1]-a[1])*k/n;let mm=0;const inn=inMask(x|0,y|0);
    if(!inn){mm=1e9;for(const q of tg){const d=Math.hypot(x-q[0],y-q[1]);if(d<mm)mm=d}}
-   dab(x,y);if(inn||mm<4){pain+=PN[sz]*kF;blush(x,y,.03,10)}else{pain+=.4;lk++;ouch=true;blush(x,y,.1,12)}}}}
-function scores(){const oc=cnt.reduce((a,b)=>a+b,0)/cnt.length*[1,.95,.88][penMax],fs=fill.length?fill.reduce((t,f)=>{let w=0;f.a.forEach((v,j)=>{if(j!==f.c)w+=v});return t+Math.min(1,f.a[f.c]/.85)*(1-.5*Math.min(1,w))},0)/fill.length*(1-Math.min(.5,lk*.01)):1;return[oc,fs]}
+   dab(x,y);if(inn||mm<4){pain+=PN[sz]*kF*[.6,1.2][dens];blush(x,y,.03,10)}else{pain+=.4;lk++;ouch=true;blush(x,y,.1,12)}}}}
+function scores(){const oc=cnt.reduce((a,b)=>a+b,0)/cnt.length*[1,.95,.88][penMax],fs=fill.length?fill.reduce((t,f)=>{let w=0;f.a.forEach((v,j)=>{if(j!==f.c)w+=v});w=Math.min(1,w);return t+Math.min(1,f.d[f.c]/.85)*(1-.5*Math.max(0,(w-.6)/.4))},0)/fill.length*(1-Math.min(.5,lk*.01)):1;return[oc,fs]}
 $('done').onclick=()=>{if(state!=='play')return;if(phase===1){phase=2;drawing=false;buzz(false);setPhase()}else finish(false)};
 /* laço */
 function loop(now){if(state!=='play')return;const dt=(now-last)/1000;last=now;if(!drawing)pain=Math.max(0,pain-8*dt);const c=CL[ci];
@@ -391,11 +396,16 @@ function draw(now){const c=CL[ci];ctx.clearRect(0,0,W,H);ctx.save();const o=off(
  ctx.restore();machine(now)}
 function machine(now){if(!mp||!MC||!MI.complete||!MI.naturalWidth)return;const j=drawing?Math.sin(now/12)*1.2:0,k=drawing?Math.sin(now/9)*.8:0;ctx.drawImage(MI,mp[0]-MC.tx+j,mp[1]-MC.ty+k,MC.w,MC.h)}
 /* fim de cliente */
+function extras(){const c=CL[ci],n=fill.length;if(!n)return '';let hi=0,sh=0,mx=0;
+ fill.forEach(f=>{if(f.c!==5&&f.d[5]>=.25)hi++;if(f.c!==4&&f.d[4]>=.2)sh++;let k=0;for(let j=0;j<4;j++)if(f.d[j]>=.25)k++;if(k>=2)mx++});
+ const t=[];if(hi/n>=.03)t.push('Os brilhos deram vida '+c.dat+'.');if(sh/n>=.06)t.push('A sombra deu volume '+c.dat+'.');if(mx/n>=.06)t.push('O degradê entre as cores ficou bonito.');
+ return t.length?'Você foi além do pedido. '+t.join(' ')+' Isso é capricho de quem entende do ofício.':''}
 function finish(fled){state='end';drawing=false;buzz(false);elapsed=performance.now()-t0;totalMs+=elapsed;const[oc,fs]=scores(),t=.5*oc+.5*fs,ok=!fled&&t>=.5,stars=t>.85?3:t>.7?2:1,lastC=ci===CL.length-1;
  ev('jogo_cliente',{cliente:CL[ci].n,resultado:fled?'fugiu':ok?'ok':'reprovado',tempo_s:Math.round(elapsed/1000)});
  $('rtitle').textContent=ok?(lastC?'Você está contratado':'Cliente satisfeito'):'Você está demitido';
  $('rstars').textContent=ok?'★'.repeat(stars)+'☆'.repeat(3-stars):'';
  $('rtext').textContent=fled?CL[ci].n+' não aguentou a dor e foi embora. O chefe mandou você para a rua.':!ok?'A tatuagem ficou com '+Math.round(t*100)+'% de acerto. O chefe não gostou.':'Acerto de '+Math.round(t*100)+'%. Tempo gasto: '+fmt(elapsed)+(lastC?'. Tempo total: '+fmt(totalMs)+'.':'.');
+ {const ex=extras();$('rplus').textContent=ok?ex:'';$('rplus').classList.toggle('hide',!(ok&&ex))}
  $('cta').classList.toggle('hide',!(ok&&lastC));if(ok&&lastC)ev('jogo_fim',{tempo_total_s:Math.round(totalMs/1000)});
  $('next').textContent=!ok?'Tentar de novo':lastC?'Jogar de novo':'Próximo cliente';
  $('next').onclick=()=>{if(!ok||lastC){ci=0;totalMs=0}else ci++;brief()};show('result')}
