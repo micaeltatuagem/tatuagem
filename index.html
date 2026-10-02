@@ -487,7 +487,7 @@
     /* ── Processo ────────────────────────────────────────────── */
     #processo .etapas {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 1px;
       background: var(--border);
       border: 1px solid var(--border);
@@ -525,6 +525,7 @@
     }
     @media (max-width: 700px) {
       #processo .etapas { grid-template-columns: 1fr 1fr; }
+      #processo .etapas .etapa:last-child { grid-column: 1 / -1; }
     }
     @media (max-width: 420px) {
       #processo .etapas { grid-template-columns: 1fr; }
@@ -1278,6 +1279,11 @@
         <div class="etapa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 20.5s-7.5-4.6-9.7-9.2C.8 7.7 2.4 4 6 4c2 0 3.5 1.1 4.4 2.5C11.2 5.1 12.7 4 14.7 4c3.6 0 5.2 3.7 3.7 7.3-2.2 4.6-9.7 9.2-9.7 9.2Z"/><path d="M8.5 11.5h1.7l1-2 2 4 1-2h1.6"/></svg></div>
         <div class="etapa-titulo"><a href="fisiologia-da-tatuagem" onclick="gtag('event','click_card',{event_category:'navegacao',event_label:'cuidados'})">Cuidados</a></div>
         <p>Cicatrização e manutenção — como manter a tattoo bonita por décadas.</p>
+      </div>
+      <div class="etapa">
+        <div class="etapa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="7" width="20" height="11" rx="5.5"/><path d="M7 10.5v4M5 12.5h4"/><circle cx="15.5" cy="11.5" r="0.9" fill="currentColor" stroke="none"/><circle cx="18" cy="13.5" r="0.9" fill="currentColor" stroke="none"/></svg></div>
+        <div class="etapa-titulo"><a href="jogo-tatuador" onclick="gtag('event','click_card',{event_category:'navegacao',event_label:'jogo'})">Jogo</a></div>
+        <p>Teste a mão de tatuador: siga o decalque, preencha a cor e cuide da dor do cliente.</p>
       </div>
     </div>
   </div>
