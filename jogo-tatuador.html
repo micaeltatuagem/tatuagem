@@ -311,7 +311,7 @@ const star=[];for(let i=0;i<=10;i++){const r=i%2?50:115,a=-Math.PI/2+i*Math.PI/5
 const CL=[
  {n:'Dona Cida',dat:'ao coração',r:'Um coração vermelho no braço.',tol:'Alta',tv:100,poly:center(heart),col:0},
  {n:'Rogério',dat:'à estrela',r:'Uma estrela dourada.',tol:'Média',tv:85,poly:center(star),col:1},
- {n:'Fabiana',dat:'à flor',r:'Uma flor no estilo tradicional.',tol:'Média',tv:90,d:'florzinha'},
+ {n:'Fabiana',dat:'à flor',r:'Uma flor vermelha com folhas verdes e miolo dourado.',tol:'Média',tv:90,d:'florzinha'},
  {n:'Cláudio',dat:'à adaga',r:'Uma adaga para o antebraço.',tol:'Média',tv:85,d:'adaga'},
  {n:'Tati',dat:'à andorinha',r:'Uma andorinha em voo.',tol:'Baixa',tv:70,d:'andorinha'},
  {n:'Renato',dat:'à aranha',r:'Uma aranha pendurada na teia.',tol:'Baixa',tv:60,d:'aranha'}
@@ -359,7 +359,7 @@ $('sws').innerHTML=CN.map((n,i)=>`<button class="sw${i===4?' sel':''}" data-c="$
 document.querySelectorAll('#pal button').forEach(b=>b.onclick=()=>{sel=+b.dataset.c;document.querySelectorAll('#pal button').forEach(x=>x.classList.toggle('sel',x===b))});
 function setup(i){const c=CL[i];let lines,pts=[];
  if(c.poly){lines=[c.poly];for(let y=0;y<H;y+=STEP)for(let x=0;x<W;x+=STEP)if(inside(c.poly,x,y))pts.push({x,y,c:c.col});refImg=null}
- else{const d=D[c.d];lines=d.lines;for(const y in d.rows){const r=d.rows[y];for(let k=0;k<r.length;k+=2)for(let j=0;j<r[k+1];j++)pts.push({x:r[k]+j*STEP,y:+y,c:4})}refImg=new Image();refImg.src=d.ref}
+ else{const d=D[c.d];lines=d.lines;(d.fills||[{c:4,rows:d.rows}]).forEach(F=>{for(const y in F.rows){const r=F.rows[y];for(let k=0;k<r.length;k+=2)for(let j=0;j<r[k+1];j++)pts.push({x:r[k]+j*STEP,y:+y,c:F.c})}});refImg=new Image();refImg.src=d.ref}
  tg=lines.flatMap(l=>sample(l));cnt=new Uint8Array(tg.length);fill=pts.map(p=>({x:p.x,y:p.y,c:p.c,a:COL.map(()=>0),d:COL.map(()=>0)}));
  mask=new Uint8Array(80*110);fill.forEach(f=>{for(let cy=((f.y-2.5)/4)|0;cy<=((f.y+2.5)/4|0);cy++)for(let cx=((f.x-2.5)/4)|0;cx<=((f.x+2.5)/4|0);cx++)if(cx>=0&&cx<80&&cy>=0&&cy<110)mask[cy*80+cx]=1});
  kO=Math.min(1,150/tg.length);kF=Math.min(1,800/Math.max(1,fill.length));
@@ -415,13 +415,13 @@ function extras(){const c=CL[ci],n=fill.length;if(!n)return '';let hi=0,sh=0,mx=
  return t.length?'Você foi além do pedido. '+t.join(' ')+' Isso é capricho de quem entende do ofício.':''}
 function finish(fled){state='end';drawing=false;buzz(false);elapsed=performance.now()-t0;totalMs+=elapsed;const[oc,fs]=scores(),t=.5*oc+.5*fs,ok=!fled&&t>=.5,stars=t>.85?3:t>.7?2:1,lastC=ci===CL.length-1;
  ev('jogo_cliente',{cliente:CL[ci].n,resultado:fled?'fugiu':ok?'ok':'reprovado',tempo_s:Math.round(elapsed/1000)});
- $('rtitle').textContent=ok?(lastC?'Você está contratado':'Cliente satisfeito'):'Você está demitido';
+ $('rtitle').textContent=ok?(lastC?'Você está contratado':'Cliente satisfeito'):(fled?'O cliente foi embora':'O chefe não gostou');
  $('rstars').textContent=ok?'★'.repeat(stars)+'☆'.repeat(3-stars):'';
- $('rtext').textContent=fled?CL[ci].n+' não aguentou a dor e foi embora. O chefe mandou você para a rua.':!ok?'A tatuagem ficou com '+Math.round(t*100)+'% de acerto. O chefe não gostou.':'Acerto de '+Math.round(t*100)+'%. Tempo gasto: '+fmt(elapsed)+(lastC?'. Tempo total: '+fmt(totalMs)+'.':'.');
+ $('rtext').textContent=fled?CL[ci].n+' não aguentou a dor e foi embora. Tente de novo com este cliente.':!ok?'A tatuagem ficou com '+Math.round(t*100)+'% de acerto, e o chefe esperava mais. Tente de novo com este cliente.':'Acerto de '+Math.round(t*100)+'%. Tempo gasto: '+fmt(elapsed)+(lastC?'. Tempo total: '+fmt(totalMs)+'.':'.');
  {const ex=extras();$('rplus').textContent=ok?ex:'';$('rplus').classList.toggle('hide',!(ok&&ex))}
  $('cta').classList.toggle('hide',!(ok&&lastC));if(ok&&lastC)ev('jogo_fim',{tempo_total_s:Math.round(totalMs/1000)});
- $('next').textContent=!ok?'Tentar de novo':lastC?'Jogar de novo':'Próximo cliente';
- $('next').onclick=()=>{if(!ok||lastC){ci=0;totalMs=0}else ci++;brief()};show('result')}
+ $('next').textContent=!ok?'Tentar este cliente de novo':lastC?'Jogar de novo':'Próximo cliente';
+ $('next').onclick=()=>{if(ok){if(lastC){ci=0;totalMs=0}else ci++}brief()};show('result')}
 })();
 </script>
 </body>
