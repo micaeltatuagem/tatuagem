@@ -313,6 +313,7 @@ function renderPagina(v, posts) {
     <li class="nav-mobile-item"><a href="/guia" class="atual">Guia</a></li>
     <li class="nav-mobile-item"><a href="/blog">Blog</a></li>
     <li class="nav-mobile-item"><a href="/fisiologia-da-tatuagem">Cuidados</a></li>
+    <li class="nav-mobile-item"><a href="/jogo-tatuador">Jogo</a></li>
     <li class="nav-mobile-item"><a href="/preview-tatuagem">Criar</a></li>
     <li class="nav-mobile-item"><a href="/valor">Valor</a></li>
     <li class="nav-mobile-item"><a href="/valor#layaway">Layaway</a></li>
@@ -340,6 +341,7 @@ function renderPagina(v, posts) {
   <li><a href="/guia">Guia</a></li>
   <li><a href="/blog">Blog</a></li>
   <li><a href="/fisiologia-da-tatuagem">Cuidados</a></li>
+  <li><a href="/jogo-tatuador">Jogo</a></li>
 </ul>
 <ul class="nav-group-panel" data-panel="planeje">
   <li><a href="/preview-tatuagem">Criar</a></li>

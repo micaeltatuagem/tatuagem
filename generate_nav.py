@@ -19,6 +19,7 @@ ITEMS = {
     'guia':         ('Guia', 'page', 'guia'),
     'blog':         ('Blog', 'page', 'blog'),
     'cuidados':     ('Cuidados', 'page', 'fisiologia-da-tatuagem'),
+    'jogo':         ('Jogo', 'page', 'jogo-tatuador'),
     'criar':        ('Criar', 'page', 'preview-tatuagem'),
     'valor':        ('Valor', 'page', 'valor'),
     'layaway':      ('Layaway', 'anchor_on', ('valor', 'layaway')),
@@ -33,7 +34,7 @@ ITEMS = {
 # Grupos hierárquicos do dropdown (5 grupos + Reserva como botão isolado)
 GROUPS = [
     ('Tatuagens', ['galeria', 'flash', 'estilos']),
-    ('Conheça',   ['sobre', 'guia', 'blog', 'cuidados']),
+    ('Conheça',   ['sobre', 'guia', 'blog', 'cuidados', 'jogo']),
     ('Planeje',   ['criar', 'valor', 'layaway', 'promocoes']),
     ('Agende',    ['whatsapp']),  # Reserva fica fora, como botão de destaque
     ('Estúdio',   ['localizacao', 'contato', 'aerografia']),
@@ -45,6 +46,7 @@ KEY_TO_SELF_FILE = {
     'blog': 'blog.html',
     'reserva': 'reserva.html', 'aerografia': 'aerografia.html',
     'cuidados': 'fisiologia-da-tatuagem.html', 'valor': 'valor.html',
+    'jogo': 'jogo-tatuador.html',
     'galeria': 'galeria.html', 'estilos': 'estilo/index.html',
 }
 
