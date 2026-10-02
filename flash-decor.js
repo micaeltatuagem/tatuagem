@@ -205,6 +205,7 @@
       return document.querySelector('main#conteudo .grupo') ? ['header', 'main#conteudo .grupo', 'footer'] : ['header','main','footer'];
     }
     if (path.includes('blog')) return ['main','footer'];
+    if (path.includes('jogo-tatuador')) return ['header','main','footer'];
     // index / default
     return ['#hero','#sobre','#galeria','#processo','#faq','#promocoes','#contato'];
   }
