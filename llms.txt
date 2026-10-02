@@ -17,3 +17,4 @@
 - [Reserva](https://micaeltatuagem.com.br/reserva.html): agendamento e cadastro
 - [Guia](https://micaeltatuagem.com.br/guia): dicionário com significados, estilos, técnicas e termos de tatuagem (centenas de verbetes, cada um em sua própria URL /guia/<termo>)
 - [Blog](https://micaeltatuagem.com.br/blog): artigos aprofundados sobre simbolismo, mitologia e história por trás de estilos e motivos de tatuagem
+- [Jogo](https://micaeltatuagem.com.br/jogo-tatuador): jogo de tatuagem no navegador, com contorno em uma passada e preenchimento de cor em flashes tradicionais
