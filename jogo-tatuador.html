@@ -80,7 +80,7 @@ body{background:var(--ink);color:var(--bone);font-family:'Inter',sans-serif;font
 .header-title .split{color:var(--muted);font-style:italic;font-weight:400}
 .header-sub{margin-top:.9rem;max-width:560px;color:var(--muted);font-size:.98rem}
 main{position:relative;overflow:hidden;padding:3rem 1.5rem 4rem}
-.page-inner{max-width:480px;margin:0 auto;position:relative;z-index:1}
+.page-inner{max-width:520px;margin:0 auto;position:relative;z-index:1}
 .content-panel{position:relative;z-index:1;background:rgba(10,10,10,0.62);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(212,201,176,0.08);border-radius:4px;padding:1.6rem 1.4rem}
 h2{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.7rem;line-height:1.2;margin-bottom:.8rem;color:var(--bone)}
 p{margin-bottom:1rem;color:var(--bone);opacity:.9}
@@ -95,7 +95,17 @@ p{margin-bottom:1rem;color:var(--bone);opacity:.9}
 .sw.sel{border-color:var(--bone);box-shadow:0 0 0 2px var(--accent)}
 .bar{height:10px;background:rgba(0,0,0,.5);border:1px solid var(--border);border-radius:3px;overflow:hidden;margin:.3rem 0 .8rem}
 .bar i{display:block;height:100%;width:0;background:var(--accent);transition:background .2s}
-canvas{width:100%;aspect-ratio:320/440;background:#c98f6b;border:1px solid var(--border);border-radius:4px;touch-action:none;display:block;cursor:none;margin-bottom:.8rem}
+canvas{width:100%;max-width:calc((100vh - 250px)*.7273);max-width:calc((100dvh - 250px)*.7273);aspect-ratio:320/440;background:#c98f6b;border:1px solid var(--border);border-radius:4px;touch-action:none;display:block;cursor:none;justify-self:center}
+.play{display:grid;grid-template-columns:minmax(0,1fr) 74px;gap:.6rem;align-items:start}
+.tools{display:flex;flex-direction:column;gap:.45rem}
+.grp{display:flex;flex-direction:column;gap:.3rem}
+.grp .lbl{margin:0;font-size:.6rem;letter-spacing:.06em}
+.grp .btn.alt{padding:.3rem .1rem;font-size:.72rem;width:100%}
+.swg{display:grid;grid-template-columns:1fr 1fr;gap:.3rem;justify-items:center}
+.swg .sw{width:26px;height:26px}
+section{scroll-margin-top:84px}
+.gh{margin-bottom:.4rem}
+@media(min-width:700px){.play{grid-template-columns:minmax(0,1fr) 104px}.grp .btn.alt{font-size:.85rem}.swg .sw{width:34px;height:34px}.grp .btn.alt{padding:.45rem .1rem}}
 .ctrl{margin-bottom:.8rem;gap:.5rem;justify-content:center;flex-wrap:wrap}
 .time{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.6rem;color:var(--accent)}
 .stars{color:var(--accent);font-size:1.6rem;letter-spacing:.3rem;margin-bottom:.4rem}
@@ -204,16 +214,19 @@ footer p{margin-top:.5rem;color:var(--muted)}
     <button class="btn" id="go" type="button">Começar</button>
   </section>
   <section id="game" class="hide">
-    <div class="row"><div><h2 id="cname" style="margin:0;font-size:1.4rem"></h2><div class="muted" id="phase"></div></div><div class="row" style="gap:.8rem"><span class="time" id="time">0:00</span><button class="btn alt" id="snd" type="button">Som: ligado</button></div></div>
-    <div class="row" style="margin-top:.6rem"><span class="muted">Dor do cliente</span><span class="muted" id="cov"></span></div>
+    <div class="row gh"><div><h2 id="cname" style="margin:0;font-size:1.4rem"></h2><div class="muted" id="phase"></div></div><div class="row" style="gap:.6rem"><span class="time" id="time">0:00</span><button class="btn alt" id="snd" type="button">Som: ligado</button></div></div>
+    <div class="row"><span class="muted">Dor do cliente</span><span class="muted" id="cov"></span></div>
     <div class="bar"><i id="pain"></i></div>
-    <canvas id="cv" width="320" height="440" aria-label="Pele do cliente com o decalque"></canvas>
-    <div id="pens"><p class="lbl">Agulhas de contorno</p><div class="row ctrl"><button class="btn alt" type="button" data-p="0">Fina</button><button class="btn alt sel" type="button" data-p="1">Média</button><button class="btn alt" type="button" data-p="2">Grossa</button></div></div>
-    <div id="szs" class="hide"><p class="lbl">Agulhas de pintura</p><div class="row ctrl"><button class="btn alt" type="button" data-z="0">Pequena</button><button class="btn alt sel" type="button" data-z="1">Média</button><button class="btn alt" type="button" data-z="2">Grande</button></div></div>
-    <div id="dns" class="hide"><p class="lbl">Pintura</p><div class="row ctrl"><button class="btn alt" type="button" data-d="0">Suave</button><button class="btn alt sel" type="button" data-d="1">Densa</button></div></div>
-    <div class="row ctrl hide" id="pal"></div>
-    <p class="muted hide" id="hint" style="text-align:center">Suave faz sombra e degradê, densa preenche. Além do desenho, dá para acrescentar sombra e brilho.</p>
-    <div style="text-align:center"><button class="btn" id="done" type="button"></button></div>
+    <div class="play">
+      <canvas id="cv" width="320" height="440" aria-label="Pele do cliente com o decalque"></canvas>
+      <div class="tools">
+        <div id="pens" class="grp"><p class="lbl">Agulhas</p><button class="btn alt" type="button" data-p="0" title="Agulha de contorno fina">Fina</button><button class="btn alt sel" type="button" data-p="1" title="Agulha de contorno média">Média</button><button class="btn alt" type="button" data-p="2" title="Agulha de contorno grossa">Grossa</button></div>
+        <div id="szs" class="grp hide"><p class="lbl">Agulhas</p><button class="btn alt" type="button" data-z="0" title="Agulha de pintura pequena">Pequena</button><button class="btn alt sel" type="button" data-z="1" title="Agulha de pintura média">Média</button><button class="btn alt" type="button" data-z="2" title="Agulha de pintura grande">Grande</button></div>
+        <div id="dns" class="grp hide"><p class="lbl">Pintura</p><button class="btn alt" type="button" data-d="0">Suave</button><button class="btn alt sel" type="button" data-d="1">Densa</button></div>
+        <div id="pal" class="grp hide"><p class="lbl">Cores</p><div class="swg" id="sws"></div></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:.7rem"><button class="btn" id="done" type="button"></button></div>
   </section>
   <section id="result" class="hide">
     <h2 id="rtitle"></h2>
@@ -311,7 +324,7 @@ const PR=[6,9,13],POFF=[10,14,19],PP=[.3,.2,.12],PW=[3,5,8],PK=[.85,.75,.6],PRAD
 const rc=document.createElement('canvas');rc.width=W;rc.height=H;const rx=rc.getContext('2d');
 const pc=document.createElement('canvas');pc.width=W;pc.height=H;const px=pc.getContext('2d');
 const fmt=ms=>{const s=Math.floor(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
-function show(id){['intro','brief','game','result'].forEach(s=>$(s).classList.toggle('hide',s!==id))}
+function show(id){['intro','brief','game','result'].forEach(s=>$(s).classList.toggle('hide',s!==id));if(id!=='intro'){const el=$(id);requestAnimationFrame(()=>el.scrollIntoView({block:'start',behavior:'smooth'}))}}
 /* carga */
 Promise.all([getJSON('desenhos.json'),getJSON('maquina.json')]).then(([d,m])=>{D=d;MC=m;MI.src=PRE&&PRE['maquina.webp']?'data:image/webp;base64,'+PRE['maquina.webp']:'/jogo/maquina.webp';ready=true;$('start').disabled=false;$('start').textContent='Começar'}).catch(()=>{$('start').textContent='Não foi possível carregar o jogo'});
 /* áudio */
@@ -337,12 +350,12 @@ function dab(x,y){const r=SR[sz],ad=[.09,.3][dens],g=px.createRadialGradient(x,y
 /* fluxo */
 $('start').onclick=()=>{if(!ready)return;audioInit();ci=0;totalMs=0;ev('jogo_inicio');brief()};
 $('snd').onclick=()=>{snd=!snd;$('snd').textContent=snd?'Som: ligado':'Som: desligado';if(!snd)buzz(false)};
-function brief(){const c=CL[ci];$('bn').textContent='Cliente '+(ci+1)+' de '+CL.length+' · '+c.n;$('br').textContent=c.r;$('bt').textContent='Tolerância à dor: '+c.tol+'.';show('brief')}
+function brief(){const c=CL[ci];$('bn').textContent='Cliente '+(ci+1)+' de '+CL.length+' · '+c.n;$('br').textContent=c.r;$('bt').textContent='Tolerância à dor: '+c.tol+'. Na cor, suave faz sombra e degradê e densa preenche. Dá para acrescentar sombra e brilho além do desenho.';show('brief')}
 $('go').onclick=()=>setup(ci);
 document.querySelectorAll('#pens button').forEach(b=>b.onclick=()=>{pen=+b.dataset.p;document.querySelectorAll('#pens button').forEach(x=>x.classList.toggle('sel',x===b))});
 document.querySelectorAll('#szs button').forEach(b=>b.onclick=()=>{sz=+b.dataset.z;document.querySelectorAll('#szs button').forEach(x=>x.classList.toggle('sel',x===b))});
 document.querySelectorAll('#dns button').forEach(b=>b.onclick=()=>{dens=+b.dataset.d;document.querySelectorAll('#dns button').forEach(x=>x.classList.toggle('sel',x===b))});
-$('pal').innerHTML=CN.map((n,i)=>`<button class="sw${i===4?' sel':''}" data-c="${i}" style="background:${COL[i]}" aria-label="${n}" title="${n}"></button>`).join('');
+$('sws').innerHTML=CN.map((n,i)=>`<button class="sw${i===4?' sel':''}" data-c="${i}" style="background:${COL[i]}" aria-label="${n}" title="${n}"></button>`).join('');
 document.querySelectorAll('#pal button').forEach(b=>b.onclick=()=>{sel=+b.dataset.c;document.querySelectorAll('#pal button').forEach(x=>x.classList.toggle('sel',x===b))});
 function setup(i){const c=CL[i];let lines,pts=[];
  if(c.poly){lines=[c.poly];for(let y=0;y<H;y+=STEP)for(let x=0;x<W;x+=STEP)if(inside(c.poly,x,y))pts.push({x,y,c:c.col});refImg=null}
@@ -352,7 +365,7 @@ function setup(i){const c=CL[i];let lines,pts=[];
  kO=Math.min(1,150/tg.length);kF=Math.min(1,800/Math.max(1,fill.length));
  rx.clearRect(0,0,W,H);px.clearRect(0,0,W,H);offPts=[];strokes=[];lk=0;penMax=0;pain=0;phase=1;mp=null;gi=-1;lastP=null;drawing=false;state='play';
  setPhase();$('cname').textContent=c.n;show('game');t0=performance.now();last=t0;requestAnimationFrame(loop)}
-function setPhase(){$('phase').textContent=phase===1?'Etapa 1 · contorno':'Etapa 2 · cor';$('pens').classList.toggle('hide',phase!==1);$('pal').classList.toggle('hide',phase!==2);$('szs').classList.toggle('hide',phase!==2);$('dns').classList.toggle('hide',phase!==2);$('hint').classList.toggle('hide',phase!==2);$('done').textContent=phase===1?'Ir para a cor':'Entregar'}
+function setPhase(){$('phase').textContent=phase===1?'Etapa 1 · contorno':'Etapa 2 · cor';$('pens').classList.toggle('hide',phase!==1);$('pal').classList.toggle('hide',phase!==2);$('szs').classList.toggle('hide',phase!==2);$('dns').classList.toggle('hide',phase!==2);$('done').textContent=phase===1?'Ir para a cor':'Entregar';if(!$('game').classList.contains('hide'))requestAnimationFrame(()=>$('game').scrollIntoView({block:'start',behavior:'smooth'}))}
 /* entrada */
 const off=t=>[Math.sin(t/900)*2,Math.cos(t/700)*3];
 const raw=e=>{const r=cv.getBoundingClientRect();return[(e.clientX-r.left)*W/r.width,(e.clientY-r.top)*H/r.height]};
