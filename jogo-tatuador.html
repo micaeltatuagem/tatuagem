@@ -113,6 +113,14 @@ section{scroll-margin-top:84px}
 .lbl{font-size:.78rem;color:var(--muted);text-align:center;margin:0 0 .3rem;letter-spacing:.08em;text-transform:uppercase;opacity:1}
 .content-panel a{color:var(--accent)}
 .plus{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;line-height:1.45;color:var(--accent);opacity:1}
+.pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+@media(min-width:560px){.pick-grid{grid-template-columns:repeat(3,1fr)}}
+.pcard{background:rgba(24,22,22,.85);border:1px solid var(--border);border-radius:4px;padding:.6rem .4rem;text-align:center;color:var(--bone);cursor:pointer;font-family:inherit}
+.pcard:hover,.pcard:focus-visible{border-color:var(--accent);outline:none}
+.pcard img{width:88px;max-width:100%;height:auto;display:block;margin:0 auto .45rem;background:#f0e8d6;border-radius:2px}
+.pcard .pn{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.15rem;line-height:1.2}
+.pcard .pm{font-size:.74rem;color:var(--muted);line-height:1.45}
+.pcard .ps{color:var(--accent);font-size:.95rem;letter-spacing:.15rem;min-height:1.3rem}
 .hide{display:none!important}
 footer{position:relative;overflow:hidden;text-align:center;padding:2.2rem 1.5rem 2.6rem;border-top:1px solid var(--border);font-size:.85rem;color:var(--muted)}
 footer>*{position:relative;z-index:1}
@@ -202,16 +210,21 @@ footer p{margin-top:.5rem;color:var(--muted)}
 <div class="content-panel">
   <section id="intro">
     <h2>Antes de começar</h2>
-    <p>Cada cliente chega com um desenho. Primeiro o contorno, depois o preenchimento.</p>
+    <p>São seis clientes, cada um com um desenho e uma tolerância diferente à dor. Você escolhe qual fazer. Primeiro o contorno, depois o preenchimento.</p>
     <p>Segure e arraste para tatuar. A agulha é puxada de leve para a linha, como a pele faz. Tatuar fora do traço dói e deixa marca. Levante a máquina para a dor baixar.</p>
     <button class="btn" id="start" type="button" disabled>Carregando…</button>
     <noscript><p class="muted">Este jogo precisa de JavaScript ativado no navegador.</p></noscript>
+  </section>
+  <section id="pick" class="hide">
+    <h2>Escolha o desenho</h2>
+    <p class="muted" id="pcount"></p>
+    <div class="pick-grid" id="pgrid"></div>
   </section>
   <section id="brief" class="hide">
     <h2 id="bn"></h2>
     <p id="br"></p>
     <p class="muted" id="bt"></p>
-    <button class="btn" id="go" type="button">Começar</button>
+    <div class="row" style="justify-content:flex-start;gap:.6rem;flex-wrap:wrap"><button class="btn" id="go" type="button">Começar</button><button class="btn alt" id="back" type="button">Escolher outro</button></div>
   </section>
   <section id="game" class="hide">
     <div class="row gh"><div><h2 id="cname" style="margin:0;font-size:1.4rem"></h2><div class="muted" id="phase"></div></div><div class="row" style="gap:.6rem"><span class="time" id="time">0:00</span><button class="btn alt" id="snd" type="button">Som: ligado</button></div></div>
@@ -226,20 +239,20 @@ footer p{margin-top:.5rem;color:var(--muted)}
         <div id="pal" class="grp hide"><p class="lbl">Cores</p><div class="swg" id="sws"></div></div>
       </div>
     </div>
-    <div style="text-align:center;margin-top:.7rem"><button class="btn" id="done" type="button"></button></div>
+    <div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:.7rem"><button class="btn" id="done" type="button"></button><button class="btn alt" id="quit" type="button">Escolher outro desenho</button></div>
   </section>
   <section id="result" class="hide">
     <h2 id="rtitle"></h2>
     <div class="stars" id="rstars"></div>
     <p id="rtext"></p>
     <p class="plus hide" id="rplus"></p>
-    <button class="btn" id="next" type="button"></button>
+    <div class="row" style="justify-content:flex-start;gap:.6rem;flex-wrap:wrap"><button class="btn" id="next" type="button"></button><button class="btn alt" id="again" type="button"></button></div>
     <div class="cta-link hide" id="cta"><p>Quer tatuar de verdade?</p><a class="btn" href="https://wa.me/5532999666946?text=Ol%C3%A1.+joguei+o+jogo+do+tatuador+no+site+e+quero+fazer+uma+tatuagem+com+o+Micael" target="_blank" rel="noopener" onclick="gtag('event','click_whatsapp',{event_category:'cta',event_label:'jogo'});if(typeof fbq==='function')fbq('track','Lead')">Falar no WhatsApp</a></div>
   </section>
 </div>
   <div class="content-panel" style="margin-top:1.5rem">
     <h2>Como o jogo funciona</h2>
-    <p>Cada cliente chega com um desenho de flash. Você faz o contorno em uma passada, escolhendo entre agulhas de contorno de espessuras diferentes, e depois preenche a cor com agulhas de pintura pequena, média ou grande.</p>
+    <p>Você escolhe entre seis clientes, cada um com um desenho de flash e uma tolerância diferente à dor. Você faz o contorno em uma passada, escolhendo entre agulhas de contorno de espessuras diferentes, e depois preenche a cor com agulhas de pintura pequena, média ou grande.</p>
     <p>Na pintura, você escolhe entre aplicação suave e densa e pode acrescentar sombra e brilho além do desenho. O que for além do pedido é reconhecido no fim.</p>
     <p>A agulha é puxada de leve para a linha, como a pele faz com a máquina de verdade. Sair do traço, repassar onde já foi tatuado ou deixar a cor passar do contorno machuca o cliente. Se a dor passar do limite dele, ele vai embora.</p>
     <p>O som é o da minha Micky Sharpz, gravado enquanto eu tatuava.</p>
@@ -309,13 +322,15 @@ const center=p=>{let a=1e9,b=-1e9,c=1e9,d=-1e9;p.forEach(q=>{a=Math.min(a,q[0]);
 const heart=[];for(let t=0;t<=6.28;t+=.1)heart.push([160+5.6*16*Math.pow(Math.sin(t),3),215-5.6*(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))]);heart.push(heart[0]);
 const star=[];for(let i=0;i<=10;i++){const r=i%2?50:115,a=-Math.PI/2+i*Math.PI/5;star.push([160+r*Math.cos(a),225+r*Math.sin(a)])}
 const CL=[
- {n:'Dona Cida',dat:'ao coração',r:'Um coração vermelho no braço.',tol:'Alta',tv:100,poly:center(heart),col:0},
- {n:'Rogério',dat:'à estrela',r:'Uma estrela dourada.',tol:'Média',tv:85,poly:center(star),col:1},
- {n:'Fabiana',dat:'à flor',r:'Uma flor vermelha com folhas verdes e miolo dourado.',tol:'Média',tv:90,d:'florzinha'},
- {n:'Cláudio',dat:'à adaga',r:'Uma adaga com pomo e guarda dourados e cabo vermelho.',tol:'Média',tv:85,d:'adaga'},
- {n:'Tati',dat:'à andorinha',r:'Uma andorinha em voo.',tol:'Baixa',tv:70,d:'andorinha'},
- {n:'Renato',dat:'à aranha',r:'Uma aranha pendurada na teia.',tol:'Baixa',tv:60,d:'aranha'}
+ {n:'Dona Cida',title:'Coração',dif:'Dificuldade: fácil',dat:'ao coração',r:'Um coração vermelho no braço.',tol:'Alta',tv:100,poly:center(heart),col:0},
+ {n:'Rogério',title:'Estrela',dif:'Dificuldade: fácil',dat:'à estrela',r:'Uma estrela dourada.',tol:'Média',tv:85,poly:center(star),col:1},
+ {n:'Fabiana',title:'Flor',dif:'Dificuldade: média',dat:'à flor',r:'Uma flor vermelha com folhas verdes e miolo dourado.',tol:'Média',tv:90,d:'florzinha'},
+ {n:'Cláudio',title:'Adaga',dif:'Dificuldade: média',dat:'à adaga',r:'Uma adaga com pomo e guarda dourados e cabo vermelho.',tol:'Média',tv:85,d:'adaga'},
+ {n:'Tati',title:'Andorinha',dif:'Dificuldade: difícil',dat:'à andorinha',r:'Uma andorinha em voo.',tol:'Baixa',tv:70,d:'andorinha'},
+ {n:'Renato',title:'Aranha na teia',dif:'Dificuldade: difícil',dat:'à aranha',r:'Uma aranha pendurada na teia.',tol:'Baixa',tv:60,d:'aranha'}
 ];
+const SK='jogoTatuador.v1';let done={};try{const j=JSON.parse(localStorage.getItem(SK)||'{}');if(j&&j.done)for(const k in j.done)if(+k>=0&&+k<CL.length)done[k]=Math.max(1,Math.min(3,+j.done[k]||1))}catch(e){}
+const save=()=>{try{localStorage.setItem(SK,JSON.stringify({done}))}catch(e){}};
 function sample(l,st=5){const o=[];for(let i=0;i<l.length-1;i++){const a=l[i],b=l[i+1],n=Math.max(1,Math.round(Math.hypot(b[0]-a[0],b[1]-a[1])/st));for(let k=0;k<n;k++)o.push([a[0]+(b[0]-a[0])*k/n,a[1]+(b[1]-a[1])*k/n])}o.push(l[l.length-1]);return o}
 let D=null,MC=null,MI=new Image(),refImg=null,ready=false;
 let AC=null,bz=null,lastG=0,ouch=false,snd=true,BUF={},LD={};
@@ -324,7 +339,7 @@ const PR=[6,9,13],POFF=[10,14,19],PP=[.3,.2,.12],PW=[3,5,8],PK=[.85,.75,.6],PRAD
 const rc=document.createElement('canvas');rc.width=W;rc.height=H;const rx=rc.getContext('2d');
 const pc=document.createElement('canvas');pc.width=W;pc.height=H;const px=pc.getContext('2d');
 const fmt=ms=>{const s=Math.floor(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
-function show(id){['intro','brief','game','result'].forEach(s=>$(s).classList.toggle('hide',s!==id));if(id!=='intro'){const el=$(id);requestAnimationFrame(()=>el.scrollIntoView({block:'start',behavior:'smooth'}))}}
+function show(id){['intro','pick','brief','game','result'].forEach(s=>$(s).classList.toggle('hide',s!==id));if(id!=='intro'){const el=$(id);requestAnimationFrame(()=>el.scrollIntoView({block:'start',behavior:'smooth'}))}}
 /* carga */
 Promise.all([getJSON('desenhos.json'),getJSON('maquina.json')]).then(([d,m])=>{D=d;MC=m;MI.src=PRE&&PRE['maquina.webp']?'data:image/webp;base64,'+PRE['maquina.webp']:'/jogo/maquina.webp';ready=true;$('start').disabled=false;$('start').textContent='Começar'}).catch(()=>{$('start').textContent='Não foi possível carregar o jogo'});
 /* áudio */
@@ -348,10 +363,15 @@ function blush(x,y,a,r){const g=rx.createRadialGradient(x,y,0,x,y,r);g.addColorS
 function dab(x,y){const r=SR[sz],ad=[.09,.3][dens],g=px.createRadialGradient(x,y,0,x,y,r),hx=Math.round(ad*255).toString(16).padStart(2,'0');g.addColorStop(0,COL[sel]+hx);g.addColorStop(1,COL[sel]+'00');px.fillStyle=g;px.fillRect(x-r,y-r,2*r,2*r);
  for(const f of fill){const d=Math.hypot(x-f.x,y-f.y);if(d<r){const aa=ad*(1-d/r);f.a=f.a.map((v,j)=>j===sel?1-(1-v)*(1-aa):v*(1-aa));f.d[sel]=1-(1-f.d[sel])*(1-aa)}}}
 /* fluxo */
-$('start').onclick=()=>{if(!ready)return;audioInit();ci=0;totalMs=0;ev('jogo_inicio');brief()};
+$('start').onclick=()=>{if(!ready)return;audioInit();totalMs=0;ev('jogo_inicio');pick()};
 $('snd').onclick=()=>{snd=!snd;$('snd').textContent=snd?'Som: ligado':'Som: desligado';if(!snd)buzz(false)};
-function brief(){const c=CL[ci];$('bn').textContent='Cliente '+(ci+1)+' de '+CL.length+' · '+c.n;$('br').textContent=c.r;$('bt').textContent='Tolerância à dor: '+c.tol+'. Na cor, suave faz sombra e degradê e densa preenche. Dá para acrescentar sombra e brilho além do desenho.';show('brief')}
-$('go').onclick=()=>setup(ci);
+function thumb(c){if(c.d)return D[c.d].ref;const k=document.createElement('canvas');k.width=88;k.height=121;const g=k.getContext('2d');g.scale(.275,.275);g.fillStyle=COL[c.col];g.beginPath();c.poly.forEach((p,i)=>i?g.lineTo(p[0],p[1]):g.moveTo(p[0],p[1]));g.closePath();g.fill();g.strokeStyle='#0d0d12';g.lineWidth=6;g.stroke();return k.toDataURL()}
+function pick(){state='idle';drawing=false;buzz(false);
+ $('pgrid').innerHTML=CL.map((c,i)=>`<button class="pcard" type="button" data-i="${i}"><img src="${thumb(c)}" alt="${c.title}" width="88" height="121"><div class="pn">${c.title}</div><div class="pm">${c.n} · Dor: ${c.tol.toLowerCase()}<br>${c.dif}</div><div class="ps">${done[i]?'★'.repeat(done[i])+'☆'.repeat(3-done[i]):''}</div></button>`).join('');
+ $('pgrid').querySelectorAll('button').forEach(b=>b.onclick=()=>{ci=+b.dataset.i;brief()});
+ $('pcount').textContent='Concluídos: '+Object.keys(done).length+' de '+CL.length+'.';show('pick')}
+function brief(){const c=CL[ci];$('bn').textContent=c.title+' · '+c.n;$('br').textContent=c.r;$('bt').textContent='Tolerância à dor: '+c.tol+'. Na cor, suave faz sombra e degradê e densa preenche. Dá para acrescentar sombra e brilho além do desenho.';show('brief')}
+$('go').onclick=()=>setup(ci);$('back').onclick=pick;$('quit').onclick=()=>{state='idle';drawing=false;buzz(false);pick()};
 document.querySelectorAll('#pens button').forEach(b=>b.onclick=()=>{pen=+b.dataset.p;document.querySelectorAll('#pens button').forEach(x=>x.classList.toggle('sel',x===b))});
 document.querySelectorAll('#szs button').forEach(b=>b.onclick=()=>{sz=+b.dataset.z;document.querySelectorAll('#szs button').forEach(x=>x.classList.toggle('sel',x===b))});
 document.querySelectorAll('#dns button').forEach(b=>b.onclick=()=>{dens=+b.dataset.d;document.querySelectorAll('#dns button').forEach(x=>x.classList.toggle('sel',x===b))});
@@ -413,15 +433,18 @@ function extras(){const c=CL[ci],n=fill.length;if(!n)return '';let hi=0,sh=0,mx=
  fill.forEach(f=>{if(f.c!==5&&f.d[5]>=.25)hi++;if(f.c!==4&&f.d[4]>=.2)sh++;let k=0;for(let j=0;j<4;j++)if(f.d[j]>=.25)k++;if(k>=2)mx++});
  const t=[];if(hi/n>=.03)t.push('Os brilhos deram vida '+c.dat+'.');if(sh/n>=.06)t.push('A sombra deu volume '+c.dat+'.');if(mx/n>=.06)t.push('O degradê entre as cores ficou bonito.');
  return t.length?'Você foi além do pedido. '+t.join(' ')+' Isso é capricho de quem entende do ofício.':''}
-function finish(fled){state='end';drawing=false;buzz(false);elapsed=performance.now()-t0;totalMs+=elapsed;const[oc,fs]=scores(),t=.5*oc+.5*fs,ok=!fled&&t>=.5,stars=t>.85?3:t>.7?2:1,lastC=ci===CL.length-1;
+function finish(fled){state='end';drawing=false;buzz(false);elapsed=performance.now()-t0;totalMs+=elapsed;const[oc,fs]=scores(),t=.5*oc+.5*fs,ok=!fled&&t>=.5,stars=t>.85?3:t>.7?2:1;
+ const before=Object.keys(done).length;if(ok){done[ci]=Math.max(done[ci]||0,stars);save()}
+ const nd=Object.keys(done).length,all=nd===CL.length;
  ev('jogo_cliente',{cliente:CL[ci].n,resultado:fled?'fugiu':ok?'ok':'reprovado',tempo_s:Math.round(elapsed/1000)});
- $('rtitle').textContent=ok?(lastC?'Você está contratado':'Cliente satisfeito'):(fled?'O cliente foi embora':'O chefe não gostou');
+ $('rtitle').textContent=ok?(all?'Você está contratado':'Cliente satisfeito'):(fled?'O cliente foi embora':'O chefe não gostou');
  $('rstars').textContent=ok?'★'.repeat(stars)+'☆'.repeat(3-stars):'';
- $('rtext').textContent=fled?CL[ci].n+' não aguentou a dor e foi embora. Tente de novo com este cliente.':!ok?'A tatuagem ficou com '+Math.round(t*100)+'% de acerto, e o chefe esperava mais. Tente de novo com este cliente.':'Acerto de '+Math.round(t*100)+'%. Tempo gasto: '+fmt(elapsed)+(lastC?'. Tempo total: '+fmt(totalMs)+'.':'.');
+ $('rtext').textContent=fled?CL[ci].n+' não aguentou a dor e foi embora. Tente de novo ou escolha outro desenho.':!ok?'A tatuagem ficou com '+Math.round(t*100)+'% de acerto, e o chefe esperava mais. Tente de novo ou escolha outro desenho.':'Acerto de '+Math.round(t*100)+'%. Tempo gasto: '+fmt(elapsed)+(all?'. Você concluiu os '+CL.length+' desenhos.':'. Concluídos: '+nd+' de '+CL.length+'.');
  {const ex=extras();$('rplus').textContent=ok?ex:'';$('rplus').classList.toggle('hide',!(ok&&ex))}
- $('cta').classList.toggle('hide',!(ok&&lastC));if(ok&&lastC)ev('jogo_fim',{tempo_total_s:Math.round(totalMs/1000)});
- $('next').textContent=!ok?'Tentar este cliente de novo':lastC?'Jogar de novo':'Próximo cliente';
- $('next').onclick=()=>{if(ok){if(lastC){ci=0;totalMs=0}else ci++}brief()};show('result')}
+ $('cta').classList.toggle('hide',!(ok&&all));if(ok&&all&&before<CL.length)ev('jogo_fim',{tempo_total_s:Math.round(totalMs/1000)});
+ if(ok){$('next').textContent='Escolher outro desenho';$('next').onclick=pick;$('again').textContent='Refazer este';$('again').onclick=brief}
+ else{$('next').textContent='Tentar de novo';$('next').onclick=brief;$('again').textContent='Escolher outro desenho';$('again').onclick=pick}
+ show('result')}
 })();
 </script>
 </body>
