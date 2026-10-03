@@ -325,8 +325,8 @@ const CL=[
  {n:'Dona Cida',title:'Coração',dif:'Dificuldade: fácil',dat:'ao coração',r:'Um coração vermelho no braço.',tol:'Alta',tv:100,poly:center(heart),col:0},
  {n:'Rogério',title:'Estrela',dif:'Dificuldade: fácil',dat:'à estrela',r:'Uma estrela dourada.',tol:'Média',tv:85,poly:center(star),col:1},
  {n:'Fabiana',title:'Flor',dif:'Dificuldade: média',dat:'à flor',r:'Uma flor vermelha com folhas verdes e miolo dourado.',tol:'Média',tv:90,d:'florzinha'},
- {n:'Cláudio',title:'Adaga',dif:'Dificuldade: média',dat:'à adaga',r:'Uma adaga com pomo e guarda dourados e cabo vermelho.',tol:'Média',tv:85,d:'adaga'},
- {n:'Tati',title:'Andorinha',dif:'Dificuldade: difícil',dat:'à andorinha',r:'Uma andorinha em voo.',tol:'Baixa',tv:70,d:'andorinha'},
+ {n:'Cláudio',title:'Adaga',dif:'Dificuldade: média',dat:'à adaga',r:'Uma adaga com pomo e guarda dourados, cabo vermelho e lâmina azul e preta.',tol:'Média',tv:85,d:'adaga'},
+ {n:'Tati',title:'Andorinha',dif:'Dificuldade: difícil',dat:'à andorinha',r:'Uma andorinha em voo, azul e preta, com o peito vermelho.',tol:'Baixa',tv:70,d:'andorinha'},
  {n:'Renato',title:'Aranha na teia',dif:'Dificuldade: difícil',dat:'à aranha',r:'Uma aranha pendurada na teia.',tol:'Baixa',tv:60,d:'aranha'}
 ];
 const SK='jogoTatuador.v1';let done={};try{const j=JSON.parse(localStorage.getItem(SK)||'{}');if(j&&j.done)for(const k in j.done)if(+k>=0&&+k<CL.length)done[k]=Math.max(1,Math.min(3,+j.done[k]||1))}catch(e){}
