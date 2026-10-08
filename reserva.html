@@ -937,7 +937,10 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
           <option value="Colorido / Neo-tradicional">Colorido / Neo-tradicional</option>
           <option value="Ornamental">Ornamental</option>
           <option value="Ainda não sei">Ainda não sei</option>
+          <option value="__outro">Outro (digitar)</option>
         </select>
+        <input type="text" id="estilo-outro" maxlength="60"
+               placeholder="Qual estilo você quer?" hidden style="margin-top:.6rem;" />
       </div>
 
       <div class="field">
@@ -1230,6 +1233,15 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     document.getElementById('codigo-status').className = 'codigo-status';
   });
 
+  // ── Estilo "Outro": mostra campo de texto ──
+  document.getElementById('estilo').addEventListener('change', function () {
+    const outro = this.value === '__outro';
+    const campo = document.getElementById('estilo-outro');
+    campo.hidden = !outro;
+    campo.required = outro;
+    if (outro) campo.focus(); else campo.value = '';
+  });
+
   // ── Aviso reativo de idade (nao bloqueia o formulario, so avisa) ──
   document.getElementById('idade').addEventListener('input', function () {
     const idadeVal = this.value.trim();
@@ -1262,7 +1274,9 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     const idade            = parseInt(idadeVal, 10);
     const whatsapp         = formatarWhats(document.getElementById('whatsapp').value);
     const ideia            = document.getElementById('ideia').value.trim();
-    const estilo           = document.getElementById('estilo').value;
+    const estiloSel        = document.getElementById('estilo').value;
+    const estiloOutro      = document.getElementById('estilo-outro').value.trim();
+    const estilo           = estiloSel === '__outro' ? estiloOutro : estiloSel;
     const tamanho          = document.getElementById('tamanho').value;
     const local             = document.getElementById('local').value.trim();
     const referencias       = document.getElementById('referencias').value.trim();
@@ -1277,7 +1291,8 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     if (idade < 18) return mostrarErro('Atendimento disponível apenas para maiores de 18 anos. Não é possível concluir o cadastro para menores de idade.');
     if (whatsapp.length < 10) return mostrarErro('WhatsApp inválido.');
     if (!ideia) return mostrarErro('Conte o que você imagina tatuar.');
-    if (!estilo) return mostrarErro('Selecione um estilo.');
+    if (!estiloSel) return mostrarErro('Selecione um estilo.');
+    if (estiloSel === '__outro' && !estiloOutro) return mostrarErro('Escreva qual estilo você quer.');
     if (!tamanho) return mostrarErro('Selecione um tamanho aproximado.');
     if (!local) return mostrarErro('Diga o local do corpo.');
     if (!canal) return mostrarErro('Diga como conheceu o Micael.');
@@ -1302,7 +1317,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     const whatsUrl = `https://wa.me/5532999666946?text=${encodeURIComponent(msg)}`;
 
     if (typeof gtag === 'function') {
-      gtag('event', 'reserva_form_submit', { event_category: 'conversao', event_label: estilo }); if(typeof fbq==='function')fbq('track','Lead');
+      gtag('event', 'reserva_form_submit', { event_category: 'conversao', event_label: estiloSel === '__outro' ? 'Outro' : estilo }); if(typeof fbq==='function')fbq('track','Lead');
     }
 
     // Gera codigo unico de indicacao
@@ -1457,7 +1472,8 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
       if (Array.isArray(tags) && tags.length) {
         select.innerHTML = '<option value="" disabled selected>Selecione um estilo</option>' +
           tags.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('') +
-          '<option value="Ainda não sei">Ainda não sei</option>';
+          '<option value="Ainda não sei">Ainda não sei</option>' +
+          '<option value="__outro">Outro (digitar)</option>';
       }
     } catch (err) {
       console.warn('Não foi possível carregar os estilos cadastrados:', err);
