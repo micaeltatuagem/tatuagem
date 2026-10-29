@@ -183,7 +183,6 @@
     .badge-usado      { background: #1a1408; color: var(--accent-dim); }
     .badge-gratis     { background: #0d1a14; color: var(--success); }
     .badge-pendente   { background: #1a130d; color: var(--warning); }
-    .badge-cancelado  { background: #1a0e0e; color: var(--error); }
 
     /* ações */
     .td-acoes { white-space: nowrap; }
@@ -245,32 +244,6 @@
     .modal-row .v { color: var(--ink); font-weight: 500; }
     .modal-row .v.cod { font-family: monospace; color: var(--accent); }
 
-    /* ── Layaway (pagamentos adiantados) ───────────────────── */
-    .lay-item { border: 1px solid var(--border); border-radius: var(--radius); padding: .9rem 1rem; margin-bottom: .7rem; background: var(--surface2); }
-    .lay-head { display: flex; justify-content: space-between; align-items: baseline; gap: .8rem; margin-bottom: .5rem; font-size: .88rem; }
-    .lay-head .lay-desc { color: var(--ink); font-weight: 600; }
-    .lay-meta { font-size: .78rem; color: var(--ink-muted); margin-top: .45rem; }
-    .lay-bar { height: 5px; background: var(--ink-faint); border-radius: 3px; overflow: hidden; }
-    .lay-bar-fill { height: 100%; background: var(--accent); transition: width .3s; }
-    .lay-acoes { margin-top: .7rem; }
-    .lay-pags { margin-top: .6rem; border-top: 1px solid var(--ink-faint); padding-top: .4rem; }
-    .lay-pag { display: flex; justify-content: space-between; font-size: .8rem; color: var(--ink); padding: .2rem 0; }
-    .lay-pag a { color: var(--ink-muted); text-decoration: none; padding: 0 .3rem; }
-    .lay-pag a:hover { color: var(--error); }
-    .lay-pag-form { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; margin-top: .7rem; }
-    .lay-pag-form input { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--ink); font-family: var(--font-ui); font-size: .82rem; padding: .4rem .6rem; outline: none; }
-    .lay-pag-form input[type=number] { width: 7rem; }
-    .lay-novo summary { cursor: pointer; font-size: .8rem; color: var(--accent); padding: .3rem 0; }
-    .lay-novo-form { display: flex; flex-direction: column; gap: .6rem; margin-top: .6rem; }
-    .lay-novo-form input, .lay-novo-form select {
-      width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius);
-      color: var(--ink); font-family: var(--font-ui); font-size: .88rem; padding: .55rem .8rem; outline: none;
-    }
-    .lay-novo-form input:focus, .lay-novo-form select:focus { border-color: var(--border-hi); }
-    .lay-hint { font-size: .76rem; color: var(--ink-muted); }
-    .lay-err { font-size: .78rem; color: var(--error); min-height: 1.1em; }
-    .badge-lay { background: #1a1408; color: var(--accent); margin-left: .35rem; }
-    .badge-lay-quitado { background: #0d1a14; color: var(--success); margin-left: .35rem; }
     .indicados-list { list-style: none; }
     .indicados-list li {
       display: flex; justify-content: space-between; align-items: center;
@@ -383,7 +356,6 @@
       <button class="filtro-btn" data-filtro="desconto-disponivel">Desconto disponível</button>
       <button class="filtro-btn" data-filtro="desconto-usado">Desconto usado</button>
       <button class="filtro-btn" data-filtro="gratis-liberado">Sessão grátis</button>
-      <button class="filtro-btn" data-filtro="layaway-ativo">Layaway ativo</button>
       <button class="btn-reload" id="btn-reload">↺ Atualizar</button>
       <button class="btn-reload" id="btn-novo" style="border-color:var(--accent-dim);color:var(--accent);">+ Novo cliente</button>
     </div>
@@ -484,9 +456,6 @@
   let todos = [];
   let filtroAtivo = 'todos';
   let clienteModal = null;
-  let layawayPorCliente = {}; // cliente_id -> [layaways]
-  let pagamentosPorLayaway = {}; // layaway_id -> [pagamentos]
-  const TETO_LAYAWAY = 600;
 
   // ── Utilitários ─────────────────────────────────────────────
   function toast(msg, tipo = '') {
@@ -551,11 +520,9 @@
     const tbody = document.getElementById('tbody');
     tbody.innerHTML = '<tr class="loading-row"><td colspan="10">Carregando…</td></tr>';
 
-    const [{ data, error }, { data: anamneses, error: errAnam }, { data: lays, error: errLay }, { data: pags, error: errPag }] = await Promise.all([
+    const [{ data, error }, { data: anamneses, error: errAnam }] = await Promise.all([
       sb.from('clientes_promo').select('*').order('criado_em', { ascending: false }),
-      sb.from('anamneses').select('codigo_indicacao, tatuagens').not('codigo_indicacao', 'is', null),
-      sb.from('layaway').select('*').order('criado_em', { ascending: false }),
-      sb.from('layaway_pagamentos').select('*').order('data_pagamento', { ascending: true }).order('criado_em', { ascending: true })
+      sb.from('anamneses').select('codigo_indicacao, tatuagens').not('codigo_indicacao', 'is', null)
     ]);
 
     if (error) {
@@ -575,16 +542,6 @@
           anamnesesPorCodigo[a.codigo_indicacao] = a;
         }
       });
-    }
-
-    // Layaway: se a consulta falhar, o resto do painel continua funcionando.
-    layawayPorCliente = {};
-    if (!errLay && lays) {
-      lays.forEach(l => { (layawayPorCliente[l.cliente_id] = layawayPorCliente[l.cliente_id] || []).push(l); });
-    }
-    pagamentosPorLayaway = {};
-    if (!errPag && pags) {
-      pags.forEach(g => { (pagamentosPorLayaway[g.layaway_id] = pagamentosPorLayaway[g.layaway_id] || []).push(g); });
     }
 
     todos = data || [];
@@ -653,7 +610,6 @@
       if (filtroAtivo === 'desconto-disponivel') return c.status_desconto === 'disponivel';
       if (filtroAtivo === 'desconto-usado')      return c.status_desconto === 'usado';
       if (filtroAtivo === 'gratis-liberado')     return c.sessao_gratis_liberada && !c.sessao_gratis_usada;
-      if (filtroAtivo === 'layaway-ativo')       return layawayAtivos(c.id).length > 0;
       return true;
     });
 
@@ -697,7 +653,7 @@
 
       return `
       <tr>
-        <td class="td-nome">${escapeHtml(c.nome)}${badgeGratis ? ' ' + badgeGratis : ''}${badgeLayaway(c.id)}</td>
+        <td class="td-nome">${escapeHtml(c.nome)}${badgeGratis ? ' ' + badgeGratis : ''}</td>
         <td class="td-whats"><a href="https://wa.me/55${c.whatsapp.replace(/\D/g,'')}" target="_blank">${escapeHtml(fmtWhats(c.whatsapp))}</a></td>
         <td class="td-codigo">${c.codigo_indicacao}</td>
         <td class="td-canal">${canalLabel(c.canal)}</td>
@@ -789,213 +745,6 @@
     await carregarClientes();
   }
 
-
-  // ── Layaway (pagamentos adiantados) ──────────────────────────
-  const LAY_LABEL = { em_andamento: 'Em andamento', quitado: 'Quitado', agendado: 'Agendado', concluido: 'Concluído', cancelado: 'Cancelado' };
-  const LAY_BADGE = { em_andamento: 'badge-pendente', quitado: 'badge-gratis', agendado: 'badge-disponivel', concluido: 'badge-usado', cancelado: 'badge-cancelado' };
-
-  function fmtMoeda(v) {
-    return (v ?? 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  }
-
-  function hojeISO() {
-    const d = new Date();
-    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-  }
-  function fmtDataPag(iso) { // 'YYYY-MM-DD' -> dd/mm/aaaa sem deslocar fuso
-    if (!iso) return '—';
-    const [a, m, d] = String(iso).slice(0, 10).split('-');
-    return `${d}/${m}/${a}`;
-  }
-
-  function layawayAtivos(clienteId) {
-    return (layawayPorCliente[clienteId] || []).filter(l => l.status === 'em_andamento' || l.status === 'quitado' || l.status === 'agendado');
-  }
-
-  // Selo ao lado do nome na tabela: mostra o layaway que está rolando.
-  function badgeLayaway(clienteId) {
-    const ativos = layawayAtivos(clienteId);
-    if (!ativos.length) return '';
-    const emAndamento = ativos.filter(l => l.status === 'em_andamento');
-    if (emAndamento.length) {
-      const l = emAndamento[0];
-      const extra = emAndamento.length > 1 ? ` +${emAndamento.length - 1}` : '';
-      return `<span class="badge badge-lay" title="Layaway em andamento">💰 ${l.parcelas_pagas}/${l.num_parcelas}${extra}</span>`;
-    }
-    return '<span class="badge badge-lay-quitado" title="Layaway quitado, falta agendar/concluir">💰 Quitado</span>';
-  }
-
-  function htmlLayaway(c) {
-    const lista = layawayPorCliente[c.id] || [];
-    const itens = lista.map(l => {
-      const pags = pagamentosPorLayaway[l.id] || [];
-      const pct = Math.min(100, (l.parcelas_pagas / l.num_parcelas) * 100);
-      const pago = pags.reduce((t, g) => t + Number(g.valor), 0);
-      const restante = Math.max(0, l.valor_total - pago);
-      const podeEditar = l.status === 'em_andamento' || l.status === 'quitado';
-      const listaPag = pags.map(g => `
-        <div class="lay-pag"><span>${fmtDataPag(g.data_pagamento)} · ${fmtMoeda(g.valor)}</span>
-        ${podeEditar ? `<a href="#" title="Remover este pagamento" onclick="layRemoverPagamento('${g.id}');return false;">✕</a>` : ''}</div>`).join('');
-      const formPag = l.status === 'em_andamento' ? `
-        <div class="lay-pag-form">
-          <input type="date" id="lp-data-${l.id}" value="${hojeISO()}" />
-          <input type="number" step="0.01" min="0.01" id="lp-valor-${l.id}" value="${l.valor_parcela}" />
-          <button class="btn-acao destaque" onclick="layParcela('${l.id}')">+ Registrar pagamento</button>
-        </div>` : '';
-      let btns = '';
-      if (l.status === 'quitado')      btns += `<button class="btn-acao destaque" onclick="layStatus('${l.id}','agendado')">Agendar sessão</button>`;
-      if (l.status === 'agendado')     btns += `<button class="btn-acao destaque" onclick="layStatus('${l.id}','concluido')">Concluir (tatuagem feita)</button>`;
-      if (l.status !== 'cancelado' && l.status !== 'concluido') {
-        btns += `<button class="btn-acao danger" onclick="layStatus('${l.id}','cancelado')">Cancelar</button>`;
-      }
-      return `
-      <div class="lay-item">
-        <div class="lay-head">
-          <span class="lay-desc">${escapeHtml(l.descricao)}</span>
-          <span class="badge ${LAY_BADGE[l.status]}">${LAY_LABEL[l.status]}</span>
-        </div>
-        <div class="lay-bar"><div class="lay-bar-fill" style="width:${pct}%"></div></div>
-        <div class="lay-meta">
-          ${l.parcelas_pagas}/${l.num_parcelas} parcelas de ${fmtMoeda(l.valor_parcela)} · pago ${fmtMoeda(pago)} de ${fmtMoeda(l.valor_total)} · falta ${fmtMoeda(restante)}
-          ${l.observacoes ? `<br>Obs.: ${escapeHtml(l.observacoes)}` : ''}
-        </div>
-        ${listaPag ? `<div class="lay-pags">${listaPag}</div>` : ''}
-        ${formPag}
-        ${btns ? `<div class="lay-acoes">${btns}</div>` : ''}
-      </div>`;
-    }).join('') || '<div style="color:var(--ink-muted);font-size:.83rem;margin-bottom:.6rem;">Nenhum layaway para este cliente.</div>';
-
-    return `
-      <div class="modal-section">
-        <h3>Layaway · pagamentos adiantados (${lista.length})</h3>
-        ${itens}
-        <details class="lay-novo">
-          <summary>+ Novo layaway para ${escapeHtml(c.nome)}</summary>
-          <div class="lay-novo-form">
-            <input id="ly-desc" type="text" placeholder="Peça (ex: Flash coração, braço)" />
-            <input id="ly-valor" type="number" step="0.01" min="1" max="${TETO_LAYAWAY}" placeholder="Valor total (até R$${TETO_LAYAWAY})" oninput="layPreviewParcela()" />
-            <select id="ly-parc" onchange="layPreviewParcela()">
-              <option value="2">2x</option><option value="3">3x</option><option value="4">4x</option>
-            </select>
-            <div class="lay-hint" id="ly-preview"></div>
-            <input id="ly-obs" type="text" placeholder="Observações (opcional)" />
-            <div class="lay-err" id="ly-err"></div>
-            <button class="btn-modal primary" onclick="layNovo('${c.id}')">Criar layaway</button>
-          </div>
-        </details>
-      </div>`;
-  }
-
-  async function layRecarregar() {
-    const id = clienteModal;
-    await carregarClientes();
-    if (id) abrirModal(id);
-  }
-
-  function layPreviewParcela() {
-    const v = parseFloat(document.getElementById('ly-valor').value) || 0;
-    const n = parseInt(document.getElementById('ly-parc').value, 10);
-    document.getElementById('ly-preview').textContent = v > 0 ? `${n}x de ${fmtMoeda(Math.round((v / n) * 100) / 100)}, sem juros` : '';
-  }
-
-  async function layNovo(clienteId) {
-    const descricao = document.getElementById('ly-desc').value.trim();
-    const valor = parseFloat(document.getElementById('ly-valor').value);
-    const parcelas = parseInt(document.getElementById('ly-parc').value, 10);
-    const obs = document.getElementById('ly-obs').value.trim() || null;
-    const err = document.getElementById('ly-err');
-    if (!descricao) return (err.textContent = 'Descreva a peça.');
-    if (!valor || valor <= 0) return (err.textContent = 'Valor inválido.');
-    if (valor > TETO_LAYAWAY) return (err.textContent = `Layaway só vai até ${fmtMoeda(TETO_LAYAWAY)}.`);
-
-    const { error } = await sb.from('layaway').insert({
-      cliente_id: clienteId,
-      descricao,
-      valor_total: valor,
-      num_parcelas: parcelas,
-      valor_parcela: Math.round((valor / parcelas) * 100) / 100,
-      parcelas_pagas: 0,
-      status: 'em_andamento',
-      observacoes: obs
-    });
-    if (error) return (err.textContent = 'Erro: ' + error.message);
-    toast('Layaway criado ✓', 'ok');
-    await layRecarregar();
-  }
-
-  function acharLayaway(id) { return Object.values(layawayPorCliente).flat().find(x => x.id === id); }
-
-  // Recalcula parcelas_pagas / status a partir dos pagamentos que existem.
-  async function layAtualizarResumo(l) {
-    const { data: pags, error: e1 } = await sb.from('layaway_pagamentos').select('id').eq('layaway_id', l.id);
-    if (e1) return e1;
-    const n = (pags || []).length;
-    const updates = { parcelas_pagas: n };
-    if (n >= l.num_parcelas) {
-      updates.status = 'quitado';
-      updates.data_quitacao = new Date().toISOString();
-    } else if (l.status === 'quitado') {
-      updates.status = 'em_andamento';
-      updates.data_quitacao = null;
-    }
-    const { error } = await sb.from('layaway').update(updates).eq('id', l.id);
-    return error;
-  }
-
-  async function layParcela(id) {
-    const l = acharLayaway(id);
-    if (!l) return;
-    const data = document.getElementById('lp-data-' + id).value;
-    const valor = parseFloat(document.getElementById('lp-valor-' + id).value);
-    if (!data) return toast('Informe a data do pagamento', 'err');
-    if (!valor || valor <= 0) return toast('Valor inválido', 'err');
-    const n = l.parcelas_pagas + 1;
-    if (!window.confirm(`Registrar pagamento ${n}/${l.num_parcelas}: ${fmtMoeda(valor)} em ${fmtDataPag(data)}?`)) return;
-    const { error } = await sb.from('layaway_pagamentos').insert({ layaway_id: id, valor, data_pagamento: data });
-    if (error) return toast('Erro: ' + error.message, 'err');
-    const err2 = await layAtualizarResumo(l);
-    if (err2) return toast('Pagamento salvo, mas falhou atualizar o layaway: ' + err2.message, 'err');
-    toast(n >= l.num_parcelas ? 'Layaway quitado ✓ Já pode agendar a sessão.' : `Pagamento ${n}/${l.num_parcelas} registrado ✓`, 'ok');
-    await layRecarregar();
-  }
-
-  async function layRemoverPagamento(pagId) {
-    let l = null;
-    for (const [lid, arr] of Object.entries(pagamentosPorLayaway)) {
-      if (arr.some(g => g.id === pagId)) { l = acharLayaway(lid); break; }
-    }
-    if (!l) return;
-    if (!window.confirm('Remover este pagamento? (use só se marcou por engano)')) return;
-    const { error } = await sb.from('layaway_pagamentos').delete().eq('id', pagId);
-    if (error) return toast('Erro: ' + error.message, 'err');
-    const err2 = await layAtualizarResumo(l);
-    if (err2) return toast('Removido, mas falhou atualizar o layaway: ' + err2.message, 'err');
-    toast('Pagamento removido', 'ok');
-    await layRecarregar();
-  }
-
-  async function layStatus(id, novo) {
-    const msgs = {
-      agendado: 'Marcar a sessão como agendada?',
-      concluido: 'Marcar como concluído (tatuagem feita)?',
-      cancelado: 'Cancelar este layaway?\n\nNão apaga o registro, só marca como cancelado.'
-    };
-    if (!window.confirm(msgs[novo])) return;
-    const updates = { status: novo };
-    if (novo === 'agendado')  updates.data_agendamento = new Date().toISOString();
-    if (novo === 'concluido') updates.data_conclusao = new Date().toISOString();
-    const { error } = await sb.from('layaway').update(updates).eq('id', id);
-    if (error) return toast('Erro: ' + error.message, 'err');
-    toast(`Layaway ${LAY_LABEL[novo].toLowerCase()} ✓`, 'ok');
-    await layRecarregar();
-  }
-
-  window.layParcela = layParcela;
-  window.layRemoverPagamento = layRemoverPagamento;
-  window.layStatus = layStatus;
-  window.layNovo = layNovo;
-  window.layPreviewParcela = layPreviewParcela;
-
   // ── Modal detalhes ───────────────────────────────────────────
   async function abrirModal(id) {
     clienteModal = id;
@@ -1050,8 +799,6 @@
           <span class="v">${c.sessao_gratis_usada ? `Usada em ${fmtData(c.data_uso_gratis)}` : c.sessao_gratis_liberada ? '✦ Liberada!' : 'Não liberada'}</span>
         </div>
       </div>
-
-      ${htmlLayaway(c)}
 
       <div class="modal-section">
         <h3>Amigos indicados (${(indicados||[]).length})</h3>
