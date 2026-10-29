@@ -672,10 +672,6 @@
       updates.data_quitacao = new Date().toISOString();
     }
 
-    const hoje = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
-    const { error: errPag } = await sb.from('layaway_pagamentos').insert({ layaway_id: id, valor: l.valor_parcela, data_pagamento: hoje });
-    if (errPag) return toast('Erro ao registrar pagamento: ' + errPag.message, 'err');
-
     const { error } = await sb.from('layaway').update(updates).eq('id', id);
     if (error) return toast('Erro ao atualizar: ' + error.message, 'err');
 
