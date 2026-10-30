@@ -450,6 +450,7 @@
   // ── Estado ──────────────────────────────────────────────────
   let todos = [];           // registros de layaway, já com o cliente embutido (join)
   let clientesPorId = {};   // id -> registro de clientes_promo
+  let pagamentosPorLayaway = {}; // layaway_id -> [pagamentos]
   let filtroAtivo = 'todos';
   let layawayModal = null;
 
@@ -530,9 +531,10 @@
     const tbody = document.getElementById('tbody');
     tbody.innerHTML = '<tr class="loading-row"><td colspan="8">Carregando…</td></tr>';
 
-    const [{ data, error }, { data: clientes, error: errCli }] = await Promise.all([
+    const [{ data, error }, { data: clientes, error: errCli }, { data: pags, error: errPag }] = await Promise.all([
       sb.from('layaway').select('*').order('criado_em', { ascending: false }),
-      sb.from('clientes_promo').select('id, nome, whatsapp, codigo_indicacao')
+      sb.from('clientes_promo').select('id, nome, whatsapp, codigo_indicacao'),
+      sb.from('layaway_pagamentos').select('*').order('data_pagamento', { ascending: true }).order('criado_em', { ascending: true })
     ]);
 
     if (error) {
@@ -546,6 +548,12 @@
 
     clientesPorId = {};
     (clientes || []).forEach(c => { clientesPorId[c.id] = c; });
+
+    // Se a tabela de pagamentos falhar, o painel segue funcionando sem o histórico.
+    pagamentosPorLayaway = {};
+    if (!errPag && pags) {
+      pags.forEach(g => { (pagamentosPorLayaway[g.layaway_id] = pagamentosPorLayaway[g.layaway_id] || []).push(g); });
+    }
 
     todos = data || [];
     atualizarStats();
@@ -743,6 +751,64 @@
     if (layawayModal) abrirModal(id);
   }
 
+
+  function fmtDataPag(iso) { // 'YYYY-MM-DD' -> dd/mm/aaaa sem deslocar fuso
+    if (!iso) return '—';
+    const [a, m, d] = String(iso).slice(0, 10).split('-');
+    return `${d}/${m}/${a}`;
+  }
+
+  // ── Comprovante via WhatsApp ─────────────────────────────────
+  function foneWhats(w) {
+    const d = String(w || '').replace(/\D/g, '');
+    return (d.length >= 12 && d.startsWith('55')) ? d : '55' + d;
+  }
+
+  function textoComprovante(l, cli, pagId) {
+    const pags = pagamentosPorLayaway[l.id] || [];
+    const nome = ((cli && cli.nome) || '').trim().split(/\s+/)[0];
+    let idx, valor, data, pagoAte;
+    if (pags.length) {
+      const i = pagId ? pags.findIndex(g => g.id === pagId) : pags.length - 1;
+      const p = pags[i < 0 ? pags.length - 1 : i];
+      idx = (i < 0 ? pags.length - 1 : i) + 1;
+      valor = Number(p.valor);
+      data = p.data_pagamento;
+      pagoAte = pags.slice(0, idx).reduce((t, g) => t + Number(g.valor), 0);
+    } else {
+      idx = l.parcelas_pagas;
+      valor = l.valor_parcela;
+      data = null;
+      pagoAte = Math.min(l.parcelas_pagas, l.num_parcelas) * l.valor_parcela;
+    }
+    const restante = Math.max(0, l.valor_total - pagoAte);
+    const quitado = idx >= l.num_parcelas || restante < 0.005;
+    return [
+      '*Micael Tatuagem* ✦ Comprovante de pagamento',
+      '',
+      `Olá${nome ? ', ' + nome : ''}! Recebi o pagamento do seu layaway ✅`,
+      '',
+      `*Peça:* ${l.descricao}`,
+      `*Parcela:* ${idx}/${l.num_parcelas}`,
+      `*Valor pago:* ${fmtMoeda(valor)}`,
+      data ? `*Data:* ${fmtDataPag(data)}` : null,
+      `*Total pago até agora:* ${fmtMoeda(pagoAte)} de ${fmtMoeda(l.valor_total)}`,
+      `*Falta:* ${fmtMoeda(restante)}`,
+      '',
+      quitado ? 'Seu layaway está quitado! 🎉 Agora é só combinarmos a data da sua sessão.' : 'Obrigado! Qualquer dúvida é só me chamar.'
+    ].filter(x => x !== null).join('\n');
+  }
+
+  function enviarComprovante(layId, pagId) {
+    const l = todos.find(x => x.id === layId);
+    if (!l) return;
+    const cli = clientesPorId[l.cliente_id];
+    if (!cli || !cli.whatsapp) return toast('Cliente sem WhatsApp cadastrado', 'err');
+    const url = `https://wa.me/${foneWhats(cli.whatsapp)}?text=${encodeURIComponent(textoComprovante(l, cli, pagId))}`;
+    window.open(url, '_blank', 'noopener');
+  }
+  window.enviarComprovante = enviarComprovante;
+
   // ── Modal detalhes ───────────────────────────────────────────
   function abrirModal(id) {
     layawayModal = id;
@@ -762,9 +828,18 @@
     if (l.status === 'agendado') {
       acoesExtra += `<button class="btn-modal success" onclick="concluir('${l.id}')">Marcar como concluído</button>`;
     }
+    if (l.parcelas_pagas > 0) {
+      acoesExtra += `<button class="btn-modal success" onclick="enviarComprovante('${l.id}')">📲 Enviar comprovante</button>`;
+    }
     if (l.status !== 'cancelado' && l.status !== 'concluido') {
       acoesExtra += `<button class="btn-modal danger" onclick="cancelar('${l.id}')">Cancelar layaway</button>`;
     }
+    const pagsL = pagamentosPorLayaway[l.id] || [];
+    const histPag = pagsL.length ? `
+      <div class="modal-section">
+        <h3>Pagamentos (${pagsL.length})</h3>
+        ${pagsL.map(g => `<div class="modal-row"><span class="k">${fmtDataPag(g.data_pagamento)}</span><span class="v">${fmtMoeda(g.valor)} · <a href="#" style="color:var(--accent);" onclick="enviarComprovante('${l.id}','${g.id}');return false;">comprovante</a></span></div>`).join('')}
+      </div>` : '';
 
     document.getElementById('modal-body').innerHTML = `
       <div class="modal-section">
@@ -787,6 +862,8 @@
         ${l.data_conclusao ? `<div class="modal-row"><span class="k">Concluído em</span><span class="v">${fmtData(l.data_conclusao)}</span></div>` : ''}
         ${l.observacoes ? `<div class="modal-row"><span class="k">Obs.</span><span class="v">${escapeHtml(l.observacoes)}</span></div>` : ''}
       </div>
+
+      ${histPag}
 
       <div class="modal-acoes">
         ${acoesExtra}

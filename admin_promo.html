@@ -257,6 +257,8 @@
     .lay-pag { display: flex; justify-content: space-between; font-size: .8rem; color: var(--ink); padding: .2rem 0; }
     .lay-pag a { color: var(--ink-muted); text-decoration: none; padding: 0 .3rem; }
     .lay-pag a:hover { color: var(--error); }
+    .lay-pag a.lay-comp { color: var(--accent); font-size: .74rem; margin-right: .5rem; }
+    .lay-pag a.lay-comp:hover { color: var(--accent); text-decoration: underline; }
     .lay-pag-form { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; margin-top: .7rem; }
     .lay-pag-form input { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--ink); font-family: var(--font-ui); font-size: .82rem; padding: .4rem .6rem; outline: none; }
     .lay-pag-form input[type=number] { width: 7rem; }
@@ -835,7 +837,7 @@
       const podeEditar = l.status === 'em_andamento' || l.status === 'quitado';
       const listaPag = pags.map(g => `
         <div class="lay-pag"><span>${fmtDataPag(g.data_pagamento)} · ${fmtMoeda(g.valor)}</span>
-        ${podeEditar ? `<a href="#" title="Remover este pagamento" onclick="layRemoverPagamento('${g.id}');return false;">✕</a>` : ''}</div>`).join('');
+        <span><a href="#" class="lay-comp" title="Enviar comprovante por WhatsApp" onclick="enviarComprovante('${l.id}','${g.id}');return false;">📲 Comprovante</a>${podeEditar ? `<a href="#" title="Remover este pagamento" onclick="layRemoverPagamento('${g.id}');return false;">✕</a>` : ''}</span></div>`).join('');
       const formPag = l.status === 'em_andamento' ? `
         <div class="lay-pag-form">
           <input type="date" id="lp-data-${l.id}" value="${hojeISO()}" />
@@ -885,6 +887,58 @@
         </details>
       </div>`;
   }
+
+
+  // ── Comprovante via WhatsApp ─────────────────────────────────
+  function foneWhats(w) {
+    const d = String(w || '').replace(/\D/g, '');
+    return (d.length >= 12 && d.startsWith('55')) ? d : '55' + d;
+  }
+
+  function textoComprovante(l, cli, pagId) {
+    const pags = pagamentosPorLayaway[l.id] || [];
+    const nome = ((cli && cli.nome) || '').trim().split(/\s+/)[0];
+    let idx, valor, data, pagoAte;
+    if (pags.length) {
+      const i = pagId ? pags.findIndex(g => g.id === pagId) : pags.length - 1;
+      const p = pags[i < 0 ? pags.length - 1 : i];
+      idx = (i < 0 ? pags.length - 1 : i) + 1;
+      valor = Number(p.valor);
+      data = p.data_pagamento;
+      pagoAte = pags.slice(0, idx).reduce((t, g) => t + Number(g.valor), 0);
+    } else {
+      idx = l.parcelas_pagas;
+      valor = l.valor_parcela;
+      data = null;
+      pagoAte = Math.min(l.parcelas_pagas, l.num_parcelas) * l.valor_parcela;
+    }
+    const restante = Math.max(0, l.valor_total - pagoAte);
+    const quitado = idx >= l.num_parcelas || restante < 0.005;
+    return [
+      '*Micael Tatuagem* ✦ Comprovante de pagamento',
+      '',
+      `Olá${nome ? ', ' + nome : ''}! Recebi o pagamento do seu layaway ✅`,
+      '',
+      `*Peça:* ${l.descricao}`,
+      `*Parcela:* ${idx}/${l.num_parcelas}`,
+      `*Valor pago:* ${fmtMoeda(valor)}`,
+      data ? `*Data:* ${fmtDataPag(data)}` : null,
+      `*Total pago até agora:* ${fmtMoeda(pagoAte)} de ${fmtMoeda(l.valor_total)}`,
+      `*Falta:* ${fmtMoeda(restante)}`,
+      '',
+      quitado ? 'Seu layaway está quitado! 🎉 Agora é só combinarmos a data da sua sessão.' : 'Obrigado! Qualquer dúvida é só me chamar.'
+    ].filter(x => x !== null).join('\n');
+  }
+
+  function enviarComprovante(layId, pagId) {
+    const l = acharLayaway(layId);
+    if (!l) return;
+    const cli = todos.find(c => c.id === l.cliente_id);
+    if (!cli || !cli.whatsapp) return toast('Cliente sem WhatsApp cadastrado', 'err');
+    const url = `https://wa.me/${foneWhats(cli.whatsapp)}?text=${encodeURIComponent(textoComprovante(l, cli, pagId))}`;
+    window.open(url, '_blank', 'noopener');
+  }
+  window.enviarComprovante = enviarComprovante;
 
   async function layRecarregar() {
     const id = clienteModal;
