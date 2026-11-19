@@ -27,6 +27,7 @@ ITEMS = {
     'contato':      ('Contato', 'anchor', 'contato'),
     'aerografia':   ('Aerografia', 'page', 'aerografia'),
     'promocoes':    ('Promoções', 'anchor', 'promocoes'),
+    'agendar':      ('Agendar horário', 'page', 'agendar'),
     'whatsapp':     ('WhatsApp', 'external', 'https://wa.me/5532999666946'),
     'reserva':      ('Reserva', 'page', 'reserva'),
 }
@@ -36,7 +37,7 @@ GROUPS = [
     ('Tatuagens', ['galeria', 'flash', 'estilos']),
     ('Conheça',   ['sobre', 'guia', 'blog', 'cuidados', 'jogo']),
     ('Planeje',   ['criar', 'valor', 'layaway', 'promocoes']),
-    ('Agende',    ['whatsapp']),  # Reserva fica fora, como botão de destaque
+    ('Agende',    ['agendar', 'whatsapp']),  # Reserva fica fora, como botão de destaque
     ('Estúdio',   ['localizacao', 'contato', 'aerografia']),
 ]
 
@@ -44,7 +45,7 @@ GROUPS = [
 KEY_TO_SELF_FILE = {
     'flash': 'flash.html', 'criar': 'preview-tatuagem.html', 'guia': 'guia.html',
     'blog': 'blog.html',
-    'reserva': 'reserva.html', 'aerografia': 'aerografia.html',
+    'reserva': 'reserva.html', 'agendar': 'agendar.html', 'aerografia': 'aerografia.html',
     'cuidados': 'fisiologia-da-tatuagem.html', 'valor': 'valor.html',
     'jogo': 'jogo-tatuador.html',
     'galeria': 'galeria.html', 'estilos': 'estilo/index.html',
