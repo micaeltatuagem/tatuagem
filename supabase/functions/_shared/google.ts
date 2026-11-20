@@ -50,3 +50,8 @@ export async function criarEvento(calId: string, ev: {
   });
   return j.id ?? eventId;
 }
+
+/** Manda um e-mail para o DONO do script (você). O destinatário é fixo no script. */
+export async function avisarDono(assunto: string, corpo: string): Promise<void> {
+  await chamarScript({ op: "avisar", assunto, corpo });
+}

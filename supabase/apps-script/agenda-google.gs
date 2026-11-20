@@ -39,6 +39,12 @@ function doPost(e) {
         throw err;
       }
     }
+    if (req.op === 'avisar') {
+      // Envia SEMPRE para o dono do script (nunca para um endereço vindo do pedido)
+      var dono = Session.getEffectiveUser().getEmail();
+      MailApp.sendEmail(dono, String(req.assunto).slice(0, 200), String(req.corpo).slice(0, 5000));
+      return saida({ ok: true });
+    }
     return saida({ erro: 'op_invalida' });
   } catch (err) {
     return saida({ erro: String(err) });

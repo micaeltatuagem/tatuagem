@@ -1,6 +1,6 @@
 // Webhook do Mercado Pago. Deploy com:  supabase functions deploy agenda-webhook --no-verify-jwt
 // A confirmação NUNCA vem do navegador: aqui consultamos o pagamento direto na API do Mercado Pago.
-import { sb, garantirEvento } from "../_shared/agenda.ts";
+import { sb, garantirEvento, avisarReserva, avisarPagoSemVaga } from "../_shared/agenda.ts";
 
 async function hmacHex(secret: string, msg: string) {
   const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
@@ -62,11 +62,15 @@ Deno.serve(async (req) => {
     if (error.code === "23P01") {
       await c.from("agendamentos").update({ status: "pago_sem_vaga", mp_payment_id: String(pg.id) }).eq("id", agId);
       console.error("PAGO SEM VAGA — reembolsar no Mercado Pago:", agId, pg.id);
+      await avisarPagoSemVaga({ ...ag, mp_payment_id: String(pg.id) });
       return new Response("ok");
     }
     console.error(error);
     return new Response("erro", { status: 500 });
   }
-  if (conf) await garantirEvento(c, conf);
+  if (conf) { // só a chamada que realmente confirmou chega aqui (a atualização é atômica) → 1 e-mail por reserva
+    await garantirEvento(c, conf);
+    await avisarReserva(conf);
+  }
   return new Response("ok");
 });

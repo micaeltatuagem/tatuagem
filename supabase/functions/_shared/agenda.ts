@@ -1,6 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { type Cfg, type Ocupado, epoch, proximosDias, slotsDoDia } from "./slots.ts";
-import { freeBusy, criarEvento } from "./google.ts";
+import { freeBusy, criarEvento, avisarDono } from "./google.ts";
 
 export const sb = () =>
   createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, {
@@ -84,4 +84,39 @@ export async function garantirEvento(c: ReturnType<typeof sb>, ag: Record<string
   } catch (e) {
     console.error("garantirEvento falhou (o horário continua bloqueado pelo banco):", e);
   }
+}
+
+// ── Avisos para o dono (e-mail) ────────────────────────
+const quando = (iso: string) =>
+  new Date(iso).toLocaleString("pt-BR", { timeZone: "America/Sao_Paulo", weekday: "long", day: "2-digit", month: "long", hour: "2-digit", minute: "2-digit" });
+const horaFim = (iso: string) =>
+  new Date(iso).toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit" });
+const linkZap = (tel: string) => { const d = String(tel).replace(/\D/g, ""); return `https://wa.me/${d.length <= 11 ? "55" + d : d}`; };
+const detalhes = (ag: Record<string, any>) => [
+  `Cliente: ${ag.nome}`,
+  `WhatsApp: ${ag.whatsapp} → ${linkZap(ag.whatsapp)}`,
+  `E-mail: ${ag.email}`,
+  `Quando: ${quando(ag.inicio)} até ${horaFim(ag.fim)} (${ag.duracao_horas}h)`,
+  `Sinal: R$ ${Number(ag.sinal_valor).toFixed(2).replace(".", ",")} (abate do valor final)`,
+  `Agendamento: ${ag.id}`,
+].join("\n");
+
+/** Reserva confirmada (sinal pago). Nunca derruba o fluxo se o e-mail falhar. */
+export async function avisarReserva(ag: Record<string, any>) {
+  try {
+    await avisarDono(
+      `Nova reserva: ${ag.nome} — ${quando(ag.inicio)}`,
+      `Nova reserva confirmada, sinal pago.\nO evento já está na agenda Tatuagem.\n\n${detalhes(ag)}\n`,
+    );
+  } catch (e) { console.error("avisarReserva falhou:", e); }
+}
+
+/** Raro: pagou, mas o horário já tinha sido ocupado → precisa reembolsar. */
+export async function avisarPagoSemVaga(ag: Record<string, any>) {
+  try {
+    await avisarDono(
+      `⚠ PAGO SEM VAGA — reembolsar: ${ag.nome}`,
+      `O cliente pagou o sinal, mas o horário já estava ocupado. REEMBOLSE no Mercado Pago e avise o cliente.\n\n${detalhes(ag)}\nPagamento MP: ${ag.mp_payment_id ?? "?"}\n`,
+    );
+  } catch (e) { console.error("avisarPagoSemVaga falhou:", e); }
 }
