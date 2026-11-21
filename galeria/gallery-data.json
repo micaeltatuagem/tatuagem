@@ -557,16 +557,6 @@
     "date": "2025-01-01"
   },
   {
-    "id": 47,
-    "filename": "1781643432172-tatuagem-valentina.webp",
-    "imageUrl": "galeria/1781643432172-tatuagem-valentina.webp",
-    "title": "Valentina",
-    "altText": "Valentina — tatuagem por Micael Faccio, Muriaé MG",
-    "description": "",
-    "styles": [],
-    "date": "2026-07-20"
-  },
-  {
     "id": 48,
     "filename": "1781643494250-tatuagem-thor.webp",
     "imageUrl": "galeria/1781643494250-tatuagem-thor.webp",
@@ -622,6 +612,16 @@
     "imageUrl": "galeria/1781655164650-tatuagem-pop-art.webp",
     "title": "Pop Art",
     "altText": "Pop Art — tatuagem por Micael Faccio, Muriaé MG",
+    "description": "",
+    "styles": [],
+    "date": "2026-07-20"
+  },
+  {
+    "id": 54,
+    "filename": "1781655205001-tatuagem-mulher-caveira.webp",
+    "imageUrl": "galeria/1781655205001-tatuagem-mulher-caveira.webp",
+    "title": "Mulher Caveira",
+    "altText": "Mulher Caveira — tatuagem por Micael Faccio, Muriaé MG",
     "description": "",
     "styles": [],
     "date": "2026-07-20"
