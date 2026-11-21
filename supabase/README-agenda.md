@@ -5,7 +5,7 @@ Projeto Supabase: `rpgcsejfewltricfsdrd`.
 
 ## Como funciona
 1. `agenda-slots` — devolve os horários livres. Regras: seg–sex 18–22h; sáb, dom e feriados 10–20h;
-   sessões de 2h/4h; 30 min de intervalo; mínimo 24h de antecedência. Bloqueia o que estiver
+   reserva de **1 hora** (o tamanho da sessão é visto depois, pelo WhatsApp); horários cheios, sem intervalo entre reservas; **pausa de almoço 12h–13h em sáb/dom/feriados**; mínimo de **9 dias** de antecedência (`antecedencia_horas = 216`). Bloqueia o que estiver
    **ocupado** nas agendas do Google (só lê livre/ocupado, nunca títulos) e o que já está reservado.
 2. `agenda-reservar` — revalida o horário, segura por 30 min (status `pendente`) e cria o PIX de R$ 50 no Mercado Pago.
    O banco impede duas reservas no mesmo horário mesmo com cliques simultâneos.
@@ -13,7 +13,8 @@ Projeto Supabase: `rpgcsejfewltricfsdrd`.
    (nunca confia no navegador), confirma a reserva e cria o evento na agenda "Tatuagem".
 4. `agenda-status` — a página consulta a cada 4 s até confirmar.
 
-Tudo configurável na tabela `agenda_config` (sinal, intervalo, horários, antecedência) sem mexer em código.
+Tudo configurável na tabela `agenda_config` (sinal, duração, intervalo, horários, almoço, antecedência) sem mexer em código.
+Migrations: `20261119120000_agenda.sql` (base) e `20261121120000_agenda_1h_almoco.sql` (1 hora + almoço).
 Feriados: tabela `feriados` (já tem os nacionais; **adicione os municipais de Muriaé**).
 
 ## Colocando no ar (uma vez)

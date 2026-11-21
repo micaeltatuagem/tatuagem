@@ -41,7 +41,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <title>Agendar Tatuagem em Muriaé MG · Escolha seu horário · Micael Tatuagem</title>
-  <meta name="description" content="Escolha dia e horário e garanta sua sessão de tatuagem em Muriaé-MG com um sinal de R$ 50 via PIX, abatido do valor final." />
+  <meta name="description" content="Escolha dia e horário e reserve com um sinal de R$ 50 via PIX, abatido do valor final da tatuagem em Muriaé-MG." />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://micaeltatuagem.com.br/agendar" />
   <meta name="keywords" content="agendar tatuagem Muriaé, marcar horário tatuador Muriaé, Micael Faccio tatuagem" />
@@ -915,7 +915,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
 <header class="header">
   <p class="header-label">Agendamento</p>
   <h1 class="header-title">Escolha seu<br>horário</h1>
-  <p class="header-subtitle">Sessões de 2 ou 4 horas. Você garante o horário com um sinal de R$&nbsp;50 via PIX, que é abatido do valor final da tatuagem.</p>
+  <p class="header-subtitle">Escolha o dia e o horário. O sinal de R$&nbsp;50 via PIX garante a sua reserva e é abatido do valor final da tatuagem. Depois, a gente confirma o tamanho da sessão pelo WhatsApp.</p>
 </header>
 
 <section class="form-section">
@@ -925,18 +925,10 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
     <div class="msg-error" id="ag-erro" role="alert"></div>
 
     <div id="ag-escolha">
-      <div class="ag-passo" id="p-duracao">
-        <div class="form-group-head"><span class="form-group-num">1</span><span class="form-group-title">Duração da sessão</span></div>
-        <p class="form-group-desc">Ainda não definimos o tamanho? <a href="/reserva" style="color:var(--gold);">Conte sua ideia primeiro</a> e eu te digo qual escolher.</p>
-        <div class="ag-chips" id="ag-duracoes">
-          <button type="button" class="ag-chip" data-h="2" aria-pressed="false">2 horas<small>peças pequenas</small></button>
-          <button type="button" class="ag-chip" data-h="4" aria-pressed="false">4 horas<small>peças maiores</small></button>
-        </div>
-      </div>
-
-      <div class="ag-passo" id="p-dia" hidden>
-        <div class="form-group-head"><span class="form-group-num">2</span><span class="form-group-title">Dia e horário</span></div>
-        <p class="form-group-desc" id="ag-desc-dia">Carregando horários…</p>
+      <div class="ag-passo" id="p-dia">
+        <div class="form-group-head"><span class="form-group-num">1</span><span class="form-group-title">Dia e horário</span></div>
+        <p class="form-group-desc">Ainda não me contou sua ideia? <a href="/reserva" style="color:var(--gold);">Conte aqui primeiro</a>.</p>
+        <p class="ag-info" id="ag-desc-dia">Carregando horários…</p>
         <div class="ag-chips" id="ag-dias"></div>
         <button type="button" class="ag-mais" id="ag-mais-dias" hidden>Ver mais datas ▾</button>
         <div class="ag-horas" id="ag-horas-wrap" hidden>
@@ -946,7 +938,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
       </div>
 
       <form class="ag-passo" id="p-dados" hidden autocomplete="on">
-        <div class="form-group-head"><span class="form-group-num">3</span><span class="form-group-title">Seus dados</span></div>
+        <div class="form-group-head"><span class="form-group-num">2</span><span class="form-group-title">Seus dados</span></div>
         <p class="form-group-desc">Pra te avisar da sessão e emitir o comprovante do PIX.</p>
         <div class="hp-field" aria-hidden="true"><label for="ag-site">Deixe em branco</label><input type="text" id="ag-site" tabindex="-1" autocomplete="off" /></div>
         <div class="field"><label for="ag-nome">Nome <span class="req">*</span></label><input type="text" id="ag-nome" autocomplete="name" maxlength="80" required /></div>
@@ -1023,6 +1015,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function partes(d) { var p = d.split('-').map(Number); return { y: p[0], m: p[1], d: p[2], dow: new Date(Date.UTC(p[0], p[1] - 1, p[2])).getUTCDay() }; }
   function rotuloDia(d) { var p = partes(d); return SEMLONGO[p.dow] + ', ' + p.d + ' de ' + MES[p.m - 1]; }
+  function duracaoTxt() { return S.h === 1 ? '1 hora' : S.h + ' horas'; }
   function fimHora(hora, h) { var t = hora.split(':').map(Number); var m = t[0] * 60 + t[1] + h * 60; return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); }
 
   var ERROS = {
@@ -1052,24 +1045,21 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   }
 
   // ── Passo 1 → 2: duração e horários ─────────────────────────
-  function escolherDuracao(h, manterErro) {
-    S.h = h; S.data = null; S.hora = null; if (!manterErro) limparErro();
-    document.querySelectorAll('#ag-duracoes .ag-chip').forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.h === h)); });
-    $('p-dia').hidden = false; $('p-dados').hidden = true; $('ag-horas-wrap').hidden = true;
+  function carregarHorarios(manterErro) {
+    S.data = null; S.hora = null; if (!manterErro) limparErro();
+    $('p-dados').hidden = true; $('ag-horas-wrap').hidden = true;
     $('ag-dias').innerHTML = ''; $('ag-mais-dias').hidden = true;
     $('ag-desc-dia').textContent = 'Carregando horários…';
-    ev('agenda_duracao', { event_label: h + 'h' });
-    chamar('agenda-slots', { duracao: h }).then(function (r) {
-      if (S.h !== h) return; // clicou em outra duração enquanto carregava
+    chamar('agenda-slots', {}).then(function (r) {
       if (!r.ok) { $('ag-desc-dia').textContent = ''; mostrarErro('indisponivel'); return; }
-      S.dias = r.j.dias || {}; S.sinal = r.j.sinal || 50;
+      S.dias = r.j.dias || {}; S.sinal = r.j.sinal || 50; S.h = r.j.duracao || 1;
       desenharDias(false);
     }).catch(function () { $('ag-desc-dia').textContent = ''; mostrarErro('indisponivel'); });
   }
 
   function desenharDias(todos) {
     var chaves = Object.keys(S.dias).sort();
-    if (!chaves.length) { $('ag-desc-dia').textContent = 'Não há horários livres para essa duração nos próximos dias. Chame no WhatsApp que a gente encontra um encaixe.'; return; }
+    if (!chaves.length) { $('ag-desc-dia').textContent = 'Não há horários livres no momento. Chame no WhatsApp que a gente encontra um encaixe.'; return; }
     $('ag-desc-dia').textContent = 'Escolha o dia:';
     var mostrar = todos ? chaves : chaves.slice(0, 12);
     $('ag-dias').innerHTML = mostrar.map(function (d) {
@@ -1092,24 +1082,25 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   function escolherHora(t) {
     S.hora = t;
     document.querySelectorAll('#ag-horas .ag-chip').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.t === t)); });
-    $('ag-resumo').innerHTML = '<strong>' + esc(rotuloDia(S.data)) + '</strong><br>das ' + t + ' às ' + fimHora(t, S.h) + ' (sessão de ' + S.h + 'h)';
+    $('ag-resumo').innerHTML = '<strong>' + esc(rotuloDia(S.data)) + '</strong><br>das ' + t + ' às ' + fimHora(t, S.h) + ' (' + duracaoTxt() + ')';
     $('ag-pagar').textContent = 'Pagar sinal de R$ ' + String(S.sinal).replace('.', ',') + ' via PIX';
     $('p-dados').hidden = false;
-    ev('agenda_horario_escolhido', { event_label: S.h + 'h' });
+    ev('agenda_horario_escolhido');
     setTimeout(function () { $('p-dados').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
   }
 
-  $('ag-duracoes').addEventListener('click', function (e) { var b = e.target.closest('.ag-chip'); if (b) escolherDuracao(+b.dataset.h); });
   $('ag-dias').addEventListener('click', function (e) { var b = e.target.closest('.ag-chip'); if (b) escolherDia(b.dataset.d); });
   $('ag-horas').addEventListener('click', function (e) { var b = e.target.closest('.ag-chip'); if (b) escolherHora(b.dataset.t); });
   $('ag-mais-dias').addEventListener('click', function () { desenharDias(true); });
+
+  carregarHorarios(false);
 
   // ── Passo 3: reservar e gerar o PIX ─────────────────────────
   $('p-dados').addEventListener('submit', function (e) {
     e.preventDefault(); limparErro();
     var btn = $('ag-pagar'); btn.disabled = true; btn.textContent = 'Gerando PIX…';
     chamar('agenda-reservar', {
-      duracao: S.h, data: S.data, hora: S.hora,
+      data: S.data, hora: S.hora,
       nome: $('ag-nome').value, whatsapp: $('ag-whats').value, email: $('ag-email').value,
       maior18: $('ag-18').checked, politica: $('ag-politica').checked,
       hp: $('ag-site').value, tempo_ms: Date.now() - abertoEm
@@ -1117,7 +1108,7 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
       btn.disabled = false; btn.textContent = 'Pagar sinal de R$ ' + String(S.sinal).replace('.', ',') + ' via PIX';
       if (!r.ok) {
         mostrarErro(r.j && r.j.erro);
-        if (r.j && r.j.erro === 'horario_indisponivel') escolherDuracao(S.h, true); // recarrega os horários e mantém o aviso
+        if (r.j && r.j.erro === 'horario_indisponivel') carregarHorarios(true); // recarrega os horários e mantém o aviso
         return;
       }
       S.resId = r.j.id; S.expira = Date.parse(r.j.expira_em);
@@ -1151,8 +1142,8 @@ src="https://www.facebook.com/tr?id=752589036406948&ev=PageView&noscript=1"
   }
   function confirmado() {
     $('ag-pix').hidden = true; $('ag-ok').hidden = false;
-    $('ag-ok-resumo').innerHTML = '<strong>' + esc(rotuloDia(S.data)) + '</strong><br>das ' + S.hora + ' às ' + fimHora(S.hora, S.h) + ' (sessão de ' + S.h + 'h)';
-    var msg = 'Olá, Micael! Acabei de confirmar minha sessão de ' + S.h + 'h em ' + rotuloDia(S.data) + ' às ' + S.hora + '.';
+    $('ag-ok-resumo').innerHTML = '<strong>' + esc(rotuloDia(S.data)) + '</strong><br>das ' + S.hora + ' às ' + fimHora(S.hora, S.h) + ' (' + duracaoTxt() + ')';
+    var msg = 'Olá, Micael! Acabei de reservar meu horário em ' + rotuloDia(S.data) + ' às ' + S.hora + '.';
     $('ag-whats-ok').href = 'https://wa.me/5532999666946?text=' + encodeURIComponent(msg);
     window.scrollTo({ top: $('ag-app').offsetTop - 80, behavior: 'smooth' });
     ev('agenda_confirmada', { value: S.sinal, currency: 'BRL', event_category: 'conversao' });

@@ -47,9 +47,10 @@ async function ocupadosDoBanco(c: ReturnType<typeof sb>, from: number, to: numbe
   return (data ?? []).map((r: { inicio: string; fim: string }) => ({ start: Date.parse(r.inicio), end: Date.parse(r.fim) }));
 }
 
-/** Datas → horários de início livres, para uma duração. */
-export async function disponibilidade(c: ReturnType<typeof sb>, duracaoH: number, agora = Date.now()) {
+/** Datas → horários de início livres (a duração da reserva vem de agenda_config.duracao_horas). */
+export async function disponibilidade(c: ReturnType<typeof sb>, agora = Date.now()) {
   const cfg = await carregarConfig(c);
+  const duracaoH = cfg.duracao_horas;
   const feriados = await carregarFeriados(c);
   await expirarPendentes(c);
   const dias = proximosDias(agora, cfg.dias_a_frente);

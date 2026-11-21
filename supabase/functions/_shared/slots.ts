@@ -14,6 +14,9 @@ export interface Cfg {
   semana_fecha: string;
   fds_abre: string;
   fds_fecha: string;
+  duracao_horas: number;               // duração da reserva (1 = só o horário; o tamanho da sessão é visto depois)
+  fds_almoco_abre?: string | null;      // pausa de almoço em sáb/dom/feriado (vazio = sem pausa)
+  fds_almoco_fecha?: string | null;
 }
 export interface Ocupado { start: number; end: number } // epoch ms
 
@@ -35,10 +38,15 @@ export function diaDaSemana(dateStr: string): number { // 0 = domingo
   return new Date(Date.UTC(y, m - 1, d)).getUTCDay();
 }
 
+/** Sábado, domingo ou feriado */
+export function ehFolga(dateStr: string, feriados: Set<string>): boolean {
+  const dow = diaDaSemana(dateStr);
+  return dow === 0 || dow === 6 || feriados.has(dateStr);
+}
+
 /** Janela de atendimento do dia em minutos [abre, fecha] */
 export function janela(dateStr: string, cfg: Cfg, feriados: Set<string>): [number, number] {
-  const dow = diaDaSemana(dateStr);
-  const fds = dow === 0 || dow === 6 || feriados.has(dateStr);
+  const fds = ehFolga(dateStr, feriados);
   return fds ? [toMin(cfg.fds_abre), toMin(cfg.fds_fecha)] : [toMin(cfg.semana_abre), toMin(cfg.semana_fecha)];
 }
 
@@ -50,8 +58,13 @@ export function slotsDoDia(p: {
   const dur = p.duracaoH * 60;
   const buf = p.cfg.intervalo_min * 60000;
   const minStart = p.agora + p.cfg.antecedencia_horas * 3600000;
+  const folga = ehFolga(p.dateStr, p.feriados);
+  const almAbre = folga && p.cfg.fds_almoco_abre ? toMin(p.cfg.fds_almoco_abre) : null;
+  const almFecha = folga && p.cfg.fds_almoco_fecha ? toMin(p.cfg.fds_almoco_fecha) : null;
   const out: string[] = [];
   for (let s = abre; s + dur <= fecha; s += p.cfg.passo_min) {
+    // pausa de almoço: a reserva não pode encostar no intervalo [almAbre, almFecha)
+    if (almAbre !== null && almFecha !== null && s < almFecha && s + dur > almAbre) continue;
     const a = epoch(p.dateStr, s), b = epoch(p.dateStr, s + dur);
     if (a < minStart) continue;
     if (p.ocupados.some((o) => a < o.end + buf && b + buf > o.start)) continue;
