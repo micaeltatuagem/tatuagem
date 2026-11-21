@@ -12,7 +12,7 @@
     <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-                  <image:image>
+                        <image:image>
         <image:loc>https://micaeltatuagem.com.br/https://rpgcsejfewltricfsdrd.supabase.co/storage/v1/object/public/site-media/galeria/1789154004169-dlmzr6.mp4</image:loc>
         <image:title>Tatuagem Micael Tatuagem</image:title>
         <image:caption>Colorido, Tradicional — Tatuagem Micael Tatuagem — Micael Faccio, tatuador em Muriaé MG</image:caption>
@@ -236,11 +236,6 @@
         <image:loc>https://micaeltatuagem.com.br/galeria/wolverine.webp</image:loc>
         <image:title>Tatuagem Wolverine</image:title>
         <image:caption>Dark Art, Colorido — Tatuagem Wolverine — Micael Faccio, tatuador em Muriaé MG</image:caption>
-      </image:image>
-      <image:image>
-        <image:loc>https://micaeltatuagem.com.br/galeria/1781643432172-tatuagem-valentina.webp</image:loc>
-        <image:title>Tatuagem Valentina</image:title>
-        <image:caption> — Tatuagem Valentina — Micael Faccio, tatuador em Muriaé MG</image:caption>
       </image:image>
       <image:image>
         <image:loc>https://micaeltatuagem.com.br/galeria/1781643494250-tatuagem-thor.webp</image:loc>
